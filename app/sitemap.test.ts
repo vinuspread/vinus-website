@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 const mockWorks = [{ slug: 'project-a', created_at: '2024-01-01T00:00:00Z' }]
 const mockBlogs = [{ slug: 'post-b', created_at: '2024-02-01T00:00:00Z' }]
 
-vi.mock('@/lib/supabase/client', () => ({
+vi.mock('@/lib/supabase/readonly', () => ({
   createClient: () => ({
     from: (table: string) => ({
       select: () => ({
@@ -24,7 +24,7 @@ describe('sitemap', () => {
   it('includes all static routes', async () => {
     const { default: sitemap } = await import('./sitemap')
     const entries = await sitemap()
-    const urls = entries.map((e) => e.url)
+    const urls = entries.map((e: { url: string }) => e.url)
     expect(urls).toContain('https://vinus.co.kr')
     expect(urls).toContain('https://vinus.co.kr/work')
     expect(urls).toContain('https://vinus.co.kr/blog')
@@ -35,7 +35,7 @@ describe('sitemap', () => {
   it('includes published work and blog slugs', async () => {
     const { default: sitemap } = await import('./sitemap')
     const entries = await sitemap()
-    const urls = entries.map((e) => e.url)
+    const urls = entries.map((e: { url: string }) => e.url)
     expect(urls).toContain('https://vinus.co.kr/work/project-a')
     expect(urls).toContain('https://vinus.co.kr/blog/post-b')
   })
