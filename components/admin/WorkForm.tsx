@@ -100,7 +100,7 @@ export default function WorkForm({ initialData }: Props) {
           required
           defaultValue={initialData?.title}
           onChange={(e) => { if (!slugEdited) { const slugInput = e.currentTarget.form?.elements.namedItem('slug') as HTMLInputElement; if (slugInput) slugInput.value = toSlug(e.target.value) } }}
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
         <label className="text-sm text-gray-500 pt-3">슬러그 *</label>
@@ -109,14 +109,14 @@ export default function WorkForm({ initialData }: Props) {
           required
           defaultValue={initialData?.slug}
           onChange={() => setSlugEdited(true)}
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
         <label className="text-sm text-gray-500 pt-3">카테고리</label>
         <input
           name="category"
           defaultValue={initialData?.category ?? ''}
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
         <label className="text-sm text-gray-500 pt-3">썸네일</label>
@@ -127,7 +127,7 @@ export default function WorkForm({ initialData }: Props) {
               value={thumbnailUrl}
               onChange={(e) => setThumbnailUrl(e.target.value)}
               placeholder="URL 직접 입력"
-              className="flex-1 border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+              className="flex-1 border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
             />
             <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100">
               {uploading ? '업로드 중...' : '파일 선택'}
@@ -146,7 +146,7 @@ export default function WorkForm({ initialData }: Props) {
           type="text"
           defaultValue={initialData?.thumbnail_color ?? ''}
           placeholder="#ffffff"
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
         <label className="text-sm text-gray-500 pt-3">정렬 순서</label>
@@ -154,7 +154,7 @@ export default function WorkForm({ initialData }: Props) {
           name="sort_order"
           type="number"
           defaultValue={initialData?.sort_order ?? 0}
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
         <label className="text-sm text-gray-500 pt-3">공개</label>
@@ -169,14 +169,14 @@ export default function WorkForm({ initialData }: Props) {
         <input
           name="meta_title"
           defaultValue={initialData?.meta_title ?? ''}
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
         <label className="text-sm text-gray-500 pt-3">Meta 설명</label>
         <input
           name="meta_description"
           defaultValue={initialData?.meta_description ?? ''}
-          className="border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
       </div>
 

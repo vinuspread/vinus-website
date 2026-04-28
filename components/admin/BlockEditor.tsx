@@ -133,7 +133,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   onChange(updateBlock(blocks, index, { ...block, content: e.target.value }))
                 }
                 rows={4}
-                className="w-full border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black resize-none bg-transparent"
+                className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
                 placeholder="HTML 또는 텍스트 입력"
               />
             )}
@@ -148,7 +148,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                       onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))
                     }
                     placeholder="이미지 URL 직접 입력"
-                    className="flex-1 border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                    className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                   />
                   <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
                     {uploading[block.id] ? '업로드 중...' : '파일 선택'}
@@ -166,7 +166,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                     onChange(updateBlock(blocks, index, { ...block, alt: e.target.value }))
                   }
                   placeholder="Alt 텍스트"
-                  className="w-full border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                 />
               </div>
             )}
@@ -184,7 +184,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                         onChange(updateBlock(blocks, index, { ...block, images }))
                       }}
                       placeholder="이미지 URL"
-                      className="flex-1 border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                      className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                     />
                     <input
                       type="text"
@@ -195,7 +195,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                         onChange(updateBlock(blocks, index, { ...block, images }))
                       }}
                       placeholder="Alt"
-                      className="w-24 border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                      className="w-24 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                     />
                     <label className="cursor-pointer border border-gray-300 px-2 py-1 text-xs hover:bg-gray-100">
                       업로드
@@ -234,7 +234,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))
                 }
                 placeholder="YouTube URL"
-                className="w-full border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
               />
             )}
 
@@ -247,7 +247,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   onChange={(e) =>
                     onChange(updateBlock(blocks, index, { ...block, height: Number(e.target.value) }))
                   }
-                  className="w-24 border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                  className="w-24 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                 />
               </div>
             )}
@@ -262,7 +262,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                       onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))
                     }
                     placeholder="파일 URL 직접 입력"
-                    className="flex-1 border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                    className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                   />
                   <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
                     {uploading[block.id] ? '업로드 중...' : '파일 선택'}
@@ -276,7 +276,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                     onChange(updateBlock(blocks, index, { ...block, label: e.target.value }))
                   }
                   placeholder="다운로드 버튼 레이블"
-                  className="w-full border-b border-gray-300 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                 />
               </div>
             )}
@@ -288,7 +288,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
         <select
           value={addType}
           onChange={(e) => setAddType(e.target.value as BlockType)}
-          className="border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:border-black bg-transparent"
+          className="border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         >
           {BLOCK_TYPES.map((t) => (
             <option key={t.value} value={t.value}>
