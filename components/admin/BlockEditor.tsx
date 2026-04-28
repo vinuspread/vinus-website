@@ -266,7 +266,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   />
                   <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
                     {uploading[block.id] ? '업로드 중...' : '파일 선택'}
-                    <input type="file" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
+                    <input type="file" className="hidden" onChange={handleImageUpload(block.id, index, null)} />
                   </label>
                 </div>
                 <input
