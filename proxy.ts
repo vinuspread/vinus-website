@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 
 // Edge-compatible lightweight check: verify Supabase session cookie exists.
 // Full token validation happens in server components via lib/supabase/server.ts.
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname === '/admin/login'
 
   const projectRef = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? '')
