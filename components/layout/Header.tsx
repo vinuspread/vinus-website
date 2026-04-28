@@ -36,7 +36,7 @@ export default function Header() {
             <Link
               href={item.href}
               className={`text-sm tracking-widest uppercase transition-opacity ${
-                pathname.startsWith(item.href) ? 'opacity-100' : 'opacity-60 hover:opacity-100'
+                (pathname === item.href || pathname.startsWith(item.href + '/')) ? 'opacity-100' : 'opacity-60 hover:opacity-100'
               } text-white`}
             >
               {item.label}

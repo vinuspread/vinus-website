@@ -21,4 +21,12 @@ describe('Header', () => {
     const hrefs = navLinks.map(link => link.getAttribute('href'))
     expect(hrefs).not.toContain('/download')
   })
+
+  it('renders Blog dropdown with Story and Download subcategories', () => {
+    render(<Header />)
+    expect(screen.getByText('Story')).toBeInTheDocument()
+    expect(screen.getByText('Download')).toBeInTheDocument()
+    expect(screen.getByText('Story').closest('a')).toHaveAttribute('href', '/blog?category=Story')
+    expect(screen.getByText('Download').closest('a')).toHaveAttribute('href', '/blog?category=Download')
+  })
 })
