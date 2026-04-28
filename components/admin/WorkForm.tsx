@@ -32,12 +32,21 @@ export default function WorkForm({ initialData }: Props) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
-    const fd = new FormData()
-    fd.append('file', file)
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-    const json = await res.json() as { url?: string }
-    if (json.url) setThumbnailUrl(json.url)
-    setUploading(false)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const json = await res.json() as { url?: string; error?: string }
+      if (!res.ok || !json.url) {
+        setError(json.error ?? '업로드 실패')
+      } else {
+        setThumbnailUrl(json.url)
+      }
+    } catch {
+      setError('업로드 중 오류가 발생했습니다.')
+    } finally {
+      setUploading(false)
+    }
   }
 
   function handleSubmit(e: { preventDefault: () => void; currentTarget: HTMLFormElement }) {

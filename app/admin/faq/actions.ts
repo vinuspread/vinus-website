@@ -6,6 +6,8 @@ import type { Faq } from '@/types'
 
 export async function saveFaqs(faqs: Faq[]) {
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
 
   for (const faq of faqs) {
     if (!faq.id || faq.id.startsWith('new-')) {
@@ -33,6 +35,8 @@ export async function saveFaqs(faqs: Faq[]) {
 export async function deleteFaq(id: string) {
   if (id.startsWith('new-')) return
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error('Unauthorized')
   const { error } = await supabase.from('faq').delete().eq('id', id)
   if (error) throw new Error(error.message)
   revalidatePath('/we')

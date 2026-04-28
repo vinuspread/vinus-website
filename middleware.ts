@@ -29,7 +29,11 @@ export async function middleware(request: NextRequest) {
   const isLoginPage = request.nextUrl.pathname === '/admin/login'
 
   if (!isLoginPage && !user) {
-    return NextResponse.redirect(new URL('/admin/login', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/admin/login', request.url))
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value)
+    })
+    return redirectResponse
   }
 
   if (isLoginPage && user) {
