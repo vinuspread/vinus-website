@@ -98,7 +98,22 @@ export default function BlockEditor({ blocks, onChange }: Props) {
         {blocks.map((block, index) => (
           <div key={block.id} className="border border-gray-200 p-4">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-gray-400 uppercase tracking-wider">{block.type}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-400 uppercase tracking-wider">{block.type}</span>
+                <select
+                  value={block.motion}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, motion: e.target.value as Block['motion'] }))}
+                  className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                >
+                  <option value="none">모션 없음</option>
+                  <option value="fadeIn">Fade In</option>
+                  <option value="slideUp">Slide Up</option>
+                  <option value="zoomIn">Zoom In</option>
+                  <option value="textReveal">Text Reveal</option>
+                  <option value="curtainReveal">Curtain Reveal</option>
+                  <option value="stagger">Stagger</option>
+                </select>
+              </div>
               <div className="flex gap-1">
                 <button
                   type="button"
