@@ -1,6 +1,6 @@
 # Admin CMS Implementation Design
 
-**Goal:** `/admin` 경로에 Supabase Auth 기반 관리자 페이지를 구현한다. Work, Blog, FAQ, Settings 콘텐츠를 블록 에디터로 관리하고 관리자 계정을 초대/삭제할 수 있다.
+**Goal:** `/admin` 경로에 Supabase Auth 기반 관리자 페이지를 구현한다. Work, Blog, FAQ, Settings 콘텐츠를 블록 에디터로 관리하고 관리자 계정을 초대/삭제할 수 있다. 검색엔진을 위한 sitemap.xml도 함께 구현한다.
 
 **Architecture:** Next.js App Router의 `/admin` 라우트 그룹을 미들웨어로 보호. 어드민 전용 layout.tsx로 공개 사이트와 완전히 분리. 블록 에디터는 클라이언트 컴포넌트로 구현.
 
@@ -12,6 +12,7 @@
 
 ```
 app/
+  sitemap.ts                동적 sitemap.xml (Next.js MetadataRoute.Sitemap)
   admin/
     layout.tsx              어드민 전용 레이아웃 (Pretendard, 사이드바)
     page.tsx                대시보드 (콘텐츠 수 요약)
@@ -182,7 +183,7 @@ interface BlockEditorProps {
 
 ### 레이아웃
 - 좌측 고정 사이드바 (w-64) + 우측 콘텐츠 (`flex-1`)
-- 모바일(< md): 사이드바 숨김, 상단 헤더 + 햄버거 메뉴로 전환
+- **PC 전용** — 반응형 없음. 모바일 접근 시 "PC에서 접속해주세요" 안내 메시지 표시
 - 어드민 전용 `app/admin/layout.tsx` — 공개 사이트 Header/Footer/LenisProvider 미포함
 
 ### 폰트
@@ -205,8 +206,58 @@ interface BlockEditorProps {
 - 삭제: `border border-red-500 text-red-500 px-4 py-1 text-xs`
 
 ### 반응형
-- 모든 폼: 모바일에서 라벨-인풋 상하 배치 (`flex-col`), 데스크탑에서 좌우 배치 (`grid grid-cols-[160px_1fr]`)
-- 목록 테이블: 모바일에서 가로 스크롤
+- 어드민은 반응형 없음 (PC 전용)
+- 공개 사이트(vinus website)는 별도로 반응형 적용
+
+---
+
+## 9. Sitemap (`app/sitemap.ts`)
+
+Next.js 내장 `MetadataRoute.Sitemap`을 사용해 동적으로 생성. 별도 페이지 없이 `/sitemap.xml` URL로 자동 서빙됨.
+
+### 포함 URL
+- 정적 페이지: `/`, `/work`, `/blog`, `/we`, `/request`
+- 동적 페이지: `is_published = true`인 모든 Work, Blog 슬러그
+
+### 구현
+```ts
+// app/sitemap.ts
+import { MetadataRoute } from 'next'
+import { createClient } from '@/lib/supabase/client'
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
+  const supabase = createClient()
+
+  const [{ data: works }, { data: blogs }] = await Promise.all([
+    supabase.from('work').select('slug, created_at').eq('is_published', true),
+    supabase.from('blog').select('slug, created_at').eq('is_published', true),
+  ])
+
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: base, lastModified: new Date() },
+    { url: `${base}/work`, lastModified: new Date() },
+    { url: `${base}/blog`, lastModified: new Date() },
+    { url: `${base}/we`, lastModified: new Date() },
+    { url: `${base}/request`, lastModified: new Date() },
+  ]
+
+  const workRoutes = (works ?? []).map(w => ({
+    url: `${base}/work/${w.slug}`,
+    lastModified: new Date(w.created_at),
+  }))
+
+  const blogRoutes = (blogs ?? []).map(b => ({
+    url: `${base}/blog/${b.slug}`,
+    lastModified: new Date(b.created_at),
+  }))
+
+  return [...staticRoutes, ...workRoutes, ...blogRoutes]
+}
+```
+
+### revalidate
+`sitemap.ts`에 `export const revalidate = 86400` 추가 (24시간마다 재생성).
 
 ---
 
