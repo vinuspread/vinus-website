@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription, formatDate } from '@/lib/utils'
 import type { Blog } from '@/types'
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const supabase = await createClient()
+  const supabase = createBrowserClient()
   const { data: blogs } = await supabase
     .from('blog')
     .select('slug')
