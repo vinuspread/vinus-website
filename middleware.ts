@@ -33,12 +33,16 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isLoginPage && user) {
-    return NextResponse.redirect(new URL('/admin', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/admin', request.url))
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie.name, cookie.value)
+    })
+    return redirectResponse
   }
 
   return response
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin', '/admin/:path*'],
 }
