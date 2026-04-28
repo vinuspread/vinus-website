@@ -1,11 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useRef } from 'react'
+import { useGSAP } from '@gsap/react'
+import { gsap, ScrollTrigger } from '../../lib/gsap'
 import Image from 'next/image'
-
-gsap.registerPlugin(ScrollTrigger)
 
 interface ImageRevealProps {
   src: string
@@ -29,30 +27,25 @@ export default function ImageReveal({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const curtainRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const wrapper = wrapperRef.current
+  useGSAP(() => {
     const curtain = curtainRef.current
-    if (!wrapper || !curtain) return
+    if (!curtain) return
 
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        curtain,
-        { scaleX: 1, transformOrigin: 'left center' },
-        {
-          scaleX: 0,
-          duration: 0.9,
-          ease: 'power3.inOut',
-          scrollTrigger: {
-            trigger: wrapper,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      )
-    }, wrapper)
-
-    return () => ctx.revert()
-  }, [])
+    gsap.fromTo(
+      curtain,
+      { scaleX: 1, transformOrigin: 'left center' },
+      {
+        scaleX: 0,
+        duration: 0.9,
+        ease: 'power3.inOut',
+        scrollTrigger: {
+          trigger: wrapperRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      }
+    )
+  }, { scope: wrapperRef })
 
   return (
     <div ref={wrapperRef} className={`relative overflow-hidden ${className ?? ''}`}>
@@ -63,7 +56,8 @@ export default function ImageReveal({
       )}
       <div
         ref={curtainRef}
-        className="absolute inset-0 z-10"
+        aria-hidden="true"
+        className="absolute inset-0 z-10 pointer-events-none"
         style={{ backgroundColor: curtainColor }}
       />
     </div>
