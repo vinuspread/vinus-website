@@ -1,0 +1,56 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+import type { Block } from '@/types'
+
+export interface BlogFormData {
+  id?: string
+  title: string
+  slug: string
+  category: 'Story' | 'Download'
+  blocks: Block[]
+  file_url: string
+  meta_title: string
+  meta_description: string
+  is_published: boolean
+  sort_order: number
+}
+
+export async function saveBlog(data: BlogFormData) {
+  const supabase = await createClient()
+  const payload = {
+    title: data.title,
+    slug: data.slug,
+    category: data.category,
+    blocks: data.blocks,
+    file_url: data.file_url || null,
+    meta_title: data.meta_title || null,
+    meta_description: data.meta_description || null,
+    is_published: data.is_published,
+    sort_order: data.sort_order,
+  }
+
+  if (data.id) {
+    const { error } = await supabase.from('blog').update(payload).eq('id', data.id)
+    if (error) throw new Error(error.message)
+  } else {
+    const { error } = await supabase.from('blog').insert(payload)
+    if (error) throw new Error(error.message)
+  }
+
+  revalidatePath('/blog')
+  revalidatePath(`/blog/${data.slug}`, 'page')
+  revalidatePath('/sitemap.xml')
+  redirect('/admin/blog')
+}
+
+export async function deleteBlog(id: string, slug: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.from('blog').delete().eq('id', id)
+  if (error) throw new Error(error.message)
+  revalidatePath('/blog')
+  revalidatePath(`/blog/${slug}`, 'page')
+  redirect('/admin/blog')
+}
