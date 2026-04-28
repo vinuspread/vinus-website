@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
               name="email"
               type="email"
               required
-              className="w-full border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent"
+              className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black transition-colors bg-transparent"
             />
           </div>
           <div>
@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
               name="password"
               type="password"
               required
-              className="w-full border-b border-gray-300 py-3 text-sm focus:outline-none focus:border-black transition-colors bg-transparent"
+              className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black transition-colors bg-transparent"
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
