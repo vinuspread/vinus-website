@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -38,8 +39,15 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 mix-blend-difference">
-      <Link href="/" className="text-white font-bold text-lg tracking-wider" aria-label="바이너스프레드 홈">
-        VINUS
+      <Link href="/" aria-label="바이너스프레드 홈">
+        <Image
+          src="/images/h1_logo2.png"
+          alt="바이너스프레드"
+          width={44}
+          height={44}
+          className="invert"
+          priority
+        />
       </Link>
 
       {/* 데스크탑 네비게이션 */}

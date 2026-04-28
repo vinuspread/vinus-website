@@ -1,14 +1,18 @@
-import { Geist, Geist_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import LenisProvider from '@/components/motion/LenisProvider'
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
+const pretendard = localFont({
+  src: '../../public/fonts/PretendardVariable.woff2',
+  variable: '--font-pretendard',
+  display: 'swap',
+  weight: '45 920',
+})
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable} min-h-full flex flex-col antialiased`}>
+    <div className={`${pretendard.variable} ${pretendard.className} min-h-full flex flex-col antialiased`}>
       <LenisProvider>
         <Header />
         <main className="flex-1" style={{ paddingTop: 'var(--header-height)' }}>
