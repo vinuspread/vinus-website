@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     template: '%s | 바이너스프레드',
   },
   description: '웹 개발 및 디자인 전문 스튜디오, 맞춤형 웹사이트 제작과 창의적인 디자인 솔루션 제공',
-  metadataBase: new URL('https://vinus.co.kr'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'),
   openGraph: {
     siteName: '바이너스프레드',
     locale: 'ko_KR',
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col">
         <LenisProvider>
           <Header />
-          <main className="flex-1 pt-20">
+          <main className="flex-1" style={{ paddingTop: 'var(--header-height)' }}>
             {children}
           </main>
           <Footer />

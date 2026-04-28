@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const navItems = [
@@ -22,6 +22,19 @@ const navItems = [
 export default function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        buttonRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 mix-blend-difference">
@@ -42,7 +55,7 @@ export default function Header() {
               {item.label}
             </Link>
             {item.children && (
-              <div className="absolute top-full left-0 pt-2 hidden group-hover:block">
+              <div className="absolute top-full left-0 pt-2 hidden group-hover:block group-focus-within:block">
                 <ul className="bg-white rounded shadow-lg py-2 min-w-[120px]">
                   {item.children.map(child => (
                     <li key={child.label}>
@@ -60,9 +73,12 @@ export default function Header() {
 
       {/* 모바일 햄버거 */}
       <button
+        ref={buttonRef}
         className="md:hidden text-white"
         onClick={() => setMenuOpen(prev => !prev)}
-        aria-label="메뉴 열기"
+        aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}
+        aria-expanded={menuOpen}
+        aria-controls="mobile-menu"
       >
         <span className="text-2xl">{menuOpen ? '✕' : '☰'}</span>
       </button>
@@ -71,6 +87,9 @@ export default function Header() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            id="mobile-menu"
+            role="navigation"
+            aria-label="모바일 메뉴"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
