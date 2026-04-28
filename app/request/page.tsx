@@ -5,7 +5,7 @@ import { useState } from 'react'
 export default function RequestPage() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: { preventDefault: () => void; currentTarget: HTMLFormElement }) {
     e.preventDefault()
     setStatus('sending')
 
