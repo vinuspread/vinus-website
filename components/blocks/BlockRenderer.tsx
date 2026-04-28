@@ -17,6 +17,7 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           case 'video':   return <VideoBlock key={block.id} block={block} />
           case 'divider': return <DividerBlock key={block.id} block={block} />
           case 'file':    return <FileBlock key={block.id} block={block} />
+          default:        return null
         }
       })}
     </div>
