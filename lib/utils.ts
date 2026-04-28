@@ -12,7 +12,7 @@ export function slugify(text: string): string {
 export function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
   if (isNaN(date.getTime())) return ''
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}`
+  return `${date.getUTCFullYear()}.${String(date.getUTCMonth() + 1).padStart(2, '0')}`
 }
 
 export function getMetaTitle(title: string, metaTitle: string | null): string {
