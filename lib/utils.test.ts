@@ -12,11 +12,17 @@ describe('slugify', () => {
   it('collapses multiple hyphens', () => {
     expect(slugify('Hello  World')).toBe('hello-world')
   })
+  it('removes leading and trailing hyphens', () => {
+    expect(slugify('  hello  ')).toBe('hello')
+  })
 })
 
 describe('formatDate', () => {
   it('formats to YYYY.MM', () => {
     expect(formatDate('2024-03-15T00:00:00Z')).toBe('2024.03')
+  })
+  it('returns empty string for invalid date', () => {
+    expect(formatDate('invalid')).toBe('')
   })
 })
 

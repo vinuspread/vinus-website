@@ -2,14 +2,16 @@
 export function slugify(text: string): string {
   return text
     .toLowerCase()
+    .trim()
     .replace(/[^a-z0-9가-힣\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .trim()
+    .replace(/^-+|-+$/g, '')
 }
 
 export function formatDate(dateStr: string): string {
   const date = new Date(dateStr)
+  if (isNaN(date.getTime())) return ''
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}`
 }
 

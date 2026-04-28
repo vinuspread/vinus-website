@@ -86,6 +86,4 @@ export interface Faq {
   is_published: boolean
 }
 
-export interface Settings {
-  [key: string]: string
-}
+export type Settings = Record<string, string | undefined>
