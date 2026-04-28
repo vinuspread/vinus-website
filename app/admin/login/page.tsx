@@ -3,15 +3,6 @@
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import localFont from 'next/font/local'
-
-const pretendard = localFont({
-  src: '../../../public/fonts/PretendardVariable.woff2',
-  variable: '--font-pretendard',
-  display: 'swap',
-  weight: '45 920',
-})
-
 export default function AdminLoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -39,7 +30,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className={`${pretendard.variable} ${pretendard.className} min-h-screen flex items-center justify-center bg-white`}>
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-sm px-8">
         <h1 className="text-4xl font-bold mb-12">Admin</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
