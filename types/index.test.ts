@@ -9,6 +9,7 @@ describe('Block types', () => {
       type: 'text',
       content: 'Hello',
       motion: 'fadeIn',
+      spacing: 'md',
     }
     expect(block.type).toBe('text')
   })
@@ -20,6 +21,7 @@ describe('Block types', () => {
       src: '/image.jpg',
       alt: 'test image',
       motion: 'curtainReveal',
+      spacing: 'lg',
     }
     expect(block.type).toBe('image')
   })

@@ -24,9 +24,11 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
         })()
         if (!inner) return null
         return (
-          <BlockMotion key={block.id} motion={block.motion}>
-            {inner}
-          </BlockMotion>
+          <div key={block.id} className={`block-spacing-${block.spacing ?? 'md'}`}>
+            <BlockMotion motion={block.motion}>
+              {inner}
+            </BlockMotion>
+          </div>
         )
       })}
     </div>

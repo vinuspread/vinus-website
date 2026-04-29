@@ -1,12 +1,14 @@
 // types/index.ts
 
 export type MotionType = 'none' | 'fadeIn' | 'slideUp' | 'textReveal' | 'curtainReveal' | 'zoomIn' | 'stagger'
+export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl'
 
 export interface TextBlock {
   id: string
   type: 'text'
   content: string
   motion: MotionType
+  spacing: SpacingType
 }
 
 export interface ImageBlock {
@@ -15,6 +17,7 @@ export interface ImageBlock {
   src: string
   alt: string
   motion: MotionType
+  spacing: SpacingType
 }
 
 export interface GalleryBlock {
@@ -22,6 +25,7 @@ export interface GalleryBlock {
   type: 'gallery'
   images: { src: string; alt: string }[]
   motion: MotionType
+  spacing: SpacingType
 }
 
 export interface VideoBlock {
@@ -29,6 +33,7 @@ export interface VideoBlock {
   type: 'video'
   url: string
   motion: MotionType
+  spacing: SpacingType
 }
 
 export interface DividerBlock {
@@ -36,6 +41,7 @@ export interface DividerBlock {
   type: 'divider'
   height: number
   motion: MotionType
+  spacing: SpacingType
 }
 
 export interface FileBlock {
@@ -44,6 +50,7 @@ export interface FileBlock {
   url: string
   label: string
   motion: MotionType
+  spacing: SpacingType
 }
 
 export type Block = TextBlock | ImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock

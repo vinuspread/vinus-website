@@ -6,7 +6,7 @@ import type { Block } from '@/types'
 describe('BlockRenderer', () => {
   it('renders text block', () => {
     const blocks: Block[] = [
-      { id: '1', type: 'text', content: 'Hello World', motion: 'none' },
+      { id: '1', type: 'text', content: 'Hello World', motion: 'none', spacing: 'md' },
     ]
     render(<BlockRenderer blocks={blocks} />)
     expect(screen.getByText('Hello World')).toBeInTheDocument()
@@ -14,7 +14,7 @@ describe('BlockRenderer', () => {
 
   it('renders divider block', () => {
     const blocks: Block[] = [
-      { id: '2', type: 'divider', height: 40, motion: 'none' },
+      { id: '2', type: 'divider', height: 40, motion: 'none', spacing: 'md' },
     ]
     const { container } = render(<BlockRenderer blocks={blocks} />)
     const divider = container.querySelector('[style*="height: 40px"]')
@@ -23,7 +23,7 @@ describe('BlockRenderer', () => {
 
   it('renders file block with download link', () => {
     const blocks: Block[] = [
-      { id: '3', type: 'file', url: '/test.pdf', label: 'Download PDF', motion: 'none' },
+      { id: '3', type: 'file', url: '/test.pdf', label: 'Download PDF', motion: 'none', spacing: 'md' },
     ]
     render(<BlockRenderer blocks={blocks} />)
     const link = screen.getByText('Download PDF')
@@ -38,7 +38,7 @@ describe('BlockRenderer', () => {
 
   it('renders image block with correct alt text', () => {
     const blocks: Block[] = [
-      { id: '4', type: 'image', src: '/test.jpg', alt: 'Test image', motion: 'none' },
+      { id: '4', type: 'image', src: '/test.jpg', alt: 'Test image', motion: 'none', spacing: 'md' },
     ]
     render(<BlockRenderer blocks={blocks} />)
     expect(screen.getByAltText('Test image')).toBeInTheDocument()
@@ -55,6 +55,7 @@ describe('BlockRenderer', () => {
           { src: '/c.jpg', alt: 'Image C' },
         ],
         motion: 'none',
+        spacing: 'md',
       },
     ]
     render(<BlockRenderer blocks={blocks} />)
@@ -63,7 +64,7 @@ describe('BlockRenderer', () => {
 
   it('renders video block with YouTube embed', () => {
     const blocks: Block[] = [
-      { id: '6', type: 'video', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', motion: 'none' },
+      { id: '6', type: 'video', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', motion: 'none', spacing: 'md' },
     ]
     const { container } = render(<BlockRenderer blocks={blocks} />)
     const iframe = container.querySelector('iframe')

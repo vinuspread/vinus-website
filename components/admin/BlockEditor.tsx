@@ -21,12 +21,12 @@ const BLOCK_TYPES: { value: BlockType; label: string }[] = [
 function createBlock(type: BlockType): Block {
   const id = crypto.randomUUID()
   switch (type) {
-    case 'text': return { id, type, content: '', motion: 'none' }
-    case 'image': return { id, type, src: '', alt: '', motion: 'none' }
-    case 'gallery': return { id, type, images: [], motion: 'none' }
-    case 'video': return { id, type, url: '', motion: 'none' }
-    case 'divider': return { id, type, height: 40, motion: 'none' }
-    case 'file': return { id, type, url: '', label: '', motion: 'none' }
+    case 'text': return { id, type, content: '', motion: 'none', spacing: 'md' }
+    case 'image': return { id, type, src: '', alt: '', motion: 'none', spacing: 'md' }
+    case 'gallery': return { id, type, images: [], motion: 'none', spacing: 'md' }
+    case 'video': return { id, type, url: '', motion: 'none', spacing: 'md' }
+    case 'divider': return { id, type, height: 40, motion: 'none', spacing: 'none' }
+    case 'file': return { id, type, url: '', label: '', motion: 'none', spacing: 'md' }
   }
 }
 
@@ -112,6 +112,17 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   <option value="textReveal">Text Reveal</option>
                   <option value="curtainReveal">Curtain Reveal</option>
                   <option value="stagger">Stagger</option>
+                </select>
+                <select
+                  value={block.spacing ?? 'md'}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, spacing: e.target.value as Block['spacing'] }))}
+                  className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                >
+                  <option value="none">간격 없음</option>
+                  <option value="sm">간격 SM</option>
+                  <option value="md">간격 MD</option>
+                  <option value="lg">간격 LG</option>
+                  <option value="xl">간격 XL</option>
                 </select>
               </div>
               <div className="flex gap-1">

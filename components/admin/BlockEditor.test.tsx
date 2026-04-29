@@ -4,8 +4,8 @@ import { describe, it, expect, vi } from 'vitest'
 import BlockEditor from './BlockEditor'
 import type { Block } from '@/types'
 
-const textBlock: Block = { id: '1', type: 'text', content: 'Hello', motion: 'none' }
-const imageBlock: Block = { id: '2', type: 'image', src: '/a.jpg', alt: 'Alt', motion: 'none' }
+const textBlock: Block = { id: '1', type: 'text', content: 'Hello', motion: 'none', spacing: 'md' }
+const imageBlock: Block = { id: '2', type: 'image', src: '/a.jpg', alt: 'Alt', motion: 'none', spacing: 'md' }
 
 describe('BlockEditor', () => {
   it('renders existing blocks', () => {
