@@ -25,6 +25,7 @@ export default async function AdminBlogEditPage({ params }: Props) {
           title: typedBlog.title,
           slug: typedBlog.slug,
           category: typedBlog.category,
+          thumbnail_url: typedBlog.thumbnail_url ?? '',
           blocks: typedBlog.blocks ?? [],
           file_url: typedBlog.file_url ?? '',
           meta_title: typedBlog.meta_title ?? '',

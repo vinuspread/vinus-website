@@ -10,6 +10,7 @@ export interface BlogFormData {
   title: string
   slug: string
   category: 'Story' | 'Download'
+  thumbnail_url: string
   blocks: Block[]
   file_url: string
   meta_title: string
@@ -24,6 +25,7 @@ export async function saveBlog(data: BlogFormData) {
     title: data.title,
     slug: data.slug,
     category: data.category,
+    thumbnail_url: data.thumbnail_url || null,
     blocks: data.blocks,
     file_url: data.file_url || null,
     meta_title: data.meta_title || null,

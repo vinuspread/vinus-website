@@ -17,9 +17,11 @@ export default function BlogForm({ initialData }: Props) {
   const [error, setError] = useState('')
   const [blocks, setBlocks] = useState<Block[]>(initialData?.blocks ?? [])
   const [category, setCategory] = useState<'Story' | 'Download'>(initialData?.category ?? 'Story')
+  const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url ?? '')
   const [fileUrl, setFileUrl] = useState(initialData?.file_url ?? '')
   const [slugEdited, setSlugEdited] = useState(isEdit)
   const [uploading, setUploading] = useState(false)
+  const [thumbnailUploading, setThumbnailUploading] = useState(false)
 
   function toSlug(title: string) {
     return title
@@ -27,6 +29,27 @@ export default function BlogForm({ initialData }: Props) {
       .replace(/[^a-z0-9가-힣\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
+  }
+
+  async function uploadThumbnail(e: { target: { files?: FileList | null } }) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setThumbnailUploading(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+      const json = await res.json() as { url?: string; error?: string }
+      if (!res.ok || !json.url) {
+        setError(json.error ?? '업로드 실패')
+      } else {
+        setThumbnailUrl(json.url)
+      }
+    } catch {
+      setError('업로드 중 오류가 발생했습니다.')
+    } finally {
+      setThumbnailUploading(false)
+    }
   }
 
   async function uploadFile(e: { target: { files?: FileList | null } }) {
@@ -61,6 +84,7 @@ export default function BlogForm({ initialData }: Props) {
       title: get('title'),
       slug: get('slug'),
       category,
+      thumbnail_url: thumbnailUrl,
       blocks,
       file_url: fileUrl,
       meta_title: get('meta_title'),
@@ -121,6 +145,27 @@ export default function BlogForm({ initialData }: Props) {
           <option value="Story">Story</option>
           <option value="Download">Download</option>
         </select>
+
+        <label className="text-sm text-gray-500 pt-3">썸네일</label>
+        <div className="flex flex-col gap-2">
+          {thumbnailUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={thumbnailUrl} alt="thumbnail" className="w-32 h-20 object-cover rounded border border-gray-200" />
+          )}
+          <div className="flex gap-2 items-center">
+            <input
+              type="text"
+              value={thumbnailUrl}
+              onChange={(e) => setThumbnailUrl(e.target.value)}
+              placeholder="이미지 URL"
+              className="flex-1 border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+            />
+            <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100 whitespace-nowrap">
+              {thumbnailUploading ? '업로드 중...' : '파일 선택'}
+              <input type="file" accept="image/*" className="hidden" onChange={uploadThumbnail} />
+            </label>
+          </div>
+        </div>
 
         {category === 'Download' && (
           <>
