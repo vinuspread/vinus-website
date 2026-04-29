@@ -8,6 +8,16 @@ interface Props {
   onChange: (blocks: Block[]) => void
 }
 
+const MOTION_DESC: Record<string, string> = {
+  none: '',
+  fadeIn: '서서히 나타남',
+  slideUp: '아래에서 위로 올라오며 나타남',
+  zoomIn: '살짝 확대되며 나타남',
+  textReveal: '텍스트가 부드럽게 떠오름',
+  curtainReveal: '아래에서 크게 올라오며 강조됨',
+  stagger: '자식 요소들이 순차적으로 하나씩 나타남',
+}
+
 type BlockType = Block['type']
 const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'text', label: '텍스트' },
@@ -113,6 +123,9 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   <option value="curtainReveal">Curtain Reveal</option>
                   <option value="stagger">Stagger</option>
                 </select>
+                {MOTION_DESC[block.motion] && (
+                  <span className="text-xs text-gray-400">{MOTION_DESC[block.motion]}</span>
+                )}
                 <select
                   value={block.spacing ?? 'md'}
                   onChange={(e) => onChange(updateBlock(blocks, index, { ...block, spacing: e.target.value as Block['spacing'] }))}
