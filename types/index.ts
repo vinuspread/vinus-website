@@ -19,12 +19,16 @@ export interface TextBlock {
   spacing: SpacingType
 }
 
+export type ImageLayout = 'single' | 'pair' | 'trio' | 'sequence'
+
 export interface ImageBlock {
   id: string
   type: 'image'
   src: string
   alt: string
   size?: ImageSize
+  layout?: ImageLayout
+  images?: { src: string; alt: string }[]
   motion: MotionType
   spacing: SpacingType
 }

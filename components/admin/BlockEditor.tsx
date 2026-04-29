@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Block, TextVariant, TextFont, TextAlign, ImageSize, GalleryLayout } from '@/types'
+import type { Block, TextVariant, TextFont, TextAlign, ImageSize, GalleryLayout, ImageLayout } from '@/types'
 
 interface Props {
   blocks: Block[]
@@ -83,12 +83,17 @@ export default function BlockEditor({ blocks, onChange }: Props) {
     return async (e: { target: { files?: FileList | null } }) => {
       const file = e.target.files?.[0]
       if (!file) return
-      setUploading((prev) => ({ ...prev, [blockId]: true }))
+      const uploadKey = galleryIndex !== undefined ? `${blockId}-${galleryIndex}` : blockId
+      setUploading((prev) => ({ ...prev, [uploadKey]: true }))
       try {
         const url = await uploadFile(file)
         const block = blocks[index]
         if (block.type === 'image' && field === 'src') {
           onChange(updateBlock(blocks, index, { ...block, src: url }))
+        } else if (block.type === 'image' && galleryIndex !== undefined) {
+          const images = [...(block.images ?? [])]
+          images[galleryIndex] = { ...images[galleryIndex], src: url }
+          onChange(updateBlock(blocks, index, { ...block, images }))
         } else if (block.type === 'gallery' && galleryIndex !== undefined) {
           const images = [...block.images]
           images[galleryIndex] = { ...images[galleryIndex], src: url }
@@ -97,7 +102,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
           onChange(updateBlock(blocks, index, { ...block, url }))
         }
       } finally {
-        setUploading((prev) => ({ ...prev, [blockId]: false }))
+        setUploading((prev) => ({ ...prev, [uploadKey]: false }))
       }
     }
   }
@@ -208,48 +213,103 @@ export default function BlockEditor({ blocks, onChange }: Props) {
               </div>
             )}
 
-            {block.type === 'image' && (
-              <div className="space-y-2">
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="text"
-                    value={block.src}
-                    onChange={(e) =>
-                      onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))
-                    }
-                    placeholder="이미지 URL 직접 입력"
-                    className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                  />
-                  <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
-                    {uploading[block.id] ? '업로드 중...' : '파일 선택'}
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
-                  </label>
+            {block.type === 'image' && (() => {
+              const imgLayout = block.layout ?? 'single'
+              const imgs = block.images ?? []
+              const targetCount = imgLayout === 'pair' ? 2 : imgLayout === 'trio' || imgLayout === 'sequence' ? 3 : 1
+              return (
+                <div className="space-y-3">
+                  {/* 레이아웃 선택 */}
+                  <select
+                    value={imgLayout}
+                    onChange={(e) => {
+                      const next = e.target.value as ImageLayout
+                      const count = next === 'pair' ? 2 : next === 'trio' || next === 'sequence' ? 3 : 1
+                      const nextImages = Array.from({ length: count }, (_, i) => imgs[i] ?? { src: '', alt: '' })
+                      onChange(updateBlock(blocks, index, { ...block, layout: next, images: nextImages }))
+                    }}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="single">1장 — 단독 이미지</option>
+                    <option value="pair">2장 — 나란히 배치</option>
+                    <option value="trio">3장 — 나란히 배치</option>
+                    <option value="sequence">3장 — 스크롤 순차 등장</option>
+                  </select>
+
+                  {/* 1장: 기존 단독 이미지 */}
+                  {imgLayout === 'single' && (
+                    <div className="space-y-2">
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={block.src}
+                          onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
+                          placeholder="이미지 URL 직접 입력"
+                          className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                        />
+                        <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
+                          {uploading[block.id] ? '업로드 중...' : '파일 선택'}
+                          <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
+                        </label>
+                      </div>
+                      <select
+                        value={block.size ?? 'full'}
+                        onChange={(e) => onChange(updateBlock(blocks, index, { ...block, size: e.target.value as ImageSize }))}
+                        className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                      >
+                        <option value="sm">작게 — 중앙 1/3 크기</option>
+                        <option value="md">중간 — 중앙 2/3 크기</option>
+                        <option value="lg">크게 — 거의 전체 너비</option>
+                        <option value="full">전체 너비</option>
+                      </select>
+                      {block.src && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={block.src} alt="preview" className="max-h-32 object-contain" />
+                      )}
+                      <input
+                        type="text"
+                        value={block.alt}
+                        onChange={(e) => onChange(updateBlock(blocks, index, { ...block, alt: e.target.value }))}
+                        placeholder="Alt 텍스트"
+                        className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                      />
+                    </div>
+                  )}
+
+                  {/* 2장·3장·순차: 이미지 배열 */}
+                  {imgLayout !== 'single' && (
+                    <div className="space-y-2">
+                      {Array.from({ length: targetCount }, (_, gi) => {
+                        const img = imgs[gi] ?? { src: '', alt: '' }
+                        return (
+                          <div key={gi} className="flex gap-2 items-center">
+                            <span className="text-xs text-gray-400 w-6 shrink-0">{gi + 1}</span>
+                            <input
+                              type="text"
+                              value={img.src}
+                              onChange={(e) => {
+                                const next = [...imgs]
+                                next[gi] = { ...img, src: e.target.value }
+                                onChange(updateBlock(blocks, index, { ...block, images: next }))
+                              }}
+                              placeholder="이미지 URL"
+                              className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                            />
+                            <label className="cursor-pointer border border-gray-300 px-2 py-1 text-xs hover:bg-gray-100 shrink-0">
+                              {uploading[`${block.id}-${gi}`] ? '업로드 중...' : '업로드'}
+                              <input
+                                type="file" accept="image/*" className="hidden"
+                                onChange={handleImageUpload(block.id, index, null, gi)}
+                              />
+                            </label>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
-                <select
-                  value={block.size ?? 'full'}
-                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, size: e.target.value as ImageSize }))}
-                  className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
-                >
-                  <option value="sm">작게 — 1/3 너비, 가운데</option>
-                  <option value="md">중간 — 2/3 너비, 가운데</option>
-                  <option value="lg">크게 — 거의 전체 너비</option>
-                  <option value="full">전체 너비</option>
-                </select>
-                {block.src && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={block.src} alt="preview" className="max-h-32 object-contain" />
-                )}
-                <input
-                  type="text"
-                  value={block.alt}
-                  onChange={(e) =>
-                    onChange(updateBlock(blocks, index, { ...block, alt: e.target.value }))
-                  }
-                  placeholder="Alt 텍스트"
-                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                />
-              </div>
-            )}
+              )
+            })()}
 
             {block.type === 'gallery' && (
               <div className="space-y-2">
