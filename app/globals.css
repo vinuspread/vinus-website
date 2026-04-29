@@ -65,6 +65,17 @@ html.lenis, html.lenis body {
 .block-spacing-lg   { margin-bottom: 5rem; }
 .block-spacing-xl   { margin-bottom: 7.5rem; }
 
+/* Sequence gallery: per-image scroll animation */
+.sequence-item {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sequence-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* Block scroll animations */
 .block-anim {
   opacity: 0;

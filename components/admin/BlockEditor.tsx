@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Block, TextVariant, TextFont, TextAlign } from '@/types'
+import type { Block, TextVariant, TextFont, TextAlign, ImageSize, GalleryLayout } from '@/types'
 
 interface Props {
   blocks: Block[]
@@ -225,6 +225,16 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
                   </label>
                 </div>
+                <select
+                  value={block.size ?? 'full'}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, size: e.target.value as ImageSize }))}
+                  className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                >
+                  <option value="sm">작게 — 1/3 너비, 가운데</option>
+                  <option value="md">중간 — 2/3 너비, 가운데</option>
+                  <option value="lg">크게 — 거의 전체 너비</option>
+                  <option value="full">전체 너비</option>
+                </select>
                 {block.src && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={block.src} alt="preview" className="max-h-32 object-contain" />
@@ -243,6 +253,15 @@ export default function BlockEditor({ blocks, onChange }: Props) {
 
             {block.type === 'gallery' && (
               <div className="space-y-2">
+                <select
+                  value={block.layout ?? 'grid-3'}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, layout: e.target.value as GalleryLayout }))}
+                  className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                >
+                  <option value="grid-2">2열 그리드 — 이미지 2개 나란히</option>
+                  <option value="grid-3">3열 그리드 — 이미지 3개 나란히</option>
+                  <option value="sequence">세로 시퀀스 — 이미지가 스크롤 따라 순차 등장</option>
+                </select>
                 {block.images.map((img, gi) => (
                   <div key={gi} className="flex gap-2 items-center">
                     <input

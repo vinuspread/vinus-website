@@ -5,6 +5,8 @@ export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl'
 export type TextVariant = 'body' | 'heading' | 'subheading' | 'caption'
 export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
+export type ImageSize = 'sm' | 'md' | 'lg' | 'full'
+export type GalleryLayout = 'grid-2' | 'grid-3' | 'sequence'
 
 export interface TextBlock {
   id: string
@@ -22,6 +24,7 @@ export interface ImageBlock {
   type: 'image'
   src: string
   alt: string
+  size?: ImageSize
   motion: MotionType
   spacing: SpacingType
 }
@@ -30,6 +33,7 @@ export interface GalleryBlock {
   id: string
   type: 'gallery'
   images: { src: string; alt: string }[]
+  layout?: GalleryLayout
   motion: MotionType
   spacing: SpacingType
 }
