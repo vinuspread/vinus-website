@@ -24,14 +24,15 @@ export default async function AdminWorkEditPage({ params }: Props) {
           id: typedWork.id,
           title: typedWork.title,
           slug: typedWork.slug,
-          category: typedWork.category ?? '',
+          subtitle: typedWork.subtitle ?? '',
+          client_name: typedWork.client_name ?? '',
+          category: typedWork.category ?? 'web',
+          period: typedWork.period ?? '',
           thumbnail_url: typedWork.thumbnail_url ?? '',
-          thumbnail_color: typedWork.thumbnail_color ?? '',
           blocks: typedWork.blocks ?? [],
           meta_title: typedWork.meta_title ?? '',
           meta_description: typedWork.meta_description ?? '',
           is_published: typedWork.is_published,
-          sort_order: typedWork.sort_order,
         }}
       />
     </div>

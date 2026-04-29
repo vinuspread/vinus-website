@@ -6,6 +6,8 @@ import BlockEditor from './BlockEditor'
 import { saveWork, deleteWork, type WorkFormData } from '@/app/admin/work/actions'
 import type { Block } from '@/types'
 
+const CATEGORIES = ['web', 'mobile', 'character', 'product', 'etc']
+
 interface Props {
   initialData?: WorkFormData & { id: string }
 }
@@ -17,7 +19,6 @@ export default function WorkForm({ initialData }: Props) {
   const [error, setError] = useState('')
   const [blocks, setBlocks] = useState<Block[]>(initialData?.blocks ?? [])
   const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url ?? '')
-  const [slugEdited, setSlugEdited] = useState(isEdit)
   const [uploading, setUploading] = useState(false)
 
   function toSlug(title: string) {
@@ -59,14 +60,15 @@ export default function WorkForm({ initialData }: Props) {
       id: initialData?.id,
       title: get('title'),
       slug: get('slug'),
+      subtitle: get('subtitle'),
+      client_name: get('client_name'),
       category: get('category'),
+      period: get('period'),
       thumbnail_url: thumbnailUrl,
-      thumbnail_color: get('thumbnail_color'),
       blocks,
       meta_title: get('meta_title'),
       meta_description: get('meta_description'),
       is_published: (form.elements.namedItem('is_published') as HTMLInputElement).checked,
-      sort_order: Number(get('sort_order')) || 0,
     }
 
     startTransition(async () => {
@@ -91,32 +93,67 @@ export default function WorkForm({ initialData }: Props) {
     })
   }
 
+  const inputClass = "border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-3xl">
       <div className="grid grid-cols-[160px_1fr] gap-4 items-start">
+
+        {/* 슬러그 — 숨김, 제목에서 자동생성 */}
+        <input
+          name="slug"
+          type="hidden"
+          defaultValue={initialData?.slug ?? ''}
+          id="slug-input"
+        />
+
         <label className="text-sm text-gray-500 pt-3">제목 *</label>
         <input
           name="title"
           required
           defaultValue={initialData?.title}
-          onChange={(e) => { if (!slugEdited) { const slugInput = e.currentTarget.form?.elements.namedItem('slug') as HTMLInputElement; if (slugInput) slugInput.value = toSlug(e.target.value) } }}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+          onChange={(e) => {
+            if (!isEdit) {
+              const slugInput = document.getElementById('slug-input') as HTMLInputElement
+              if (slugInput) slugInput.value = toSlug(e.target.value)
+            }
+          }}
+          className={inputClass}
         />
 
-        <label className="text-sm text-gray-500 pt-3">슬러그 *</label>
+        <label className="text-sm text-gray-500 pt-3">서브제목</label>
         <input
-          name="slug"
-          required
-          defaultValue={initialData?.slug}
-          onChange={() => setSlugEdited(true)}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+          name="subtitle"
+          defaultValue={initialData?.subtitle ?? ''}
+          placeholder="예: 브랜드 아이덴티티 & 웹사이트"
+          className={inputClass}
+        />
+
+        <label className="text-sm text-gray-500 pt-3">클라이언트</label>
+        <input
+          name="client_name"
+          defaultValue={initialData?.client_name ?? ''}
+          placeholder="클라이언트명"
+          className={inputClass}
         />
 
         <label className="text-sm text-gray-500 pt-3">카테고리</label>
-        <input
+        <select
           name="category"
-          defaultValue={initialData?.category ?? ''}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+          defaultValue={initialData?.category ?? 'web'}
+          className={inputClass}
+        >
+          {CATEGORIES.map(c => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+
+        <label className="text-sm text-gray-500 pt-3">개발기간</label>
+        <input
+          name="period"
+          defaultValue={initialData?.period ?? ''}
+          placeholder="예: 2024.01 ~ 2024.03"
+          className={inputClass}
         />
 
         <label className="text-sm text-gray-500 pt-3">썸네일</label>
@@ -140,23 +177,6 @@ export default function WorkForm({ initialData }: Props) {
           )}
         </div>
 
-        <label className="text-sm text-gray-500 pt-3">썸네일 배경색</label>
-        <input
-          name="thumbnail_color"
-          type="text"
-          defaultValue={initialData?.thumbnail_color ?? ''}
-          placeholder="#ffffff"
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
-        />
-
-        <label className="text-sm text-gray-500 pt-3">정렬 순서</label>
-        <input
-          name="sort_order"
-          type="number"
-          defaultValue={initialData?.sort_order ?? 0}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
-        />
-
         <label className="text-sm text-gray-500 pt-3">공개</label>
         <input
           name="is_published"
@@ -169,14 +189,14 @@ export default function WorkForm({ initialData }: Props) {
         <input
           name="meta_title"
           defaultValue={initialData?.meta_title ?? ''}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+          className={inputClass}
         />
 
         <label className="text-sm text-gray-500 pt-3">Meta 설명</label>
         <input
           name="meta_description"
           defaultValue={initialData?.meta_description ?? ''}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+          className={inputClass}
         />
       </div>
 

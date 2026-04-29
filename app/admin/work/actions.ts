@@ -9,14 +9,15 @@ export interface WorkFormData {
   id?: string
   title: string
   slug: string
+  subtitle: string
+  client_name: string
   category: string
+  period: string
   thumbnail_url: string
-  thumbnail_color: string
   blocks: Block[]
   meta_title: string
   meta_description: string
   is_published: boolean
-  sort_order: number
 }
 
 export async function saveWork(data: WorkFormData) {
@@ -24,14 +25,15 @@ export async function saveWork(data: WorkFormData) {
   const payload = {
     title: data.title,
     slug: data.slug,
+    subtitle: data.subtitle || null,
+    client_name: data.client_name || null,
     category: data.category || null,
+    period: data.period || null,
     thumbnail_url: data.thumbnail_url || null,
-    thumbnail_color: data.thumbnail_color || null,
     blocks: data.blocks,
     meta_title: data.meta_title || null,
     meta_description: data.meta_description || null,
     is_published: data.is_published,
-    sort_order: data.sort_order,
   }
 
   if (data.id) {

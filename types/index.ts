@@ -73,7 +73,10 @@ export interface Work {
   id: string
   slug: string
   title: string
+  subtitle: string | null
+  client_name: string | null
   category: string | null
+  period: string | null
   thumbnail_url: string | null
   thumbnail_color: string | null
   blocks: Block[]
