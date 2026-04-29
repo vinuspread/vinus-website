@@ -6,7 +6,7 @@ export type TextVariant = 'body' | 'heading' | 'subheading' | 'caption'
 export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
 export type ImageSize = 'sm' | 'md' | 'lg' | 'full'
-export type GalleryLayout = 'grid-2' | 'grid-3' | 'sequence'
+export type GalleryLayout = 'grid-2' | 'grid-3' | 'sequence' | 'sequence-h'
 
 export interface TextBlock {
   id: string

@@ -321,6 +321,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   <option value="grid-2">2열 그리드 — 이미지 2개 나란히</option>
                   <option value="grid-3">3열 그리드 — 이미지 3개 나란히</option>
                   <option value="sequence">세로 시퀀스 — 이미지가 스크롤 따라 순차 등장</option>
+                  <option value="sequence-h">가로 시퀀스 — 나란히 배치 후 좌→우 순차 등장</option>
                 </select>
                 {block.images.map((img, gi) => (
                   <div key={gi} className="flex gap-2 items-center">

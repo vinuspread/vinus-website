@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import type { GalleryBlock as GalleryBlockType } from '@/types'
 import SequenceGallery from './SequenceGallery'
+import HorizontalSequenceGallery from './HorizontalSequenceGallery'
 
 const GRID_CLASS: Record<string, string> = {
   'grid-2': 'grid grid-cols-2 gap-3',
@@ -10,9 +11,8 @@ const GRID_CLASS: Record<string, string> = {
 export default function GalleryBlock({ block }: { block: GalleryBlockType }) {
   const layout = block.layout ?? 'grid-3'
 
-  if (layout === 'sequence') {
-    return <SequenceGallery images={block.images} />
-  }
+  if (layout === 'sequence') return <SequenceGallery images={block.images} />
+  if (layout === 'sequence-h') return <HorizontalSequenceGallery images={block.images} />
 
   return (
     <div className={GRID_CLASS[layout]}>
