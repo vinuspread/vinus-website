@@ -5,6 +5,373 @@
 
 ---
 
+> ## ⚠️ 디자인 기준
+>
+> **기존 사이트 https://www.vinus.co.kr 을 기준으로 디자인하세요.**  
+> 이번 작업은 완전히 새로운 디자인을 만드는 것이 아니라, 기존 디자인을 **최대한 유지하면서 리뉴얼**하는 것입니다.  
+> 폰트·여백·색상·레이아웃 모두 기존 사이트를 기준으로 하되, 더 자연스러운 모션과 반응형을 추가해 주세요.  
+> 페이지별 참고 URL → **섹션 9 참고**
+
+---
+
+## 0. 작업 방식 — HTML/CSS/JS → TSX 변환 흐름
+
+안티그래비티는 **익숙한 HTML+CSS+JS로 먼저 작업** 후, 아래 규칙에 따라 파일을 정리해서 전달합니다.  
+개발자가 이 파일을 받아 TSX로 변환하고 기능을 연결합니다.
+
+```
+안티그래비티 작업 흐름
+────────────────────────────────────
+1. HTML/CSS/JS로 UI 완성 (로컬에서 브라우저 확인)
+2. 아래 폴더 구조 규칙에 맞게 파일 정리
+3. GitHub PR 또는 ZIP으로 개발자에게 전달
+4. 개발자가 TSX로 변환 + 데이터 연결
+────────────────────────────────────
+```
+
+---
+
+---
+
+## 0-1. HTML/CSS/JS 파일 저장 구조
+
+전달 패키지는 아래 구조를 **정확히** 따라야 합니다.
+
+```
+publish/                          ← 전달 루트 폴더
+│
+├── README.md                     ← 작업 내용 설명 (필수)
+│
+├── pages/                        ← 페이지 단위 HTML
+│   ├── home.html                 ← 홈 (/)
+│   ├── work-list.html            ← Work 목록 (/work)
+│   ├── work-detail.html          ← Work 상세 (/work/슬러그)
+│   ├── blog-list.html            ← Blog 목록 (/blog)
+│   ├── blog-detail.html          ← Blog 상세 (/blog/슬러그)
+│   ├── we.html                   ← We 페이지 (/we)
+│   └── request.html              ← 문의 페이지 (/request)
+│
+├── components/                   ← 공통 UI 조각 HTML
+│   ├── header.html               ← 헤더/네비게이션
+│   ├── footer.html               ← 푸터
+│   ├── work-card.html            ← Work 카드 1개 (목록에서 반복)
+│   ├── blog-card.html            ← Blog 카드 1개 (목록에서 반복)
+│   └── blocks/                   ← 콘텐츠 블록 UI
+│       ├── block-text.html       ← 텍스트 블록
+│       ├── block-image.html      ← 이미지 블록
+│       ├── block-gallery.html    ← 갤러리 블록
+│       ├── block-video.html      ← 영상 블록
+│       ├── block-divider.html    ← 여백/구분선 블록
+│       └── block-file.html       ← 파일 다운로드 블록
+│
+├── css/
+│   ├── style.css                 ← 전체 공통 스타일
+│   ├── header.css                ← 헤더 전용 (없으면 style.css에 통합)
+│   └── pages/
+│       ├── home.css
+│       ├── work.css
+│       ├── blog.css
+│       ├── we.css
+│       └── request.css
+│
+├── js/
+│   ├── common.js                 ← 공통 인터랙션 (메뉴 열기/닫기 등)
+│   └── pages/
+│       ├── home.js
+│       ├── work.js
+│       └── request.js            ← 폼 유효성 검사 UI (제출 처리는 개발자)
+│
+└── assets/
+    ├── images/                   ← 새로 추가된 이미지만 (기존 이미지 제외)
+    │   └── new-icon.svg
+    └── fonts/                    ← 추가 폰트 필요시만 (Pretendard는 불필요)
+```
+
+---
+
+## 0-2. HTML 파일 작성 규칙
+
+### 기본 템플릿
+
+모든 HTML 파일은 아래 구조를 따릅니다.
+
+```html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>페이지 제목 | 바이너스프레드</title>
+
+  <!-- Pretendard 폰트 (반드시 이 CDN 사용) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css" />
+
+  <!-- 공통 CSS -->
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- 페이지별 CSS -->
+  <link rel="stylesheet" href="../css/pages/home.css" />
+</head>
+<body>
+
+  <!-- 헤더 (공통) -->
+  <!-- @@include('../components/header.html') -->
+  <header class="site-header">
+    <!-- header.html 내용 복사 -->
+  </header>
+
+  <!-- 페이지 본문 -->
+  <main class="page-main">
+    <!-- 이 부분이 TSX 변환 시 page.tsx가 됩니다 -->
+  </main>
+
+  <!-- 푸터 (공통) -->
+  <!-- @@include('../components/footer.html') -->
+  <footer class="site-footer">
+    <!-- footer.html 내용 복사 -->
+  </footer>
+
+  <!-- JS -->
+  <script src="../js/common.js"></script>
+  <script src="../js/pages/home.js"></script>
+</body>
+</html>
+```
+
+---
+
+## 0-3. 더미 데이터 표기 방법
+
+개발자가 실제 데이터로 교체할 부분은 **주석으로 명확히 표시**합니다.
+
+```html
+<!-- Work 카드 — 실제로는 DB에서 반복 생성됨 -->
+<article class="work-card">
+  <!-- [DATA: work.thumbnail_url] -->
+  <img src="../assets/images/dummy-thumbnail.png" alt="프로젝트 썸네일" />
+
+  <!-- [DATA: work.thumbnail_color] — 배경색으로 사용 -->
+  <div class="work-card__overlay" style="background-color: rgba(214,48,255,0.9);">
+
+    <!-- [DATA: work.title] -->
+    <h2 class="work-card__title">프로젝트 제목이 들어갑니다</h2>
+
+    <!-- [DATA: work.category] -->
+    <p class="work-card__category">Web Design</p>
+
+  </div>
+</article>
+<!-- /Work 카드 반복 끝 -->
+```
+
+### 데이터 표기 키 목록
+
+| 표기 | 실제 데이터 | 설명 |
+|---|---|---|
+| `[DATA: work.title]` | Work 제목 | 문자열 |
+| `[DATA: work.slug]` | URL 슬러그 | `/work/{slug}` 링크에 사용 |
+| `[DATA: work.thumbnail_url]` | 썸네일 이미지 URL | img src에 사용 |
+| `[DATA: work.thumbnail_color]` | 썸네일 배경색 | 예: `rgba(214,48,255,0.9)` |
+| `[DATA: work.category]` | 카테고리 | 문자열 |
+| `[DATA: blog.title]` | Blog 제목 | 문자열 |
+| `[DATA: blog.category]` | `Story` 또는 `Download` | 탭 필터에 사용 |
+| `[DATA: blog.created_at]` | 날짜 | 예: `2024-03-15` |
+| `[DATA: settings.address]` | 회사 주소 | 푸터/We 페이지 |
+| `[DATA: settings.tel]` | 전화번호 | 푸터/We 페이지 |
+| `[DATA: settings.instagram]` | Instagram URL | 외부 링크 |
+
+---
+
+## 0-4. CSS 작성 규칙
+
+### 클래스 네이밍 — BEM 방식 권장
+
+```css
+/* 블록__요소--상태 */
+.work-card { }
+.work-card__title { }
+.work-card__overlay { }
+.work-card--featured { }   /* 변형 */
+.work-card:hover { }
+```
+
+### 절대 사용 금지
+
+```css
+/* ❌ ID 선택자 — 재사용 불가 */
+#main-title { }
+
+/* ❌ !important */
+.title { color: red !important; }
+
+/* ❌ 외부 라이브러리 import */
+@import url("https://cdn.example.com/bootstrap.css");
+```
+
+### 색상 변수 — CSS Custom Property 사용
+
+```css
+/* style.css 최상단에 선언 */
+:root {
+  --color-accent: #FF3B5C;      /* 포인트 컬러 */
+  --color-text: #333333;        /* 기본 텍스트 */
+  --color-text-muted: #888888;  /* 보조 텍스트 */
+  --color-bg: #ffffff;          /* 배경 */
+  --color-border: #e5e5e5;      /* 구분선 */
+  --font-main: "Pretendard Variable", Pretendard, sans-serif;
+}
+
+/* 사용 */
+.work-card__title {
+  color: var(--color-text);
+  font-family: var(--font-main);
+}
+```
+
+### 반응형 — 모바일 우선
+
+```css
+/* 기본: 모바일 */
+.work-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* 태블릿 이상 */
+@media (min-width: 768px) {
+  .work-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* 데스크탑 이상 */
+@media (min-width: 1280px) {
+  .work-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+```
+
+---
+
+## 0-5. JS 작성 규칙
+
+### 기본 원칙
+
+- **jQuery 사용 금지** — 순수 JavaScript(Vanilla JS)만 사용
+- DOM 조작은 클래스 토글 위주로 (style 직접 변경 최소화)
+- 이벤트는 `addEventListener` 사용
+
+### 올바른 작성 예시
+
+```js
+// common.js
+
+// 헤더 메뉴 열기/닫기
+const menuBtn = document.querySelector('.header__menu-btn');
+const nav = document.querySelector('.header__nav');
+
+if (menuBtn && nav) {
+  menuBtn.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('is-open');
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+
+  // ESC 키로 닫기
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      nav.classList.remove('is-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+```
+
+```css
+/* CSS에서 상태 제어 */
+.header__nav {
+  display: none;
+}
+.header__nav.is-open {
+  display: block;
+}
+```
+
+### 폼 처리 — UI까지만 담당
+
+```js
+// request.js
+// 폼 유효성 검사 UI만 작성 — 실제 제출은 개발자가 연결
+
+const form = document.querySelector('.request-form');
+const submitBtn = document.querySelector('.request-form__submit');
+
+if (form) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); // 제출 막기 (개발자가 이 부분을 교체)
+
+    // [개발자 연결 필요] 이 아래에 실제 API 호출 코드가 들어갑니다
+    console.log('폼 제출 — 개발자 연결 필요');
+  });
+}
+```
+
+### 애니메이션 — CSS transition 우선, JS는 트리거만
+
+```js
+// 스크롤 진입 시 애니메이션
+const animTargets = document.querySelectorAll('[data-anim]');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+animTargets.forEach(el => observer.observe(el));
+```
+
+```html
+<!-- HTML에서 data-anim 속성으로 표시 -->
+<div class="work-card" data-anim="fadeIn">...</div>
+```
+
+```css
+/* CSS에서 실제 애니메이션 정의 */
+[data-anim] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+[data-anim].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+---
+
+## 0-6. TSX 변환 매핑 참고표
+
+개발자가 HTML을 TSX로 변환할 때 아래 규칙을 따릅니다.  
+퍼블리셔는 이 표를 참고해 HTML을 작성하면 변환이 쉬워집니다.
+
+| HTML | TSX 변환 | 비고 |
+|---|---|---|
+| `<img src="...">` | `<Image src="..." fill />` | next/image |
+| `<a href="/work">` | `<Link href="/work">` | next/link |
+| `class="..."` | `className="..."` | 자동 치환 |
+| `for="..."` | `htmlFor="..."` | label 속성 |
+| `style="color:red"` | `className="text-red-500"` | Tailwind 변환 |
+| `<!-- [DATA: x] -->` | `{data.x}` | 개발자가 연결 |
+| JS 이벤트 함수 | `onClick`, `onChange` 핸들러 | 개발자가 변환 |
+| `data-anim` 스크롤 | `<BlockMotion motion="fadeIn">` | 개발자가 변환 |
+
+---
+
 ## 1. 기술 스택 (변경 불가)
 
 | 항목 | 기술 | 비고 |
@@ -358,11 +725,74 @@ npm run dev
 
 ---
 
-## 9. 참고: 현재 사이트 디자인
+## 9. 디자인 기준 — 기존 사이트 참고
+
+> **핵심 원칙:** 기존 vinus.co.kr의 레이아웃·타이포그래피·여백·색감을 **최대한 유사하게** 유지합니다.  
+> 새 사이트는 디자인을 바꾸는 것이 아니라, 기존 디자인에 **모션과 CMS 기능을 추가**하는 리뉴얼입니다.
+
+---
+
+### 9-1. 기준 URL
 
 | URL | 설명 |
 |---|---|
-| https://www.vinus.co.kr | 기존 사이트 (디자인 기준) |
-| https://vinus-website.vercel.app | 현재 개발 중인 새 사이트 |
+| https://www.vinus.co.kr | **기존 사이트 — 디자인 기준** |
+| https://vinus-website.vercel.app | 현재 개발 중인 새 사이트 (기능 구조 참고용) |
 
-**디자인 방향:** 기존 vinus.co.kr의 레이아웃·느낌을 최대한 유지하면서, 모션과 CMS 기능을 추가하는 방향.
+---
+
+### 9-2. 페이지별 참고 URL
+
+각 페이지 작업 시 아래 URL을 브라우저에서 직접 확인하면서 디자인하세요.
+
+| 작업 페이지 | 기존 사이트 참고 URL |
+|---|---|
+| 홈 (`home.html`) | https://www.vinus.co.kr |
+| We (`we.html`) | https://www.vinus.co.kr/we.php?md=info |
+| Work 목록 (`work-list.html`) | https://www.vinus.co.kr/portfolio.php |
+| Work 상세 (`work-detail.html`) | https://www.vinus.co.kr/portfolio.php?md=view&pcode=1 |
+| Blog 목록 (`blog-list.html`) | https://www.vinus.co.kr/story.php |
+| Blog 상세 (`blog-detail.html`) | https://www.vinus.co.kr/story.php?md=view&idx=1 |
+| Request (`request.html`) | https://www.vinus.co.kr/request.php |
+| 헤더/네비 (`header.html`) | https://www.vinus.co.kr (공통) |
+| 푸터 (`footer.html`) | https://www.vinus.co.kr (공통) |
+
+---
+
+### 9-3. 반드시 유지해야 할 디자인 요소
+
+기존 사이트를 보고 아래 항목을 그대로 따릅니다.
+
+#### 전체 공통
+- **폰트:** Pretendard Variable — 기존 사이트와 동일하게 이미 설정됨
+- **기본 텍스트 색상:** `#333333`
+- **배경:** `#ffffff`
+- **여백·간격:** 기존 사이트의 섹션 간 여백, 폰트 크기, 행간(line-height)을 그대로 따를 것
+
+#### 헤더/네비게이션
+- 기존 사이트의 헤더 스타일(위치, 높이, 로고 크기, 메뉴 배치)을 기준으로 작업
+- 모바일에서 full-screen 오버레이 네비게이션 방식 등 기존 동작 참고
+
+#### 홈 페이지
+- 기존 사이트의 포트폴리오 그리드 레이아웃 기준
+- 썸네일 hover 시 오버레이 색상 + 제목 표시 인터랙션 유지
+
+#### Work / Blog 목록
+- 기존 사이트의 카드 배치, 여백, 타이포그래피 기준
+
+#### We 페이지
+- 기존 사이트의 섹션 구성, 이미지 배치, 클라이언트 로고 그리드 기준
+
+#### Request 페이지
+- 기존 사이트의 폼 레이아웃, 필드 스타일, 버튼 디자인 기준
+
+---
+
+### 9-4. 새로 추가하는 것 (기존에 없는 것)
+
+기존 사이트에는 없지만 새 사이트에 추가되는 기능입니다. 디자인은 기존 스타일에 맞게 자연스럽게 녹여주세요.
+
+- **페이지 전환 애니메이션** — 개발자가 처리, 별도 작업 불필요
+- **스크롤 진입 애니메이션** — `data-anim` 속성으로 표시, JS/CSS 패턴은 섹션 0-5 참고
+- **Work/Blog 상세 블록 시스템** — `<BlockRenderer>` 컴포넌트 삽입 위치만 지정, 실제 블록 UI는 개발 완료
+- **CMS 연동** — 개발자가 처리, 퍼블리셔는 더미 데이터로 작업
