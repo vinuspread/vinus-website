@@ -2,11 +2,17 @@
 
 export type MotionType = 'none' | 'fadeIn' | 'slideUp' | 'textReveal' | 'curtainReveal' | 'zoomIn' | 'stagger'
 export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+export type TextVariant = 'body' | 'heading' | 'subheading' | 'caption'
+export type TextFont = 'pretendard' | 'syne'
+export type TextAlign = 'left' | 'center' | 'right'
 
 export interface TextBlock {
   id: string
   type: 'text'
   content: string
+  variant?: TextVariant
+  font?: TextFont
+  align?: TextAlign
   motion: MotionType
   spacing: SpacingType
 }

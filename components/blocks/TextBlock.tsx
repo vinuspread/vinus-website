@@ -16,14 +16,42 @@ const ALLOWED_ATTRIBUTES: sanitizeHtml.IOptions['allowedAttributes'] = {
   '*': ['class'],
 }
 
+const VARIANT_CLASS: Record<string, string> = {
+  body:       'prose prose-lg max-w-none',
+  heading:    'text-4xl md:text-5xl font-bold leading-tight',
+  subheading: 'text-2xl md:text-3xl font-semibold leading-snug',
+  caption:    'text-sm text-gray-400 leading-relaxed',
+}
+
+const FONT_CLASS: Record<string, string> = {
+  pretendard: '',
+  syne:       'font-syne',
+}
+
+const ALIGN_CLASS: Record<string, string> = {
+  left:   'text-left',
+  center: 'text-center',
+  right:  'text-right',
+}
+
 export default function TextBlock({ block }: { block: TextBlockType }) {
-  const clean = sanitizeHtml(block.content, {
+  // preserve plain-text line breaks as <br> before sanitization
+  const withBreaks = block.content.replace(/\n/g, '<br>')
+  const clean = sanitizeHtml(withBreaks, {
     allowedTags: ALLOWED_TAGS,
     allowedAttributes: ALLOWED_ATTRIBUTES,
   })
+
+  const variant = block.variant ?? 'body'
+  const cls = [
+    VARIANT_CLASS[variant],
+    FONT_CLASS[block.font ?? 'pretendard'],
+    ALIGN_CLASS[block.align ?? 'left'],
+  ].filter(Boolean).join(' ')
+
   return (
     <div
-      className="prose prose-lg max-w-none my-8"
+      className={cls}
       dangerouslySetInnerHTML={{ __html: clean }}
     />
   )

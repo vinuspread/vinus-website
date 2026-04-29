@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Block } from '@/types'
+import type { Block, TextVariant, TextFont, TextAlign } from '@/types'
 
 interface Props {
   blocks: Block[]
@@ -166,15 +166,46 @@ export default function BlockEditor({ blocks, onChange }: Props) {
             </div>
 
             {block.type === 'text' && (
-              <textarea
-                value={block.content}
-                onChange={(e) =>
-                  onChange(updateBlock(blocks, index, { ...block, content: e.target.value }))
-                }
-                rows={4}
-                className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
-                placeholder="HTML 또는 텍스트 입력"
-              />
+              <div className="space-y-2">
+                <div className="flex gap-2 flex-wrap">
+                  <select
+                    value={block.variant ?? 'body'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, variant: e.target.value as TextVariant }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="body">본문 (기본)</option>
+                    <option value="heading">제목 — 크고 굵게</option>
+                    <option value="subheading">소제목 — 중간 크기</option>
+                    <option value="caption">캡션 — 작고 흐리게</option>
+                  </select>
+                  <select
+                    value={block.font ?? 'pretendard'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, font: e.target.value as TextFont }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="pretendard">Pretendard (한국어 기본)</option>
+                    <option value="syne">Syne (영문 디스플레이)</option>
+                  </select>
+                  <select
+                    value={block.align ?? 'left'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, align: e.target.value as TextAlign }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="left">왼쪽 정렬</option>
+                    <option value="center">가운데 정렬</option>
+                    <option value="right">오른쪽 정렬</option>
+                  </select>
+                </div>
+                <textarea
+                  value={block.content}
+                  onChange={(e) =>
+                    onChange(updateBlock(blocks, index, { ...block, content: e.target.value }))
+                  }
+                  rows={4}
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
+                  placeholder="텍스트 또는 HTML 입력 (줄바꿈은 Enter 키로)"
+                />
+              </div>
             )}
 
             {block.type === 'image' && (
