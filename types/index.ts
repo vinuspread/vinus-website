@@ -9,6 +9,7 @@ export type ImageSize = 'sm' | 'md' | 'lg' | 'full'
 export type GalleryLayout = 'grid-2' | 'grid-3' | 'sequence' | 'sequence-h'
 export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 export type HeadingWeight = 'light' | 'normal' | 'bold'
+export type EmbedInputType = 'url' | 'code'
 
 export interface TextBlock {
   id: string
@@ -82,7 +83,18 @@ export interface HeadingTextBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock
+export interface EmbedBlock {
+  id: string
+  type: 'embed'
+  embedType: EmbedInputType
+  url: string
+  code: string
+  caption: string
+  motion: MotionType
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
 
 export interface Work {
   id: string

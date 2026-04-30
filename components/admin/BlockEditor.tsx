@@ -26,6 +26,7 @@ const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'image', label: '이미지' },
   { value: 'gallery', label: '갤러리' },
   { value: 'video', label: '비디오' },
+  { value: 'embed', label: '임베드' },
   { value: 'divider', label: '구분선' },
   { value: 'file', label: '파일' },
 ]
@@ -38,6 +39,7 @@ function createBlock(type: BlockType): Block {
     case 'image': return { id, type, src: '', alt: '', motion: 'none', spacing: 'md' }
     case 'gallery': return { id, type, images: [], motion: 'none', spacing: 'md' }
     case 'video': return { id, type, url: '', motion: 'none', spacing: 'md' }
+    case 'embed': return { id, type, embedType: 'url', url: '', code: '', caption: '', motion: 'none', spacing: 'md' }
     case 'divider': return { id, type, height: 40, motion: 'none', spacing: 'none' }
     case 'file': return { id, type, url: '', label: '', motion: 'none', spacing: 'md' }
   }
@@ -434,6 +436,59 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 >
                   + 이미지 추가
                 </button>
+              </div>
+            )}
+
+            {block.type === 'embed' && (
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onChange(updateBlock(blocks, index, { ...block, embedType: 'url' }))}
+                    className={`text-xs px-3 py-1 border ${block.embedType === 'url' ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}
+                  >
+                    URL 입력
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onChange(updateBlock(blocks, index, { ...block, embedType: 'code' }))}
+                    className={`text-xs px-3 py-1 border ${block.embedType === 'code' ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}
+                  >
+                    임베드 코드 붙여넣기
+                  </button>
+                </div>
+
+                {block.embedType === 'url' ? (
+                  <div className="space-y-1">
+                    <input
+                      type="text"
+                      value={block.url}
+                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))}
+                      placeholder="YouTube, Vimeo, Figma, Google Maps URL 입력"
+                      className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                    />
+                    <p className="text-xs text-gray-400">지원: YouTube · Vimeo · Figma · Google Maps · 일반 URL</p>
+                  </div>
+                ) : (
+                  <div className="space-y-1">
+                    <textarea
+                      value={block.code}
+                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, code: e.target.value }))}
+                      rows={5}
+                      placeholder={'플랫폼에서 제공하는 임베드 코드를 붙여넣으세요.\n예: Instagram, Twitter/X, Spotify 등의 <iframe> 또는 <blockquote> 코드'}
+                      className="w-full border border-gray-200 p-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent font-mono"
+                    />
+                    <p className="text-xs text-gray-400">보안상 &lt;script&gt; 태그는 자동으로 제거됩니다.</p>
+                  </div>
+                )}
+
+                <input
+                  type="text"
+                  value={block.caption}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, caption: e.target.value }))}
+                  placeholder="캡션 (선택)"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-600 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                />
               </div>
             )}
 
