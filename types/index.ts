@@ -7,6 +7,8 @@ export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
 export type ImageSize = 'sm' | 'md' | 'lg' | 'full'
 export type GalleryLayout = 'grid-2' | 'grid-3' | 'sequence' | 'sequence-h'
+export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type HeadingWeight = 'light' | 'normal' | 'bold'
 
 export interface TextBlock {
   id: string
@@ -67,7 +69,20 @@ export interface FileBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock
+export interface HeadingTextBlock {
+  id: string
+  type: 'heading-text'
+  heading: string
+  body: string
+  headingSize?: HeadingSize
+  headingWeight?: HeadingWeight
+  font?: TextFont
+  align?: TextAlign
+  motion: MotionType
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock
 
 export interface Work {
   id: string

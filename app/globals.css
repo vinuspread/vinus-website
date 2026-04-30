@@ -151,3 +151,19 @@ html.lenis, html.lenis body {
 .block-stagger.is-visible > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
 .block-stagger.is-visible > *:nth-child(5) { opacity: 1; transform: translateY(0); transition-delay: 0.4s; }
 .block-stagger.is-visible > *:nth-child(n+6) { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
+
+/* heading-text block staggered reveal */
+.ht-block-heading,
+.ht-block-body {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ht-block-body {
+  transition-delay: 0.3s;
+}
+.ht-block.is-visible .ht-block-heading,
+.ht-block.is-visible .ht-block-body {
+  opacity: 1;
+  transform: translateY(0);
+}

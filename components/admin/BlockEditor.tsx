@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Block, TextVariant, TextFont, TextAlign, ImageSize, GalleryLayout, ImageLayout } from '@/types'
+import type { HeadingSize, HeadingWeight } from '@/types'
 
 interface Props {
   blocks: Block[]
@@ -21,6 +22,7 @@ const MOTION_DESC: Record<string, string> = {
 type BlockType = Block['type']
 const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'text', label: '텍스트' },
+  { value: 'heading-text', label: '제목+텍스트' },
   { value: 'image', label: '이미지' },
   { value: 'gallery', label: '갤러리' },
   { value: 'video', label: '비디오' },
@@ -32,6 +34,7 @@ function createBlock(type: BlockType): Block {
   const id = crypto.randomUUID()
   switch (type) {
     case 'text': return { id, type, content: '', motion: 'none', spacing: 'md' }
+    case 'heading-text': return { id, type, heading: '', body: '', headingSize: 'md', headingWeight: 'normal', font: 'pretendard', align: 'left', motion: 'none', spacing: 'md' }
     case 'image': return { id, type, src: '', alt: '', motion: 'none', spacing: 'md' }
     case 'gallery': return { id, type, images: [], motion: 'none', spacing: 'md' }
     case 'video': return { id, type, url: '', motion: 'none', spacing: 'md' }
@@ -169,6 +172,64 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 </button>
               </div>
             </div>
+
+            {block.type === 'heading-text' && (
+              <div className="space-y-3">
+                <div className="flex gap-2 flex-wrap">
+                  <select
+                    value={block.headingSize ?? 'md'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, headingSize: e.target.value as HeadingSize }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="sm">제목 작게</option>
+                    <option value="md">제목 중간</option>
+                    <option value="lg">제목 크게</option>
+                    <option value="xl">제목 매우 크게</option>
+                    <option value="2xl">제목 최대</option>
+                  </select>
+                  <select
+                    value={block.headingWeight ?? 'normal'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, headingWeight: e.target.value as HeadingWeight }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="light">가늘게 (Light)</option>
+                    <option value="normal">보통 (Normal)</option>
+                    <option value="bold">굵게 (Bold)</option>
+                  </select>
+                  <select
+                    value={block.font ?? 'pretendard'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, font: e.target.value as TextFont }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="pretendard">Pretendard (한국어)</option>
+                    <option value="syne">Syne (영문)</option>
+                  </select>
+                  <select
+                    value={block.align ?? 'left'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, align: e.target.value as TextAlign }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="left">왼쪽 정렬</option>
+                    <option value="center">가운데 정렬</option>
+                    <option value="right">오른쪽 정렬</option>
+                  </select>
+                </div>
+                <input
+                  type="text"
+                  value={block.heading}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, heading: e.target.value }))}
+                  placeholder="제목 입력"
+                  className="w-full border-b border-gray-300 py-2 text-sm font-medium text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                />
+                <textarea
+                  value={block.body}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, body: e.target.value }))}
+                  rows={4}
+                  placeholder="본문 텍스트 입력 (줄바꿈은 Enter 키로)"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-600 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
+                />
+              </div>
+            )}
 
             {block.type === 'text' && (
               <div className="space-y-2">

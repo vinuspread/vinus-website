@@ -5,6 +5,7 @@ import GalleryBlock from './GalleryBlock'
 import VideoBlock from './VideoBlock'
 import DividerBlock from './DividerBlock'
 import FileBlock from './FileBlock'
+import HeadingTextBlock from './HeadingTextBlock'
 import BlockMotion from './BlockMotion'
 
 export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
@@ -13,21 +14,24 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
       {blocks.map(block => {
         const inner = (() => {
           switch (block.type) {
-            case 'text':    return <TextBlock key={block.id} block={block} />
-            case 'image':   return <ImageBlock key={block.id} block={block} />
-            case 'gallery': return <GalleryBlock key={block.id} block={block} />
-            case 'video':   return <VideoBlock key={block.id} block={block} />
-            case 'divider': return <DividerBlock key={block.id} block={block} />
-            case 'file':    return <FileBlock key={block.id} block={block} />
-            default:        return null
+            case 'text':         return <TextBlock key={block.id} block={block} />
+            case 'image':        return <ImageBlock key={block.id} block={block} />
+            case 'gallery':      return <GalleryBlock key={block.id} block={block} />
+            case 'video':        return <VideoBlock key={block.id} block={block} />
+            case 'divider':      return <DividerBlock key={block.id} block={block} />
+            case 'file':         return <FileBlock key={block.id} block={block} />
+            case 'heading-text': return <HeadingTextBlock key={block.id} block={block} />
+            default:             return null
           }
         })()
         if (!inner) return null
         return (
           <div key={block.id} className={`block-spacing-${block.spacing ?? 'md'}`}>
-            <BlockMotion motion={block.motion}>
-              {inner}
-            </BlockMotion>
+            {block.type === 'heading-text' ? inner : (
+              <BlockMotion motion={block.motion}>
+                {inner}
+              </BlockMotion>
+            )}
           </div>
         )
       })}
