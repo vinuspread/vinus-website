@@ -73,7 +73,15 @@ export default function WorkForm({ initialData }: Props) {
 
     startTransition(async () => {
       try {
-        await saveWork(data)
+        const result = await saveWork(data)
+        const goToList = confirm('저장이 완료되었습니다.\n목록으로 이동하시겠습니까?')
+        if (goToList) {
+          router.push('/admin/work')
+        } else if (!data.id) {
+          router.replace(`/admin/work/${result.id}`)
+        } else {
+          router.refresh()
+        }
       } catch (err) {
         if (err && typeof err === 'object' && 'digest' in err) throw err
         setError(err instanceof Error ? err.message : '저장 실패')

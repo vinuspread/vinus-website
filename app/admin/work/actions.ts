@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import type { Block } from '@/types'
 
 export interface WorkFormData {
@@ -20,7 +19,7 @@ export interface WorkFormData {
   is_published: boolean
 }
 
-export async function saveWork(data: WorkFormData) {
+export async function saveWork(data: WorkFormData): Promise<{ id: string; slug: string }> {
   const supabase = await createClient()
   const payload = {
     title: data.title,
@@ -39,18 +38,22 @@ export async function saveWork(data: WorkFormData) {
   if (data.id) {
     const { error } = await supabase.from('work').update(payload).eq('id', data.id)
     if (error) throw new Error(error.message)
+    revalidatePath('/work')
+    revalidatePath(`/work/${data.slug}`, 'page')
+    revalidatePath('/sitemap.xml')
+    return { id: data.id, slug: data.slug }
   } else {
-    const { error } = await supabase.from('work').insert(payload)
+    const { data: inserted, error } = await supabase.from('work').insert(payload).select('id').single()
     if (error) throw new Error(error.message)
+    revalidatePath('/work')
+    revalidatePath(`/work/${data.slug}`, 'page')
+    revalidatePath('/sitemap.xml')
+    return { id: inserted.id, slug: data.slug }
   }
-
-  revalidatePath('/work')
-  revalidatePath(`/work/${data.slug}`, 'page')
-  revalidatePath('/sitemap.xml')
-  redirect('/admin/work')
 }
 
 export async function deleteWork(id: string, slug: string) {
+  const { redirect } = await import('next/navigation')
   const supabase = await createClient()
   const { error } = await supabase.from('work').delete().eq('id', id)
   if (error) throw new Error(error.message)
