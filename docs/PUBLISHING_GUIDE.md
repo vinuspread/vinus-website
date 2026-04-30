@@ -5,6 +5,22 @@
 
 ---
 
+> ## 🚨 브랜치 필독 — 반드시 지켜주세요
+>
+> **작업 브랜치: `ui-design`**
+>
+> ```bash
+> git checkout ui-design   # 작업 시작 전 반드시 실행
+> ```
+>
+> - **`main` 브랜치에는 절대 직접 push하지 마세요.** 사이트가 즉시 배포되는 브랜치입니다.
+> - 모든 작업은 `ui-design` 브랜치에서 진행하고, 완성 후 PR(Pull Request)로 제출합니다.
+> - 현재 브랜치 확인: `git branch` (앞에 `*` 표시된 브랜치가 현재 위치)
+>
+> **잘못된 브랜치에서 작업했다면 개발자에게 즉시 연락하세요.**
+
+---
+
 > ## ⚠️ 디자인 기준
 >
 > **기존 사이트 https://www.vinus.co.kr 을 기준으로 디자인하세요.**  
@@ -420,8 +436,27 @@ import BlockRenderer from '@/components/blocks/BlockRenderer'
 
 ```
 GitHub: https://github.com/vinuspread/vinus-website
-Branch: main (보호됨)
-작업 브랜치: design/* 로 생성 후 PR
+Branch: main     ← 배포 브랜치, 직접 push 금지
+작업 브랜치: ui-design  ← 모든 UI 작업은 여기서
+```
+
+### 작업 시작 순서
+
+```bash
+git clone https://github.com/vinuspread/vinus-website.git
+cd vinus-website
+git checkout ui-design   # ← 이 브랜치에서 작업
+npm install
+npm run dev
+```
+
+### 작업 완료 후 제출
+
+```bash
+git add .
+git commit -m "feat: 작업 내용 요약"
+git push origin ui-design   # ui-design 브랜치로 push
+# GitHub에서 ui-design → main 으로 Pull Request 생성
 ```
 
 ### 로컬 개발 환경 실행
