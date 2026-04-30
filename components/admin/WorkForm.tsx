@@ -185,13 +185,18 @@ export default function WorkForm({ initialData }: Props) {
           )}
         </div>
 
-        <label className="text-sm text-gray-500 pt-3">공개</label>
-        <input
-          name="is_published"
-          type="checkbox"
-          defaultChecked={initialData?.is_published ?? false}
-          className="mt-3"
-        />
+        <div className="col-span-2 flex items-center gap-3 py-2">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              name="is_published"
+              type="checkbox"
+              defaultChecked={initialData?.is_published ?? false}
+              className="sr-only peer"
+            />
+            <div className="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-black transition-colors after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4" />
+          </label>
+          <span className="text-sm text-gray-500">공개</span>
+        </div>
 
         <label className="text-sm text-gray-500 pt-3">Meta 타이틀</label>
         <input
