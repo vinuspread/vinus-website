@@ -11,10 +11,10 @@ interface CursorContextType {
 
 const CursorContext = createContext<CursorContextType | undefined>(undefined)
 
+const noop = { setCursorState: () => {} }
+
 export function useCursor() {
-  const context = useContext(CursorContext)
-  if (!context) throw new Error('useCursor must be used within CursorProvider')
-  return context
+  return useContext(CursorContext) ?? noop
 }
 
 export function CursorProvider({ children }: { children: ReactNode }) {
