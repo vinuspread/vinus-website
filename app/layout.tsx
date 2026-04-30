@@ -1,5 +1,31 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import JsonLd from '@/components/seo/JsonLd'
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
+
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '바이너스프레드',
+  alternateName: 'VINUS SPREAD',
+  url: SITE_URL,
+  logo: `${SITE_URL}/images/@profile.png`,
+  description: '웹 개발 및 디자인 전문 스튜디오. 맞춤형 웹사이트 제작과 창의적인 디자인 솔루션을 제공합니다.',
+  address: { '@type': 'PostalAddress', addressCountry: 'KR' },
+}
+
+const websiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: '바이너스프레드',
+  url: SITE_URL,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/work` },
+    'query-input': 'required name=search_term_string',
+  },
+}
 
 export const metadata: Metadata = {
   title: {
@@ -28,6 +54,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body>
+        <JsonLd data={organizationLd} />
+        <JsonLd data={websiteLd} />
         {children}
       </body>
     </html>

@@ -3,11 +3,14 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
+import JsonLd from '@/components/seo/JsonLd'
 import { getMetaTitle, getMetaDescription, formatDate } from '@/lib/utils'
 import type { Blog } from '@/types'
 import { FadeUp, TextReveal, MagneticLink } from '@/components/ui/MotionWrapper'
 
 export const revalidate = 86400
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -28,15 +31,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient()
   const { data: blog } = await supabase
     .from('blog')
-    .select('title, meta_title, meta_description')
+    .select('title, meta_title, meta_description, thumbnail_url, blocks')
     .eq('slug', slug)
     .single()
 
   if (!blog) return {}
 
+  const description = getMetaDescription(blog.meta_description, blog.blocks as Blog['blocks'])
+
   return {
     title: getMetaTitle(blog.title, blog.meta_title),
-    description: getMetaDescription(blog.meta_description),
+    description,
+    openGraph: {
+      type: 'article',
+      images: blog.thumbnail_url ? [blog.thumbnail_url] : [],
+    },
   }
 }
 
@@ -53,9 +62,38 @@ export default async function BlogDetailPage({ params }: Props) {
   if (!blog) notFound()
 
   const typedBlog = blog as Blog
+  const description = getMetaDescription(typedBlog.meta_description, typedBlog.blocks ?? [])
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: typedBlog.title,
+    description,
+    url: `${SITE_URL}/blog/${typedBlog.slug}`,
+    datePublished: typedBlog.created_at,
+    dateModified: typedBlog.created_at,
+    ...(typedBlog.thumbnail_url && { image: typedBlog.thumbnail_url }),
+    author: {
+      '@type': 'Organization',
+      name: '바이너스프레드',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '바이너스프레드',
+      url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/@profile.png` },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${SITE_URL}/blog/${typedBlog.slug}`,
+    },
+  }
 
   return (
     <article className="pb-32 bg-white">
+      <JsonLd data={jsonLd} />
+
       <header className="relative pt-40 pb-20 md:pt-56 md:pb-24 px-6 md:px-12 max-w-[1200px] mx-auto border-b border-gray-100">
         <div className="max-w-4xl mx-auto text-center">
           <FadeUp delay={0.2} className="flex items-center justify-center gap-4 mb-10">
@@ -87,8 +125,7 @@ export default async function BlogDetailPage({ params }: Props) {
           </MagneticLink>
         </FadeUp>
       )}
-      
-      {/* Back to List */}
+
       <FadeUp delay={0.4} className="mt-40 text-center">
         <MagneticLink href="/blog" className="inline-block text-sm tracking-[0.2em] uppercase text-gray-400 hover:text-black border-b border-transparent hover:border-black pb-2 transition-all">
           Back to Journal
@@ -97,5 +134,3 @@ export default async function BlogDetailPage({ params }: Props) {
     </article>
   )
 }
-
-

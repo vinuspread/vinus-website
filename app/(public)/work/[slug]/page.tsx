@@ -3,11 +3,14 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
+import JsonLd from '@/components/seo/JsonLd'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import type { Work } from '@/types'
 import { FadeUp, TextReveal, MagneticLink } from '@/components/ui/MotionWrapper'
 
 export const revalidate = 86400
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -28,15 +31,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient()
   const { data: work } = await supabase
     .from('work')
-    .select('title, meta_title, meta_description, thumbnail_url')
+    .select('title, meta_title, meta_description, thumbnail_url, blocks')
     .eq('slug', slug)
     .single()
 
   if (!work) return {}
 
+  const description = getMetaDescription(work.meta_description, work.blocks as Work['blocks'])
+
   return {
     title: getMetaTitle(work.title, work.meta_title),
-    description: getMetaDescription(work.meta_description),
+    description,
     openGraph: {
       images: work.thumbnail_url ? [work.thumbnail_url] : [],
     },
@@ -56,9 +61,30 @@ export default async function WorkDetailPage({ params }: Props) {
   if (!work) notFound()
 
   const typedWork = work as Work
+  const description = getMetaDescription(typedWork.meta_description, typedWork.blocks ?? [])
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: typedWork.title,
+    description,
+    url: `${SITE_URL}/work/${typedWork.slug}`,
+    ...(typedWork.thumbnail_url && { image: typedWork.thumbnail_url }),
+    ...(typedWork.client_name && { producer: { '@type': 'Organization', name: typedWork.client_name } }),
+    ...(typedWork.category && { keywords: typedWork.category }),
+    ...(typedWork.period && { temporalCoverage: typedWork.period }),
+    dateCreated: typedWork.created_at,
+    creator: {
+      '@type': 'Organization',
+      name: '바이너스프레드',
+      url: SITE_URL,
+    },
+  }
 
   return (
     <article className="pb-32 bg-white">
+      <JsonLd data={jsonLd} />
+
       {/* Hero Header for Work Detail */}
       <header className="relative pt-40 pb-24 md:pt-56 md:pb-32 px-6 md:px-12 max-w-[1600px] mx-auto border-b border-gray-100">
         <div className="max-w-6xl">
@@ -70,21 +96,21 @@ export default async function WorkDetailPage({ params }: Props) {
           <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-light tracking-tighter leading-[1] uppercase">
             <TextReveal text={typedWork.title} delay={0.4} />
           </h1>
-          
+
           {/* Metadata Row */}
           <FadeUp delay={1} className="mt-16 pt-16 border-t border-gray-100">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-sm md:text-base">
               <div>
                 <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Client</p>
-                <p className="font-light text-black text-lg">바이너스프레드</p>
+                <p className="font-light text-black text-lg">{typedWork.client_name || '바이너스프레드'}</p>
               </div>
               <div>
                 <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Role</p>
-                <p className="font-light text-black text-lg">UX/UI, Development</p>
+                <p className="font-light text-black text-lg">{typedWork.subtitle || 'UX/UI, Development'}</p>
               </div>
               <div>
-                <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Year</p>
-                <p className="font-light text-black text-lg">{new Date(typedWork.created_at).getFullYear()}</p>
+                <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Period</p>
+                <p className="font-light text-black text-lg">{typedWork.period || new Date(typedWork.created_at).getFullYear()}</p>
               </div>
               <div>
                 <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Link</p>
@@ -97,12 +123,11 @@ export default async function WorkDetailPage({ params }: Props) {
         </div>
       </header>
 
-      {/* Content Blocks (Do not modify BlockRenderer as instructed) */}
       <div className="mt-24 md:mt-32 px-4 md:px-0 max-w-6xl mx-auto">
         <BlockRenderer blocks={typedWork.blocks ?? []} />
       </div>
-      
-      {/* Next Project Nav (Global Agency Style) */}
+
+      {/* Next Project Nav */}
       <div className="mt-40 border-t border-black bg-black text-white px-6 md:px-12 py-32 md:py-48 flex flex-col items-center justify-center text-center overflow-hidden relative">
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none" />
         <FadeUp delay={0.2} className="relative z-10 w-full">
@@ -117,5 +142,3 @@ export default async function WorkDetailPage({ params }: Props) {
     </article>
   )
 }
-
-
