@@ -215,6 +215,7 @@ export default function BlogForm({ initialData }: Props) {
             placeholder="비워두면 제목이 자동 사용됩니다"
             maxLength={60}
             className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+            style={{ width: '100%' }}
           />
           <p className="text-xs text-gray-400">권장 60자 이내 · 비우면 자동 생성</p>
         </div>
@@ -226,7 +227,7 @@ export default function BlogForm({ initialData }: Props) {
             defaultValue={initialData?.meta_description ?? ''}
             placeholder="비워두면 콘텐츠에서 자동 추출됩니다"
             maxLength={160}
-            rows={3}
+            rows={2}
             className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent resize-none"
           />
           <p className="text-xs text-gray-400">권장 120~160자 · 비우면 첫 번째 텍스트 블록에서 자동 추출</p>
