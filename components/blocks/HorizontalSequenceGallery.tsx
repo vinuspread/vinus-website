@@ -7,7 +7,7 @@ interface Props {
   images: { src: string; alt: string }[]
 }
 
-export default function HorizontalSequenceGallery({ images }: Props) {
+export default function HorizontalSequenceGallery({ images = [] }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import BlogCard from '@/components/blog/BlogCard'
 import type { Blog } from '@/types'
+import { FadeUp, LetterReveal, MagneticLink } from '@/components/ui/MotionWrapper'
 
 export const revalidate = 3600
 
@@ -39,30 +40,50 @@ export default async function BlogPage({ searchParams }: Props) {
   ]
 
   return (
-    <div className="px-8 max-w-7xl mx-auto pb-24">
-      <h1 className="text-4xl font-bold mb-8 tracking-tight">Blog</h1>
-      <nav className="flex gap-6 mb-12 border-b border-gray-200" aria-label="블로그 카테고리">
-        {tabs.map(tab => (
-          <Link
-            key={tab.value}
-            href={tab.value === 'all' ? '/blog' : `/blog?category=${tab.value}`}
-            className={`pb-3 text-sm tracking-wider transition-colors border-b-2 -mb-px ${
-              activeCategory === tab.value
-                ? 'border-black text-black'
-                : 'border-transparent text-gray-400 hover:text-black'
-            }`}
-          >
-            {tab.label}
-          </Link>
-        ))}
-      </nav>
-      <ul className="space-y-0">
-        {((blogs as Blog[]) ?? []).map(blog => (
-          <li key={blog.id}>
-            <BlogCard blog={blog} />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <main className="pt-32 md:pt-48 pb-32 min-h-screen bg-gray-50/50">
+      <div className="px-6 md:px-12 max-w-[1200px] mx-auto text-center">
+        <header className="mb-16 md:mb-24 flex flex-col items-center">
+          <FadeUp delay={0.2}>
+            <p className="text-sm text-gray-400 tracking-[0.2em] uppercase mb-4 font-syne">
+              Our Thoughts
+            </p>
+          </FadeUp>
+          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-syne font-bold tracking-tighter leading-none uppercase text-black">
+            <LetterReveal text="Journal." delay={0.4} className="justify-center" />
+          </h1>
+        </header>
+
+        <FadeUp delay={0.8}>
+          <nav className="flex justify-center gap-8 md:gap-16 mb-16 md:mb-24" aria-label="블로그 카테고리">
+            {tabs.map(tab => (
+              <MagneticLink
+                key={tab.value}
+                href={tab.value === 'all' ? '/blog' : `/blog?category=${tab.value}`}
+                className={`relative pb-3 text-sm md:text-lg tracking-widest uppercase transition-colors ${
+                  activeCategory === tab.value
+                    ? 'text-black font-medium'
+                    : 'text-gray-400 hover:text-gray-900'
+                }`}
+              >
+                {tab.label}
+                {activeCategory === tab.value && (
+                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-black" />
+                )}
+              </MagneticLink>
+            ))}
+          </nav>
+        </FadeUp>
+
+        <ul className="space-y-0 border-t border-gray-200">
+          {((blogs as Blog[]) ?? []).map((blog, index) => (
+            <li key={blog.id}>
+              <BlogCard blog={blog} index={index} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </main>
   )
 }
+
+

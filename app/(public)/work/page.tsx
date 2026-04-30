@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import WorkCard from '@/components/work/WorkCard'
 import type { Work } from '@/types'
+import { FadeUp, LetterReveal } from '@/components/ui/MotionWrapper'
 
 export const revalidate = 3600
 
@@ -19,13 +20,30 @@ export default async function WorkPage() {
     .order('sort_order', { ascending: true })
 
   return (
-    <div className="px-8 max-w-7xl mx-auto pb-24">
-      <h1 className="text-4xl font-bold mb-12 tracking-tight">Work</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {((works as Work[]) ?? []).map(work => (
-          <WorkCard key={work.id} work={work} />
-        ))}
+    <main className="pt-32 md:pt-48 pb-24 min-h-screen bg-black text-white text-center">
+      <div className="px-6 md:px-12 max-w-[1600px] mx-auto">
+        <header className="mb-16 md:mb-32 flex flex-col items-center gap-12">
+          <div>
+            <h1 className="text-7xl md:text-9xl lg:text-[11rem] font-syne font-bold tracking-tighter leading-none uppercase text-white">
+              <LetterReveal text="Selected Works." delay={0.2} className="justify-center" />
+            </h1>
+          </div>
+          <FadeUp delay={0.8} className="max-w-xl">
+            <p className="text-xl md:text-2xl text-gray-400 font-light leading-relaxed">
+              우리의 크리에이티브가 담긴 핵심 프로젝트들을 소개합니다. 디자인과 기술의 완벽한 밸런스를 경험해보세요.
+            </p>
+          </FadeUp>
+        </header>
+
+        {/* Portfolio Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-0">
+          {((works as Work[]) ?? []).map((work, index) => (
+            <WorkCard key={work.id} work={work} index={index} />
+          ))}
+        </div>
       </div>
-    </div>
+    </main>
   )
 }
+
+

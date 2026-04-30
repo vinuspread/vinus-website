@@ -10,13 +10,14 @@ const GRID_CLASS: Record<string, string> = {
 
 export default function GalleryBlock({ block }: { block: GalleryBlockType }) {
   const layout = block.layout ?? 'grid-3'
+  const images = block.images ?? []
 
-  if (layout === 'sequence') return <SequenceGallery images={block.images} />
-  if (layout === 'sequence-h') return <HorizontalSequenceGallery images={block.images} />
+  if (layout === 'sequence') return <SequenceGallery images={images} />
+  if (layout === 'sequence-h') return <HorizontalSequenceGallery images={images} />
 
   return (
     <div className={GRID_CLASS[layout]}>
-      {block.images.map((img, i) => (
+      {images.map((img, i) => (
         <div key={img.src || i} className="relative aspect-square overflow-hidden">
           <Image
             src={img.src}
