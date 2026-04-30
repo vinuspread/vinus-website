@@ -59,7 +59,7 @@ export default function HeadingTextBlock({ block }: { block: HeadingTextBlockTyp
         {block.heading}
       </h2>
       {block.body && (
-        <p className={`ht-block-body mt-6 text-base md:text-lg leading-relaxed text-gray-600 whitespace-pre-wrap ${fontCls}`}>
+        <p className={`ht-block-body mt-6 text-xl leading-relaxed text-gray-600 whitespace-pre-wrap ${fontCls}`}>
           {block.body}
         </p>
       )}

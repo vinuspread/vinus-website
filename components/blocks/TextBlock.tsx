@@ -17,7 +17,7 @@ const ALLOWED_ATTRIBUTES: sanitizeHtml.IOptions['allowedAttributes'] = {
 }
 
 const VARIANT_CLASS: Record<string, string> = {
-  body:       'prose prose-lg max-w-none',
+  body:       'prose prose-xl max-w-none',
   heading:    'text-4xl md:text-5xl font-bold leading-tight',
   subheading: 'text-2xl md:text-3xl font-semibold leading-snug',
   caption:    'text-sm text-gray-400 leading-relaxed',
