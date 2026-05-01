@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-mine-shaft: #2a2a2a;
+  --color-gallery:    #f0f0f0;
+  --color-alto:       #d6d6d6;
+  --color-ash:        #ccc4b9;
+
+  /* Spacing Tokens */
+  --spacing-page-padding: 40px;
+  --spacing-column:       38.4px;
+
+  /* Custom Easings */
+  --ease-expo-out: cubic-bezier(.075, .82, .165, 1);
+  --ease-image:    cubic-bezier(.4, .4, .1, 1);
+  --ease-fill:     cubic-bezier(.3, .3, 0, 1);
+}
+
+/* Base Styles */
+@layer base {
+  html, body {
+    @apply bg-gallery text-mine-shaft antialiased overflow-x-hidden;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    text-transform: uppercase;
+  }
+}
+
+/* ------------------------------------------------------------
+   Animation System (Refactored based on dashdigital.studio)
+   ------------------------------------------------------------ */
+
+/* Container for reveal */
+.anim-clip {
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Base reveal class */
+.anim-move-up {
+  display: block;
+  transform: translateY(120%);
+  transition: transform 1.5s var(--ease-expo-out);
+  transition-delay: var(--delay, 0s);
+}
+
+/* When parent (anim-wrap) gets .ready */
+.anim-wrap.ready .anim-move-up {
+  transform: translateY(0);
+}
+
+/* Image reveal */
+.anim-move-up-img {
+  transform: translateY(120%);
+  transition: transform 2.4s var(--ease-image);
+  transition-delay: var(--delay, 0s);
+}
+.anim-wrap.ready .anim-move-up-img {
+  transform: translateY(0);
+}
+
+/* Fill animation (dividers) */
+.anim-fill-width {
+  width: 0;
+  transition: width 1s var(--ease-fill);
+  transition-delay: var(--delay, 0s);
+}
+.anim-wrap.ready .anim-fill-width {
+  width: 100%;
+}
+
+/* Header scroll interaction */
+.nav-hidden {
+  transform: translateY(-56px); /* height of nav */
+  transition: transform 1s cubic-bezier(.215,.61,.355,1);
+}
+
+/* Custom Cursor */
+.cursor {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  background: var(--color-mine-shaft);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+.cursor-hover {
+  width: 80px;
+  height: 80px;
+  background: rgba(42, 42, 42, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 10px;
+}
