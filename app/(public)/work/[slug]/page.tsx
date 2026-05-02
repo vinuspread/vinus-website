@@ -86,34 +86,37 @@ export default async function WorkDetailPage({ params }: Props) {
     <article>
       <JsonLd data={jsonLd} />
 
-      {/* Sticky Hero */}
+      {/* Fixed Hero — Lenis smooth scroll과 호환되는 fixed 방식 */}
       {typedWork.hero_url && (
-        <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ zIndex: 0 }}>
-          {typedWork.hero_type === 'video' ? (
-            <video
-              src={typedWork.hero_url}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          ) : (
-            <Image
-              src={typedWork.hero_url}
-              alt={typedWork.title}
-              fill
-              priority
-              className="object-cover"
-              sizes="100vw"
-            />
-          )}
-          {/* 하단 페이드 — 콘텐츠 연결 */}
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white to-transparent" />
-        </div>
+        <>
+          <div className="fixed inset-0 w-full h-screen overflow-hidden" style={{ zIndex: 1 }}>
+            {typedWork.hero_type === 'video' ? (
+              <video
+                src={typedWork.hero_url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <Image
+                src={typedWork.hero_url}
+                alt={typedWork.title}
+                fill
+                priority
+                className="object-cover"
+                sizes="100vw"
+              />
+            )}
+            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white to-transparent" />
+          </div>
+          {/* 히어로 높이만큼 스크롤 공간 확보 */}
+          <div className="h-screen" />
+        </>
       )}
 
-      {/* Content scrolls over hero */}
+      {/* Content scrolls over fixed hero */}
       <div className="relative bg-white pb-32" style={{ zIndex: 10 }}>
 
       {/* Hero Header for Work Detail */}
