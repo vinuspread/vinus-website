@@ -28,6 +28,8 @@ export default async function AdminWorkEditPage({ params }: Props) {
           client_name: typedWork.client_name ?? '',
           category: typedWork.category ?? 'web',
           period: typedWork.period ?? '',
+          hero_url: typedWork.hero_url ?? '',
+          hero_type: typedWork.hero_type ?? 'image',
           thumbnail_url: typedWork.thumbnail_url ?? '',
           blocks: typedWork.blocks ?? [],
           meta_title: typedWork.meta_title ?? '',

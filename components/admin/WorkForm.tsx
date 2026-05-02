@@ -19,7 +19,10 @@ export default function WorkForm({ initialData }: Props) {
   const [error, setError] = useState('')
   const [blocks, setBlocks] = useState<Block[]>(initialData?.blocks ?? [])
   const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url ?? '')
+  const [heroUrl, setHeroUrl] = useState(initialData?.hero_url ?? '')
+  const [heroType, setHeroType] = useState<'image' | 'video'>(initialData?.hero_type ?? 'image')
   const [uploading, setUploading] = useState(false)
+  const [heroUploading, setHeroUploading] = useState(false)
 
   function toSlug(title: string) {
     return title
@@ -29,24 +32,40 @@ export default function WorkForm({ initialData }: Props) {
       .replace(/-+/g, '-')
   }
 
+  async function uploadFile(file: File): Promise<string> {
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+    const json = await res.json() as { url?: string; error?: string }
+    if (!res.ok || !json.url) throw new Error(json.error ?? '업로드 실패')
+    return json.url
+  }
+
   async function uploadThumbnail(e: { target: { files?: FileList | null } }) {
     const file = e.target.files?.[0]
     if (!file) return
     setUploading(true)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-      const json = await res.json() as { url?: string; error?: string }
-      if (!res.ok || !json.url) {
-        setError(json.error ?? '업로드 실패')
-      } else {
-        setThumbnailUrl(json.url)
-      }
-    } catch {
-      setError('업로드 중 오류가 발생했습니다.')
+      setThumbnailUrl(await uploadFile(file))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '업로드 실패')
     } finally {
       setUploading(false)
+    }
+  }
+
+  async function uploadHero(e: { target: { files?: FileList | null } }) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setHeroUploading(true)
+    try {
+      const url = await uploadFile(file)
+      setHeroUrl(url)
+      setHeroType(file.type.startsWith('video/') ? 'video' : 'image')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '업로드 실패')
+    } finally {
+      setHeroUploading(false)
     }
   }
 
@@ -64,6 +83,8 @@ export default function WorkForm({ initialData }: Props) {
       client_name: get('client_name'),
       category: get('category'),
       period: get('period'),
+      hero_url: heroUrl,
+      hero_type: heroType,
       thumbnail_url: thumbnailUrl,
       blocks,
       meta_title: get('meta_title'),
@@ -108,12 +129,7 @@ export default function WorkForm({ initialData }: Props) {
       <div className="grid grid-cols-[160px_1fr] gap-4 items-start">
 
         {/* 슬러그 — 숨김, 제목에서 자동생성 */}
-        <input
-          name="slug"
-          type="hidden"
-          defaultValue={initialData?.slug ?? ''}
-          id="slug-input"
-        />
+        <input name="slug" type="hidden" defaultValue={initialData?.slug ?? ''} id="slug-input" />
 
         <label className="text-sm text-gray-500 pt-3">제목 *</label>
         <input
@@ -130,40 +146,51 @@ export default function WorkForm({ initialData }: Props) {
         />
 
         <label className="text-sm text-gray-500 pt-3">서브제목</label>
-        <input
-          name="subtitle"
-          defaultValue={initialData?.subtitle ?? ''}
-          placeholder="예: 브랜드 아이덴티티 & 웹사이트"
-          className={inputClass}
-        />
+        <input name="subtitle" defaultValue={initialData?.subtitle ?? ''} placeholder="예: 브랜드 아이덴티티 & 웹사이트" className={inputClass} />
 
         <label className="text-sm text-gray-500 pt-3">클라이언트</label>
-        <input
-          name="client_name"
-          defaultValue={initialData?.client_name ?? ''}
-          placeholder="클라이언트명"
-          className={inputClass}
-        />
+        <input name="client_name" defaultValue={initialData?.client_name ?? ''} placeholder="클라이언트명" className={inputClass} />
 
         <label className="text-sm text-gray-500 pt-3">카테고리</label>
-        <select
-          name="category"
-          defaultValue={initialData?.category ?? 'web'}
-          className={inputClass}
-        >
-          {CATEGORIES.map(c => (
-            <option key={c} value={c}>{c}</option>
-          ))}
+        <select name="category" defaultValue={initialData?.category ?? 'web'} className={inputClass}>
+          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
 
         <label className="text-sm text-gray-500 pt-3">개발기간</label>
-        <input
-          name="period"
-          defaultValue={initialData?.period ?? ''}
-          placeholder="예: 2024.01 ~ 2024.03"
-          className={inputClass}
-        />
+        <input name="period" defaultValue={initialData?.period ?? ''} placeholder="예: 2024.01 ~ 2024.03" className={inputClass} />
 
+        {/* 히어로 영역 */}
+        <label className="text-sm text-gray-500 pt-3">히어로</label>
+        <div className="space-y-2">
+          <div className="flex gap-2 items-center">
+            <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100">
+              {heroUploading ? '업로드 중...' : '이미지 / 동영상 선택'}
+              <input type="file" accept="image/*,video/*" className="hidden" onChange={uploadHero} />
+            </label>
+            {heroUrl && (
+              <button type="button" onClick={() => { setHeroUrl(''); setHeroType('image') }} className="text-xs text-red-400 hover:text-red-600">
+                삭제
+              </button>
+            )}
+          </div>
+          {heroUrl && (
+            <div className="relative w-full aspect-video overflow-hidden bg-gray-100">
+              {heroType === 'video' ? (
+                // eslint-disable-next-line jsx-a11y/media-has-caption
+                <video src={heroUrl} muted loop className="w-full h-full object-cover" />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={heroUrl} alt="hero preview" className="w-full h-full object-cover" />
+              )}
+              <span className="absolute top-2 left-2 text-xs bg-black/60 text-white px-2 py-0.5">
+                {heroType === 'video' ? '동영상' : '이미지'}
+              </span>
+            </div>
+          )}
+          <p className="text-xs text-gray-400">상세 페이지 최상단 전체화면 영역 · 이미지 또는 동영상</p>
+        </div>
+
+        {/* 썸네일 */}
         <label className="text-sm text-gray-500 pt-3">썸네일</label>
         <div className="space-y-2">
           <div className="flex gap-2 items-center">
@@ -187,12 +214,7 @@ export default function WorkForm({ initialData }: Props) {
 
         <div className="col-span-2 flex items-center gap-3 py-2">
           <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              name="is_published"
-              type="checkbox"
-              defaultChecked={initialData?.is_published ?? false}
-              className="sr-only peer"
-            />
+            <input name="is_published" type="checkbox" defaultChecked={initialData?.is_published ?? false} className="sr-only peer" />
             <div className="w-10 h-6 bg-gray-200 rounded-full peer peer-checked:bg-black transition-colors after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4" />
           </label>
           <span className="text-sm text-gray-500">공개</span>
@@ -200,26 +222,13 @@ export default function WorkForm({ initialData }: Props) {
 
         <label className="text-sm text-gray-500 pt-3">Meta 타이틀</label>
         <div className="space-y-1">
-          <input
-            name="meta_title"
-            defaultValue={initialData?.meta_title ?? ''}
-            placeholder="비워두면 제목이 자동 사용됩니다"
-            maxLength={60}
-            className={`w-full ${inputClass}`}
-          />
+          <input name="meta_title" defaultValue={initialData?.meta_title ?? ''} placeholder="비워두면 제목이 자동 사용됩니다" maxLength={60} className={`w-full ${inputClass}`} />
           <p className="text-xs text-gray-400">권장 60자 이내 · 비우면 자동 생성</p>
         </div>
 
         <label className="text-sm text-gray-500 pt-3">Meta 설명</label>
         <div className="space-y-1">
-          <textarea
-            name="meta_description"
-            defaultValue={initialData?.meta_description ?? ''}
-            placeholder="비워두면 콘텐츠에서 자동 추출됩니다"
-            maxLength={160}
-            rows={2}
-            className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent resize-none"
-          />
+          <textarea name="meta_description" defaultValue={initialData?.meta_description ?? ''} placeholder="비워두면 콘텐츠에서 자동 추출됩니다" maxLength={160} rows={2} className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent resize-none" />
           <p className="text-xs text-gray-400">권장 120~160자 · 비우면 첫 번째 텍스트 블록에서 자동 추출</p>
         </div>
       </div>
@@ -232,27 +241,14 @@ export default function WorkForm({ initialData }: Props) {
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <div className="flex gap-3 pt-4 border-t border-gray-200">
-        <button
-          type="submit"
-          disabled={isPending}
-          className="border border-[#FF3B5C] text-[#FF3B5C] px-8 py-2 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50"
-        >
+        <button type="submit" disabled={isPending} className="border border-[#FF3B5C] text-[#FF3B5C] px-8 py-2 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50">
           {isPending ? '저장 중...' : '저장'}
         </button>
-        <button
-          type="button"
-          onClick={() => router.push('/admin/work')}
-          className="border border-black text-black px-6 py-2 text-sm hover:bg-black hover:text-white transition-colors"
-        >
+        <button type="button" onClick={() => router.push('/admin/work')} className="border border-black text-black px-6 py-2 text-sm hover:bg-black hover:text-white transition-colors">
           목록
         </button>
         {isEdit && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={isPending}
-            className="ml-auto border border-red-400 text-red-500 px-6 py-2 text-sm hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50"
-          >
+          <button type="button" onClick={handleDelete} disabled={isPending} className="ml-auto border border-red-400 text-red-500 px-6 py-2 text-sm hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50">
             삭제
           </button>
         )}

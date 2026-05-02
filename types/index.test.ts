@@ -37,6 +37,8 @@ describe('Work type', () => {
       client_name: null,
       category: 'web',
       period: null,
+      hero_url: null,
+      hero_type: null,
       thumbnail_url: '/thumb.jpg',
       thumbnail_color: 'rgba(0,0,0,0.9)',
       blocks: [],

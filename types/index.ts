@@ -104,6 +104,8 @@ export interface Work {
   client_name: string | null
   category: string | null
   period: string | null
+  hero_url: string | null
+  hero_type: 'image' | 'video' | null
   thumbnail_url: string | null
   thumbnail_color: string | null
   blocks: Block[]

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
+import Image from 'next/image'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import JsonLd from '@/components/seo/JsonLd'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
@@ -82,11 +83,41 @@ export default async function WorkDetailPage({ params }: Props) {
   }
 
   return (
-    <article className="pb-32 bg-white">
+    <article>
       <JsonLd data={jsonLd} />
 
+      {/* Sticky Hero */}
+      {typedWork.hero_url && (
+        <div className="sticky top-0 h-screen w-full overflow-hidden" style={{ zIndex: 0 }}>
+          {typedWork.hero_type === 'video' ? (
+            <video
+              src={typedWork.hero_url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <Image
+              src={typedWork.hero_url}
+              alt={typedWork.title}
+              fill
+              priority
+              className="object-cover"
+              sizes="100vw"
+            />
+          )}
+          {/* 하단 페이드 — 콘텐츠 연결 */}
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white to-transparent" />
+        </div>
+      )}
+
+      {/* Content scrolls over hero */}
+      <div className="relative bg-white pb-32" style={{ zIndex: 10 }}>
+
       {/* Hero Header for Work Detail */}
-      <header className="relative pt-40 pb-24 md:pt-56 md:pb-32 px-6 md:px-12 max-w-[1600px] mx-auto border-b border-gray-100">
+      <header className="relative pt-20 pb-24 md:pt-28 md:pb-32 px-6 md:px-12 max-w-[1600px] mx-auto border-b border-gray-100">
         <div className="max-w-6xl">
           <FadeUp delay={0.2} className="mb-8">
             <p className="text-sm md:text-base text-gray-400 tracking-[0.2em] uppercase">
@@ -139,6 +170,8 @@ export default async function WorkDetailPage({ params }: Props) {
           </MagneticLink>
         </FadeUp>
       </div>
+
+      </div>{/* end content wrapper */}
     </article>
   )
 }

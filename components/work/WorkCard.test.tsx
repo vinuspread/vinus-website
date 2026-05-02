@@ -11,6 +11,8 @@ const mockWork: Work = {
   client_name: null,
   category: 'web',
   period: null,
+  hero_url: null,
+  hero_type: null,
   thumbnail_url: '/test.jpg',
   thumbnail_color: 'rgba(78,78,78,0.9)',
   blocks: [],

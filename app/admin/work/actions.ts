@@ -12,6 +12,8 @@ export interface WorkFormData {
   client_name: string
   category: string
   period: string
+  hero_url: string
+  hero_type: 'image' | 'video'
   thumbnail_url: string
   blocks: Block[]
   meta_title: string
@@ -28,6 +30,8 @@ export async function saveWork(data: WorkFormData): Promise<{ id: string; slug: 
     client_name: data.client_name || null,
     category: data.category || null,
     period: data.period || null,
+    hero_url: data.hero_url || null,
+    hero_type: data.hero_url ? data.hero_type : null,
     thumbnail_url: data.thumbnail_url || null,
     blocks: data.blocks,
     meta_title: data.meta_title || null,
