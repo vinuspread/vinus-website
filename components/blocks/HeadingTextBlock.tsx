@@ -80,7 +80,7 @@ export default function HeadingTextBlock({ block }: { block: HeadingTextBlockTyp
     BODY_SIZE_CLASS[block.bodySize ?? '16'],
     BODY_WEIGHT_CLASS[block.bodyWeight ?? 'regular'],
     BODY_LETTER_SPACING_CLASS[block.bodyLetterSpacing ?? '0'],
-    'leading-[1.3] text-gray-600 whitespace-pre-wrap',
+    'leading-[1.5] text-gray-600 whitespace-pre-wrap',
     fontCls,
   ].filter(Boolean).join(' ')
 
