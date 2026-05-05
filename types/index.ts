@@ -84,6 +84,9 @@ export interface HeadingTextBlock {
   headingWeight?: HeadingWeight
   font?: TextFont
   align?: TextAlign
+  bodySize?: TextSize
+  bodyWeight?: TextWeight
+  bodyLetterSpacing?: TextLetterSpacing
   motion: MotionType
   spacing: SpacingType
 }

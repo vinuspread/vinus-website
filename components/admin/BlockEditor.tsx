@@ -238,6 +238,39 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   placeholder="제목 입력"
                   className="w-full border-b border-gray-300 py-2 text-sm font-medium text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                 />
+                <div className="flex gap-2 flex-wrap pt-1">
+                  <span className="text-xs text-gray-400 self-center">본문</span>
+                  <select
+                    value={block.bodySize ?? '16'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, bodySize: e.target.value as TextSize }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="14">14px</option>
+                    <option value="16">16px</option>
+                    <option value="18">18px</option>
+                    <option value="20">20px</option>
+                  </select>
+                  <select
+                    value={block.bodyWeight ?? 'regular'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, bodyWeight: e.target.value as TextWeight }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="regular">Regular</option>
+                    <option value="medium">Medium</option>
+                    <option value="bold">Bold</option>
+                  </select>
+                  <select
+                    value={block.bodyLetterSpacing ?? '0'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, bodyLetterSpacing: e.target.value as TextLetterSpacing }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="-2">자간 -2%</option>
+                    <option value="-1.5">자간 -1.5%</option>
+                    <option value="-1">자간 -1%</option>
+                    <option value="-0.5">자간 -0.5%</option>
+                    <option value="0">자간 0%</option>
+                  </select>
+                </div>
                 <textarea
                   value={block.body}
                   onChange={(e) => onChange(updateBlock(blocks, index, { ...block, body: e.target.value }))}

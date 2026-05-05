@@ -30,6 +30,27 @@ const FONT_CLASS: Record<string, string> = {
   syne:       'font-syne',
 }
 
+const BODY_SIZE_CLASS: Record<string, string> = {
+  '14': 'text-sm',
+  '16': 'text-base',
+  '18': 'text-lg',
+  '20': 'text-xl',
+}
+
+const BODY_WEIGHT_CLASS: Record<string, string> = {
+  regular: 'font-normal',
+  medium:  'font-medium',
+  bold:    'font-bold',
+}
+
+const BODY_LETTER_SPACING_CLASS: Record<string, string> = {
+  '-2':   'tracking-[-0.02em]',
+  '-1.5': 'tracking-[-0.015em]',
+  '-1':   'tracking-[-0.01em]',
+  '-0.5': 'tracking-[-0.005em]',
+  '0':    'tracking-normal',
+}
+
 export default function HeadingTextBlock({ block }: { block: HeadingTextBlockType }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -55,13 +76,21 @@ export default function HeadingTextBlock({ block }: { block: HeadingTextBlockTyp
   const headingSizeCls = HEADING_SIZE_CLASS[block.headingSize ?? 'md']
   const headingWeightCls = HEADING_WEIGHT_CLASS[block.headingWeight ?? 'normal']
 
+  const bodyCls = [
+    BODY_SIZE_CLASS[block.bodySize ?? '16'],
+    BODY_WEIGHT_CLASS[block.bodyWeight ?? 'regular'],
+    BODY_LETTER_SPACING_CLASS[block.bodyLetterSpacing ?? '0'],
+    'leading-[1.3] text-gray-600 whitespace-pre-wrap',
+    fontCls,
+  ].filter(Boolean).join(' ')
+
   return (
     <div ref={ref} className={`ht-block ${alignCls}`}>
       <h2 className={`ht-block-heading leading-tight tracking-tight ${headingSizeCls} ${headingWeightCls} ${fontCls}`}>
         {block.heading}
       </h2>
       {block.body && (
-        <p className={`ht-block-body mt-6 text-xl leading-relaxed text-gray-600 whitespace-pre-wrap ${fontCls}`}>
+        <p className={`ht-block-body mt-6 ${bodyCls}`}>
           {block.body}
         </p>
       )}
