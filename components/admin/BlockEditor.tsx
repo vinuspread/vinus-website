@@ -24,6 +24,7 @@ const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'text', label: '텍스트' },
   { value: 'heading-text', label: '제목+텍스트' },
   { value: 'image', label: '이미지' },
+  { value: 'parallax-image', label: '패럴랙스 이미지' },
   { value: 'gallery', label: '갤러리' },
   { value: 'video', label: '비디오' },
   { value: 'embed', label: '임베드' },
@@ -37,6 +38,7 @@ function createBlock(type: BlockType): Block {
     case 'text': return { id, type, content: '', motion: 'none', spacing: 'md' }
     case 'heading-text': return { id, type, heading: '', body: '', headingSize: 'md', headingWeight: 'normal', font: 'pretendard', align: 'left', motion: 'none', spacing: 'md' }
     case 'image': return { id, type, src: '', alt: '', motion: 'none', spacing: 'md' }
+    case 'parallax-image': return { id, type, src: '', alt: '', containerHeight: 600, motion: 'none', spacing: 'md' }
     case 'gallery': return { id, type, images: [], motion: 'none', spacing: 'md' }
     case 'video': return { id, type, url: '', motion: 'none', spacing: 'md' }
     case 'embed': return { id, type, embedType: 'url', url: '', code: '', caption: '', motion: 'none', spacing: 'md' }
@@ -107,7 +109,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
         const url = await uploadFile(file)
         const currentBlocks = blocksRef.current
         const block = currentBlocks[index]
-        if (block.type === 'image' && field === 'src') {
+        if ((block.type === 'image' || block.type === 'parallax-image') && field === 'src') {
           onChange(updateBlock(currentBlocks, index, { ...block, src: url }))
         } else if (block.type === 'gallery' && galleryIndex !== undefined) {
           const images = [...block.images]
@@ -370,6 +372,51 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 {block.src && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={block.src} alt="preview" className="max-h-32 object-contain" />
+                )}
+                <input
+                  type="text"
+                  value={block.alt}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, alt: e.target.value }))}
+                  placeholder="Alt 텍스트"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                />
+              </div>
+            )}
+
+            {block.type === 'parallax-image' && (
+              <div className="space-y-2">
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={block.src}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
+                    placeholder="이미지 URL 직접 입력"
+                    className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                  />
+                  <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
+                    {uploading[block.id] ? '업로드 중...' : '파일 선택'}
+                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
+                  </label>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-500">높이</span>
+                  <select
+                    value={block.containerHeight ?? 600}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, containerHeight: Number(e.target.value) }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value={300}>300px</option>
+                    <option value={400}>400px</option>
+                    <option value={500}>500px</option>
+                    <option value={600}>600px</option>
+                    <option value={700}>700px</option>
+                    <option value={800}>800px</option>
+                    <option value={1000}>1000px</option>
+                  </select>
+                </div>
+                {block.src && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={block.src} alt="preview" className="max-h-24 object-contain" />
                 )}
                 <input
                   type="text"

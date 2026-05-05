@@ -102,7 +102,17 @@ export interface EmbedBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
+export interface ParallaxImageBlock {
+  id: string
+  type: 'parallax-image'
+  src: string
+  alt: string
+  containerHeight?: number
+  motion: MotionType
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | ParallaxImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
 
 export interface Work {
   id: string
