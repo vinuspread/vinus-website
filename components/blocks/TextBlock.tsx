@@ -59,7 +59,7 @@ export default function TextBlock({ block }: { block: TextBlockType }) {
     SIZE_CLASS[block.size ?? '16'],
     WEIGHT_CLASS[block.weight ?? 'regular'],
     LETTER_SPACING_CLASS[block.letterSpacing ?? '0'],
-    'leading-[1.5]',
+    'leading-[1.8]',
     FONT_CLASS[block.font ?? 'pretendard'],
     ALIGN_CLASS[block.align ?? 'left'],
   ].filter(Boolean).join(' ')
