@@ -1,4 +1,3 @@
-import React from 'react'
 import sanitizeHtml from 'sanitize-html'
 import type { TextBlock as TextBlockType } from '@/types'
 
@@ -17,11 +16,25 @@ const ALLOWED_ATTRIBUTES: sanitizeHtml.IOptions['allowedAttributes'] = {
   '*': ['class'],
 }
 
-const VARIANT_CLASS: Record<string, string> = {
-  body:       'text-base leading-relaxed',
-  heading:    'text-4xl md:text-5xl leading-tight',
-  subheading: 'text-2xl md:text-3xl leading-snug',
-  caption:    'text-sm text-gray-400 leading-relaxed',
+const SIZE_CLASS: Record<string, string> = {
+  '14': 'text-sm',
+  '16': 'text-base',
+  '18': 'text-lg',
+  '20': 'text-xl',
+}
+
+const WEIGHT_CLASS: Record<string, string> = {
+  regular: 'font-normal',
+  medium:  'font-medium',
+  bold:    'font-bold',
+}
+
+const LETTER_SPACING_CLASS: Record<string, string> = {
+  '-2':   'tracking-[-0.02em]',
+  '-1.5': 'tracking-[-0.015em]',
+  '-1':   'tracking-[-0.01em]',
+  '-0.5': 'tracking-[-0.005em]',
+  '0':    'tracking-normal',
 }
 
 const FONT_CLASS: Record<string, string> = {
@@ -36,23 +49,23 @@ const ALIGN_CLASS: Record<string, string> = {
 }
 
 export default function TextBlock({ block }: { block: TextBlockType }) {
-  // preserve plain-text line breaks as <br> before sanitization
   const withBreaks = block.content.replace(/\n/g, '<br>')
   const clean = sanitizeHtml(withBreaks, {
     allowedTags: ALLOWED_TAGS,
     allowedAttributes: ALLOWED_ATTRIBUTES,
   })
 
-  const variant = block.variant ?? 'body'
-  const Tag = 'p' as React.ElementType
   const cls = [
-    VARIANT_CLASS[variant],
+    SIZE_CLASS[block.size ?? '16'],
+    WEIGHT_CLASS[block.weight ?? 'regular'],
+    LETTER_SPACING_CLASS[block.letterSpacing ?? '0'],
+    'leading-relaxed',
     FONT_CLASS[block.font ?? 'pretendard'],
     ALIGN_CLASS[block.align ?? 'left'],
   ].filter(Boolean).join(' ')
 
   return (
-    <Tag
+    <p
       className={cls}
       dangerouslySetInnerHTML={{ __html: clean }}
     />

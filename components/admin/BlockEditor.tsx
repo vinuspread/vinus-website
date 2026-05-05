@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import type { Block, TextVariant, TextFont, TextAlign, ImageAlign, GalleryLayout } from '@/types'
+import type { Block, TextFont, TextAlign, TextSize, TextWeight, TextLetterSpacing, ImageAlign, GalleryLayout } from '@/types'
 import type { HeadingSize, HeadingWeight } from '@/types'
 
 interface Props {
@@ -252,22 +252,42 @@ export default function BlockEditor({ blocks, onChange }: Props) {
               <div className="space-y-2">
                 <div className="flex gap-2 flex-wrap">
                   <select
-                    value={block.variant ?? 'body'}
-                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, variant: e.target.value as TextVariant }))}
+                    value={block.size ?? '16'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, size: e.target.value as TextSize }))}
                     className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                   >
-                    <option value="body">기본 (16px)</option>
-                    <option value="caption">작게 (14px)</option>
-                    <option value="subheading">크게 (24~30px)</option>
-                    <option value="heading">매우 크게 (36~48px)</option>
+                    <option value="14">14px</option>
+                    <option value="16">16px</option>
+                    <option value="18">18px</option>
+                    <option value="20">20px</option>
+                  </select>
+                  <select
+                    value={block.weight ?? 'regular'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, weight: e.target.value as TextWeight }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="regular">Regular</option>
+                    <option value="medium">Medium</option>
+                    <option value="bold">Bold</option>
+                  </select>
+                  <select
+                    value={block.letterSpacing ?? '0'}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, letterSpacing: e.target.value as TextLetterSpacing }))}
+                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                  >
+                    <option value="-2">자간 -2%</option>
+                    <option value="-1.5">자간 -1.5%</option>
+                    <option value="-1">자간 -1%</option>
+                    <option value="-0.5">자간 -0.5%</option>
+                    <option value="0">자간 0%</option>
                   </select>
                   <select
                     value={block.font ?? 'pretendard'}
                     onChange={(e) => onChange(updateBlock(blocks, index, { ...block, font: e.target.value as TextFont }))}
                     className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                   >
-                    <option value="pretendard">Pretendard (한국어 기본)</option>
-                    <option value="syne">Syne (영문 디스플레이)</option>
+                    <option value="pretendard">Pretendard</option>
+                    <option value="syne">Syne</option>
                   </select>
                   <select
                     value={block.align ?? 'left'}

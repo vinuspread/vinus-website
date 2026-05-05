@@ -3,6 +3,9 @@
 export type MotionType = 'none' | 'fadeIn' | 'slideUp' | 'textReveal' | 'curtainReveal' | 'zoomIn' | 'stagger'
 export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type TextVariant = 'body' | 'heading' | 'subheading' | 'caption'
+export type TextSize = '14' | '16' | '18' | '20'
+export type TextWeight = 'regular' | 'medium' | 'bold'
+export type TextLetterSpacing = '-2' | '-1.5' | '-1' | '-0.5' | '0'
 export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
 export type ImageAlign = 'center' | 'full'
@@ -16,6 +19,9 @@ export interface TextBlock {
   type: 'text'
   content: string
   variant?: TextVariant
+  size?: TextSize
+  weight?: TextWeight
+  letterSpacing?: TextLetterSpacing
   font?: TextFont
   align?: TextAlign
   motion: MotionType
