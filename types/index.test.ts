@@ -34,6 +34,7 @@ describe('Work type', () => {
       slug: 'test-project',
       title: 'Test Project',
       subtitle: null,
+      summary: null,
       client_name: null,
       category: 'web',
       period: null,

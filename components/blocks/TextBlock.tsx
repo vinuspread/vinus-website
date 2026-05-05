@@ -1,3 +1,4 @@
+import React from 'react'
 import sanitizeHtml from 'sanitize-html'
 import type { TextBlock as TextBlockType } from '@/types'
 
@@ -17,9 +18,9 @@ const ALLOWED_ATTRIBUTES: sanitizeHtml.IOptions['allowedAttributes'] = {
 }
 
 const VARIANT_CLASS: Record<string, string> = {
-  body:       'prose prose-xl max-w-none',
-  heading:    'text-4xl md:text-5xl font-bold leading-tight',
-  subheading: 'text-2xl md:text-3xl font-semibold leading-snug',
+  body:       'text-base leading-relaxed',
+  heading:    'text-4xl md:text-5xl leading-tight',
+  subheading: 'text-2xl md:text-3xl leading-snug',
   caption:    'text-sm text-gray-400 leading-relaxed',
 }
 
@@ -43,6 +44,7 @@ export default function TextBlock({ block }: { block: TextBlockType }) {
   })
 
   const variant = block.variant ?? 'body'
+  const Tag = 'p' as React.ElementType
   const cls = [
     VARIANT_CLASS[variant],
     FONT_CLASS[block.font ?? 'pretendard'],
@@ -50,7 +52,7 @@ export default function TextBlock({ block }: { block: TextBlockType }) {
   ].filter(Boolean).join(' ')
 
   return (
-    <div
+    <Tag
       className={cls}
       dangerouslySetInnerHTML={{ __html: clean }}
     />

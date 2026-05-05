@@ -25,6 +25,7 @@ export default async function AdminWorkEditPage({ params }: Props) {
           title: typedWork.title,
           slug: typedWork.slug,
           subtitle: typedWork.subtitle ?? '',
+          summary: typedWork.summary ?? '',
           client_name: typedWork.client_name ?? '',
           category: typedWork.category ?? 'web',
           period: typedWork.period ?? '',

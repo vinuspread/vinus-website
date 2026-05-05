@@ -27,8 +27,16 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           }
         })()
         if (!inner) return null
+
+        const isFullWidth =
+          block.type === 'image' ||
+          ('fullWidth' in block && block.fullWidth === true)
+        const wrapClass = isFullWidth
+          ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
+          : `block-spacing-${block.spacing ?? 'md'} max-w-4xl mx-auto px-6 md:px-12`
+
         return (
-          <div key={block.id} className={`block-spacing-${block.spacing ?? 'md'}`}>
+          <div key={block.id} className={wrapClass}>
             {block.type === 'heading-text' ? inner : (
               <BlockMotion motion={block.motion}>
                 {inner}

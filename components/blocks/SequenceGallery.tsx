@@ -35,10 +35,10 @@ export default function SequenceGallery({ images = [] }: Props) {
         <div
           key={img.src || i}
           ref={(el) => { refs.current[i] = el }}
-          className="sequence-item relative w-full aspect-video overflow-hidden"
+          className="sequence-item w-full"
         >
           {img.src && (
-            <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="100vw" />
+            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="100vw" className="w-auto max-w-full h-auto block" />
           )}
         </div>
       ))}

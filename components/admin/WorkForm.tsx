@@ -23,6 +23,7 @@ export default function WorkForm({ initialData }: Props) {
   const [heroType, setHeroType] = useState<'image' | 'video'>(initialData?.hero_type ?? 'image')
   const [uploading, setUploading] = useState(false)
   const [heroUploading, setHeroUploading] = useState(false)
+  const [slug, setSlug] = useState(initialData?.slug ?? '')
 
   function toSlug(title: string) {
     return title
@@ -33,12 +34,24 @@ export default function WorkForm({ initialData }: Props) {
   }
 
   async function uploadFile(file: File): Promise<string> {
-    const fd = new FormData()
-    fd.append('file', file)
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-    const json = await res.json() as { url?: string; error?: string }
-    if (!res.ok || !json.url) throw new Error(json.error ?? '업로드 실패')
-    return json.url
+    // 1. Signed URL 발급
+    const res = await fetch('/api/admin/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: file.name, contentType: file.type }),
+    })
+    const json = await res.json() as { signedUrl?: string; publicUrl?: string; error?: string }
+    if (!res.ok || !json.signedUrl || !json.publicUrl) throw new Error(json.error ?? '업로드 실패')
+
+    // 2. Supabase Storage에 직접 업로드
+    const uploadRes = await fetch(json.signedUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file,
+    })
+    if (!uploadRes.ok) throw new Error('파일 업로드 실패')
+
+    return json.publicUrl
   }
 
   async function uploadThumbnail(e: { target: { files?: FileList | null } }) {
@@ -78,8 +91,9 @@ export default function WorkForm({ initialData }: Props) {
     const data: WorkFormData = {
       id: initialData?.id,
       title: get('title'),
-      slug: get('slug'),
+      slug,
       subtitle: get('subtitle'),
+      summary: get('summary'),
       client_name: get('client_name'),
       category: get('category'),
       period: get('period'),
@@ -125,28 +139,28 @@ export default function WorkForm({ initialData }: Props) {
   const inputClass = "border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-3xl">
+    <form onSubmit={handleSubmit} className="flex gap-8 items-start">
+      <div className="flex-1 space-y-8 min-w-0">
       <div className="grid grid-cols-[160px_1fr] gap-4 items-start">
 
-        {/* 슬러그 — 숨김, 제목에서 자동생성 */}
-        <input name="slug" type="hidden" defaultValue={initialData?.slug ?? ''} id="slug-input" />
-
-        <label className="text-sm text-gray-500 pt-3">제목 *</label>
+        <label className="text-sm text-gray-500 pt-3">프로젝트명 *</label>
         <input
           name="title"
           required
           defaultValue={initialData?.title}
           onChange={(e) => {
-            if (!isEdit) {
-              const slugInput = document.getElementById('slug-input') as HTMLInputElement
-              if (slugInput) slugInput.value = toSlug(e.target.value)
-            }
+            if (!isEdit) setSlug(toSlug(e.target.value))
           }}
           className={inputClass}
         />
 
-        <label className="text-sm text-gray-500 pt-3">서브제목</label>
+        <input name="slug" type="hidden" value={slug} readOnly />
+
+        <label className="text-sm text-gray-500 pt-3">서브타이틀</label>
         <input name="subtitle" defaultValue={initialData?.subtitle ?? ''} placeholder="예: 브랜드 아이덴티티 & 웹사이트" className={inputClass} />
+
+        <label className="text-sm text-gray-500 pt-3">써머리</label>
+        <textarea name="summary" defaultValue={initialData?.summary ?? ''} placeholder="프로젝트 배경 및 목적을 간략히 설명해주세요" rows={4} className={`${inputClass} resize-none`} />
 
         <label className="text-sm text-gray-500 pt-3">클라이언트</label>
         <input name="client_name" defaultValue={initialData?.client_name ?? ''} placeholder="클라이언트명" className={inputClass} />
@@ -157,7 +171,7 @@ export default function WorkForm({ initialData }: Props) {
         </select>
 
         <label className="text-sm text-gray-500 pt-3">개발기간</label>
-        <input name="period" defaultValue={initialData?.period ?? ''} placeholder="예: 2024.01 ~ 2024.03" className={inputClass} />
+        <input name="period" defaultValue={initialData?.period ?? ''} placeholder="예: 2021.05" className={inputClass} />
 
         {/* 히어로 영역 */}
         <label className="text-sm text-gray-500 pt-3">히어로</label>
@@ -239,16 +253,18 @@ export default function WorkForm({ initialData }: Props) {
       </div>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
+      </div>
 
-      <div className="flex gap-3 pt-4 border-t border-gray-200">
-        <button type="submit" disabled={isPending} className="border border-[#FF3B5C] text-[#FF3B5C] px-8 py-2 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50">
+      {/* 우측 sticky 버튼 패널 */}
+      <div className="sticky top-8 w-40 flex-shrink-0 flex flex-col gap-3">
+        <button type="submit" disabled={isPending} className="w-full border border-[#FF3B5C] text-[#FF3B5C] px-4 py-2.5 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50">
           {isPending ? '저장 중...' : '저장'}
         </button>
-        <button type="button" onClick={() => router.push('/admin/work')} className="border border-black text-black px-6 py-2 text-sm hover:bg-black hover:text-white transition-colors">
+        <button type="button" onClick={() => router.push('/admin/work')} className="w-full border border-black text-black px-4 py-2.5 text-sm hover:bg-black hover:text-white transition-colors">
           목록
         </button>
         {isEdit && (
-          <button type="button" onClick={handleDelete} disabled={isPending} className="ml-auto border border-red-400 text-red-500 px-6 py-2 text-sm hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50">
+          <button type="button" onClick={handleDelete} disabled={isPending} className="w-full border border-red-400 text-red-500 px-4 py-2.5 text-sm hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50 mt-4">
             삭제
           </button>
         )}

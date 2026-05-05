@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white py-20 px-6 md:px-12 overflow-hidden relative">
+    <footer className="bg-black text-white py-20 px-6 md:px-12 overflow-hidden relative z-[2]">
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Call to Action Section */}
         <motion.div 
@@ -97,7 +97,7 @@ export default function Footer() {
 
         {/* Massive Brand Typography */}
         <div className="w-full relative z-10 mt-8 pointer-events-none select-none">
-          <svg width="100%" height="auto" viewBox="0 0 1000 210" className="overflow-visible block">
+          <svg width="100%" viewBox="0 0 1000 210" className="overflow-visible block">
             <text 
               x="0" 
               y="160" 

@@ -32,9 +32,9 @@ export default function HorizontalSequenceGallery({ images = [] }: Props) {
   return (
     <div ref={containerRef} className="flex gap-3">
       {images.map((img, i) => (
-        <div key={img.src || i} className="h-seq-item flex-1 relative aspect-square overflow-hidden">
+        <div key={img.src || i} className="h-seq-item flex-1">
           {img.src && (
-            <Image src={img.src} alt={img.alt} fill className="object-cover" sizes="33vw" />
+            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="33vw" className="w-auto max-w-full h-auto block" />
           )}
         </div>
       ))}

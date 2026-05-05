@@ -4,11 +4,13 @@ import { useEffect, useRef } from 'react'
 import type { HeadingTextBlock as HeadingTextBlockType } from '@/types'
 
 const HEADING_SIZE_CLASS: Record<string, string> = {
-  sm:  'text-2xl md:text-3xl',
-  md:  'text-3xl md:text-4xl',
-  lg:  'text-4xl md:text-5xl',
-  xl:  'text-5xl md:text-6xl',
-  '2xl': 'text-6xl md:text-8xl',
+  sm:    'text-[20px] md:text-[24px]',
+  md:    'text-[22px] md:text-[28px]',
+  lg:    'text-[26px] md:text-[32px]',
+  xl:    'text-[28px] md:text-[36px]',
+  '2xl': 'text-[32px] md:text-[40px]',
+  '3xl': 'text-[40px] md:text-[60px]',
+  '4xl': 'text-[48px] md:text-[80px]',
 }
 
 const HEADING_WEIGHT_CLASS: Record<string, string> = {

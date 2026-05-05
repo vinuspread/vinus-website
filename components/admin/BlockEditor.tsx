@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import type { Block, TextVariant, TextFont, TextAlign, ImageSize, GalleryLayout, ImageLayout } from '@/types'
+import { useState, useRef, useEffect } from 'react'
+import type { Block, TextVariant, TextFont, TextAlign, ImageAlign, GalleryLayout } from '@/types'
 import type { HeadingSize, HeadingWeight } from '@/types'
 
 interface Props {
@@ -68,46 +68,57 @@ function removeBlock(blocks: Block[], index: number): Block[] {
 }
 
 async function uploadFile(file: File): Promise<string> {
-  const fd = new FormData()
-  fd.append('file', file)
-  const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-  const json = await res.json() as { url?: string; error?: string }
-  if (!res.ok || !json.url) throw new Error(json.error ?? '업로드 실패')
-  return json.url
+  const res = await fetch('/api/admin/upload', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename: file.name, contentType: file.type }),
+  })
+  const json = await res.json() as { signedUrl?: string; publicUrl?: string; error?: string }
+  if (!res.ok || !json.signedUrl || !json.publicUrl) throw new Error(json.error ?? '업로드 실패')
+
+  const uploadRes = await fetch(json.signedUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type },
+    body: file,
+  })
+  if (!uploadRes.ok) throw new Error('파일 업로드 실패')
+
+  return json.publicUrl
 }
 
 export default function BlockEditor({ blocks, onChange }: Props) {
   const [addType, setAddType] = useState<BlockType>('text')
   const [uploading, setUploading] = useState<Record<string, boolean>>({})
+  const blocksRef = useRef(blocks)
+  useEffect(() => { blocksRef.current = blocks }, [blocks])
 
   function handleAdd() {
     onChange([...blocks, createBlock(addType)])
   }
 
   function handleImageUpload(blockId: string, index: number, field: 'src' | null, galleryIndex?: number) {
-    return async (e: { target: { files?: FileList | null } }) => {
+    return async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
       if (!file) return
+      const input = e.target
       const uploadKey = galleryIndex !== undefined ? `${blockId}-${galleryIndex}` : blockId
       setUploading((prev) => ({ ...prev, [uploadKey]: true }))
       try {
         const url = await uploadFile(file)
-        const block = blocks[index]
+        const currentBlocks = blocksRef.current
+        const block = currentBlocks[index]
         if (block.type === 'image' && field === 'src') {
-          onChange(updateBlock(blocks, index, { ...block, src: url }))
-        } else if (block.type === 'image' && galleryIndex !== undefined) {
-          const images = [...(block.images ?? [])]
-          images[galleryIndex] = { ...images[galleryIndex], src: url }
-          onChange(updateBlock(blocks, index, { ...block, images }))
+          onChange(updateBlock(currentBlocks, index, { ...block, src: url }))
         } else if (block.type === 'gallery' && galleryIndex !== undefined) {
           const images = [...block.images]
           images[galleryIndex] = { ...images[galleryIndex], src: url }
-          onChange(updateBlock(blocks, index, { ...block, images }))
+          onChange(updateBlock(currentBlocks, index, { ...block, images }))
         } else if (block.type === 'file') {
-          onChange(updateBlock(blocks, index, { ...block, url }))
+          onChange(updateBlock(currentBlocks, index, { ...block, url }))
         }
       } finally {
         setUploading((prev) => ({ ...prev, [uploadKey]: false }))
+        input.value = ''
       }
     }
   }
@@ -142,10 +153,12 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                 >
                   <option value="none">간격 없음</option>
-                  <option value="sm">간격 SM</option>
-                  <option value="md">간격 MD</option>
-                  <option value="lg">간격 LG</option>
-                  <option value="xl">간격 XL</option>
+                  <option value="sm">간격 24px</option>
+                  <option value="md">간격 48px</option>
+                  <option value="lg">간격 80px</option>
+                  <option value="xl">간격 120px</option>
+                  <option value="2xl">간격 200px</option>
+                  <option value="3xl">간격 240px</option>
                 </select>
               </div>
               <div className="flex gap-1">
@@ -183,11 +196,13 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                     onChange={(e) => onChange(updateBlock(blocks, index, { ...block, headingSize: e.target.value as HeadingSize }))}
                     className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                   >
-                    <option value="sm">제목 작게</option>
-                    <option value="md">제목 중간</option>
-                    <option value="lg">제목 크게</option>
-                    <option value="xl">제목 매우 크게</option>
-                    <option value="2xl">제목 최대</option>
+                    <option value="sm">제목 24px</option>
+                    <option value="md">제목 28px</option>
+                    <option value="lg">제목 32px</option>
+                    <option value="xl">제목 36px</option>
+                    <option value="2xl">제목 40px</option>
+                    <option value="3xl">제목 60px</option>
+                    <option value="4xl">제목 80px</option>
                   </select>
                   <select
                     value={block.headingWeight ?? 'normal'}
@@ -241,10 +256,10 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                     onChange={(e) => onChange(updateBlock(blocks, index, { ...block, variant: e.target.value as TextVariant }))}
                     className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                   >
-                    <option value="body">본문 (기본)</option>
-                    <option value="heading">제목 — 크고 굵게</option>
-                    <option value="subheading">소제목 — 중간 크기</option>
-                    <option value="caption">캡션 — 작고 흐리게</option>
+                    <option value="body">기본 (16px)</option>
+                    <option value="caption">작게 (14px)</option>
+                    <option value="subheading">크게 (24~30px)</option>
+                    <option value="heading">매우 크게 (36~48px)</option>
                   </select>
                   <select
                     value={block.font ?? 'pretendard'}
@@ -276,106 +291,54 @@ export default function BlockEditor({ blocks, onChange }: Props) {
               </div>
             )}
 
-            {block.type === 'image' && (() => {
-              const imgLayout = block.layout ?? 'single'
-              const imgs = block.images ?? []
-              const targetCount = imgLayout === 'pair' ? 2 : imgLayout === 'trio' || imgLayout === 'sequence' ? 3 : 1
-              return (
-                <div className="space-y-3">
-                  {/* 레이아웃 선택 */}
-                  <select
-                    value={imgLayout}
-                    onChange={(e) => {
-                      const next = e.target.value as ImageLayout
-                      const count = next === 'pair' ? 2 : next === 'trio' || next === 'sequence' ? 3 : 1
-                      const nextImages = Array.from({ length: count }, (_, i) => imgs[i] ?? { src: '', alt: '' })
-                      onChange(updateBlock(blocks, index, { ...block, layout: next, images: nextImages }))
-                    }}
-                    className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
-                  >
-                    <option value="single">1장 — 단독 이미지</option>
-                    <option value="pair">2장 — 나란히 배치</option>
-                    <option value="trio">3장 — 나란히 배치</option>
-                    <option value="sequence">3장 — 스크롤 순차 등장</option>
-                  </select>
-
-                  {/* 1장: 기존 단독 이미지 */}
-                  {imgLayout === 'single' && (
-                    <div className="space-y-2">
-                      <div className="flex gap-2 items-center">
-                        <input
-                          type="text"
-                          value={block.src}
-                          onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
-                          placeholder="이미지 URL 직접 입력"
-                          className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                        />
-                        <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
-                          {uploading[block.id] ? '업로드 중...' : '파일 선택'}
-                          <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
-                        </label>
-                      </div>
-                      <select
-                        value={block.size ?? 'full'}
-                        onChange={(e) => onChange(updateBlock(blocks, index, { ...block, size: e.target.value as ImageSize }))}
-                        className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
-                      >
-                        <option value="sm">작게 — 중앙 1/3 크기</option>
-                        <option value="md">중간 — 중앙 2/3 크기</option>
-                        <option value="lg">크게 — 거의 전체 너비</option>
-                        <option value="full">전체 너비</option>
-                      </select>
-                      {block.src && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={block.src} alt="preview" className="max-h-32 object-contain" />
-                      )}
-                      <input
-                        type="text"
-                        value={block.alt}
-                        onChange={(e) => onChange(updateBlock(blocks, index, { ...block, alt: e.target.value }))}
-                        placeholder="Alt 텍스트"
-                        className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                      />
-                    </div>
-                  )}
-
-                  {/* 2장·3장·순차: 이미지 배열 */}
-                  {imgLayout !== 'single' && (
-                    <div className="space-y-2">
-                      {Array.from({ length: targetCount }, (_, gi) => {
-                        const img = imgs[gi] ?? { src: '', alt: '' }
-                        return (
-                          <div key={gi} className="flex gap-2 items-center">
-                            <span className="text-xs text-gray-400 w-6 shrink-0">{gi + 1}</span>
-                            <input
-                              type="text"
-                              value={img.src}
-                              onChange={(e) => {
-                                const next = [...imgs]
-                                next[gi] = { ...img, src: e.target.value }
-                                onChange(updateBlock(blocks, index, { ...block, images: next }))
-                              }}
-                              placeholder="이미지 URL"
-                              className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                            />
-                            <label className="cursor-pointer border border-gray-300 px-2 py-1 text-xs hover:bg-gray-100 shrink-0">
-                              {uploading[`${block.id}-${gi}`] ? '업로드 중...' : '업로드'}
-                              <input
-                                type="file" accept="image/*" className="hidden"
-                                onChange={handleImageUpload(block.id, index, null, gi)}
-                              />
-                            </label>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
+            {block.type === 'image' && (
+              <div className="space-y-2">
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={block.src}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
+                    placeholder="이미지 URL 직접 입력"
+                    className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                  />
+                  <label className="cursor-pointer border border-gray-300 px-3 py-1 text-xs hover:bg-gray-100">
+                    {uploading[block.id] ? '업로드 중...' : '파일 선택'}
+                    <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, 'src')} />
+                  </label>
                 </div>
-              )
-            })()}
+                <select
+                  value={block.align ?? 'full'}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, align: e.target.value as ImageAlign }))}
+                  className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
+                >
+                  <option value="center">센터 정렬</option>
+                  <option value="full">전체화면</option>
+                </select>
+                {block.src && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={block.src} alt="preview" className="max-h-32 object-contain" />
+                )}
+                <input
+                  type="text"
+                  value={block.alt}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, alt: e.target.value }))}
+                  placeholder="Alt 텍스트"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                />
+              </div>
+            )}
 
             {block.type === 'gallery' && (
               <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={block.fullWidth ?? false}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, fullWidth: e.target.checked }))}
+                    className="accent-black"
+                  />
+                  <span className="text-xs text-gray-600">전체화면</span>
+                </label>
                 <select
                   value={block.layout ?? 'grid-3'}
                   onChange={(e) => onChange(updateBlock(blocks, index, { ...block, layout: e.target.value as GalleryLayout }))}
@@ -493,15 +456,26 @@ export default function BlockEditor({ blocks, onChange }: Props) {
             )}
 
             {block.type === 'video' && (
-              <input
-                type="text"
-                value={block.url}
-                onChange={(e) =>
-                  onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))
-                }
-                placeholder="YouTube URL"
-                className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-              />
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={block.fullWidth ?? false}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, fullWidth: e.target.checked }))}
+                    className="accent-black"
+                  />
+                  <span className="text-xs text-gray-600">전체화면</span>
+                </label>
+                <input
+                  type="text"
+                  value={block.url}
+                  onChange={(e) =>
+                    onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))
+                  }
+                  placeholder="YouTube URL"
+                  className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                />
+              </div>
             )}
 
             {block.type === 'divider' && (

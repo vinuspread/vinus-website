@@ -1,13 +1,13 @@
 // types/index.ts
 
 export type MotionType = 'none' | 'fadeIn' | 'slideUp' | 'textReveal' | 'curtainReveal' | 'zoomIn' | 'stagger'
-export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl'
+export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type TextVariant = 'body' | 'heading' | 'subheading' | 'caption'
 export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
-export type ImageSize = 'sm' | 'md' | 'lg' | 'full'
+export type ImageAlign = 'center' | 'full'
 export type GalleryLayout = 'grid-2' | 'grid-3' | 'sequence' | 'sequence-h'
-export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 export type HeadingWeight = 'light' | 'normal' | 'bold'
 export type EmbedInputType = 'url' | 'code'
 
@@ -22,16 +22,13 @@ export interface TextBlock {
   spacing: SpacingType
 }
 
-export type ImageLayout = 'single' | 'pair' | 'trio' | 'sequence'
-
 export interface ImageBlock {
   id: string
   type: 'image'
   src: string
   alt: string
-  size?: ImageSize
-  layout?: ImageLayout
-  images?: { src: string; alt: string }[]
+  align?: ImageAlign
+  fullWidth?: boolean
   motion: MotionType
   spacing: SpacingType
 }
@@ -41,6 +38,7 @@ export interface GalleryBlock {
   type: 'gallery'
   images: { src: string; alt: string }[]
   layout?: GalleryLayout
+  fullWidth?: boolean
   motion: MotionType
   spacing: SpacingType
 }
@@ -49,6 +47,7 @@ export interface VideoBlock {
   id: string
   type: 'video'
   url: string
+  fullWidth?: boolean
   motion: MotionType
   spacing: SpacingType
 }
@@ -101,6 +100,7 @@ export interface Work {
   slug: string
   title: string
   subtitle: string | null
+  summary: string | null
   client_name: string | null
   category: string | null
   period: string | null

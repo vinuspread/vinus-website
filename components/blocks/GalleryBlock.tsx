@@ -18,15 +18,15 @@ export default function GalleryBlock({ block }: { block: GalleryBlockType }) {
   return (
     <div className={GRID_CLASS[layout]}>
       {images.map((img, i) => (
-        <div key={img.src || i} className="relative aspect-square overflow-hidden">
-          <Image
-            src={img.src}
-            alt={img.alt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 50vw, 33vw"
-          />
-        </div>
+        <Image
+          key={img.src || i}
+          src={img.src}
+          alt={img.alt}
+          width={0}
+          height={0}
+          sizes="(max-width: 768px) 50vw, 33vw"
+          className="w-auto max-w-full h-auto block"
+        />
       ))}
     </div>
   )

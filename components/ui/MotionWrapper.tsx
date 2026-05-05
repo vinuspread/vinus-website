@@ -53,7 +53,7 @@ export function MagneticLink({ children, href, className = '' }: { children: Rea
 }
 
 // 4. Staggered Text Reveal
-export function TextReveal({ text, className = '', delay = 0 }: { text: string, className?: string, delay?: number }) {
+export function TextReveal({ text, className = '', delay = 0, nowrap = false }: { text: string, className?: string, delay?: number, nowrap?: boolean }) {
   const words = text.split(' ')
 
   const container = {
@@ -82,7 +82,7 @@ export function TextReveal({ text, className = '', delay = 0 }: { text: string, 
 
   return (
     <motion.div
-      className={`flex flex-wrap ${className}`}
+      className={`flex ${nowrap ? 'flex-nowrap' : 'flex-wrap'} ${className}`}
       variants={container}
       initial="hidden"
       whileInView="visible"

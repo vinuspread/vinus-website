@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
-import Image from 'next/image'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
+import HeroParallax from '@/components/work/HeroParallax'
 import JsonLd from '@/components/seo/JsonLd'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import type { Work } from '@/types'
@@ -86,32 +86,9 @@ export default async function WorkDetailPage({ params }: Props) {
     <article>
       <JsonLd data={jsonLd} />
 
-      {/* Fixed Hero — Lenis smooth scroll과 호환되는 fixed 방식 */}
       {typedWork.hero_url && (
         <>
-          <div className="fixed inset-0 w-full h-screen overflow-hidden" style={{ zIndex: 1 }}>
-            {typedWork.hero_type === 'video' ? (
-              <video
-                src={typedWork.hero_url}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            ) : (
-              <Image
-                src={typedWork.hero_url}
-                alt={typedWork.title}
-                fill
-                priority
-                className="object-cover"
-                sizes="100vw"
-              />
-            )}
-            <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-white to-transparent" />
-          </div>
-          {/* 히어로 높이만큼 스크롤 공간 확보 */}
+          <HeroParallax url={typedWork.hero_url} type={typedWork.hero_type ?? 'image'} alt={typedWork.title} />
           <div className="h-screen" />
         </>
       )}
@@ -120,44 +97,40 @@ export default async function WorkDetailPage({ params }: Props) {
       <div className="relative bg-white pb-32" style={{ zIndex: 10 }}>
 
       {/* Hero Header for Work Detail */}
-      <header className="relative pt-20 pb-24 md:pt-28 md:pb-32 px-6 md:px-12 max-w-[1600px] mx-auto border-b border-gray-100">
-        <div className="max-w-6xl">
-          <FadeUp delay={0.2} className="mb-8">
-            <p className="text-sm md:text-base text-gray-400 tracking-[0.2em] uppercase">
-              {typedWork.category || 'PROJECT'}
-            </p>
-          </FadeUp>
-          <h1 className="text-5xl md:text-7xl lg:text-[8rem] font-light tracking-tighter leading-[1] uppercase">
-            <TextReveal text={typedWork.title} delay={0.4} />
+      <header className="relative pt-20 pb-24 md:pt-28 md:pb-32 px-6 md:px-12 max-w-4xl mx-auto">
+          <h1 className="text-[68px] font-bold tracking-tighter leading-[1] uppercase whitespace-nowrap">
+            <TextReveal text={typedWork.title} delay={0.2} nowrap />
           </h1>
+          {typedWork.subtitle && (
+            <FadeUp delay={0.5} className="mt-4">
+              <p className="text-lg md:text-xl text-black font-bold">{typedWork.subtitle}</p>
+            </FadeUp>
+          )}
 
           {/* Metadata Row */}
-          <FadeUp delay={1} className="mt-16 pt-16 border-t border-gray-100">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-sm md:text-base">
-              <div>
-                <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Client</p>
-                <p className="font-light text-black text-lg">{typedWork.client_name || '바이너스프레드'}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Role</p>
-                <p className="font-light text-black text-lg">{typedWork.subtitle || 'UX/UI, Development'}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Period</p>
-                <p className="font-light text-black text-lg">{typedWork.period || new Date(typedWork.created_at).getFullYear()}</p>
-              </div>
-              <div>
-                <p className="text-gray-400 mb-3 uppercase tracking-widest text-xs font-medium">Link</p>
-                <MagneticLink href="#" className="font-light text-black border-b border-black pb-1 hover:text-gray-500 transition-colors text-lg">
-                  Visit Website
-                </MagneticLink>
-              </div>
+          <FadeUp delay={0.7} className="mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 text-left">
+              {[
+                { label: 'Client', value: typedWork.client_name || '바이너스프레드' },
+                { label: 'Release Date', value: typedWork.period || String(new Date(typedWork.created_at).getFullYear()) },
+                { label: 'Type', value: typedWork.category || 'Design & Development' },
+              ].map(({ label, value }) => (
+                <div key={label} className="border-t-2 border-black pt-6 pb-8 md:pr-12">
+                  <p className="text-xs font-bold uppercase tracking-widest mb-4">{label}</p>
+                  <p className="text-base font-light text-black">{value}</p>
+                </div>
+              ))}
             </div>
           </FadeUp>
-        </div>
+
+          {typedWork.summary && (
+            <FadeUp delay={1} className="mt-20">
+              <p className="text-lg md:text-xl text-black leading-relaxed whitespace-pre-line">{typedWork.summary}</p>
+            </FadeUp>
+          )}
       </header>
 
-      <div className="mt-24 md:mt-32 px-4 md:px-0 max-w-6xl mx-auto">
+      <div className="mt-24 md:mt-32">
         <BlockRenderer blocks={typedWork.blocks ?? []} />
       </div>
 

@@ -62,10 +62,12 @@ html.lenis, html.lenis body {
 
 /* Block spacing */
 .block-spacing-none { margin-bottom: 0; }
-.block-spacing-sm   { margin-bottom: 1.5rem; }
-.block-spacing-md   { margin-bottom: 3rem; }
-.block-spacing-lg   { margin-bottom: 5rem; }
-.block-spacing-xl   { margin-bottom: 7.5rem; }
+.block-spacing-sm   { margin-bottom: 1.5rem; }   /* 24px */
+.block-spacing-md   { margin-bottom: 3rem; }     /* 48px */
+.block-spacing-lg   { margin-bottom: 5rem; }     /* 80px */
+.block-spacing-xl   { margin-bottom: 7.5rem; }   /* 120px */
+.block-spacing-2xl  { margin-bottom: 12.5rem; }  /* 200px */
+.block-spacing-3xl  { margin-bottom: 15rem; }    /* 240px */
 
 /* Sequence gallery: per-image scroll animation (vertical) */
 .sequence-item {

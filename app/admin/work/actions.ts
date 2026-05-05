@@ -9,6 +9,7 @@ export interface WorkFormData {
   title: string
   slug: string
   subtitle: string
+  summary: string
   client_name: string
   category: string
   period: string
@@ -27,6 +28,7 @@ export async function saveWork(data: WorkFormData): Promise<{ id: string; slug: 
     title: data.title,
     slug: data.slug,
     subtitle: data.subtitle || null,
+    summary: data.summary || null,
     client_name: data.client_name || null,
     category: data.category || null,
     period: data.period || null,
