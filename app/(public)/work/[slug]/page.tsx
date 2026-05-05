@@ -125,7 +125,7 @@ export default async function WorkDetailPage({ params }: Props) {
 
           {typedWork.summary && (
             <FadeUp delay={1} className="mt-20">
-              <p className="text-lg md:text-xl text-black leading-relaxed whitespace-pre-line">{typedWork.summary}</p>
+              <p className="text-lg md:text-xl text-black leading-relaxed whitespace-pre-line break-keep">{typedWork.summary}</p>
             </FadeUp>
           )}
       </header>
