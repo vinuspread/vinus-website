@@ -69,18 +69,30 @@ function removeBlock(blocks: Block[], index: number): Block[] {
   return blocks.filter((_, i) => i !== index)
 }
 
+function resolveContentType(file: File): string {
+  if (file.type) return file.type
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+  const map: Record<string, string> = {
+    jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+    gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml',
+    heic: 'image/heic', heif: 'image/heif', avif: 'image/avif',
+  }
+  return map[ext] ?? 'application/octet-stream'
+}
+
 async function uploadFile(file: File): Promise<string> {
+  const contentType = resolveContentType(file)
   const res = await fetch('/api/admin/upload', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filename: file.name, contentType: file.type }),
+    body: JSON.stringify({ filename: file.name, contentType }),
   })
   const json = await res.json() as { signedUrl?: string; publicUrl?: string; error?: string }
   if (!res.ok || !json.signedUrl || !json.publicUrl) throw new Error(json.error ?? '업로드 실패')
 
   const uploadRes = await fetch(json.signedUrl, {
     method: 'PUT',
-    headers: { 'Content-Type': file.type },
+    headers: { 'Content-Type': contentType },
     body: file,
   })
   if (!uploadRes.ok) throw new Error('파일 업로드 실패')
@@ -118,6 +130,8 @@ export default function BlockEditor({ blocks, onChange }: Props) {
         } else if (block.type === 'file') {
           onChange(updateBlock(currentBlocks, index, { ...block, url }))
         }
+      } catch (err) {
+        alert(`업로드 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`)
       } finally {
         setUploading((prev) => ({ ...prev, [uploadKey]: false }))
         input.value = ''
