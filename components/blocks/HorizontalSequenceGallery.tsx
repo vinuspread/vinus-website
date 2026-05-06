@@ -30,7 +30,7 @@ export default function HorizontalSequenceGallery({ images = [] }: Props) {
   }, [images])
 
   return (
-    <div ref={containerRef} className="flex gap-0">
+    <div ref={containerRef} className="flex flex-col md:flex-row gap-0">
       {images.map((img, i) => (
         <div key={img.src || i} className="h-seq-item flex-1">
           {img.src && (
