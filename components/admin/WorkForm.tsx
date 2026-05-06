@@ -33,20 +33,31 @@ export default function WorkForm({ initialData }: Props) {
       .replace(/-+/g, '-')
   }
 
+  function resolveContentType(file: File): string {
+    if (file.type) return file.type
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+    const map: Record<string, string> = {
+      jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png',
+      gif: 'image/gif', webp: 'image/webp', svg: 'image/svg+xml',
+      heic: 'image/heic', heif: 'image/heif', avif: 'image/avif',
+      mp4: 'video/mp4', mov: 'video/quicktime', webm: 'video/webm',
+    }
+    return map[ext] ?? 'application/octet-stream'
+  }
+
   async function uploadFile(file: File): Promise<string> {
-    // 1. Signed URL 발급
+    const contentType = resolveContentType(file)
     const res = await fetch('/api/admin/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ filename: file.name, contentType: file.type }),
+      body: JSON.stringify({ filename: file.name, contentType }),
     })
     const json = await res.json() as { signedUrl?: string; publicUrl?: string; error?: string }
     if (!res.ok || !json.signedUrl || !json.publicUrl) throw new Error(json.error ?? '업로드 실패')
 
-    // 2. Supabase Storage에 직접 업로드
     const uploadRes = await fetch(json.signedUrl, {
       method: 'PUT',
-      headers: { 'Content-Type': file.type },
+      headers: { 'Content-Type': contentType },
       body: file,
     })
     if (!uploadRes.ok) throw new Error('파일 업로드 실패')
@@ -118,7 +129,6 @@ export default function WorkForm({ initialData }: Props) {
           router.refresh()
         }
       } catch (err) {
-        if (err && typeof err === 'object' && 'digest' in err) throw err
         setError(err instanceof Error ? err.message : '저장 실패')
       }
     })
@@ -130,7 +140,12 @@ export default function WorkForm({ initialData }: Props) {
       try {
         await deleteWork(initialData.id, initialData.slug)
       } catch (err) {
-        if (err && typeof err === 'object' && 'digest' in err) throw err
+        // re-throw redirect signal so Next.js can navigate away
+        if (err && typeof err === 'object' && 'digest' in err &&
+            typeof (err as { digest: unknown }).digest === 'string' &&
+            (err as { digest: string }).digest.startsWith('NEXT_REDIRECT')) {
+          throw err
+        }
         setError(err instanceof Error ? err.message : '삭제 실패')
       }
     })
