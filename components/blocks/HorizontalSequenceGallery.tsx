@@ -34,7 +34,7 @@ export default function HorizontalSequenceGallery({ images = [] }: Props) {
       {images.map((img, i) => (
         <div key={img.src || i} className="h-seq-item flex-1">
           {img.src && (
-            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="(max-width: 768px) 100vw, 33vw" quality={90} className="w-auto max-w-full h-auto block" />
+            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="(max-width: 768px) 100vw, 33vw" quality={90} className="w-full h-auto block" />
           )}
         </div>
       ))}
