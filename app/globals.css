@@ -72,23 +72,19 @@ html.lenis, html.lenis body {
 /* Sequence gallery: per-image scroll animation (vertical) */
 .sequence-item {
   opacity: 0;
-  transform: translateY(48px);
-  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.9s ease;
 }
 .sequence-item.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
-/* Horizontal sequence: staggered fade-up per image */
+/* Horizontal sequence: staggered fade per image */
 .h-seq-item {
   opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.7s ease;
 }
 .h-seq-item.is-visible {
   opacity: 1;
-  transform: translateY(0);
 }
 
 /* Block scroll animations */

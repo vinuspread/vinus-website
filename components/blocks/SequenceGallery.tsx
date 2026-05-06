@@ -14,6 +14,11 @@ export default function SequenceGallery({ images = [] }: Props) {
     const observers: IntersectionObserver[] = []
     refs.current.forEach((el) => {
       if (!el) return
+      const rect = el.getBoundingClientRect()
+      if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+        el.classList.add('is-visible')
+        return
+      }
       const obs = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -21,7 +26,7 @@ export default function SequenceGallery({ images = [] }: Props) {
             obs.disconnect()
           }
         },
-        { threshold: 0.2, rootMargin: '0px 0px -35% 0px' }
+        { threshold: 0.05, rootMargin: '0px 0px -10% 0px' }
       )
       obs.observe(el)
       observers.push(obs)
