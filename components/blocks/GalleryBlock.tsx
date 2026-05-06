@@ -4,6 +4,11 @@ import HorizontalSequenceGallery from './HorizontalSequenceGallery'
 
 export default function GalleryBlock({ block }: { block: GalleryBlockType }) {
   const images = block.images ?? []
-  if (block.layout === 'sequence-h') return <HorizontalSequenceGallery images={images} />
-  return <SequenceGallery images={images} />
+  return (
+    <div className="-mx-6 md:-mx-16">
+      {block.layout === 'sequence-h'
+        ? <HorizontalSequenceGallery images={images} />
+        : <SequenceGallery images={images} />}
+    </div>
+  )
 }
