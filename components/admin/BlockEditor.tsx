@@ -39,7 +39,7 @@ function createBlock(type: BlockType): Block {
     case 'heading-text': return { id, type, heading: '', body: '', headingSize: 'md', headingWeight: 'normal', font: 'pretendard', align: 'left', motion: 'none', spacing: 'md' }
     case 'image': return { id, type, src: '', alt: '', motion: 'none', spacing: 'md' }
     case 'parallax-image': return { id, type, src: '', alt: '', containerHeight: 600, motion: 'none', spacing: 'md' }
-    case 'gallery': return { id, type, images: [], motion: 'none', spacing: 'md' }
+    case 'gallery': return { id, type, images: [], layout: 'sequence', motion: 'none', spacing: 'md' }
     case 'video': return { id, type, url: '', motion: 'none', spacing: 'md' }
     case 'embed': return { id, type, embedType: 'url', url: '', code: '', caption: '', motion: 'none', spacing: 'md' }
     case 'divider': return { id, type, height: 40, motion: 'none', spacing: 'none' }
@@ -444,8 +444,6 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   onChange={(e) => onChange(updateBlock(blocks, index, { ...block, layout: e.target.value as GalleryLayout }))}
                   className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                 >
-                  <option value="grid-2">2열 그리드 — 이미지 2개 나란히</option>
-                  <option value="grid-3">3열 그리드 — 이미지 3개 나란히</option>
                   <option value="sequence">세로 시퀀스 — 이미지가 스크롤 따라 순차 등장</option>
                   <option value="sequence-h">가로 시퀀스 — 나란히 배치 후 좌→우 순차 등장</option>
                 </select>
