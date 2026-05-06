@@ -1,25 +1,21 @@
-import { Nav } from "@/components/sections/Nav";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Video } from "@/components/sections/Video";
-import { ClientsBrands } from "@/components/sections/ClientsBrands";
-import { ImageSlider } from "@/components/sections/ImageSlider";
-import { Awards } from "@/components/sections/Awards";
-import { LatestNews } from "@/components/sections/LatestNews";
-import { Footer } from "@/components/sections/Footer";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { VideoSection } from "@/components/sections/VideoSection";
+import { ClientsBrandsSection } from "@/components/sections/ClientsBrandsSection";
+import { ImageSliderSection } from "@/components/sections/ImageSliderSection";
+import { AwardsSection } from "@/components/sections/AwardsSection";
+import { LatestNewsSection } from "@/components/sections/LatestNewsSection";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <Nav />
-      <Hero />
-      <About />
-      <Video />
-      <ClientsBrands />
-      <ImageSlider />
-      <Awards />
-      <LatestNews />
-      <Footer />
-    </main>
+    <div className="min-h-screen">
+      <HeroSection />
+      <AboutSection />
+      <VideoSection />
+      <ClientsBrandsSection />
+      <ImageSliderSection />
+      <AwardsSection />
+      <LatestNewsSection />
+    </div>
   );
 }

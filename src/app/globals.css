@@ -22,79 +22,122 @@
   html, body {
     @apply bg-gallery text-mine-shaft antialiased overflow-x-hidden;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-    text-transform: uppercase;
+    /* 전역 uppercase 제거 - 지시사항 §4 반영 */
   }
 }
 
 /* ------------------------------------------------------------
-   Animation System (Refactored based on dashdigital.studio)
+   Animation System
    ------------------------------------------------------------ */
 
-/* Container for reveal */
 .anim-clip {
   overflow: hidden;
   display: inline-block;
 }
 
-/* Base reveal class */
 .anim-move-up {
   display: block;
   transform: translateY(120%);
   transition: transform 1.5s var(--ease-expo-out);
-  transition-delay: var(--delay, 0s);
 }
 
-/* When parent (anim-wrap) gets .ready */
 .anim-wrap.ready .anim-move-up {
   transform: translateY(0);
 }
 
-/* Image reveal */
 .anim-move-up-img {
   transform: translateY(120%);
   transition: transform 2.4s var(--ease-image);
-  transition-delay: var(--delay, 0s);
 }
 .anim-wrap.ready .anim-move-up-img {
   transform: translateY(0);
 }
 
-/* Fill animation (dividers) */
 .anim-fill-width {
   width: 0;
   transition: width 1s var(--ease-fill);
-  transition-delay: var(--delay, 0s);
 }
 .anim-wrap.ready .anim-fill-width {
   width: 100%;
 }
 
-/* Header scroll interaction */
+.anim-fill-height {
+  height: 0;
+  transition: height 6s var(--ease-fill);
+}
+.anim-wrap.ready .anim-fill-height {
+  height: 100%;
+}
+
+.nav-dash {
+  width: 0;
+  transition: width 0.6s var(--ease-expo-out);
+}
+.anim-wrap.ready .nav-dash {
+  width: 16px;
+}
+
 .nav-hidden {
-  transform: translateY(-56px); /* height of nav */
+  transform: translateY(-56px);
   transition: transform 1s cubic-bezier(.215,.61,.355,1);
 }
 
-/* Custom Cursor */
+/* ------------------------------------------------------------
+   Component Styles (Real-world Analysis)
+   ------------------------------------------------------------ */
+
+/* Custom Cursor - 지시사항 §6 반영 */
 .cursor {
   position: fixed;
-  width: 12px;
-  height: 12px;
-  background: var(--color-mine-shaft);
-  border-radius: 50%;
+  border: 1px solid #2a2a2a;
+  padding: 3px 6px;
+  background: #0f0f0f;
+  color: #fafafa;
+  font-size: 10px;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
-  transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+.cursor-active {
+  opacity: 1;
 }
 
-.cursor-hover {
-  width: 80px;
-  height: 80px;
-  background: rgba(42, 42, 42, 0.9);
-  display: flex;
+/* Button */
+.btn-front {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 10px;
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 10.5px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.btn-front:hover {
+  opacity: 0.8;
+}
+
+/* Header Entrance Animation */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.header-enter {
+  animation: fade-in 0.6s ease forwards;
+}
+
+/* No Scrollbar Utility */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

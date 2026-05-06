@@ -1,53 +1,73 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 export const Header = () => {
+  const pathname = usePathname();
   const [isHidden, setIsHidden] = useState(false);
-  const [lastY, setLastY] = useState(0);
+  const lastYRef = useRef(0);
+  const navRef = useRef<HTMLElement>(null);
+
+  const pageLabel = {
+    "/": "Home",
+    "/work": "Work",
+    "/about": "About",
+  }[pathname] || "Home";
 
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      // Hide on scroll down, show on scroll up
-      setIsHidden(y > lastY && y > 100);
-      setLastY(y);
+      setIsHidden(y > lastYRef.current && y > 100);
+      lastYRef.current = y;
     };
 
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastY]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <header 
+      ref={navRef}
       className={cn(
-        "fixed top-0 left-0 w-full h-[56px] bg-gallery z-[1000] border-b border-alto px-page-padding flex items-center justify-between transition-transform duration-1000",
+        "fixed top-0 left-0 w-full h-[56px] bg-gallery z-[1000] border-b border-alto px-page-padding flex items-center justify-between transition-transform duration-1000 header-enter",
         isHidden && "nav-hidden"
       )}
     >
       {/* Left: Logo */}
       <div className="flex items-center gap-4">
-        <Link href="/" className="text-[17px] font-normal tracking-tight anim-wrap ready">
-          <span className="anim-clip">
-            <span className="anim-move-up" style={{ "--delay": "0s" } as any}>DashDigital®</span>
-          </span>
+        <Link href="/" className="text-[17px] font-normal tracking-tight uppercase">
+          DashDigital®
         </Link>
-        <div className="hidden md:flex items-center gap-2 text-mine-shaft/40 text-[14px] anim-wrap ready">
-          <span className="anim-fill-width bg-alto h-[1px] w-4" />
-          <span className="anim-clip">
-            <span className="anim-move-up" style={{ "--delay": "0.1s" } as any}>Home</span>
-          </span>
+        <div className="hidden md:flex items-center gap-2 text-mine-shaft/40 text-[14px]">
+          <span className="nav-dash bg-alto h-[1px]" />
+          {pageLabel}
         </div>
       </div>
 
       {/* Right: Menu */}
-      <div className="flex items-center gap-8 anim-wrap ready">
-        <button className="text-[10.5px] tracking-wider font-normal group">
-          <span className="anim-clip">
-            <span className="anim-move-up" style={{ "--delay": "0.2s" } as any}>Menu +</span>
-          </span>
+      <div className="flex items-center gap-6 md:gap-10">
+        <nav className="hidden md:flex items-center gap-8">
+          {[
+            { label: "Work", href: "/work" },
+            { label: "About", href: "/about" },
+            { label: "Contact", href: "#" },
+          ].map((item) => (
+            <Link 
+              key={item.label}
+              href={item.href}
+              className="text-[12px] uppercase tracking-wider hover:opacity-50 transition-opacity"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <button className="text-[12px] tracking-wider font-normal group uppercase border border-mine-shaft/20 px-3 py-1 rounded-full hover:bg-mine-shaft hover:text-gallery transition-all">
+          Menu +
         </button>
       </div>
     </header>

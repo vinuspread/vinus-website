@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export const Cursor = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [hoverText, setHoverText] = useState("");
-  const [isHovering, setIsHovering] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const cursor = cursorRef.current;
@@ -23,9 +23,9 @@ export const Cursor = () => {
       
       if (hoverData) {
         setHoverText(hoverData);
-        setIsHovering(true);
+        setIsActive(true);
       } else {
-        setIsHovering(false);
+        setIsActive(false);
       }
     };
 
@@ -42,15 +42,11 @@ export const Cursor = () => {
     <div 
       ref={cursorRef} 
       className={cn(
-        "cursor",
-        isHovering && "cursor-hover"
+        "cursor uppercase",
+        isActive && "cursor-active"
       )}
     >
-      {isHovering && (
-        <span className="anim-clip">
-          <span className="anim-move-up text-white">{hoverText}</span>
-        </span>
-      )}
+      {hoverText}
     </div>
   );
 };
