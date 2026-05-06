@@ -15,7 +15,7 @@ export default function ParallaxImageBlock({ block }: { block: ParallaxImageBloc
   })
 
   const height = block.containerHeight ?? 600
-  const travel = Math.round(height * 0.18)
+  const travel = Math.round(height * 0.3)
   const y = useTransform(scrollYProgress, [0, 1], [travel, -travel])
 
   return (
@@ -24,7 +24,7 @@ export default function ParallaxImageBlock({ block }: { block: ParallaxImageBloc
       style={{ height: `${height}px` }}
       className="-mx-6 md:-mx-16 relative overflow-hidden w-[calc(100%+3rem)] md:w-[calc(100%+8rem)]"
     >
-      <motion.div style={{ y }} className="absolute inset-0 scale-[1.4]">
+      <motion.div style={{ y }} className="absolute inset-0 scale-[1.65]">
         <Image
           src={block.src}
           alt={block.alt}
