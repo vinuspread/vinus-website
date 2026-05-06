@@ -58,6 +58,17 @@ export async function saveWork(data: WorkFormData): Promise<{ id: string; slug: 
   }
 }
 
+export async function revalidateAllWork() {
+  const supabase = await createClient()
+  const { data: works } = await supabase.from('work').select('slug')
+  revalidatePath('/work')
+  revalidatePath('/work', 'layout')
+  for (const w of works ?? []) {
+    revalidatePath(`/work/${w.slug}`, 'page')
+  }
+  revalidatePath('/sitemap.xml')
+}
+
 export async function deleteWork(id: string, slug: string) {
   const { redirect } = await import('next/navigation')
   const supabase = await createClient()
