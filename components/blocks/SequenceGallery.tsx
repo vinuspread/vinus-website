@@ -30,7 +30,7 @@ export default function SequenceGallery({ images = [] }: Props) {
   }, [images])
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-0">
       {images.map((img, i) => (
         <div
           key={img.src || i}
@@ -38,7 +38,7 @@ export default function SequenceGallery({ images = [] }: Props) {
           className="sequence-item w-full"
         >
           {img.src && (
-            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="100vw" quality={90} className="w-full h-auto block" />
+            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="100vw" quality={90} className="w-auto max-w-full h-auto block" />
           )}
         </div>
       ))}
