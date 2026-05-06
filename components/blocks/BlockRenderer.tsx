@@ -33,6 +33,7 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
         const isFullWidth =
           block.type === 'image' ||
           block.type === 'parallax-image' ||
+          block.type === 'gallery' ||
           ('fullWidth' in block && block.fullWidth === true)
         const wrapClass = isFullWidth
           ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
