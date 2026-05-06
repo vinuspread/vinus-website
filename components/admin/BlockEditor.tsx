@@ -448,15 +448,6 @@ export default function BlockEditor({ blocks, onChange }: Props) {
 
             {block.type === 'gallery' && (
               <div className="space-y-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={block.fullWidth ?? false}
-                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, fullWidth: e.target.checked }))}
-                    className="accent-black"
-                  />
-                  <span className="text-xs text-gray-600">전체화면</span>
-                </label>
                 <select
                   value={block.layout ?? 'grid-3'}
                   onChange={(e) => onChange(updateBlock(blocks, index, { ...block, layout: e.target.value as GalleryLayout }))}
