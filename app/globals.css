@@ -90,6 +90,7 @@ html.lenis, html.lenis body {
 /* Block scroll animations */
 .block-anim {
   opacity: 0;
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 .block-anim.is-visible {
   opacity: 1;

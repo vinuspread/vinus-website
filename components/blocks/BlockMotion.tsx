@@ -16,10 +16,10 @@ export default function BlockMotion({ motion, children }: Props) {
     const el = ref.current
     if (!el) return
 
-    // Already in viewport on mount (e.g. first block)
+    // Already in viewport on mount — defer one rAF so browser paints initial state first
     const rect = el.getBoundingClientRect()
     if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
-      el.classList.add('is-visible')
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('is-visible')))
       return
     }
 
