@@ -1,51 +1,71 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
+import { motion, useInView } from 'framer-motion'
+import type { MotionType } from '@/types'
 
 interface Props {
   images: { src: string; alt: string }[]
+  motion: MotionType
 }
 
-export default function SequenceGallery({ images = [] }: Props) {
-  const refs = useRef<(HTMLDivElement | null)[]>([])
+type FramerVariant = { opacity: number; y?: number; scale?: number }
 
-  useEffect(() => {
-    const observers: IntersectionObserver[] = []
-    refs.current.forEach((el) => {
-      if (!el) return
-      const rect = el.getBoundingClientRect()
-      if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
-        el.classList.add('is-visible')
-        return
-      }
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            el.classList.add('is-visible')
-            obs.disconnect()
-          }
-        },
-        { threshold: 0.05, rootMargin: '0px 0px -10% 0px' }
-      )
-      obs.observe(el)
-      observers.push(obs)
-    })
-    return () => observers.forEach((o) => o.disconnect())
-  }, [images])
+const HIDDEN: Record<MotionType, FramerVariant> = {
+  none:          { opacity: 1 },
+  fadeIn:        { opacity: 0 },
+  slideUp:       { opacity: 0, y: 80 },
+  zoomIn:        { opacity: 0, scale: 0.97 },
+  textReveal:    { opacity: 0, y: 24 },
+  curtainReveal: { opacity: 0, y: 100 },
+  stagger:       { opacity: 0, y: 40 },
+}
 
+const TRANSITION: Record<MotionType, Parameters<typeof motion.div>[0]['transition']> = {
+  none:          {},
+  fadeIn:        { duration: 0.9, ease: 'easeOut' },
+  slideUp:       { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+  zoomIn:        { duration: 0.8, ease: 'easeOut' },
+  textReveal:    { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+  curtainReveal: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+  stagger:       { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+}
+
+const VISIBLE: FramerVariant = { opacity: 1, y: 0, scale: 1 }
+
+function SequenceItem({ img, motionType }: { img: { src: string; alt: string }; motionType: MotionType }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '0px 0px -5% 0px' })
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={HIDDEN[motionType]}
+      animate={inView ? VISIBLE : HIDDEN[motionType]}
+      transition={TRANSITION[motionType]}
+      className="w-full"
+    >
+      {img.src && (
+        <Image
+          src={img.src}
+          alt={img.alt}
+          width={0}
+          height={0}
+          sizes="100vw"
+          quality={90}
+          className="w-full h-auto block"
+        />
+      )}
+    </motion.div>
+  )
+}
+
+export default function SequenceGallery({ images = [], motion: motionType }: Props) {
   return (
     <div className="space-y-0">
       {images.map((img, i) => (
-        <div
-          key={img.src || i}
-          ref={(el) => { refs.current[i] = el }}
-          className="sequence-item w-full"
-        >
-          {img.src && (
-            <Image src={img.src} alt={img.alt} width={0} height={0} sizes="100vw" quality={90} className="w-full h-auto block" />
-          )}
-        </div>
+        <SequenceItem key={img.src || i} img={img} motionType={motionType} />
       ))}
     </div>
   )

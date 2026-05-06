@@ -69,23 +69,7 @@ html.lenis, html.lenis body {
 .block-spacing-2xl  { padding-bottom: 12.5rem; }  /* 200px */
 .block-spacing-3xl  { padding-bottom: 15rem; }    /* 240px */
 
-/* Sequence gallery: per-image scroll animation (vertical) */
-.sequence-item {
-  opacity: 0;
-  transition: opacity 0.9s ease;
-}
-.sequence-item.is-visible {
-  opacity: 1;
-}
-
-/* Horizontal sequence: staggered fade per image */
-.h-seq-item {
-  opacity: 0;
-  transition: opacity 0.7s ease;
-}
-.h-seq-item.is-visible {
-  opacity: 1;
-}
+/* Gallery per-image animations handled by Framer Motion in SequenceGallery.tsx */
 
 /* Block scroll animations — handled by Framer Motion in BlockMotion.tsx */
 
