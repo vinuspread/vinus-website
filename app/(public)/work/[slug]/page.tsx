@@ -97,7 +97,7 @@ export default async function WorkDetailPage({ params }: Props) {
       <div className="relative bg-white pb-32" style={{ zIndex: 10 }}>
 
       {/* Hero Header for Work Detail */}
-      <header className="relative pt-20 pb-24 md:pt-28 md:pb-32 px-6 md:px-12 max-w-4xl mx-auto">
+      <header className="relative pt-20 pb-24 md:pt-28 md:pb-[100px] px-6 md:px-12 max-w-4xl mx-auto">
           <h1 className="text-[68px] font-bold tracking-tighter leading-[1] uppercase whitespace-nowrap">
             <TextReveal text={typedWork.title} delay={0.2} nowrap />
           </h1>
@@ -130,7 +130,7 @@ export default async function WorkDetailPage({ params }: Props) {
           )}
       </header>
 
-      <div className="mt-24 md:mt-32">
+      <div className="mt-24 md:mt-[100px]">
         <BlockRenderer blocks={typedWork.blocks ?? []} />
       </div>
 
