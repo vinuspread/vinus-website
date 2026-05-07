@@ -37,43 +37,81 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           className="object-cover" 
           priority
         />
-        {/* 좌하단 오버레이 */}
         <div className="absolute bottom-0 left-0 p-page-padding pb-[60px] z-10 w-full bg-gradient-to-t from-black/50 to-transparent">
           <p className="text-[13px] text-white/70 uppercase tracking-[-0.3px] mb-3">
             {project.services}
           </p>
-          <h1 className="text-[48px] md:text-[64px] leading-none tracking-[-2px] text-white uppercase max-w-[800px]">
+          <h1 className="text-[56px] md:text-[96px] leading-[0.9] tracking-[-3px] text-white uppercase max-w-[900px]">
             {project.title}
           </h1>
+          {project.subtitle && (
+            <p className="text-[15px] text-white/50 uppercase tracking-wider mt-2">
+              {project.subtitle}
+            </p>
+          )}
         </div>
       </section>
 
       {/* 2. Meta Bar 섹션 */}
-      <section className="px-page-padding py-[48px] border-b border-alto grid grid-cols-2 md:grid-cols-4 gap-8">
+      <section className="px-page-padding bg-white border-b border-alto grid grid-cols-2 md:grid-cols-4">
         {[
           { label: "Client", value: project.client },
           { label: "Year", value: project.year },
           { label: "Services", value: project.services },
           { label: "Awards", value: project.awards ? `${project.awards} Awards` : "—" },
-        ].map(({ label, value }) => (
-          <div key={label}>
-            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 mb-2">{label}</p>
-            <p className="text-[15px] leading-snug">{value}</p>
+        ].map(({ label, value }, i) => (
+          <div
+            key={label}
+            className={`flex flex-col gap-3 py-[40px] pr-[40px] ${i < 3 ? "border-r border-alto" : ""} ${i > 0 ? "pl-[40px] pr-0 md:pr-[40px]" : ""}`}
+          >
+            <p className="text-[10px] uppercase tracking-[0.15em] text-mine-shaft/40 font-inter">{label}</p>
+            <p className="text-[16px] leading-snug tracking-[-0.3px]">{value}</p>
           </div>
         ))}
       </section>
 
-      {/* 3. Challenge (텍스트 섹션) */}
-      <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column">
+      {/* 3. Overview 섹션 */}
+      <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
         <div className="md:col-span-2 mb-8 md:mb-0">
-          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Challenge</p>
+          <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">01</p>
+          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Overview</p>
         </div>
         <div className="md:col-span-5">
-          <p className="text-[22px] md:text-[26px] font-light leading-[1.4] tracking-[-0.4px]">
-            {project.challenge}
+          <p className="text-[22px] md:text-[26px] font-medium leading-[1.45] tracking-[-0.5px]">
+            {project.overview}
           </p>
         </div>
       </section>
+
+      {/* 4. Background 섹션 */}
+      {project.background && (
+        <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
+          <div className="md:col-span-2 mb-8 md:mb-0">
+            <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">02</p>
+            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Background</p>
+          </div>
+          <div className="md:col-span-5">
+            <p className="text-[17px] md:text-[19px] font-light leading-[1.6] tracking-[-0.3px]">
+              {project.background}
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* 5. Approach 섹션 */}
+      {project.approach && (
+        <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
+          <div className="md:col-span-2 mb-8 md:mb-0">
+            <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">03</p>
+            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Approach</p>
+          </div>
+          <div className="md:col-span-5">
+            <p className="text-[17px] md:text-[19px] font-light leading-[1.6] tracking-[-0.3px]">
+              {project.approach}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* 4. 이미지 섹션 (반복 패턴) */}
       <div className="flex flex-col gap-4 pb-[120px]">
@@ -98,19 +136,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </div>
 
-      {/* 5. Next Project 섹션 */}
-      <section className="px-page-padding py-[80px] md:py-[120px] border-t border-alto flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-        <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Next Project</p>
-        <Link 
-          href={`/work/${nextProject.slug}`} 
-          className="group flex items-center gap-4 w-full md:w-auto"
-        >
-          <span className="text-[32px] md:text-[46px] tracking-[-1.5px] uppercase group-hover:opacity-60 transition-opacity leading-none">
-            {nextProject.title}
-          </span>
-          <span className="text-[24px] group-hover:translate-x-2 transition-transform">→</span>
-        </Link>
-      </section>
+      {/* 6. Next Project 섹션 */}
+      <Link
+        href={`/work/${nextProject.slug}`}
+        className="block relative w-full h-[50vh] md:h-[60vh] overflow-hidden group border-t border-alto"
+      >
+        <Image
+          src={nextProject.heroImg}
+          alt={nextProject.title}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-500" />
+        <div className="absolute inset-0 flex flex-col justify-between p-page-padding py-[48px]">
+          <p className="text-[11px] uppercase tracking-wider text-white/60">Next Project</p>
+          <div className="flex items-end justify-between">
+            <h2 className="text-[40px] md:text-[72px] leading-none tracking-[-2px] text-white uppercase max-w-[700px]">
+              {nextProject.title}
+            </h2>
+            <span className="text-[32px] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
+          </div>
+        </div>
+      </Link>
     </main>
   );
 }

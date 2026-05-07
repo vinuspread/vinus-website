@@ -42,9 +42,8 @@ export const AwardsSection = () => {
           <p className="text-[17.1px] font-light max-w-sm">
             <span className="anim-clip block">
               <span className="anim-move-up" data-delay="200">
-                Our passion for technology drives us to excel in research, strategy, branding, UX/UI, and development. 
-                Our focus is on creating impactful experiences that bring value to our clients and their customers. 
-                While we don't chase awards, it's always gratifying to receive recognition for our work.
+                기술과 경험에 대한 깊은 이해를 바탕으로 리서치, 전략, 브랜딩, UX/UI, 개발을 유기적으로 연결합니다.<br /><br />
+                우리는 브랜드와 사용자 모두에게 가치 있는 경험을 만드는 데 집중합니다.
               </span>
             </span>
           </p>
@@ -59,13 +58,30 @@ export const AwardsSection = () => {
                   <span className="anim-move-up" data-delay={idx * 100}>{award.name}</span>
                 </span>
               </h3>
-              <ul className="text-left text-[16.5px] font-light space-y-1">
-                {award.items.map((item, i) => (
-                  <li key={i} className="anim-clip block">
-                    <span className="anim-move-up" data-delay={idx * 100 + i * 50}>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              {/* Awwwards & CSS Design Awards items → single sentence */}
+              {award.name === "Awwwards" || award.name === "CSS Design Awards" ? (
+                <p className="anim-clip text-[16.5px] font-light leading-[1.4] text-left">
+                  <span
+                    className="anim-move-up"
+                    data-delay={idx * 100}
+                  >
+                    {award.items.join(', ')}.
+                  </span>
+                </p>
+              ) : (
+                <ul className="list-none p-0 m-0 text-left text-[16.5px] font-light flex flex-col gap-1 leading-none">
+                  {award.items.map((item, i) => (
+                    <li key={i} className="anim-clip">
+                      <span
+                        className="anim-move-up"
+                        data-delay={idx * 100 + i * 50}
+                      >
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
         </div>

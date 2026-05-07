@@ -7,6 +7,10 @@
   --color-alto:       #d6d6d6;
   --color-ash:        #ccc4b9;
 
+  /* Fonts */
+  --font-inter: var(--font-inter), "Inter", sans-serif;
+  --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+
   /* Spacing Tokens */
   --spacing-page-padding: 40px;
   --spacing-column:       38.4px;
@@ -21,10 +25,14 @@
 @layer base {
   html, body {
     @apply bg-gallery text-mine-shaft antialiased overflow-x-hidden;
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-    /* 전역 uppercase 제거 - 지시사항 §4 반영 */
+    font-family: var(--font-pretendard);
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-inter {
+    font-family: var(--font-inter);
   }
 }
+
 
 /* ------------------------------------------------------------
    Animation System
@@ -37,20 +45,24 @@
 
 .anim-move-up {
   display: block;
-  transform: translateY(120%);
-  transition: transform 1.5s var(--ease-expo-out);
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 1.2s var(--ease-expo-out), opacity 0.6s ease;
 }
 
 .anim-wrap.ready .anim-move-up {
   transform: translateY(0);
+  opacity: 1;
 }
 
 .anim-move-up-img {
-  transform: translateY(120%);
-  transition: transform 2.4s var(--ease-image);
+  transform: translateY(8%);
+  opacity: 0;
+  transition: transform 2.4s var(--ease-image), opacity 1s ease;
 }
 .anim-wrap.ready .anim-move-up-img {
   transform: translateY(0);
+  opacity: 1;
 }
 
 .anim-fill-width {
@@ -109,20 +121,27 @@
 .btn-front {
   display: inline-flex;
   align-items: center;
-  background: #2a2a2a;
-  color: #f0f0f0;
+  background: #ffffff;
+  color: #222222;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 10.5px;
+  padding: 8px 20px;
+  font-size: 11px;
+  font-weight: 700;
   white-space: nowrap;
   text-transform: uppercase;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  font-family: var(--font-inter);
 }
 
 .btn-front:hover {
-  opacity: 0.8;
+  background: #222222;
+  color: #ffffff;
+  border-color: #222222;
 }
+
+
 
 /* Header Entrance Animation */
 @keyframes fade-in {

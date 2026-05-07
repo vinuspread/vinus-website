@@ -1,39 +1,52 @@
 "use client";
 
-import React from "react";
+import { useState } from "react";
 import { WorkGrid } from "@/components/sections/WorkGrid";
-import { useReveal } from "@/hooks/useReveal";
+import { PageHeader } from "@/components/common/PageHeader";
+
+const categories = ["All", "UI/UX", "Character/Illustration", "Branding", "Etc"] as const;
+type Category = (typeof categories)[number];
 
 export default function WorkPage() {
-  const revealRef = useReveal();
+  const [active, setActive] = useState<Category>("All");
 
   return (
     <main className="bg-gallery">
-      {/* Page Header */}
-      <section ref={revealRef as any} className="anim-wrap pt-[140px] pb-[80px] px-page-padding border-b border-alto">
-        <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
-          <div className="md:col-span-8 mb-[60px]">
-            <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase">
-              <span className="anim-clip block">
-                <span className="anim-move-up">WORK</span>
-              </span>
-            </h1>
-          </div>
-          
-          <div className="md:col-span-5 md:col-start-4">
-            <p className="text-[20px] font-light leading-[1.5] tracking-[-0.3px] anim-clip block">
-              <span className="anim-move-up" data-delay="200">
-                우리는 치밀한 리서치와 전략을 바탕으로 브랜드의 정체성을 강화하고,
-                사용자에게 깊은 인상을 남기는 최상의 디지털 결과물을 만들어냅니다.
-                아래는 바이너스가 진행한 대표적인 프로젝트들입니다.
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        breadcrumb="Experience"
+        noBorder
+        title={<>Seamless new <span className="font-bold">experiences</span></>}
+        description={
+          <>
+            <span className="block">
+              우리는 치밀한 리서치와 전략을 바탕으로 브랜드와 사용자의 경험을 설계하며,
+            </span>
+            <span className="block mt-[4px]">
+              새롭지만 직관적인 디지털 경험으로 더 가치 있는 브랜드를 만들어갑니다.
+            </span>
+          </>
+        }
+      />
+
+      {/* Category Filter */}
+      <div className="px-page-padding flex items-center gap-[4px] py-[20px]">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActive(cat)}
+            className={`px-[16px] py-[7px] text-[12px] uppercase tracking-[0.08em] border transition-colors ${
+              active === cat
+                ? "bg-mine-shaft text-gallery border-mine-shaft"
+                : "bg-transparent text-mine-shaft/50 border-alto hover:border-mine-shaft hover:text-mine-shaft"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
 
       {/* Projects Grid */}
-      <WorkGrid />
+      <WorkGrid filter={active} />
     </main>
   );
 }

@@ -52,14 +52,18 @@ export default function AboutPage() {
     <main className="bg-gallery">
       {/* 1. Hero 섹션 */}
       <section ref={heroRef as any} className="anim-wrap pt-[140px] pb-[80px] px-page-padding">
+        <div className="mb-6">
+          <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
+            Vinuspread
+          </span>
+        </div>
         {/* Row 1: Title */}
         <div className="mb-[80px]">
-          <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase">
+          <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter font-normal">
             <div className="anim-clip overflow-hidden">
-              <div className="anim-move-up" data-delay="0">Designed to engage</div>
-            </div>
-            <div className="anim-clip overflow-hidden">
-              <div className="anim-move-up" data-delay="100">Built to connect</div>
+              <div className="anim-move-up" data-delay="0">
+                SPREAD THE <span className="font-bold">BEAUTIFUL</span> THINGS
+              </div>
             </div>
           </h1>
         </div>
@@ -82,11 +86,10 @@ export default function AboutPage() {
                 </div>
               </div>
               <div>
-                <p className="text-[20px] font-light leading-[1.5] tracking-[-0.3px] anim-clip block">
+                <p className="text-[20px] font-medium leading-[1.5] tracking-[-0.3px] text-mine-shaft/60 anim-clip block">
                   <span className="anim-move-up" data-delay="400">
-                    Vinus crafts digital experiences rooted in research and strategy.
-                    Through deep user insight, rigorous planning, and precise design
-                    and development, we create meaningful connections between brands and people.
+                    아름다운 바이러스를 세상에 퍼뜨립니다.<br />
+                    우리가 창조하는 시각적인 결과물이 오늘보다 내일을 더 아름답게 만들거라 믿습니다.
                   </span>
                 </p>
               </div>
@@ -195,17 +198,21 @@ export default function AboutPage() {
 
       {/* 5. Collaboration 섹션 */}
       <section ref={collabRef as any} className="anim-wrap px-page-padding py-[160px] border-t border-alto">
-        <p className="text-[46.8px] leading-none tracking-[-1.5px] uppercase max-w-[700px]">
-          <span className="anim-clip block">
-            <span className="anim-move-up">We work together —</span>
-          </span>
-          <span className="anim-clip block">
-            <span className="anim-move-up" data-delay="100">with the shared vision</span>
-          </span>
-          <span className="anim-clip block">
-            <span className="anim-move-up" data-delay="200">of transforming your brand.</span>
-          </span>
-        </p>
+        <div className="flex flex-col gap-8 max-w-[700px]">
+          <p className="text-[46.8px] leading-none tracking-[-1.5px] uppercase font-inter font-bold">
+            <span className="anim-clip block">
+              <span className="anim-move-up">We turn ideas into real products.</span>
+            </span>
+          </p>
+          <p className="text-[18px] font-medium leading-[1.6] tracking-[-0.3px] text-mine-shaft/60">
+            <span className="anim-clip block">
+              <span className="anim-move-up" data-delay="100">
+                기획·디자인·개발·AI를 하나의 흐름으로 연결하여,<br />
+                사용자와 비즈니스 모두에게 가치 있는 경험을 만듭니다.
+              </span>
+            </span>
+          </p>
+        </div>
       </section>
     </main>
   );
