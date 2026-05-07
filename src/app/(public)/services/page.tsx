@@ -2,6 +2,7 @@
 
 import { useReveal } from "@/hooks/useReveal";
 import { useState } from "react";
+import { PageHeader } from "@/components/common/PageHeader";
 
 const primaryServices = [
   {
@@ -54,7 +55,6 @@ const serviceDetails = [
 ];
 
 export default function ServicesPage() {
-  const headerRef = useReveal();
   const primaryRef = useReveal();
   const detailRef = useReveal();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -64,42 +64,16 @@ export default function ServicesPage() {
   return (
     <main className="bg-gallery">
 
-      {/* ── Page Header ── */}
-      <section
-        ref={headerRef as any}
-        className="anim-wrap pt-[140px] pb-[80px] px-page-padding border-b border-alto"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
-          <div className="md:col-span-8 mb-6">
-            <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
-              Services
-            </span>
-          </div>
-          <div className="md:col-span-8 mb-[60px]">
-            <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter font-normal">
-              <span className="block overflow-hidden">
-                <span className="anim-move-up block">
-                  Strategic <span className="font-bold">Creative</span> Partner
-                </span>
-              </span>
-            </h1>
-          </div>
-          <div className="md:col-span-6">
-            <p className="text-[17px] font-medium leading-[1.4] tracking-[-0.3px] text-mine-shaft/60">
-              <span className="block overflow-hidden">
-                <span className="anim-move-up block" data-delay="200">
-                  리서치와 전략을 바탕으로 브랜드 아이덴티티, 디지털 디자인,
-                </span>
-              </span>
-              <span className="block overflow-hidden mt-[4px]">
-                <span className="anim-move-up block" data-delay="280">
-                  웹 개발까지 — 처음부터 끝까지 함께합니다.
-                </span>
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        breadcrumb="Services"
+        title={<>Strategic <span className="font-bold">Creative</span> Partner</>}
+        description={
+          <>
+            <span className="block">리서치와 전략을 바탕으로 브랜드 아이덴티티, 디지털 디자인,</span>
+            <span className="block mt-[4px]">웹 개발까지 — 처음부터 끝까지 함께합니다.</span>
+          </>
+        }
+      />
 
       {/* ── Primary Services ── */}
       <section ref={primaryRef as any} className="anim-wrap border-b border-alto">

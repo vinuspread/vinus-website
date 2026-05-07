@@ -83,7 +83,7 @@ export const HeroSectionV2 = () => {
             style={{ fontSize: "clamp(16px, 1.4vw, 22px)" }}
             data-delay="640"
           >
-            리서치와 전략을 바탕으로 브랜드와 사용자를 잇는 디지털 경험을 설계합니다.
+            리서치와 전략을 바탕으로 <span className="font-bold text-white">브랜드와 사용자를 잇는 디지털 경험</span>을 설계합니다.
           </p>
         </div>
 
