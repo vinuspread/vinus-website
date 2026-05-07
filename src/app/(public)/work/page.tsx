@@ -29,15 +29,15 @@ export default function WorkPage() {
       />
 
       {/* Category Filter */}
-      <div className="px-page-padding flex items-center gap-[4px] py-[20px]">
+      <div className="px-page-padding border-b border-alto flex items-center gap-[32px] py-[20px]">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActive(cat)}
-            className={`px-[16px] py-[7px] text-[12px] uppercase tracking-[0.08em] border transition-colors ${
+            className={`text-[12px] uppercase tracking-[0.1em] font-inter pb-[2px] transition-all duration-300 ${
               active === cat
-                ? "bg-mine-shaft text-gallery border-mine-shaft"
-                : "bg-transparent text-mine-shaft/50 border-alto hover:border-mine-shaft hover:text-mine-shaft"
+                ? "text-mine-shaft border-b border-mine-shaft"
+                : "text-mine-shaft/40 hover:text-mine-shaft"
             }`}
           >
             {cat}

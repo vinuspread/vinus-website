@@ -1,16 +1,16 @@
 "use client";
 
-import { useReveal } from "@/hooks/useReveal";
 import { stories } from "@/lib/stories";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { useReveal } from "@/hooks/useReveal";
+import { PageHeader } from "@/components/common/PageHeader";
 
 const categories = ["All", "Story", "Notice", "Etc"] as const;
 type Category = (typeof categories)[number];
 
 export default function StoryPage() {
-  const headerRef = useReveal();
   const listRef = useReveal();
   const [active, setActive] = useState<Category>("All");
 
@@ -22,53 +22,23 @@ export default function StoryPage() {
   return (
     <main className="bg-gallery">
 
-      {/* ── Page Header ── */}
-      <section
-        ref={headerRef as any}
-        className="anim-wrap pt-[140px] pb-[80px] px-page-padding"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
-          <div className="md:col-span-8 mb-6">
-            <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
-              Story
-            </span>
-          </div>
-          <div className="md:col-span-8 mb-[60px]">
-            <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter font-normal">
-              <span className="block overflow-hidden">
-                <span className="anim-move-up block">
-                  Ideas &amp; <span className="font-bold">Insights</span>
-                </span>
-              </span>
-            </h1>
-          </div>
-          <div className="md:col-span-6">
-            <p className="text-[17px] font-medium leading-[1.4] tracking-[-0.3px] text-mine-shaft/60">
-              <span className="block overflow-hidden">
-                <span className="anim-move-up block" data-delay="150">
-                  프로젝트와 경험, 그리고 브랜드에 대한
-                </span>
-              </span>
-              <span className="block overflow-hidden">
-                <span className="anim-move-up block" data-delay="220">
-                  바이너스프레드의 시선과 기록을 담았습니다.
-                </span>
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        breadcrumb="Story"
+        noBorder
+        title={<>Ideas &amp; <span className="font-bold">Insights</span></>}
+        description="프로젝트와 경험, 그리고 브랜드에 대한 바이너스프레드의 시선과 기록을 담았습니다."
+      />
 
       {/* ── Category Filter ── */}
-      <div className="px-page-padding border-b border-alto flex items-center gap-[4px] py-[20px]">
+      <div className="px-page-padding border-b border-alto flex items-center gap-[32px] py-[20px]">
         {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActive(cat)}
-            className={`px-[16px] py-[7px] text-[12px] uppercase tracking-[0.08em] border transition-colors ${
+            className={`text-[12px] uppercase tracking-[0.1em] font-inter pb-[2px] transition-all duration-300 ${
               active === cat
-                ? "bg-mine-shaft text-gallery border-mine-shaft"
-                : "bg-transparent text-mine-shaft/50 border-alto hover:border-mine-shaft hover:text-mine-shaft"
+                ? "text-mine-shaft border-b border-mine-shaft"
+                : "text-mine-shaft/40 hover:text-mine-shaft"
             }`}
           >
             {cat}

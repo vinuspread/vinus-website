@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, projects } from "@/lib/projects";
-import { DoubleButton } from "@/components/common/DoubleButton";
 
 interface ProjectPageProps {
   params: {
@@ -29,7 +28,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <main className="bg-gallery">
       {/* 1. Hero 섹션 */}
-      <section className="relative w-full h-screen overflow-hidden">
+      <section className="relative w-full h-[80vh] overflow-hidden">
         <Image 
           src={project.heroImg} 
           alt={project.title} 
@@ -37,15 +36,20 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           className="object-cover" 
           priority
         />
-        <div className="absolute bottom-0 left-0 p-page-padding pb-[60px] z-10 w-full bg-gradient-to-t from-black/50 to-transparent">
-          <p className="text-[13px] text-white/70 uppercase tracking-[-0.3px] mb-3">
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute bottom-0 left-0 p-page-padding pb-[60px] z-10 w-full">
+          <p className="text-[14px] text-white/70 uppercase tracking-wider mb-4 font-inter">
             {project.services}
           </p>
-          <h1 className="text-[56px] md:text-[96px] leading-[0.9] tracking-[-3px] text-white uppercase max-w-[900px]">
-            {project.title}
+          <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] text-white uppercase max-w-[1200px] font-inter">
+            {project.title.split(' ').map((word, i) => (
+              <span key={i} className={i % 2 === 1 ? "font-bold" : "font-normal"}>
+                {word}{' '}
+              </span>
+            ))}
           </h1>
           {project.subtitle && (
-            <p className="text-[15px] text-white/50 uppercase tracking-wider mt-2">
+            <p className="text-[17px] text-white/60 uppercase tracking-wider mt-6 font-inter max-w-[800px]">
               {project.subtitle}
             </p>
           )}
@@ -55,29 +59,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       {/* 2. Meta Bar 섹션 */}
       <section className="px-page-padding bg-white border-b border-alto grid grid-cols-2 md:grid-cols-4">
         {[
-          { label: "Client", value: project.client },
           { label: "Year", value: project.year },
+          { label: "Client", value: project.client },
           { label: "Services", value: project.services },
           { label: "Awards", value: project.awards ? `${project.awards} Awards` : "—" },
         ].map(({ label, value }, i) => (
           <div
             key={label}
-            className={`flex flex-col gap-3 py-[40px] pr-[40px] ${i < 3 ? "border-r border-alto" : ""} ${i > 0 ? "pl-[40px] pr-0 md:pr-[40px]" : ""}`}
+            className={`flex flex-col gap-4 py-[40px] pr-[40px] ${i < 3 ? "border-r border-alto" : ""} ${i > 0 ? "pl-[40px]" : ""}`}
           >
             <p className="text-[10px] uppercase tracking-[0.15em] text-mine-shaft/40 font-inter">{label}</p>
-            <p className="text-[16px] leading-snug tracking-[-0.3px]">{value}</p>
+            <p className="text-[16px] leading-snug tracking-[-0.3px] font-medium">{value}</p>
           </div>
         ))}
       </section>
 
       {/* 3. Overview 섹션 */}
-      <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
+      <section className="px-page-padding py-[100px] md:py-[140px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
         <div className="md:col-span-2 mb-8 md:mb-0">
           <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">01</p>
-          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Overview</p>
+          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter">Overview</p>
         </div>
-        <div className="md:col-span-5">
-          <p className="text-[22px] md:text-[26px] font-medium leading-[1.45] tracking-[-0.5px]">
+        <div className="md:col-span-6">
+          <p className="text-[24px] md:text-[32px] font-bold leading-[1.3] tracking-[-1px] text-mine-shaft break-keep">
             {project.overview}
           </p>
         </div>
@@ -88,10 +92,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
           <div className="md:col-span-2 mb-8 md:mb-0">
             <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">02</p>
-            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Background</p>
+            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter">Background</p>
           </div>
           <div className="md:col-span-5">
-            <p className="text-[17px] md:text-[19px] font-light leading-[1.6] tracking-[-0.3px]">
+            <p className="text-[15px] font-light leading-[1.6] tracking-[-0.3px] text-mine-shaft/70">
               {project.background}
             </p>
           </div>
@@ -103,61 +107,62 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
           <div className="md:col-span-2 mb-8 md:mb-0">
             <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">03</p>
-            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Approach</p>
+            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter">Approach</p>
           </div>
           <div className="md:col-span-5">
-            <p className="text-[17px] md:text-[19px] font-light leading-[1.6] tracking-[-0.3px]">
+            <p className="text-[15px] font-light leading-[1.6] tracking-[-0.3px] text-mine-shaft/70">
               {project.approach}
             </p>
           </div>
         </section>
       )}
 
-      {/* 4. 이미지 섹션 (반복 패턴) */}
-      <div className="flex flex-col gap-4 pb-[120px]">
-        {/* Full Width 1 */}
-        <div className="w-full aspect-[16/9] relative">
-          <Image src={project.images[0]} alt="" fill className="object-cover" />
-        </div>
-
-        {/* 2 Column Grid */}
-        <div className="px-page-padding grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-          <div className="aspect-[4/3] relative">
-            <Image src={project.images[1]} alt="" fill className="object-cover" />
+      {/* 6. 이미지 갤러리 */}
+      <div className="flex flex-col gap-4 py-[40px] md:py-[80px]">
+        {project.images.map((img, i) => (
+          <div key={i} className={`w-full relative ${i % 3 === 0 ? "aspect-[16/9]" : "px-page-padding"}`}>
+             {i % 3 === 0 ? (
+                <Image src={img} alt="" fill className="object-cover" />
+             ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <div className="aspect-[4/3] relative">
+                      <Image src={img} alt="" fill className="object-cover" />
+                   </div>
+                   {project.images[i+1] && (
+                      <div className="aspect-[4/3] relative">
+                        <Image src={project.images[i+1]} alt="" fill className="object-cover" />
+                      </div>
+                   )}
+                </div>
+             )}
           </div>
-          <div className="aspect-[4/3] relative">
-            <Image src={project.images[2]} alt="" fill className="object-cover" />
-          </div>
-        </div>
-
-        {/* Full Width 2 */}
-        <div className="w-full aspect-[16/9] relative">
-          <Image src={project.images[3]} alt="" fill className="object-cover" />
-        </div>
+        ))}
       </div>
 
-      {/* 6. Next Project 섹션 */}
-      <Link
-        href={`/work/${nextProject.slug}`}
-        className="block relative w-full h-[50vh] md:h-[60vh] overflow-hidden group border-t border-alto"
-      >
-        <Image
-          src={nextProject.heroImg}
-          alt={nextProject.title}
-          fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-500" />
-        <div className="absolute inset-0 flex flex-col justify-between p-page-padding py-[48px]">
-          <p className="text-[11px] uppercase tracking-wider text-white/60">Next Project</p>
-          <div className="flex items-end justify-between">
-            <h2 className="text-[40px] md:text-[72px] leading-none tracking-[-2px] text-white uppercase max-w-[700px]">
-              {nextProject.title}
-            </h2>
-            <span className="text-[32px] text-white group-hover:translate-x-2 transition-transform duration-300">→</span>
-          </div>
-        </div>
-      </Link>
+      {/* 7. Next Project 섹션 */}
+      <section className="px-page-padding pt-[120px] pb-[40px] border-t border-alto">
+         <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter mb-12 text-center">Next Project</p>
+         <Link
+            href={`/work/${nextProject.slug}`}
+            className="block relative w-full h-[60vh] md:h-[80vh] overflow-hidden group rounded-lg"
+         >
+            <Image
+               src={nextProject.heroImg}
+               alt={nextProject.title}
+               fill
+               className="object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
+            <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-page-padding">
+               <h2 className="text-[60px] md:text-[100px] leading-tight tracking-[-4px] text-white uppercase font-inter font-bold">
+                  {nextProject.title}
+               </h2>
+               <span className="mt-8 text-[14px] uppercase tracking-[0.2em] text-white/80 border border-white/40 px-8 py-3 rounded-full group-hover:bg-white group-hover:text-black transition-all duration-300">
+                  View Project
+               </span>
+            </div>
+         </Link>
+      </section>
     </main>
   );
 }

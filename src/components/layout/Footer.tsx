@@ -3,9 +3,22 @@
 import Link from "next/link";
 import { DoubleButton } from "@/components/common/DoubleButton";
 import { useReveal } from "@/hooks/useReveal";
+import { usePathname } from "next/navigation";
+
+const NAV = [
+  { label: "vinuspread", href: "/about" },
+  { label: "experience", href: "/work" },
+  { label: "services",   href: "/services" },
+  { label: "story",      href: "/story" },
+  { label: "contact",    href: "/contact" },
+];
 
 export const Footer = () => {
   const revealRef = useReveal();
+  const pathname = usePathname();
+
+  const currentIndex = NAV.findIndex((n) => pathname.startsWith(n.href));
+  const next = NAV[(currentIndex + 1) % NAV.length];
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -34,16 +47,13 @@ export const Footer = () => {
                 <span className="anim-move-up">Next Page</span>
               </span>
             </p>
-            <Link href="/work" className="flex items-center gap-8 group w-fit">
+            <Link href={next.href} className="flex items-center gap-8 group w-fit">
               <div className="flex items-start gap-2">
                 <span className="text-[83.5px] md:text-[120px] tracking-[-2.8px] uppercase leading-[0.9] font-normal">
                   <span className="anim-clip">
-                    <span className="anim-move-up" data-delay="100">experience</span>
+                    <span className="anim-move-up" data-delay="100">{next.label}</span>
                   </span>
                 </span>
-                <sup className="text-[24.1px] tracking-[-0.86px] mt-2 font-normal anim-clip">
-                  <span className="anim-move-up" data-delay="200">26</span>
-                </sup>
               </div>
               <div className="flex items-center overflow-visible">
                 <svg

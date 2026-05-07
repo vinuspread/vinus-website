@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { ServiceRow } from "@/components/sections/ServiceRow";
 import { useReveal } from "@/hooks/useReveal";
+import { PageHeader } from "@/components/common/PageHeader";
 
 const services = [
   { title: "Research", items: ["Customer Research", "User Testing", "Competitive Analysis", "Trends Analysis", "Brand Audit"] },
@@ -41,69 +42,47 @@ const team = [
 ];
 
 export default function AboutPage() {
-  const heroRef = useReveal();
   const imageBreakRef = useReveal();
   const servicesRef = useReveal();
   const statsRef = useReveal();
   const teamRef = useReveal();
   const collabRef = useReveal();
+  const infoRef = useReveal();
 
   return (
     <main className="bg-gallery">
-      {/* 1. Hero 섹션 */}
-      <section ref={heroRef as any} className="anim-wrap pt-[140px] pb-[80px] px-page-padding">
-        <div className="mb-6">
-          <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
-            Vinuspread
-          </span>
-        </div>
-        {/* Row 1: Title */}
-        <div className="mb-[80px]">
-          <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter font-normal">
-            <div className="anim-clip overflow-hidden">
-              <div className="anim-move-up" data-delay="0">
-                SPREAD THE <span className="font-bold">BEAUTIFUL</span> THINGS
-              </div>
-            </div>
-          </h1>
-        </div>
+      {/* 1. Page Header */}
+      <PageHeader
+        breadcrumb="Vinuspread"
+        title={<>Spread the <span className="font-bold">Beautiful</span> Things</>}
+        description={
+          <>
+            <span className="block">아름다운 바이러스를 세상에 퍼뜨립니다.</span>
+            <span className="block mt-[4px]">우리가 창조하는 시각적인 결과물이 오늘보다 내일을 더 아름답게 만들거라 믿습니다.</span>
+          </>
+        }
+      />
 
-        {/* Row 2: Info & Image */}
+      {/* 1-1. Location & Image */}
+      <section ref={infoRef as any} className="anim-wrap px-page-padding pb-[80px]">
         <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
-          <div className="md:col-span-5">
-            <div className="flex flex-col gap-16">
-              <div className="flex flex-col gap-2">
-                <p className="text-[11px] uppercase tracking-widest text-mine-shaft/40 anim-clip block">
-                  <span className="anim-move-up" data-delay="500">Location</span>
-                </p>
-                <div className="flex flex-col anim-clip block">
-                  <p className="text-[15px] leading-snug anim-move-up" data-delay="600">
-                    Seoul — Korea
-                  </p>
-                  <p className="text-[15px] leading-snug anim-move-up" data-delay="650">
-                    Working Worldwide
-                  </p>
-                </div>
-              </div>
-              <div>
-                <p className="text-[20px] font-medium leading-[1.5] tracking-[-0.3px] text-mine-shaft/60 anim-clip block">
-                  <span className="anim-move-up" data-delay="400">
-                    아름다운 바이러스를 세상에 퍼뜨립니다.<br />
-                    우리가 창조하는 시각적인 결과물이 오늘보다 내일을 더 아름답게 만들거라 믿습니다.
-                  </span>
-                </p>
-              </div>
+          <div className="md:col-span-5 flex flex-col gap-2">
+            <p className="text-[11px] uppercase tracking-widest text-mine-shaft/40 anim-clip block">
+              <span className="anim-move-up">Location</span>
+            </p>
+            <div className="flex flex-col anim-clip block">
+              <p className="text-[15px] leading-snug anim-move-up" data-delay="100">Seoul — Korea</p>
+              <p className="text-[15px] leading-snug anim-move-up" data-delay="150">Working Worldwide</p>
             </div>
           </div>
-          
           <div className="md:col-span-3">
             <div className="aspect-[4/5] relative overflow-hidden anim-clip">
               <div className="anim-move-up-img w-full h-full relative" data-delay="200">
-                <Image 
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=1000&fit=crop&auto=format&q=80" 
-                  alt="Studio atmosphere" 
-                  fill 
-                  className="object-cover" 
+                <Image
+                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=1000&fit=crop&auto=format&q=80"
+                  alt="Studio atmosphere"
+                  fill
+                  className="object-cover"
                 />
               </div>
             </div>

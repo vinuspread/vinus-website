@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useReveal } from "@/hooks/useReveal";
+import { PageHeader } from "@/components/common/PageHeader";
 
 const budgetOptions = [
   "Under ₩1,000,000",
@@ -22,7 +22,6 @@ const categoryOptions = [
 ];
 
 export default function ContactPage() {
-  const revealRef = useReveal();
   const [selectedCategories, setSelectedCategories] = useState<string[]>(["Website"]);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
 
@@ -82,46 +81,16 @@ export default function ContactPage() {
 
   return (
     <main className="bg-gallery min-h-screen">
-      {/* ── Page Header ── */}
-      <section
-        ref={revealRef as any}
-        className="anim-wrap pt-[140px] pb-[80px] px-page-padding border-b border-alto"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
-          <div className="md:col-span-8 mb-6">
-            <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
-              Contact
-            </span>
-          </div>
-          <div className="md:col-span-8 mb-[40px]">
-            <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter flex flex-wrap gap-x-[0.25em]">
-              <span className="anim-clip">
-                <span className="anim-move-up">Begin a</span>
-              </span>
-              <span className="anim-clip">
-                <span className="anim-move-up" data-delay="100">New</span>
-              </span>
-              <span className="anim-clip">
-                <span className="anim-move-up font-bold" data-delay="200">Experience</span>
-              </span>
-            </h1>
-          </div>
-          <div className="md:col-span-6">
-            <p className="text-[17px] tracking-[-0.3px] leading-[1.4] text-mine-shaft/60 break-keep">
-              <span className="block overflow-hidden">
-                <span className="anim-move-up block" data-delay="200">
-                  당신의 아이디어가 더 가치 있는 경험으로 이어질 수 있도록,
-                </span>
-              </span>
-              <span className="block overflow-hidden mt-[4px]">
-                <span className="anim-move-up block" data-delay="280">
-                  바이너스프레드가 함께 고민하고 제안합니다.
-                </span>
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        breadcrumb="Contact"
+        title={<>Begin a New <span className="font-bold">Experience</span></>}
+        description={
+          <>
+            <span className="block">당신의 아이디어가 더 가치 있는 경험으로 이어질 수 있도록,</span>
+            <span className="block mt-[4px]">바이너스프레드가 함께 고민하고 제안합니다.</span>
+          </>
+        }
+      />
 
       {/* ── Form ── */}
       <section className="px-page-padding py-[80px]">

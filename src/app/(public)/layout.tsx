@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { Cursor } from "@/components/layout/Cursor";
+import { CustomCursor } from "@/components/common/CustomCursor";
+import { SmoothScroll } from "@/components/common/SmoothScroll";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,7 +28,8 @@ export default function RootLayout({
         <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <Cursor />
+        <SmoothScroll />
+        <CustomCursor />
         <Header />
         <main>{children}</main>
         <Footer />
