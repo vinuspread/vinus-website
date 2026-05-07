@@ -15,6 +15,16 @@
   --font-syne: "Syne", "Pretendard Variable", Pretendard, sans-serif;
   --font-inter: "Inter", sans-serif;
   --font-space: "Space Grotesk", sans-serif;
+
+  /* ui-design 토큰 */
+  --color-mine-shaft: #2a2a2a;
+  --color-gallery:    #f0f0f0;
+  --color-alto:       #d6d6d6;
+  --color-ash:        #ccc4b9;
+  --spacing-page-padding: 40px;
+  --spacing-column:       38.4px;
+  --ease-expo-out: cubic-bezier(.075, .82, .165, 1);
+  --ease-image:    cubic-bezier(.4, .4, .1, 1);
 }
 
 body {
@@ -58,6 +68,27 @@ html.lenis, html.lenis body {
 @keyframes page-fade-in {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ui-design 애니메이션 시스템 */
+.anim-clip {
+  overflow: hidden;
+  display: inline-block;
+}
+.anim-move-up {
+  display: block;
+  transform: translateY(120%);
+  transition: transform 1.5s var(--ease-expo-out);
+}
+.anim-wrap.ready .anim-move-up {
+  transform: translateY(0);
+}
+.anim-move-up-img {
+  transform: translateY(120%);
+  transition: transform 2.4s var(--ease-image);
+}
+.anim-wrap.ready .anim-move-up-img {
+  transform: translateY(0);
 }
 
 /* Block spacing */

@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
-import HeroParallax from '@/components/work/HeroParallax'
 import JsonLd from '@/components/seo/JsonLd'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import type { Work } from '@/types'
-import { FadeUp, TextReveal, MagneticLink } from '@/components/ui/MotionWrapper'
 
 export const revalidate = 86400
 
@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
+
   const { data: work } = await supabase
     .from('work')
     .select('*')
@@ -62,6 +63,18 @@ export default async function WorkDetailPage({ params }: Props) {
   if (!work) notFound()
 
   const typedWork = work as Work
+
+  // 다음 프로젝트 쿼리 (sort_order 기준 다음, 없으면 첫 번째)
+  const { data: allWorks } = await supabase
+    .from('work')
+    .select('id, slug, title, sort_order')
+    .eq('is_published', true)
+    .order('sort_order', { ascending: true })
+
+  const works = allWorks ?? []
+  const currentIdx = works.findIndex(w => w.slug === slug)
+  const nextWork = works[(currentIdx + 1) % works.length] ?? null
+
   const description = getMetaDescription(typedWork.meta_description, typedWork.blocks ?? [])
 
   const jsonLd = {
@@ -75,79 +88,94 @@ export default async function WorkDetailPage({ params }: Props) {
     ...(typedWork.category && { keywords: typedWork.category }),
     ...(typedWork.period && { temporalCoverage: typedWork.period }),
     dateCreated: typedWork.created_at,
-    creator: {
-      '@type': 'Organization',
-      name: '바이너스프레드',
-      url: SITE_URL,
-    },
+    creator: { '@type': 'Organization', name: '바이너스프레드', url: SITE_URL },
   }
 
+  const heroImg = typedWork.hero_url || typedWork.thumbnail_url
+
   return (
-    <article>
+    <article className="bg-gallery">
       <JsonLd data={jsonLd} />
 
-      {typedWork.hero_url && (
-        <>
-          <HeroParallax url={typedWork.hero_url} type={typedWork.hero_type ?? 'image'} alt={typedWork.title} />
-          <div className="h-screen" />
-        </>
+      {/* 1. Hero 풀스크린 */}
+      <section className="relative w-full h-screen overflow-hidden">
+        {heroImg ? (
+          <Image
+            src={heroImg}
+            alt={typedWork.title}
+            fill
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div
+            className="w-full h-full"
+            style={{ backgroundColor: typedWork.thumbnail_color ?? '#d6d6d6' }}
+          />
+        )}
+        <div className="absolute bottom-0 left-0 px-[40px] pb-[60px] z-10 w-full bg-gradient-to-t from-black/50 to-transparent">
+          {typedWork.category && (
+            <p className="text-[13px] text-white/70 uppercase tracking-[-0.3px] mb-3">
+              {typedWork.category}
+            </p>
+          )}
+          <h1 className="text-[48px] md:text-[64px] leading-none tracking-[-2px] text-white uppercase max-w-[800px]">
+            {typedWork.title}
+          </h1>
+        </div>
+      </section>
+
+      {/* 2. Meta Bar */}
+      <section className="px-[40px] py-[48px] border-b border-alto grid grid-cols-2 md:grid-cols-4 gap-8">
+        {[
+          { label: 'Client',   value: typedWork.client_name || '바이너스프레드' },
+          { label: 'Year',     value: typedWork.period || String(new Date(typedWork.created_at).getFullYear()) },
+          { label: 'Services', value: typedWork.category || 'Design & Development' },
+          { label: 'Subtitle', value: typedWork.subtitle || '—' },
+        ].map(({ label, value }) => (
+          <div key={label}>
+            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 mb-2">{label}</p>
+            <p className="text-[15px] leading-snug">{value}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* 3. Challenge (Summary) */}
+      {typedWork.summary && (
+        <section className="px-[40px] py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-[38px]">
+          <div className="md:col-span-2 mb-8 md:mb-0">
+            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Challenge</p>
+          </div>
+          <div className="md:col-span-5">
+            <p className="text-[22px] md:text-[26px] font-light leading-[1.4] tracking-[-0.4px] whitespace-pre-line break-keep">
+              {typedWork.summary}
+            </p>
+          </div>
+        </section>
       )}
 
-      {/* Content scrolls over fixed hero */}
-      <div className="relative bg-white pb-32" style={{ zIndex: 10 }}>
+      {/* 4. 블록 콘텐츠 */}
+      {(typedWork.blocks ?? []).length > 0 && (
+        <div className="pb-[120px]">
+          <BlockRenderer blocks={typedWork.blocks ?? []} />
+        </div>
+      )}
 
-      {/* Hero Header for Work Detail */}
-      <header className="relative pt-20 pb-24 md:pt-28 md:pb-[100px] px-6 md:px-12 max-w-4xl mx-auto">
-          <h1 className="text-[68px] font-bold tracking-tighter leading-[1] uppercase whitespace-nowrap">
-            <TextReveal text={typedWork.title} delay={0.2} nowrap />
-          </h1>
-          {typedWork.subtitle && (
-            <FadeUp delay={0.5} className="mt-4">
-              <p className="text-lg md:text-xl text-black font-bold">{typedWork.subtitle}</p>
-            </FadeUp>
-          )}
-
-          {/* Metadata Row */}
-          <FadeUp delay={0.7} className="mt-16">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-0 text-left">
-              {[
-                { label: 'Client', value: typedWork.client_name || '바이너스프레드' },
-                { label: 'Release Date', value: typedWork.period || String(new Date(typedWork.created_at).getFullYear()) },
-                { label: 'Type', value: typedWork.category || 'Design & Development' },
-              ].map(({ label, value }) => (
-                <div key={label} className="border-t-2 border-black pt-6 pb-8 md:pr-12">
-                  <p className="text-xs font-bold uppercase tracking-widest mb-4">{label}</p>
-                  <p className="text-base font-light text-black">{value}</p>
-                </div>
-              ))}
-            </div>
-          </FadeUp>
-
-          {typedWork.summary && (
-            <FadeUp delay={1} className="mt-20">
-              <p className="text-lg md:text-xl text-black leading-relaxed whitespace-pre-line break-keep">{typedWork.summary}</p>
-            </FadeUp>
-          )}
-      </header>
-
-      <div className="mt-24 md:mt-[100px]">
-        <BlockRenderer blocks={typedWork.blocks ?? []} />
-      </div>
-
-      {/* Next Project Nav */}
-      <div className="mt-40 border-t border-black bg-black text-white px-6 md:px-12 py-32 md:py-48 flex flex-col items-center justify-center text-center overflow-hidden relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent pointer-events-none" />
-        <FadeUp delay={0.2} className="relative z-10 w-full">
-          <MagneticLink href="/work" className="group flex flex-col items-center w-full">
-            <p className="text-gray-400 tracking-[0.3em] uppercase mb-12 text-sm">Next Project</p>
-            <h2 className="text-6xl md:text-9xl font-light tracking-tighter transition-transform duration-700 ease-[0.16,1,0.3,1] group-hover:scale-105 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-600">
-              Coming Soon
-            </h2>
-          </MagneticLink>
-        </FadeUp>
-      </div>
-
-      </div>{/* end content wrapper */}
+      {/* 5. Next Project */}
+      {nextWork && nextWork.slug !== slug && (
+        <section className="px-[40px] py-[80px] md:py-[120px] border-t border-alto flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Next Project</p>
+          <Link
+            href={`/work/${nextWork.slug}`}
+            className="group flex items-center gap-4 w-full md:w-auto"
+          >
+            <span className="text-[32px] md:text-[46px] tracking-[-1.5px] uppercase group-hover:opacity-60 transition-opacity leading-none">
+              {nextWork.title}
+            </span>
+            <span className="text-[24px] group-hover:translate-x-2 transition-transform inline-block">→</span>
+          </Link>
+        </section>
+      )}
     </article>
   )
 }
