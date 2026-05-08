@@ -22,10 +22,15 @@ export default function WorkGrid({ works }: { works: Work[] }) {
             className="aspect-[920/640] overflow-hidden relative group border-b border-alto md:even:border-l"
           >
             {imgSrc ? (
-              <div className="anim-clip w-full h-full">
+              /* 1단계: 회색 박스가 아래에서 위로 슬라이드 */
+              <div
+                className="anim-box-reveal absolute inset-0"
+                data-delay={i % 2 === 0 ? 0 : 60}
+              >
+                {/* 2단계: 이미지가 박스 안에서 뒤따라 슬라이드 */}
                 <div
-                  className="anim-move-up-img w-full h-full relative"
-                  data-delay={i % 2 === 0 ? 0 : 60}
+                  className="anim-img-inner w-full h-full relative"
+                  data-delay={i % 2 === 0 ? 200 : 260}
                 >
                   <Image
                     src={imgSrc}
@@ -38,7 +43,7 @@ export default function WorkGrid({ works }: { works: Work[] }) {
               </div>
             ) : (
               <div
-                className="w-full h-full"
+                className="absolute inset-0"
                 style={{ backgroundColor: work.thumbnail_color ?? '#d6d6d6' }}
               />
             )}
