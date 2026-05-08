@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export const Header = () => {
   const pathname = usePathname();
   const [isHidden, setIsHidden] = useState(false);
-  const [isTop, setIsTop] = useState(true);
+  const [isPastHero, setIsPastHero] = useState(false);
   const lastYRef = useRef(0);
   const navRef = useRef<HTMLElement>(null);
 
@@ -17,17 +17,28 @@ export const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      setIsHidden(y > lastYRef.current && y > 100);
-      setIsTop(y < 10);
+      setIsHidden(isHome ? false : y > lastYRef.current && y > 100);
       lastYRef.current = y;
     };
 
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHome]);
 
-  const transparent = isHome && isTop;
+  useEffect(() => {
+    if (!isHome) { setIsPastHero(true); return; }
+    const hero = document.querySelector("#hero-section");
+    if (!hero) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setIsPastHero(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(hero);
+    return () => obs.disconnect();
+  }, [isHome]);
+
+  const transparent = isHome && !isPastHero;
 
   return (
     <header
@@ -49,21 +60,7 @@ export const Header = () => {
         </Link>
       </div>
 
-      {/* Center: Dynamic Label */}
-      <div className="flex-1 flex justify-center">
-        <span className={cn(
-          "text-[12px] uppercase tracking-[0.2em] font-inter font-bold transition-all duration-500",
-          transparent ? "text-white opacity-40" : "text-mine-shaft opacity-40"
-        )}>
-          {pathname !== "/" && ({
-            "/work": "Experience",
-            "/services": "Services",
-            "/story": "Story",
-            "/about": "Vinuspread",
-            "/contact": "Contact"
-          }[pathname] || "Experience")}
-        </span>
-      </div>
+
 
       {/* Right: Nav */}
       <nav className="flex-1 flex items-center justify-end gap-8">
