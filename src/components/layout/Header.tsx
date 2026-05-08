@@ -39,7 +39,7 @@ export const Header = () => {
       )}
     >
       {/* Left: Logo */}
-      <div className="flex items-center gap-4">
+      <div className="flex-1 flex items-center">
         <Link href="/" className="flex items-center">
           <img
             src="/logo.svg"
@@ -49,8 +49,24 @@ export const Header = () => {
         </Link>
       </div>
 
+      {/* Center: Dynamic Label */}
+      <div className="flex-1 flex justify-center">
+        <span className={cn(
+          "text-[12px] uppercase tracking-[0.2em] font-inter font-bold transition-all duration-500",
+          transparent ? "text-white opacity-40" : "text-mine-shaft opacity-40"
+        )}>
+          {pathname !== "/" && ({
+            "/work": "Experience",
+            "/services": "Services",
+            "/story": "Story",
+            "/about": "Vinuspread",
+            "/contact": "Contact"
+          }[pathname] || "Experience")}
+        </span>
+      </div>
+
       {/* Right: Nav */}
-      <nav className="flex items-center gap-8">
+      <nav className="flex-1 flex items-center justify-end gap-8">
         {[
           { label: "vinuspread", href: "/about" },
           { label: "experience", href: "/work" },

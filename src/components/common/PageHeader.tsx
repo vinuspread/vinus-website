@@ -9,6 +9,8 @@ interface PageHeaderProps {
   title: React.ReactNode;
   /** 설명 노드 — JSX 허용 */
   description?: React.ReactNode;
+  /** 우측 상단 레이블 (예: "26 Projects") */
+  sideLabel?: string;
   /** 하단 border 제거 여부 (work 페이지처럼 필터가 바로 붙는 경우) */
   noBorder?: boolean;
 }
@@ -17,6 +19,7 @@ export const PageHeader = ({
   breadcrumb,
   title,
   description,
+  sideLabel,
   noBorder = false,
 }: PageHeaderProps) => {
   const ref = useReveal();
@@ -29,11 +32,16 @@ export const PageHeader = ({
       }`}
     >
       <div className="grid grid-cols-1 md:grid-cols-8 gap-x-column">
-        {/* 브레드크럼 */}
-        <div className="md:col-span-8 mb-6">
+        {/* 브레드크럼 + 우측 레이블 */}
+        <div className="md:col-span-8 mb-6 flex items-center justify-between">
           <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
             {breadcrumb}
           </span>
+          {sideLabel && (
+            <span className="text-[15px] text-mine-shaft/50 font-inter font-medium mb-1">
+              {sideLabel}
+            </span>
+          )}
         </div>
 
         {/* 타이틀 */}

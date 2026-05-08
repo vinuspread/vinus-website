@@ -28,7 +28,7 @@ export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
           title={project.title}
           href={`/work/${project.slug}`}
           index={i}
-          className="border-b border-alto md:even:border-l"
+          className=""
         />
       ))}
     </div>

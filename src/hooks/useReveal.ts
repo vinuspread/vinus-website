@@ -7,11 +7,9 @@ export function useReveal() {
     const el = ref.current;
     if (!el) return;
 
-    // Handle data-delay attributes for staggered animations
-    // 지시사항 §2 반영: 인라인 style 대신 data-delay 속성 사용
+    // Apply stagger delays from data-delay attribute
     el.querySelectorAll<HTMLElement>("[data-delay]").forEach((child) => {
-      const delayMs = child.getAttribute("data-delay") || "0";
-      child.style.transitionDelay = `${delayMs}ms`;
+      child.style.transitionDelay = `${child.getAttribute("data-delay")}ms`;
     });
 
     const trigger = () => {
@@ -23,12 +21,12 @@ export function useReveal() {
       ([entry]) => {
         if (entry.isIntersecting) trigger();
       },
-      { threshold: 0, rootMargin: "0px" }
+      { threshold: 0, rootMargin: "0px 0px -48px 0px" }
     );
 
     obs.observe(el);
 
-    // 첫 렌더에서 이미 뷰포트 안에 있으면 rAF 후 강제 트리거
+    // Fire immediately if already visible on mount
     const raf = requestAnimationFrame(() => {
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) trigger();

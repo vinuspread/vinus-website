@@ -28,28 +28,28 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <main className="bg-gallery">
       {/* 1. Hero 섹션 */}
-      <section className="relative w-full h-[80vh] overflow-hidden">
+      <section className="relative w-full h-[80vh] overflow-hidden bg-[#0a0a0a]">
         <Image 
           src={project.heroImg} 
           alt={project.title} 
           fill 
-          className="object-cover" 
+          className="object-cover opacity-80" 
           priority
         />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="absolute bottom-0 left-0 p-page-padding pb-[60px] z-10 w-full">
-          <p className="text-[14px] text-white/70 uppercase tracking-wider mb-4 font-inter">
+        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute bottom-0 left-0 p-page-padding pb-[80px] z-10 w-full">
+          <p className="text-[14px] text-white/70 uppercase tracking-[0.2em] mb-6 font-inter">
             {project.services}
           </p>
-          <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] text-white uppercase max-w-[1200px] font-inter">
+          <h1 className="leading-[0.9] tracking-[-0.04em] text-white uppercase max-w-[1400px] font-inter font-light" style={{ fontSize: "clamp(60px, 8vw, 120px)" }}>
             {project.title.split(' ').map((word, i) => (
-              <span key={i} className={i % 2 === 1 ? "font-bold" : "font-normal"}>
+              <span key={i} className={i % 2 === 1 ? "font-bold" : ""}>
                 {word}{' '}
               </span>
             ))}
           </h1>
           {project.subtitle && (
-            <p className="text-[17px] text-white/60 uppercase tracking-wider mt-6 font-inter max-w-[800px]">
+            <p className="text-[17px] text-white/60 uppercase tracking-[0.1em] mt-8 font-inter max-w-[800px] leading-relaxed">
               {project.subtitle}
             </p>
           )}
@@ -66,22 +66,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         ].map(({ label, value }, i) => (
           <div
             key={label}
-            className={`flex flex-col gap-4 py-[40px] pr-[40px] ${i < 3 ? "border-r border-alto" : ""} ${i > 0 ? "pl-[40px]" : ""}`}
+            className={`flex flex-col gap-4 py-[48px] ${i < 3 ? "border-r border-alto" : ""} ${i > 0 ? "pl-[40px]" : ""}`}
           >
-            <p className="text-[10px] uppercase tracking-[0.15em] text-mine-shaft/40 font-inter">{label}</p>
-            <p className="text-[16px] leading-snug tracking-[-0.3px] font-medium">{value}</p>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-medium">{label}</p>
+            <p className="text-[16px] leading-snug tracking-[-0.02em] font-medium text-mine-shaft">{value}</p>
           </div>
         ))}
       </section>
 
       {/* 3. Overview 섹션 */}
-      <section className="px-page-padding py-[100px] md:py-[140px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
-        <div className="md:col-span-2 mb-8 md:mb-0">
-          <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">01</p>
-          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter">Overview</p>
+      <section className="px-page-padding py-[100px] md:py-[160px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
+        <div className="md:col-span-3 mb-8 md:mb-0">
+          <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">01</p>
+          <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Overview</p>
         </div>
-        <div className="md:col-span-6">
-          <p className="text-[24px] md:text-[32px] font-bold leading-[1.3] tracking-[-1px] text-mine-shaft break-keep">
+        <div className="md:col-span-9">
+          <p className="text-[22px] md:text-[28px] font-semibold leading-[1.3] tracking-[-0.03em] text-mine-shaft break-keep max-w-[1000px]">
             {project.overview}
           </p>
         </div>
@@ -89,13 +89,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* 4. Background 섹션 */}
       {project.background && (
-        <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
-          <div className="md:col-span-2 mb-8 md:mb-0">
-            <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">02</p>
-            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter">Background</p>
+        <section className="px-page-padding py-[100px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
+          <div className="md:col-span-3 mb-8 md:mb-0">
+            <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">02</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Background</p>
           </div>
-          <div className="md:col-span-5">
-            <p className="text-[15px] font-light leading-[1.6] tracking-[-0.3px] text-mine-shaft/70">
+          <div className="md:col-span-7">
+            <p className="text-[15px] font-normal leading-[1.7] tracking-[-0.01em] text-mine-shaft/70 break-keep">
               {project.background}
             </p>
           </div>
@@ -104,13 +104,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* 5. Approach 섹션 */}
       {project.approach && (
-        <section className="px-page-padding py-[80px] md:py-[120px] grid grid-cols-1 md:grid-cols-8 gap-column border-b border-alto">
-          <div className="md:col-span-2 mb-8 md:mb-0">
-            <p className="text-[11px] text-mine-shaft/30 mb-2 font-inter">03</p>
-            <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter">Approach</p>
+        <section className="px-page-padding py-[100px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
+          <div className="md:col-span-3 mb-8 md:mb-0">
+            <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">03</p>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Approach</p>
           </div>
-          <div className="md:col-span-5">
-            <p className="text-[15px] font-light leading-[1.6] tracking-[-0.3px] text-mine-shaft/70">
+          <div className="md:col-span-7">
+            <p className="text-[15px] font-normal leading-[1.7] tracking-[-0.01em] text-mine-shaft/70 break-keep">
               {project.approach}
             </p>
           </div>

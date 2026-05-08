@@ -1,4 +1,3 @@
-// src/components/common/ProjectCard.tsx
 "use client";
 
 import Image from "next/image";
@@ -25,62 +24,49 @@ export const ProjectCard = ({
   delayOffset = 0,
   className = "",
 }: ProjectCardProps) => {
+  const delay = delayOffset + (index % 2) * 60;
+
   const content = (
     <>
-      {/* Image Reveal */}
+      {/* Image — clip-path reveal via useReveal + GSAP */}
       <div className="anim-clip w-full h-full">
-        <div 
-          className="anim-move-up-img w-full h-full relative" 
-          data-delay={delayOffset + (index % 2) * 60}
+        <div
+          className="anim-move-up-img w-full h-full relative"
+          data-delay={delay}
         >
-          <Image 
-            src={src} 
-            alt={alt} 
-            fill 
-            className="object-cover transition-transform duration-700 group-hover:scale-105" 
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
         </div>
       </div>
 
-      {/* Overlay Content - Unified to stacked layout */}
-      <div className="absolute bottom-0 left-0 p-[40px] z-10 w-full pointer-events-none flex flex-col gap-3">
-        <div className="anim-clip">
-          <p 
-            className="text-[15.1px] text-white/80 uppercase tracking-[-0.35px] leading-none anim-move-up"
-            data-delay={delayOffset + (index % 2) * 60 + 100}
-          >
-            {category}
-          </p>
-        </div>
-        <div className="anim-clip">
-          <h3 
-            className="text-[27.3px] text-white uppercase tracking-[-0.86px] leading-tight anim-move-up font-inter font-bold"
-            data-delay={delayOffset + (index % 2) * 60 + 200}
-          >
-            {title}
-          </h3>
-        </div>
+      {/* Gradient — appears on hover */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
+      {/* Text overlay — slides up on hover */}
+      <div className="absolute bottom-0 left-0 p-[40px] z-10 w-full pointer-events-none flex flex-col gap-[10px] translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+        <p className="text-[12px] text-white/75 uppercase tracking-[0.12em] font-inter leading-none">
+          {category}
+        </p>
+        <h3 className="text-[28px] text-white uppercase tracking-[-0.04em] leading-tight font-inter font-bold">
+          {title}
+        </h3>
       </div>
-
-      {/* Dark Gradient Overlay for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </>
   );
 
-  const containerClasses = `block aspect-[920/640] overflow-hidden relative group ${className}`;
+  const base = `block aspect-[920/640] overflow-hidden relative group ${className}`;
 
   if (href) {
     return (
-      <Link href={href} className={containerClasses} data-cursor="VIEW">
+      <Link href={href} className={base} data-cursor="VIEW">
         {content}
       </Link>
     );
   }
 
-  return (
-    <div className={containerClasses}>
-      {content}
-    </div>
-  );
+  return <div className={base}>{content}</div>;
 };

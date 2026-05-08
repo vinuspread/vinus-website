@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { WorkGrid } from "@/components/sections/WorkGrid";
 import { PageHeader } from "@/components/common/PageHeader";
+import { projects } from "@/lib/projects";
 
 const categories = ["All", "UI/UX", "Character/Illustration", "Branding", "Etc"] as const;
 type Category = (typeof categories)[number];
@@ -10,10 +11,14 @@ type Category = (typeof categories)[number];
 export default function WorkPage() {
   const [active, setActive] = useState<Category>("All");
 
+  const count = (cat: Category) =>
+    cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length;
+
   return (
     <main className="bg-gallery">
       <PageHeader
         breadcrumb="Experience"
+        sideLabel={`${projects.length} Projects`}
         noBorder
         title={<>Seamless new <span className="font-bold">experiences</span></>}
         description={
@@ -41,6 +46,7 @@ export default function WorkPage() {
             }`}
           >
             {cat}
+            <span className="ml-[6px] opacity-50">{count(cat)}</span>
           </button>
         ))}
       </div>
