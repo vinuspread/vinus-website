@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 // rootMargin '0px 0px -12% 0px':
 // 뷰포트 하단을 12% 축소 → 카드 상단이 하단에서 12% 안으로 들어왔을 때 트리거
-export function useReveal(rootMargin = '0px 0px -12% 0px') {
+export function useReveal(rootMargin = '0px 0px -20% 0px') {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
