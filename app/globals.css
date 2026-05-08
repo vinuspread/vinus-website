@@ -94,8 +94,8 @@ html.lenis, html.lenis body {
 /* 회색 박스가 먼저 슬라이드업 → 이미지가 안에서 뒤따라 슬라이드업 */
 .anim-box-reveal {
   transform: translateY(110%);
-  transition: transform 1.5s var(--ease-expo-out);
-  background-color: var(--color-alto);
+  transition: transform 1.5s cubic-bezier(.075, .82, .165, 1);
+  background-color: #d6d6d6;
   overflow: hidden;
 }
 .anim-wrap.ready .anim-box-reveal {
@@ -103,7 +103,7 @@ html.lenis, html.lenis body {
 }
 .anim-img-inner {
   transform: translateY(110%);
-  transition: transform 2s var(--ease-image);
+  transition: transform 2s cubic-bezier(.4, .4, .1, 1);
 }
 .anim-wrap.ready .anim-img-inner {
   transform: translateY(0);

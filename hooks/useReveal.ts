@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export function useReveal() {
+export function useReveal(rootMargin = '-10% 0px') {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -19,20 +19,12 @@ export function useReveal() {
 
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) trigger() },
-      { threshold: 0, rootMargin: '0px' }
+      { threshold: 0, rootMargin }
     )
     obs.observe(el)
 
-    const raf = requestAnimationFrame(() => {
-      const rect = el.getBoundingClientRect()
-      if (rect.top < window.innerHeight && rect.bottom > 0) trigger()
-    })
-
-    return () => {
-      obs.disconnect()
-      cancelAnimationFrame(raf)
-    }
-  }, [])
+    return () => obs.disconnect()
+  }, [rootMargin])
 
   return ref
 }
