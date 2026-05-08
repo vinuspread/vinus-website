@@ -1,7 +1,15 @@
 # Vinuspread — Gemma 인수인계서
 
 > 브랜치: `ui-design` / 경로: `d:/Work/vinuspread2/`
-> 마지막 업데이트: 2026-05-08 (Claude)
+> 마지막 업데이트: 2026-05-08 (Gemma)
+
+## 📝 최근 작업 요약 (2026-05-08)
+
+1. **에러 해결**: Next.js 15+ 환경에서 로컬 이미지에 쿼리 스트링(`?v=2`) 사용 시 발생하는 `localPatterns` 정책 에러 해결 (`HeroSectionV2.tsx` 수정)
+2. **PageHeader 표준화**: 모든 서브페이지(Work, Services, Story, About, Contact)에 공통 `PageHeader` 적용 및 레이아웃 통일
+3. **디테일 조정**: Breadcrumbs와 타이틀 간 간격(24px) 정밀 조정 및 에디토리얼 타이포그래피 최적화
+4. **배경 이미지 최적화**: 히어로 섹션 배경 이미지가 스크롤 영역 전체를 빈틈없이 커버하도록 구조 확정
+5. **Git 관리**: `ui-design` 브랜치에 최신 디자인 및 구조 변경 사항 푸시 완료
 
 ---
 
