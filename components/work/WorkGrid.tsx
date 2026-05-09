@@ -40,6 +40,8 @@ function WorkGridItem({ work }: { work: Work }) {
                 src={imgSrc}
                 alt={work.title}
                 fill
+                placeholder="blur"
+                blurDataURL="data:image/gif;base64,R0lGODlhAQABAPAAANbW1gAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />

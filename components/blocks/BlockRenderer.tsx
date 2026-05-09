@@ -39,7 +39,7 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
           : `block-spacing-${block.spacing ?? 'md'} max-w-4xl mx-auto px-6 md:px-12`
 
-        const skipMotion = block.type === 'heading-text' || block.type === 'gallery'
+        const skipMotion = block.type === 'heading-text' || block.type === 'gallery' || block.type === 'image'
 
         return (
           <div key={block.id} className={wrapClass}>
