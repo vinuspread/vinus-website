@@ -40,7 +40,7 @@ const STAGGER_VISIBLE = {
 
 export default function BlockMotion({ motion: motionType, children }: Props) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' })
+  const inView = useInView(ref, { once: true, margin: '0px 0px -20% 0px' })
 
   if (motionType === 'none') return <>{children}</>
 

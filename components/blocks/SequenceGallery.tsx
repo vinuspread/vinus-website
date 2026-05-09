@@ -36,7 +36,7 @@ const VISIBLE: FramerVariant = { opacity: 1, y: 0, scale: 1 }
 
 function SequenceItem({ img, motionType }: { img: { src: string; alt: string }; motionType: MotionType }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' })
+  const inView = useInView(ref, { once: true, margin: '0px 0px -20% 0px' })
 
   return (
     <motion.div
