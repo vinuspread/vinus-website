@@ -70,45 +70,6 @@ html.lenis, html.lenis body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ui-design 애니메이션 시스템 */
-.anim-clip {
-  overflow: hidden;
-  display: inline-block;
-}
-.anim-move-up {
-  display: block;
-  transform: translateY(120%);
-  transition: transform 1.5s var(--ease-expo-out);
-}
-.anim-wrap.ready .anim-move-up {
-  transform: translateY(0);
-}
-.anim-move-up-img {
-  transform: translateY(120%);
-  transition: transform 2.4s var(--ease-image);
-}
-.anim-wrap.ready .anim-move-up-img {
-  transform: translateY(0);
-}
-
-/* 회색 박스가 먼저 슬라이드업 → 이미지가 안에서 뒤따라 슬라이드업 */
-.anim-box-reveal {
-  transform: translateY(110%);
-  transition: transform 1.5s cubic-bezier(.075, .82, .165, 1);
-  background-color: #d6d6d6;
-  overflow: hidden;
-}
-.anim-wrap.ready .anim-box-reveal {
-  transform: translateY(0);
-}
-.anim-img-inner {
-  transform: translateY(110%);
-  transition: transform 2s cubic-bezier(.4, .4, .1, 1);
-}
-.anim-wrap.ready .anim-img-inner {
-  transform: translateY(0);
-}
-
 /* Block spacing */
 .block-spacing-none { padding-bottom: 0; }
 .block-spacing-sm   { padding-bottom: 1.5rem; }   /* 24px */

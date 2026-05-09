@@ -77,12 +77,7 @@ function WorkGridItem({ work }: { work: Work }) {
         </div>
 
         {/* 호버 그라디언트 */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none"
-          initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </Link>
     </div>
   )
