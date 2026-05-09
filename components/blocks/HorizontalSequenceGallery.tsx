@@ -13,24 +13,20 @@ function HSeqItem({ img, delay }: { img: { src: string; alt: string }; delay: nu
 
   return (
     <div ref={ref} className="flex-1 relative overflow-hidden">
-      {/* 커버: 아래서 올라와 덮은 뒤 위로 빠져나감 */}
+      {/* 회색 배경: 아래서 슬라이드 인, 유지됨 */}
       <motion.div
-        className="absolute inset-0 z-10"
+        className="absolute inset-0 z-0"
         style={{ backgroundColor: '#d6d6d6' }}
         initial={{ y: '100%' }}
-        animate={inView ? { y: ['100%', '0%', '-101%'] } : { y: '100%' }}
-        transition={{
-          duration: 1.6,
-          delay,
-          times: [0, 0.4, 1],
-          ease: [[0.16, 1, 0.3, 1], [0.65, 0, 0.35, 1]],
-        }}
+        animate={inView ? { y: 0 } : { y: '100%' }}
+        transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
       />
-      {/* 이미지: 커버 아래에서 제자리로 */}
+      {/* 이미지: 회색 위에 올라옴 */}
       <motion.div
+        className="relative z-10"
         initial={{ y: '5%', scale: 1.03 }}
         animate={inView ? { y: 0, scale: 1 } : { y: '5%', scale: 1.03 }}
-        transition={{ duration: 0.7, delay, ease }}
+        transition={{ duration: 0.9, delay: delay + 0.5, ease }}
       >
         {img.src && (
           <Image
