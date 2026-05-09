@@ -23,7 +23,7 @@ export default function ImageBlock({ block }: { block: ImageBlockType }) {
       {/* 회색 배경: 하단에서 위로 성장, 유지됨 */}
       <motion.div
         className="absolute inset-0 z-0"
-        style={{ backgroundColor: '#d6d6d6', originY: 1 }}
+        style={{ backgroundColor: '#ebebeb', originY: 1 }}
         initial={{ scaleY: 0 }}
         animate={inView ? { scaleY: 1 } : { scaleY: 0 }}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
