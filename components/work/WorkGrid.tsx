@@ -21,20 +21,24 @@ function WorkGridItem({ work }: { work: Work }) {
       >
         {imgSrc ? (
           <div className="absolute inset-0 overflow-hidden">
-            {/* 커버: 위로 빠져나가며 이미지 드러냄 */}
+            {/* 커버: 아래서 올라와 덮은 뒤 위로 빠져나감 */}
             <motion.div
               className="absolute inset-0 z-10"
               style={{ backgroundColor: '#d6d6d6' }}
-              initial={{ y: 0 }}
-              animate={inView ? { y: '-101%' } : { y: 0 }}
-              transition={{ duration: 0.85, ease }}
+              initial={{ y: '100%' }}
+              animate={inView ? { y: ['100%', '0%', '-101%'] } : { y: '100%' }}
+              transition={{
+                duration: 1.6,
+                times: [0, 0.4, 1],
+                ease: [[0.16, 1, 0.3, 1], [0.65, 0, 0.35, 1]],
+              }}
             />
-            {/* 이미지: 아래에서 올라오며 scale */}
+            {/* 이미지: 커버 아래에서 제자리로 */}
             <motion.div
               className="absolute inset-0"
-              initial={{ y: '100%', scale: 1.08 }}
-              animate={inView ? { y: 0, scale: 1 } : { y: '100%', scale: 1.08 }}
-              transition={{ duration: 1.0, delay: 0.1, ease }}
+              initial={{ y: '8%', scale: 1.04 }}
+              animate={inView ? { y: 0, scale: 1 } : { y: '8%', scale: 1.04 }}
+              transition={{ duration: 0.7, ease }}
             >
               <Image
                 src={imgSrc}
