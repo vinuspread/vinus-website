@@ -27,14 +27,14 @@ function WorkGridItem({ work }: { work: Work }) {
               style={{ backgroundColor: '#d6d6d6' }}
               initial={{ y: '100%' }}
               animate={inView ? { y: 0 } : { y: '100%' }}
-              transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             />
-            {/* 이미지: 회색 위에 올라옴 */}
+            {/* 이미지: 회색 뒤따라 슬라이드 인, 위에 유지 */}
             <motion.div
               className="absolute inset-0 z-10"
-              initial={{ y: '6%', scale: 1.04 }}
-              animate={inView ? { y: 0, scale: 1 } : { y: '6%', scale: 1.04 }}
-              transition={{ duration: 0.9, delay: 0.5, ease }}
+              initial={{ y: '100%' }}
+              animate={inView ? { y: 0 } : { y: '100%' }}
+              transition={{ duration: 1.1, delay: 0.15, ease }}
             >
               <Image
                 src={imgSrc}
@@ -61,7 +61,7 @@ function WorkGridItem({ work }: { work: Work }) {
               className="text-[13px] text-white/70 uppercase tracking-[-0.3px] mb-2"
               initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ duration: 0.5, delay: 0.75 }}
+              transition={{ duration: 0.5, delay: 1.1 }}
             >
               {work.category}
             </motion.p>
@@ -71,7 +71,7 @@ function WorkGridItem({ work }: { work: Work }) {
               className="text-[24px] text-white uppercase tracking-[-0.7px] leading-tight"
               initial={{ y: '110%' }}
               animate={inView ? { y: 0 } : { y: '110%' }}
-              transition={{ duration: 0.6, delay: 0.85, ease }}
+              transition={{ duration: 0.6, delay: 1.2, ease }}
             >
               {work.title}
             </motion.h3>

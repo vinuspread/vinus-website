@@ -21,12 +21,12 @@ function SequenceItem({ img }: { img: { src: string; alt: string } }) {
         animate={inView ? { y: 0 } : { y: '100%' }}
         transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
       />
-      {/* 이미지: 회색 위에 올라옴 */}
+      {/* 이미지: 회색 뒤따라 슬라이드 인, 위에 유지 */}
       <motion.div
         className="relative z-10"
-        initial={{ y: '5%', scale: 1.03 }}
-        animate={inView ? { y: 0, scale: 1 } : { y: '5%', scale: 1.03 }}
-        transition={{ duration: 0.9, delay: 0.5, ease }}
+        initial={{ y: '100%' }}
+        animate={inView ? { y: 0 } : { y: '100%' }}
+        transition={{ duration: 1.1, delay: 0.15, ease }}
       >
         {img.src && (
           <Image
