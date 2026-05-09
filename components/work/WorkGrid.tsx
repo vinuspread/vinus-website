@@ -20,21 +20,21 @@ function WorkGridItem({ work }: { work: Work }) {
         className="aspect-[920/640] overflow-hidden relative group flex"
       >
         {imgSrc ? (
-          <div className="absolute inset-0 overflow-hidden">
-            {/* 회색 배경: 아래서 슬라이드 인, 유지됨 */}
+          <div className="absolute inset-0">
+            {/* 회색 배경: 하단에서 위로 성장, 유지됨 */}
             <motion.div
               className="absolute inset-0 z-0"
-              style={{ backgroundColor: '#d6d6d6' }}
-              initial={{ y: '100%' }}
-              animate={inView ? { y: 0 } : { y: '100%' }}
+              style={{ backgroundColor: '#d6d6d6', originY: 1 }}
+              initial={{ scaleY: 0 }}
+              animate={inView ? { scaleY: 1 } : { scaleY: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
             />
-            {/* 이미지: 회색 뒤따라 슬라이드 인, 위에 유지 */}
+            {/* 이미지: clipPath로 하단부터 드러남, 위에 유지 */}
             <motion.div
               className="absolute inset-0 z-10"
-              initial={{ y: '100%' }}
-              animate={inView ? { y: 0 } : { y: '100%' }}
-              transition={{ duration: 1.1, delay: 0.15, ease }}
+              initial={{ clipPath: 'inset(100% 0 0 0)' }}
+              animate={inView ? { clipPath: 'inset(0% 0 0 0)' } : { clipPath: 'inset(100% 0 0 0)' }}
+              transition={{ duration: 1.0, delay: 0.3, ease }}
             >
               <Image
                 src={imgSrc}
