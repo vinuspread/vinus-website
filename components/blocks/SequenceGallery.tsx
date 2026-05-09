@@ -24,19 +24,19 @@ const HIDDEN: Record<MotionType, FramerVariant> = {
 
 const TRANSITION: Record<MotionType, Parameters<typeof motion.div>[0]['transition']> = {
   none:          {},
-  fadeIn:        { duration: 0.9, ease: 'easeOut' },
-  slideUp:       { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-  zoomIn:        { duration: 0.8, ease: 'easeOut' },
-  textReveal:    { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-  curtainReveal: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
-  stagger:       { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+  fadeIn:        { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  slideUp:       { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  zoomIn:        { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  textReveal:    { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+  curtainReveal: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+  stagger:       { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
 }
 
 const VISIBLE: FramerVariant = { opacity: 1, y: 0, scale: 1 }
 
 function SequenceItem({ img, motionType }: { img: { src: string; alt: string }; motionType: MotionType }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -5% 0px' })
+  const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' })
 
   return (
     <motion.div

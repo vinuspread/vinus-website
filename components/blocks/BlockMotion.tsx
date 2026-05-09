@@ -23,12 +23,12 @@ const INITIAL: Record<MotionType, Variant> = {
 
 const TRANSITION: Record<MotionType, object> = {
   none:          {},
-  fadeIn:        { duration: 0.7, ease: 'easeOut' },
-  slideUp:       { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
-  zoomIn:        { duration: 0.7, ease: 'easeOut' },
-  textReveal:    { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
-  curtainReveal: { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
-  stagger:       { duration: 0.5, ease: 'easeOut' },
+  fadeIn:        { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  slideUp:       { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  zoomIn:        { duration: 1.1, ease: [0.16, 1, 0.3, 1] },
+  textReveal:    { duration: 1.0, ease: [0.16, 1, 0.3, 1] },
+  curtainReveal: { duration: 1.2, ease: [0.16, 1, 0.3, 1] },
+  stagger:       { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
 }
 
 const STAGGER_CHILD: Variant = { opacity: 0, y: 20 }
