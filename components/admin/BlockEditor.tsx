@@ -478,43 +478,49 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                   <option value="sequence-h">가로 시퀀스 — 나란히 배치 후 좌→우 순차 등장</option>
                 </select>
                 {block.images.map((img, gi) => (
-                  <div key={gi} className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={img.src}
-                      onChange={(e) => {
-                        const images = [...block.images]
-                        images[gi] = { ...images[gi], src: e.target.value }
-                        onChange(updateBlock(blocks, index, { ...block, images }))
-                      }}
-                      placeholder="이미지 URL"
-                      className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                    />
-                    <input
-                      type="text"
-                      value={img.alt}
-                      onChange={(e) => {
-                        const images = [...block.images]
-                        images[gi] = { ...images[gi], alt: e.target.value }
-                        onChange(updateBlock(blocks, index, { ...block, images }))
-                      }}
-                      placeholder="Alt"
-                      className="w-24 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                    />
-                    <label className="cursor-pointer border border-gray-300 px-2 py-1 text-xs hover:bg-gray-100">
-                      업로드
-                      <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, null, gi)} />
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const images = block.images.filter((_, i) => i !== gi)
-                        onChange(updateBlock(blocks, index, { ...block, images }))
-                      }}
-                      className="text-xs text-red-500 px-2 py-1 border border-red-200 hover:bg-red-50"
-                    >
-                      삭제
-                    </button>
+                  <div key={gi} className="space-y-1">
+                    <div className="flex gap-2 items-center">
+                      {img.src && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={img.src} alt={img.alt} className="w-12 h-12 object-cover flex-shrink-0 bg-gray-100" />
+                      )}
+                      <input
+                        type="text"
+                        value={img.src}
+                        onChange={(e) => {
+                          const images = [...block.images]
+                          images[gi] = { ...images[gi], src: e.target.value }
+                          onChange(updateBlock(blocks, index, { ...block, images }))
+                        }}
+                        placeholder="이미지 URL"
+                        className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                      />
+                      <input
+                        type="text"
+                        value={img.alt}
+                        onChange={(e) => {
+                          const images = [...block.images]
+                          images[gi] = { ...images[gi], alt: e.target.value }
+                          onChange(updateBlock(blocks, index, { ...block, images }))
+                        }}
+                        placeholder="Alt"
+                        className="w-24 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                      />
+                      <label className="cursor-pointer border border-gray-300 px-2 py-1 text-xs hover:bg-gray-100">
+                        {uploading[`${block.id}-${gi}`] ? '...' : '업로드'}
+                        <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload(block.id, index, null, gi)} />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const images = block.images.filter((_, i) => i !== gi)
+                          onChange(updateBlock(blocks, index, { ...block, images }))
+                        }}
+                        className="text-xs text-red-500 px-2 py-1 border border-red-200 hover:bg-red-50"
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </div>
                 ))}
                 <button

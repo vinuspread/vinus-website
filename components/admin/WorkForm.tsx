@@ -234,6 +234,11 @@ export default function WorkForm({ initialData }: Props) {
               {uploading ? '업로드 중...' : '파일 선택'}
               <input type="file" accept="image/*" className="hidden" onChange={uploadThumbnail} />
             </label>
+            {thumbnailUrl && (
+              <button type="button" onClick={() => setThumbnailUrl('')} className="text-xs text-red-400 hover:text-red-600">
+                삭제
+              </button>
+            )}
           </div>
           {thumbnailUrl && (
             // eslint-disable-next-line @next/next/no-img-element
