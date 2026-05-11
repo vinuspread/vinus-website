@@ -27,13 +27,14 @@ export const ClientsBrandsSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap py-[80px] px-page-padding bg-transparent">
+    <section ref={revealRef as any} className="anim-wrap px-page-padding py-[100px] bg-gallery">
 
       {/* 클라이언트 로고 그리드 */}
       <div className="mb-[80px]">
-        <h2 className="text-[46.8px] leading-none mb-[48px] uppercase font-inter">
+        <p className="section-label mb-10">( Clients )</p>
+        <h2 className="display-heading text-[clamp(40px,5vw,82px)] mb-[48px] uppercase">
           <span className="block overflow-hidden">
-            <span className="anim-move-up block">Clients</span>
+            <span className="anim-move-up block">OUR PARTNERS</span>
           </span>
         </h2>
 
@@ -55,26 +56,30 @@ export const ClientsBrandsSection = () => {
 
       {/* Brands We've Worked With */}
       <div>
-        <h2 className="text-[46.8px] leading-none mb-[40px] uppercase font-inter">
+        <p className="section-label mb-10">( Brands )</p>
+        <h2 className="display-heading text-[clamp(40px,5vw,82px)] mb-[40px] uppercase">
           <span className="block overflow-hidden">
             <span className="anim-move-up block">Brands We&apos;ve Worked With</span>
           </span>
         </h2>
 
-        <div className="border-t border-alto">
+        <div className="border-t border-alto grid grid-cols-1 md:grid-cols-2">
           {brands.map((brand, idx) => (
-            <div key={brand.name} className="grid grid-cols-8 items-center h-[73px] border-b border-alto group hover:bg-white/30 transition-colors">
-              <div className="col-span-4 text-[17px]">
+            <div 
+              key={brand.name} 
+              className={`flex flex-col justify-center py-8 border-b border-alto group hover:bg-white/30 transition-colors relative px-4 ${idx % 2 === 0 ? 'md:border-r md:pr-16' : 'md:pl-16'}`}
+            >
+              <div className="text-[22px] font-bold mb-2">
                 <span className="anim-clip">
-                  <span className="anim-move-up" data-delay={idx * 50}>{brand.name}</span>
+                  <span className="anim-move-up" data-delay={idx * 30}>{brand.name}</span>
                 </span>
               </div>
-              <div className="col-span-3 text-[15px] font-light">
+              <div className="text-[15px] font-light opacity-60">
                 <span className="anim-clip block">
-                  <span className="anim-move-up" data-delay={idx * 50 + 20}>{brand.services}</span>
+                  <span className="anim-move-up" data-delay={idx * 30 + 50}>{brand.services}</span>
                 </span>
               </div>
-              <div className="col-span-1 text-right text-[14px] text-mine-shaft/40">
+              <div className="absolute right-6 top-1/2 -translate-y-1/2 text-right text-[11px] tracking-widest text-mine-shaft/20 font-bold group-hover:text-mine-shaft transition-colors">
                 MORE +
               </div>
             </div>

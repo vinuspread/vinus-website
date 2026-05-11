@@ -1,13 +1,13 @@
 "use client";
 
-import { DoubleButton } from "@/components/common/DoubleButton";
+import { ArrowLink } from "@/components/common/ArrowLink";
 import { useReveal } from "@/hooks/useReveal";
 
 export const AboutSection = () => {
   const ref = useReveal();
 
   return (
-    <section ref={ref as any} className="anim-wrap min-h-[417px] py-[100px] px-page-padding bg-transparent">
+    <section ref={ref as any} className="anim-wrap px-page-padding py-[100px] bg-gallery border-b border-alto">
       <div className="flex flex-col gap-10 max-w-[920px]">
         {/* Heading */}
         <h2 className="text-[83px] leading-none tracking-[-2.8px] font-normal uppercase font-inter">
@@ -29,7 +29,7 @@ export const AboutSection = () => {
 
         {/* Body & Button */}
         <div>
-          <p className="text-[17px] leading-[1.4] font-medium mb-10 opacity-60 max-w-[640px] break-keep">
+          <p className="text-[17px] leading-[1.4] font-medium mb-12 opacity-60 max-w-[640px] break-keep">
             <span className="block overflow-hidden">
               <span className="anim-move-up block" data-delay="200">
                 우리는 브랜드의 본질을 연구하고, 구조적 아름다움을 설계하며, 한계 없는 기술력을 구현합니다.
@@ -43,7 +43,7 @@ export const AboutSection = () => {
           </p>
           <div className="anim-clip">
             <div className="anim-move-up" data-delay="400">
-              <DoubleButton labelFront="ABOUT US" labelBack="LEARN MORE" />
+              <ArrowLink href="/about">About Us</ArrowLink>
             </div>
           </div>
         </div>

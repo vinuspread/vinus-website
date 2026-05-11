@@ -11,9 +11,179 @@
 | 우선순위 | 작업 | 상태 |
 |----------|------|------|
 | 1 | **스택 카드 인터랙션** — 히어로 하단 섹션 전환 효과 구현 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-08) |
-| 2 | **스택 카드 롤백** — 스택 카드 인터랙션 제거, 원래 방식으로 복구 (아래 상세 스펙 참고) | ⏳ 대기 |
+| 2 | **스택 카드 롤백** — 스택 카드 인터랙션 제거, 원래 방식으로 복구 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-11) |
+| 3 | **Motto 스타일 UI 적용** — wearemotto.com 디자인 레퍼런스 기반 사이트 전반 UI 고도화 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-11) |
 
 > 각 작업 완료 후 이 표의 상태를 ✅로 변경하고 완료 목록에 추가할 것.
+
+---
+
+---
+
+## Motto 스타일 UI 적용 지시 — 젬마
+
+**레퍼런스:** https://wearemotto.com/  
+**목표:** 현재 사이트의 UI를 motto 스타일로 고도화. 버튼 제거 → 언더라인 텍스트 링크로 전환, 타이포그래피 정제, 섹션 레이아웃 클린업.
+
+---
+
+### 1. 텍스트 링크 컴포넌트 생성 — `src/components/common/ArrowLink.tsx`
+
+motto.com의 CTA는 버튼이 아니라 언더라인+화살표 텍스트 링크.
+
+```tsx
+"use client";
+import Link from "next/link";
+
+interface ArrowLinkProps {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+  external?: boolean;
+}
+
+export const ArrowLink = ({ href, children, className = "", external }: ArrowLinkProps) => {
+  const classes = `group inline-flex items-center gap-3 border-b border-mine-shaft/30 pb-3 
+    font-inter text-[15px] font-medium tracking-[-0.01em] text-mine-shaft 
+    hover:border-mine-shaft transition-colors duration-300 ${className}`;
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+        <span>{children}</span>
+        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={classes}>
+      <span>{children}</span>
+      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+    </Link>
+  );
+};
+```
+
+---
+
+### 2. 서비스 섹션 — `src/components/sections/ServicesSection.tsx` 신규 생성
+
+motto.com의 "(CHOOSE YOUR PURPOSE)" 스타일. 섹션 레이블 + 대형 텍스트 링크 3개.
+
+```tsx
+"use client";
+import { useReveal } from "@/hooks/useReveal";
+import { ArrowLink } from "@/components/common/ArrowLink";
+
+export const ServicesSection = () => {
+  const ref = useReveal();
+
+  return (
+    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-gallery">
+      
+      {/* 섹션 레이블 */}
+      <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 mb-[80px]">
+        ( Choose Your Purpose )
+      </p>
+
+      {/* 대형 링크 목록 */}
+      <div className="flex flex-col gap-0 border-t border-alto">
+        {[
+          { label: "Explore our services", href: "/services" },
+          { label: "See our case studies", href: "/work" },
+          { label: "Discover our methodology", href: "/about" },
+        ].map(({ label, href }, i) => (
+          <div key={href} className="border-b border-alto group">
+            <ArrowLink
+              href={href}
+              className="anim-move-up w-full justify-between border-none pb-0 py-[28px]
+                font-inter text-[clamp(22px,3vw,40px)] font-medium tracking-[-0.02em]"
+            >
+              {label}
+            </ArrowLink>
+          </div>
+        ))}
+      </div>
+
+    </section>
+  );
+};
+```
+
+---
+
+### 3. 홈 `page.tsx`에 ServicesSection 추가
+
+HeroSectionV2 바로 다음, WorkGrid 위에 삽입:
+
+```tsx
+<HeroSectionV2 />
+<ServicesSection />
+<WorkGrid limit={4} />
+...
+```
+
+import 추가:
+```tsx
+import { ServicesSection } from "@/components/sections/ServicesSection";
+```
+
+---
+
+### 4. 기존 `DoubleButton` CTA 텍스트 링크로 교체
+
+WorkGrid 하단 "View All Work" 버튼을 `ArrowLink`로 교체:
+
+```tsx
+// 기존
+<DoubleButton labelFront="View All Work" href="/work" />
+
+// 변경
+<ArrowLink href="/work">View All Work</ArrowLink>
+```
+
+AboutSection CTA도 동일하게 교체.
+
+---
+
+### 5. 타이포그래피 정제 — 전역 적용
+
+`globals.css`에 추가:
+
+```css
+/* Motto Style — Display Heading */
+.display-heading {
+  font-family: var(--font-inter);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+/* Motto Style — Section Label */
+.section-label {
+  font-family: var(--font-inter);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgb(42 42 42 / 0.4);
+}
+```
+
+`ClientsBrandsSection`, `AwardsSection` 등 섹션 제목에 `display-heading` 클래스 적용.  
+섹션 레이블(Clients, Awards 등)에 `section-label` 적용.
+
+---
+
+### 6. 주의사항
+
+- `ArrowLink` 내부에서 `ArrowLink`를 중첩 사용 금지
+- `border-none` 오버라이드 사용 시 Tailwind `!` prefix 대신 className 순서 조정으로 해결
+- `data-delay` 순서: 각 링크에 `data-delay={i * 80}` 적용
+- `HeroSectionV2` 수정 금지
+
+완료 후 커밋 (브랜치: ui-design).
 
 ---
 

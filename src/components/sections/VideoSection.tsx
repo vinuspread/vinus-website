@@ -16,8 +16,8 @@ export const VideoSection = () => {
   }, [isLoaded]);
 
   return (
-    <section ref={revealRef as any} className="anim-wrap h-[1080px] bg-transparent">
-      <div className="relative w-full h-full bg-alto overflow-hidden">
+    <section ref={revealRef as any} className="anim-wrap bg-transparent w-full">
+      <div className="relative w-full aspect-video bg-alto overflow-hidden">
         {/* Loading Overlay */}
         <div className={cn(
           "absolute inset-0 flex items-center justify-center z-10 bg-alto transition-opacity duration-500",

@@ -33,9 +33,10 @@ export const HeroSectionV2 = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=1000%", // Extended for smooth storytelling
-          scrub: 1.5,
+          end: "+=100%",
+          scrub: 1.0,
           pin: true,
+          pinSpacing: false,
           invalidateOnRefresh: true,
         }
       });
@@ -51,18 +52,18 @@ export const HeroSectionV2 = () => {
 
       // [Sequence 2: Main Statement Reveal]
         .to(block2Ref.current, { opacity: 1, y: 0, duration: 4, ease: "none" }, "-=3")
-        .fromTo(block2Ref.current.querySelectorAll(".reveal-line"), 
-          { yPercent: 100 }, 
+        .fromTo(block2Ref.current?.querySelectorAll(".reveal-line") ?? [],
+          { yPercent: 100 },
           { yPercent: 0, stagger: 0.15, duration: 3, ease: "none" }, "-=3")
 
       // [Sequence 3: Main Statement Exit & Deep Parallax]
-        .to(block2Ref.current, { y: -100, opacity: 0, duration: 4, ease: "none" }, "+=0.5")
-        .to(bgRef.current, { yPercent: -70, duration: 12, ease: "none" }, "-=4")
+        .to(block2Ref.current, { y: -100, opacity: 0, duration: 3, ease: "none" }, "+=0")
+        .to(bgRef.current, { yPercent: -70, duration: 7, ease: "none" }, "-=3")
 
-      // [Sequence 4: Final Detail Reveal]
-        .to(block3Ref.current, { opacity: 1, y: 0, duration: 4, ease: "none" }, "-=3")
-        .fromTo(block3Ref.current.querySelectorAll(".reveal-line"), 
-          { opacity: 0, y: 30 }, 
+      // [Sequence 4: Final Detail Reveal — crossfade with block2 exit]
+        .to(block3Ref.current, { opacity: 1, y: 0, duration: 3, ease: "none" }, "-=7")
+        .fromTo(block3Ref.current?.querySelectorAll(".reveal-line") ?? [],
+          { opacity: 0, y: 30 },
           { opacity: 1, y: 0, stagger: 0.2, duration: 3, ease: "none" }, "-=3")
 
       // [Sequence 5: Final Exit & Clean Background]
@@ -75,7 +76,7 @@ export const HeroSectionV2 = () => {
   }, []);
 
   return (
-    <section id="hero-section" ref={sectionRef} className="relative overflow-hidden">
+    <section id="hero-section" ref={sectionRef} className="relative overflow-hidden bg-[#0a0a0a]">
       
       {/* ── Background Layer ── */}
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
@@ -96,34 +97,39 @@ export const HeroSectionV2 = () => {
         
         {/* Stage 1: Intro */}
         <div ref={block1Ref} className="absolute w-full max-w-[1500px] flex flex-col items-start text-left">
-          <div className="font-inter leading-[1.25] tracking-[-0.03em]" style={{ fontSize: "clamp(26px, 3.5vw, 46px)" }}>
+          <div className="font-inter leading-[1.2] tracking-[-0.03em]" style={{ fontSize: "clamp(32px, 4.5vw, 64px)" }}>
             {["Even in the intensity of a fast-changing world,", 
               "we focus on the enduring value of what truly matters,", 
               "striving to create beautiful designs that transcend", 
               "structural and physical boundaries."].map((line, i) => (
-              <div key={i} className="overflow-hidden py-1">
-                <p className={`${i >= 2 ? 'font-bold' : 'font-light opacity-85'}`}>{line}</p>
+              <div key={i} className="overflow-hidden py-1.5">
+                <p className={`${i >= 2 ? 'font-bold' : 'font-light'}`}>{line}</p>
               </div>
             ))}
           </div>
-          <div className="mt-14 text-white/40 font-light leading-[1.7] tracking-tight max-w-[900px] break-keep" style={{ fontSize: "clamp(14px, 1.2vw, 17px)" }}>
+          <div className="mt-14 text-white font-light leading-[1.7] tracking-tight max-w-[900px] break-keep" style={{ fontSize: "clamp(14px, 1.2vw, 17px)" }}>
             <p>빠르게 변화하는 세상의 격랑 속에서도 우리는 진정으로 중요한 것의 영속적인 가치에 집중하며,</p>
             <p>구조적·물리적 경계를 초월하는 아름다운 디자인을 만들기 위해 노력합니다.</p>
           </div>
         </div>
 
         {/* Stage 2: Main Statement */}
-        <div ref={block2Ref} className="absolute w-full max-w-[1600px] flex flex-col items-start text-left opacity-0 pointer-events-none">
-          <div className="font-inter uppercase leading-[1.05] tracking-[-0.05em]" style={{ fontSize: "clamp(48px, 9vw, 140px)" }}>
+        <div ref={block2Ref} className="absolute w-full max-w-[1900px] flex flex-col items-start text-left opacity-0 pointer-events-none">
+          <div className="font-inter uppercase leading-[1.0] tracking-[-0.05em]" style={{ fontSize: "clamp(60px, 10vw, 160px)" }}>
             <div className="overflow-hidden"><p className="reveal-line font-light">We focus on</p></div>
-            <div className="overflow-hidden"><p className="reveal-line font-bold">the essential</p></div>
-            <div className="overflow-hidden"><p className="reveal-line font-light"><span className="font-bold">values</span> of your brand.</p></div>
+            <div className="overflow-hidden"><p className="reveal-line font-bold whitespace-nowrap">the essential values</p></div>
+            <div className="overflow-hidden"><p className="reveal-line font-light">of your brand.</p></div>
           </div>
         </div>
 
         {/* Stage 3: Detailed Description & CTA */}
         <div ref={block3Ref} className="absolute w-full max-w-[1400px] flex flex-col items-start text-left opacity-0 pointer-events-none">
-          <div className="font-light leading-[1.65] tracking-[-0.01em] max-w-[1000px] mb-16 text-white/60 break-keep" style={{ fontSize: "clamp(18px, 1.7vw, 23px)" }}>
+          <div className="reveal-line mb-12 overflow-hidden">
+            <h2 className="font-inter font-bold leading-[1.2] tracking-[-0.03em]" style={{ fontSize: "clamp(32px, 4.5vw, 64px)" }}>
+              Our Philosophy
+            </h2>
+          </div>
+          <div className="font-light leading-[1.65] tracking-[-0.01em] max-w-[1000px] mb-16 text-white break-keep" style={{ fontSize: "clamp(18px, 1.7vw, 23px)" }}>
             <p className="reveal-line">
               More than just creators, VINUSPREAD is a Product Management Group that bridges the gap between business objectives and user needs. 
               Rooted in our philosophy that &apos;it all begins with people,&apos; we capture the core essence that remains steadfast amidst shifting trends. 
@@ -142,7 +148,7 @@ export const HeroSectionV2 = () => {
       </div>
 
       {/* ── Global Header Presence ── */}
-      <div className="absolute top-0 inset-x-0 z-[100] px-page-padding py-[60px] flex items-center justify-between text-white/30 font-inter font-bold tracking-[0.2em] text-[10px] uppercase pointer-events-none">
+      <div className="absolute top-0 inset-x-0 z-[100] px-page-padding py-[60px] flex items-center justify-between text-white font-inter font-bold tracking-[0.2em] text-[10px] uppercase pointer-events-none">
         <span>Design Studio — Seoul</span>
         <span>Est. 2015</span>
       </div>

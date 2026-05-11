@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { DoubleButton } from "@/components/common/DoubleButton";
+import { ArrowLink } from "@/components/common/ArrowLink";
 import { useReveal } from "@/hooks/useReveal";
 import { stories } from "@/lib/stories";
 
@@ -12,7 +12,7 @@ export const LatestNewsSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap pt-[80px] px-page-padding bg-transparent pb-[120px]">
+    <section ref={revealRef as any} className="anim-wrap px-page-padding py-[100px] bg-gallery border-b border-alto">
       {/* Header Row */}
       <div className="flex justify-between items-end mb-6">
         <h2 className="text-[46.5px] tracking-[-1.6px] uppercase leading-none font-inter">
@@ -22,7 +22,7 @@ export const LatestNewsSection = () => {
         </h2>
         <div className="anim-clip">
           <div className="anim-move-up" data-delay="100">
-            <DoubleButton labelFront="View All" labelBack="View All" href="/story" />
+            <ArrowLink href="/story">View All</ArrowLink>
           </div>
         </div>
       </div>

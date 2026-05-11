@@ -29,11 +29,12 @@ export const AwardsSection = () => {
   const ref = useReveal();
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[77px] px-page-padding bg-transparent">
+    <section ref={ref as any} className="anim-wrap px-page-padding py-[100px] bg-gallery border-b border-alto">
       <div className="grid grid-cols-8 gap-column">
         {/* Left: Heading & Description */}
         <div className="col-span-4">
-          <h2 className="text-[82.4px] leading-[0.9] tracking-[-2.8px] mb-8 uppercase">
+          <p className="section-label mb-10">( RECOGNITIONS )</p>
+          <h2 className="display-heading text-[clamp(40px,5vw,82.4px)] mb-8 uppercase">
             <span className="anim-clip">
               <span className="anim-move-up">AWARDS &<br/>RECOGNITIONS</span>
             </span>

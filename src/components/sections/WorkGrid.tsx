@@ -18,7 +18,7 @@ export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
     .slice(0, limit);
 
   return (
-    <div ref={revealRef as any} className="anim-wrap grid grid-cols-1 md:grid-cols-2">
+    <div ref={revealRef as any} className="anim-wrap grid grid-cols-1 md:grid-cols-2 gap-px bg-alto">
       {filtered.map((project, i) => (
         <ProjectCard
           key={project.slug}

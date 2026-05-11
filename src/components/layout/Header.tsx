@@ -44,7 +44,7 @@ export const Header = () => {
     <header
       ref={navRef}
       className={cn(
-        "fixed top-0 left-0 w-full h-[56px] z-[1000] px-page-padding flex items-center justify-between transition-all duration-500 header-enter",
+        "fixed top-0 left-0 w-full h-[80px] z-[1000] px-page-padding flex items-center justify-between transition-all duration-500 header-enter",
         transparent ? "bg-transparent border-b border-transparent" : "bg-gallery border-b border-alto",
         isHidden && "nav-hidden"
       )}
@@ -63,7 +63,7 @@ export const Header = () => {
 
 
       {/* Right: Nav */}
-      <nav className="flex-1 flex items-center justify-end gap-8">
+      <nav className="flex-1 flex items-center justify-end gap-10">
         {[
           { label: "vinuspread", href: "/about" },
           { label: "experience", href: "/work" },

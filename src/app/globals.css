@@ -13,7 +13,7 @@
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
   /* Spacing Tokens */
-  --spacing-page-padding: 40px;
+  --spacing-page-padding: 120px;
   --spacing-column:       38.4px;
 
   /* Custom Easings */
@@ -196,25 +196,23 @@
 }
 
 /* ------------------------------------------------------------
-   Stack Card Interaction
+   Motto Style Components
    ------------------------------------------------------------ */
 
-.stack-container {
-  position: relative;
+/* Motto Style — Display Heading */
+.display-heading {
+  font-family: var(--font-inter);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
 }
 
-.stack-card {
-  position: sticky;
-  top: 0;
-  min-height: 100vh;
-  transform-origin: top center;
-  will-change: transform, opacity;
-  transition: transform 0.1s linear, opacity 0.1s linear;
-  border-radius: 0;
-}
-
-/* 카드가 뒤로 밀릴 때 모서리 둥글게 */
-.stack-card.is-stacking {
-  border-radius: 16px;
-  overflow: hidden;
+/* Motto Style — Section Label */
+.section-label {
+  font-family: var(--font-inter);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgb(42 42 42 / 0.4);
 }
