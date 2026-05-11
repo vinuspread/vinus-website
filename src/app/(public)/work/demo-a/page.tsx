@@ -19,7 +19,7 @@ const project = {
 
 export default function DemoA() {
   return (
-    <div className="bg-gallery min-h-screen">
+    <div className="bg-white min-h-screen">
 
       {/* Demo Nav */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex gap-2">

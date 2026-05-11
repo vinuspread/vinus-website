@@ -28,30 +28,24 @@ export const ProjectCard = ({
 
   const content = (
     <>
-      {/* Image — clip-path reveal via useReveal + GSAP */}
-      <div className="anim-clip w-full h-full">
-        <div
-          className="anim-move-up-img w-full h-full relative"
-          data-delay={delay}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-          />
-        </div>
+      {/* Image Container — Managed by parent GSAP */}
+      <div className="w-full h-full relative">
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
       </div>
 
-      {/* Gradient — appears on hover */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      {/* Gradient removed as per request */}
 
-      {/* Text overlay — slides up on hover */}
-      <div className="absolute bottom-0 left-0 p-[40px] z-10 w-full pointer-events-none flex flex-col gap-[10px] translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-        <p className="text-[12px] text-white/75 uppercase tracking-[0.12em] font-inter leading-none">
+      {/* Text overlay — Always visible with subtle text shadow for legibility */}
+      <div className="absolute bottom-0 left-0 p-[24px] lg:p-[32px] z-10 w-full pointer-events-none flex flex-col gap-[6px] translate-y-0 opacity-100 transition-all duration-500 ease-out">
+        <p className="text-[10px] lg:text-[11px] text-white uppercase tracking-[0.15em] font-inter leading-none drop-shadow-md">
           {category}
         </p>
-        <h3 className="text-[28px] text-white uppercase tracking-[-0.04em] leading-tight font-inter font-bold">
+        <h3 className="text-[20px] lg:text-[24px] text-white uppercase tracking-[-0.03em] leading-tight font-inter font-bold drop-shadow-md">
           {title}
         </h3>
       </div>

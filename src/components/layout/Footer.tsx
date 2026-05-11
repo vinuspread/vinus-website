@@ -25,7 +25,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer ref={revealRef as any} className="anim-wrap bg-gallery text-mine-shaft">
+    <footer ref={revealRef as any} className="anim-wrap bg-white text-mine-shaft">
       {/* 9-1. Footer Nav 상단 바 */}
       <div className="h-[56px] border-b border-alto px-page-padding flex items-center">
         <div className="grid grid-cols-4 w-full">

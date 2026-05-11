@@ -15,7 +15,7 @@ export default function WorkPage() {
     cat === "All" ? projects.length : projects.filter((p) => p.category === cat).length;
 
   return (
-    <main className="bg-gallery">
+    <main className="bg-white">
       <PageHeader
         breadcrumb="Experience"
         sideLabel={`${projects.length} Projects`}

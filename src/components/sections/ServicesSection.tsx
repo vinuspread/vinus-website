@@ -6,7 +6,7 @@ export const ServicesSection = () => {
   const ref = useReveal();
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[100px] px-page-padding bg-gallery border-b border-alto">
+    <section ref={ref as any} className="anim-wrap py-[100px] px-page-padding bg-white border-b border-alto">
       
       {/* 섹션 레이블 */}
       <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 mb-[80px]">

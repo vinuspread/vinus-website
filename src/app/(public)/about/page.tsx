@@ -50,7 +50,7 @@ export default function AboutPage() {
   const infoRef = useReveal();
 
   return (
-    <main className="bg-gallery">
+    <main className="bg-white">
       {/* 1. Page Header */}
       <PageHeader
         breadcrumb="Vinuspread"

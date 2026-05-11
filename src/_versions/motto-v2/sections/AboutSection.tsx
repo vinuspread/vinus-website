@@ -35,18 +35,22 @@ export const AboutSection = () => {
           </p>
 
           {/* Purpose Section (Merged) */}
-          <div className="mt-12">
+          <div className="mt-20">
+            <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 mb-10">
+              (Choose Your Purpose)
+            </p>
+
             <div className="flex flex-col border-t border-mine-shaft/10">
               {[
                 { label: "Explore our services", href: "/services" },
-                { label: "See our work", href: "/work" },
-                { label: "Discover our story", href: "/story" },
+                { label: "See our case studies", href: "/work" },
+                { label: "Discover our methodology", href: "/about" },
               ].map(({ label, href }, i) => (
                 <div key={href} className="border-b border-mine-shaft/10 group">
                   <ArrowLink
                     href={href}
-                    className="anim-move-up flex flex-row items-center justify-between w-full border-none py-[32px]
-                      font-inter text-[20px] lg:text-[24px] font-medium tracking-[-0.02em] whitespace-nowrap"
+                    className="anim-move-up w-full justify-between border-none py-[32px]
+                      font-inter text-[clamp(24px,2.5vw,36px)] font-medium tracking-[-0.02em]"
                     data-delay={200 + i * 80}
                   >
                     {label}

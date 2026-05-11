@@ -62,7 +62,7 @@ export default function ServicesPage() {
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
   return (
-    <main className="bg-gallery">
+    <main className="bg-white">
 
       <PageHeader
         breadcrumb="Services"

@@ -26,7 +26,7 @@ export default function Home() {
               Crafting premium digital<br />experiences.
             </h2>
           </div>
-          <WorkGrid limit={12} />
+          <WorkGrid limit={4} />
           <div className="px-page-padding mt-16 anim-clip">
             <ArrowLink href="/work" className="anim-move-up" data-delay="300">View All Work</ArrowLink>
           </div>

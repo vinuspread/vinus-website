@@ -10,13 +10,80 @@
 
 | 우선순위 | 작업 | 상태 |
 |----------|------|------|
-| 1 | **스택 카드 인터랙션** — 히어로 하단 섹션 전환 효과 구현 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-08) |
-| 2 | **스택 카드 롤백** — 스택 카드 인터랙션 제거, 원래 방식으로 복구 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-11) |
-| 3 | **Motto 스타일 UI 적용** — wearemotto.com 디자인 레퍼런스 기반 사이트 전반 UI 고도화 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-11) |
+| 1 | **스택 카드 인터랙션** | ✅ 완료 |
+| 2 | **스택 카드 롤백** | ✅ 완료 |
+| 3 | **Motto 스타일 UI** | ✅ 완료 |
+| 4 | **메인 페이지 카피 입력** — 아래 섹션별 스펙 참고 | ⏳ 대기 |
 
 > 각 작업 완료 후 이 표의 상태를 ✅로 변경하고 완료 목록에 추가할 것.
 
 ---
+
+---
+
+## 메인 페이지 구조 — 현재 확정 (2026-05-11)
+
+메인 페이지(`src/app/(public)/page.tsx`)가 아래 구조로 완전히 재설계됐다.  
+**기존 섹션(AboutSection, ServicesSection, WorkGrid 단독 사용) 삭제 금지.**  
+새 컴포넌트를 수정할 때는 아래 구조와 스타일 규칙을 반드시 준수.
+
+### 섹션 순서
+
+```
+0. Header.tsx             ← 수정 금지 (상단 메뉴 현행 유지)
+1. HeroSectionV2          ← 수정 금지
+2. WorkSection            ← src/components/sections/WorkSection.tsx (신규)
+3. MissionSection         ← src/components/sections/MissionSection.tsx (신규)
+4. PurposeSection         ← src/components/sections/PurposeSection.tsx (신규)
+5. VideoSection
+6. ClientsBrandsSection
+7. AwardsSection
+8. LatestNewsSection
+9. ImageSliderSection
+```
+
+### 공통 섹션 스타일 규칙
+
+- 배경: `bg-gallery` (모든 섹션 동일)
+- 섹션 구분: `border-b border-alto` — **모든 섹션 루트에 필수**
+- 수평 패딩: `px-page-padding` (= 120px)
+- 수직 패딩: `py-[100px]` (기본) / `py-[120px]` (주요 섹션)
+- 풀블리드 섹션(WorkGrid, VideoSection): 수직 패딩 없음, 섹션 wrapper가 감쌈
+- 섹션 레이블: `font-inter font-bold text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40`  형식: `( Label )`
+- CTA: `ArrowLink` 컴포넌트 사용. 버튼(`DoubleButton`) 사용 금지
+
+### WorkSection (`src/components/sections/WorkSection.tsx`)
+
+```tsx
+// Header row: label 좌 / "View All Work →" 우
+// px-page-padding py-[40px] border-b border-alto
+// 아래: WorkGrid 풀블리드 (limit={4})
+```
+
+### MissionSection (`src/components/sections/MissionSection.tsx`)
+
+```tsx
+// Label: ( About )
+// 대형 브랜드 스테이트먼트 (font-bold + font-light 혼용)
+// 본문 + "About Us →" ArrowLink
+// 카피 수정 가능 — 구조 변경 금지
+```
+
+### PurposeSection (`src/components/sections/PurposeSection.tsx`)
+
+```tsx
+// Label: ( Choose Your Purpose )
+// 3개 대형 텍스트 링크 (border-t/b border-alto 구분)
+// href: /services, /work, /about
+```
+
+### 스타일 토큰
+
+```
+--spacing-page-padding: 120px   ← globals.css에서 변경됨 (기존 40px)
+bg-gallery  = #f0f0f0
+border-alto = #d6d6d6
+```
 
 ---
 

@@ -1,158 +1,178 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import NextImage from "next/image";
-import { gsap } from "gsap";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { DoubleButton } from "@/components/common/DoubleButton";
+import { ArrowLink } from "@/components/common/ArrowLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const B1_LINES = [
+  { text: "Even in the intensity of a fast-changing world,",       bold: false },
+  { text: "we focus on the enduring value of what truly matters,", bold: false },
+  { text: "striving to create beautiful designs that transcend",    bold: true  },
+  { text: "structural and physical boundaries.",                    bold: true  },
+];
+
+const B2_LINES = [
+  { text: "We focus on",             size: "clamp(58px, 9vw, 152px)"  },
+  { text: "the essential values of", size: "clamp(58px, 9vw, 152px)"  },
+  { text: "your brand.",             size: "clamp(88px, 14vw, 248px)" },
+];
+
 /**
- * HeroSectionV2: Exo Ape Style Editorial Interaction
- * Features: 7-Stage storytelling, long-vertical parallax, and seamless text reveals.
+ * Refactored HeroSectionV2
+ * - Strategy: Single vertical column for perfect synchronization.
+ * - Logic: Animate the parent container (Inner Slider) for a cohesive flow.
  */
 export const HeroSectionV2 = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
-  
-  const block1Ref = useRef<HTMLDivElement>(null);
-  const block2Ref = useRef<HTMLDivElement>(null);
-  const block3Ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const metaRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    // ── 1. Page Refresh Initialization ──
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // ── 2. Unified Scroll Timeline ──
+      const slider = sliderRef.current;
+      const b1Lines = gsap.utils.toArray(".b1-line");
+      const meta = metaRef.current;
+      const counter = counterRef.current;
+
+      // 1. Initial Load: B1 Lines Fade In
+      gsap.set(b1Lines, { opacity: 0, y: 20 });
+      gsap.set(meta, { opacity: 0 });
+
+      const loadTl = gsap.timeline();
+      loadTl.to(meta, { opacity: 1, duration: 1, ease: "power2.out" })
+            .to(b1Lines, { 
+              opacity: 1, 
+              y: 0, 
+              stagger: 0.1, 
+              duration: 1, 
+              ease: "sine.out" 
+            }, "-=0.5");
+
+      // 2. Scroll Timeline: Slider Moves Up
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: sectionRef.current,
+          trigger: containerRef.current,
           start: "top top",
-          end: "+=100%",
-          scrub: 1.0,
+          end: "+=600%", 
           pin: true,
-          pinSpacing: false,
+          scrub: 2.2, // Heavy inertial feel
           invalidateOnRefresh: true,
-        }
+        },
       });
 
-      // [Initial State]
-      gsap.set(bgRef.current, { yPercent: 0 });
-      gsap.set(block1Ref.current, { opacity: 1, y: 0 });
-      gsap.set([block2Ref.current, block3Ref.current], { opacity: 0, y: 80 });
+      // Move to B2
+      tl.to(slider, {
+        yPercent: -100, // Moves B1 out, B2 in
+        duration: 2,
+        ease: "sine.inOut",
+        onStart: () => { if (counter) counter.textContent = "( 02 — 03 )"; },
+        onReverseComplete: () => { if (counter) counter.textContent = "( 01 — 03 )"; }
+      });
 
-      // [Sequence 1: Intro Fade & BG Start]
-      tl.to(block1Ref.current, { y: -100, opacity: 0, duration: 4, ease: "none" }, "+=1.5")
-        .to(bgRef.current, { yPercent: -25, duration: 8, ease: "none" }, "-=3")
+      // Stay on B2 for a moment (Breathing room)
+      tl.to({}, { duration: 0.5 });
 
-      // [Sequence 2: Main Statement Reveal]
-        .to(block2Ref.current, { opacity: 1, y: 0, duration: 4, ease: "none" }, "-=3")
-        .fromTo(block2Ref.current?.querySelectorAll(".reveal-line") ?? [],
-          { yPercent: 100 },
-          { yPercent: 0, stagger: 0.15, duration: 3, ease: "none" }, "-=3")
+      // Move to B3
+      tl.to(slider, {
+        yPercent: -200, // Moves B2 out, B3 in
+        duration: 2,
+        ease: "sine.inOut",
+        onStart: () => { if (counter) counter.textContent = "( 03 — 03 )"; },
+        onReverseComplete: () => { if (counter) counter.textContent = "( 02 — 03 )"; }
+      });
 
-      // [Sequence 3: Main Statement Exit & Deep Parallax]
-        .to(block2Ref.current, { y: -100, opacity: 0, duration: 3, ease: "none" }, "+=0")
-        .to(bgRef.current, { yPercent: -70, duration: 7, ease: "none" }, "-=3")
+      // Stay on B3
+      tl.to({}, { duration: 1 });
 
-      // [Sequence 4: Final Detail Reveal — crossfade with block2 exit]
-        .to(block3Ref.current, { opacity: 1, y: 0, duration: 3, ease: "none" }, "-=7")
-        .fromTo(block3Ref.current?.querySelectorAll(".reveal-line") ?? [],
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, stagger: 0.2, duration: 3, ease: "none" }, "-=3")
-
-      // [Sequence 5: Final Exit & Clean Background]
-        .to(block3Ref.current, { opacity: 0, y: -100, duration: 4, ease: "none" }, "+=2")
-        .to(bgRef.current, { yPercent: -85, duration: 5, ease: "none" }, "-=4");
-
-    }, sectionRef);
+    }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section id="hero-section" ref={sectionRef} className="relative overflow-hidden bg-[#0a0a0a]">
-      
-      {/* ── Background Layer ── */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-        <div ref={bgRef} className="absolute top-0 left-0 w-full h-[350%] will-change-transform">
-          <NextImage 
-            src="/images/hero-bg.jpg" 
-            alt="Hero Background" 
-            fill 
-            className="object-cover object-top" 
-            priority 
-          />
-        </div>
-        <div className="absolute inset-0 bg-black/45 z-[1]" />
-      </div>
-
-      {/* ── Interaction Stage ── */}
-      <div className="relative z-10 h-screen w-full px-page-padding flex items-center justify-start text-white">
+    <div ref={containerRef} className="relative w-full bg-white">
+      <section className="h-screen w-full flex flex-col items-center justify-center px-page-padding overflow-hidden">
         
-        {/* Stage 1: Intro */}
-        <div ref={block1Ref} className="absolute w-full max-w-[1500px] flex flex-col items-start text-left">
-          <div className="font-inter leading-[1.2] tracking-[-0.03em]" style={{ fontSize: "clamp(32px, 4.5vw, 64px)" }}>
-            {["Even in the intensity of a fast-changing world,", 
-              "we focus on the enduring value of what truly matters,", 
-              "striving to create beautiful designs that transcend", 
-              "structural and physical boundaries."].map((line, i) => (
-              <div key={i} className="overflow-hidden py-1.5">
-                <p className={`${i >= 2 ? 'font-bold' : 'font-light'}`}>{line}</p>
-              </div>
-            ))}
+        {/* Top Meta Bar */}
+        <div
+          ref={metaRef}
+          style={{ opacity: 0 }}
+          className="absolute top-[80px] inset-x-0 z-10 px-page-padding py-[20px] flex items-center justify-between pointer-events-none"
+        >
+          <span
+            ref={counterRef}
+            className="font-inter font-bold text-[11px] tracking-[0.2em] uppercase text-mine-shaft/40"
+          >
+            ( 01 — 03 )
+          </span>
+          <span className="font-inter font-bold text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40">
+            Design Studio — Seoul · Est. 2015
+          </span>
+        </div>
+
+        {/* The Slider Container */}
+        <div 
+          ref={sliderRef}
+          className="relative w-full h-full will-change-transform"
+        >
+          {/* Block 1 (B1) */}
+          <div className="w-full h-full flex flex-col justify-center gap-10">
+            <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 3.6vw, 58px)" }}>
+              {B1_LINES.map((line, i) => (
+                <div key={i} className="overflow-hidden">
+                  <p className={`b1-line ${line.bold ? "font-bold" : "font-normal"}`}>
+                    {line.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="overflow-hidden">
+              <p className="b1-line font-pretendard font-light text-[13px] leading-[2] text-mine-shaft/40 max-w-[560px] break-keep">
+                빠르게 변화하는 세상의 격랑 속에서도 우리는 진정으로 중요한 것의 영속적인 가치에 집중하며,
+                구조적·물리적 경계를 초월하는 아름다운 디자인을 만들기 위해 노력합니다.
+              </p>
+            </div>
           </div>
-          <div className="mt-14 text-white font-light leading-[1.7] tracking-tight max-w-[900px] break-keep" style={{ fontSize: "clamp(14px, 1.2vw, 17px)" }}>
-            <p>빠르게 변화하는 세상의 격랑 속에서도 우리는 진정으로 중요한 것의 영속적인 가치에 집중하며,</p>
-            <p>구조적·물리적 경계를 초월하는 아름다운 디자인을 만들기 위해 노력합니다.</p>
+
+          {/* Block 2 (B2) */}
+          <div className="w-full h-full flex flex-col justify-center">
+            <div className="font-inter uppercase leading-[0.92] tracking-[-0.05em] text-mine-shaft">
+              {B2_LINES.map((line, i) => (
+                <div key={i} className="overflow-hidden py-1">
+                  <p className="font-normal" style={{ fontSize: line.size }}>
+                    {line.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Block 3 (B3) */}
+          <div className="w-full h-full flex flex-col justify-center gap-10">
+            <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 3.6vw, 58px)" }}>
+              <p className="font-normal">
+                More than just creators, <br />
+                VINUSPREAD is a <span className="font-bold">Product Management Group.</span>
+              </p>
+            </div>
+            <div className="overflow-hidden">
+              <p className="font-pretendard font-light text-[14px] leading-[2] text-mine-shaft/45 max-w-[600px] break-keep">
+                브랜드와 사용자 모두에게 의미 있는 경험을 만드는 것. 우리는 브랜드의 핵심 본질을 포착하고,
+                최적의 방향을 설계하며, 진정으로 마음에 울리는 디지털 경험을 구현합니다.
+              </p>
+            </div>
+            <div className="flex gap-8 pointer-events-auto">
+              <ArrowLink href="/work">View Experience</ArrowLink>
+              <ArrowLink href="/contact">Start a Project</ArrowLink>
+            </div>
           </div>
         </div>
 
-        {/* Stage 2: Main Statement */}
-        <div ref={block2Ref} className="absolute w-full max-w-[1900px] flex flex-col items-start text-left opacity-0 pointer-events-none">
-          <div className="font-inter uppercase leading-[1.0] tracking-[-0.05em]" style={{ fontSize: "clamp(60px, 10vw, 160px)" }}>
-            <div className="overflow-hidden"><p className="reveal-line font-light">We focus on</p></div>
-            <div className="overflow-hidden"><p className="reveal-line font-bold whitespace-nowrap">the essential values</p></div>
-            <div className="overflow-hidden"><p className="reveal-line font-light">of your brand.</p></div>
-          </div>
-        </div>
-
-        {/* Stage 3: Detailed Description & CTA */}
-        <div ref={block3Ref} className="absolute w-full max-w-[1400px] flex flex-col items-start text-left opacity-0 pointer-events-none">
-          <div className="reveal-line mb-12 overflow-hidden">
-            <h2 className="font-inter font-bold leading-[1.2] tracking-[-0.03em]" style={{ fontSize: "clamp(32px, 4.5vw, 64px)" }}>
-              Our Philosophy
-            </h2>
-          </div>
-          <div className="font-light leading-[1.65] tracking-[-0.01em] max-w-[1000px] mb-16 text-white break-keep" style={{ fontSize: "clamp(18px, 1.7vw, 23px)" }}>
-            <p className="reveal-line">
-              More than just creators, VINUSPREAD is a Product Management Group that bridges the gap between business objectives and user needs. 
-              Rooted in our philosophy that &apos;it all begins with people,&apos; we capture the core essence that remains steadfast amidst shifting trends. 
-              We define the optimal trajectory for your brand, craft digital experiences that truly resonate with the human heart.
-            </p>
-          </div>
-          <div className="reveal-line pointer-events-auto">
-            <DoubleButton 
-              labelFront="Company Brief" 
-              href="/about" 
-              className="!bg-black !text-white px-20 py-6.5 text-[14.5px] tracking-[0.15em] border border-white/10 hover:!bg-white hover:!text-black transition-all duration-800" 
-            />
-          </div>
-        </div>
-
-      </div>
-
-      {/* ── Global Header Presence ── */}
-      <div className="absolute top-0 inset-x-0 z-[100] px-page-padding py-[60px] flex items-center justify-between text-white font-inter font-bold tracking-[0.2em] text-[10px] uppercase pointer-events-none">
-        <span>Design Studio — Seoul</span>
-        <span>Est. 2015</span>
-      </div>
-
-    </section>
+      </section>
+    </div>
   );
 };

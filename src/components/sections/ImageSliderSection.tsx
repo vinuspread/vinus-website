@@ -34,7 +34,7 @@ export const ImageSliderSection = () => {
   }, []);
 
   return (
-    <section ref={revealRef as any} className="anim-wrap h-[538px] py-[40px] bg-gallery overflow-hidden">
+    <section ref={revealRef as any} className="anim-wrap h-[538px] py-[40px] bg-white border-b border-alto overflow-hidden">
       <div ref={containerRef} className="px-page-padding h-[461px]">
         <div 
           ref={sliderRef}

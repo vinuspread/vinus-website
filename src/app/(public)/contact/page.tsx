@@ -60,7 +60,7 @@ export default function ContactPage() {
 
   if (status === "done") {
     return (
-      <main className="bg-gallery min-h-screen flex items-center justify-center px-page-padding">
+      <main className="bg-white min-h-screen flex items-center justify-center px-page-padding">
         <div className="text-center">
           <h2 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter mb-[40px]">
             THANK YOU.
@@ -80,7 +80,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="bg-gallery min-h-screen">
+    <main className="bg-white min-h-screen">
       <PageHeader
         breadcrumb="Contact"
         title={<>Begin a New <span className="font-bold">Experience</span></>}

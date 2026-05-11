@@ -1,90 +1,79 @@
 "use client";
 
-import React from "react";
 import { useReveal } from "@/hooks/useReveal";
 
 const awardsData = [
-  { name: "Awwwards", items: [
-    "1x Studio of the Year Nominee",
-    "2x E-commerce of the Year Nominee",
-    "1x Site of the Month",
-    "1x Honours Awards",
-    "13x Site of the Day",
-    "12x Developer Award",
-    "21x Honourable Mention"
-  ]},
-  { name: "The FWA", items: ["10x FWA of the Day"] },
-  { name: "CSS Design Awards", items: [
-    "1x Website of the Year Nominee",
-    "1x Website of the Month",
-    "11x Website of the Day",
-    "15x Innovation",
-    "15x UX Design",
-    "15x UI Design"
-  ]},
-  { name: "Webby", items: ["1x Webby nominee"] }
+  {
+    name: "Awwwards",
+    items: ["1x Studio of the Year Nominee", "2x E-commerce of the Year Nominee", "1x Site of the Month", "13x Site of the Day", "12x Developer Award", "21x Honourable Mention"],
+  },
+  {
+    name: "The FWA",
+    items: ["10x FWA of the Day"],
+  },
+  {
+    name: "CSS Design Awards",
+    items: ["1x Website of the Year Nominee", "1x Website of the Month", "11x Website of the Day", "15x Innovation", "15x UX Design", "15x UI Design"],
+  },
+  {
+    name: "Webby Awards",
+    items: ["1x Webby Nominee"],
+  },
 ];
 
 export const AwardsSection = () => {
   const ref = useReveal();
 
   return (
-    <section ref={ref as any} className="anim-wrap px-page-padding py-[100px] bg-gallery border-b border-alto">
-      <div className="grid grid-cols-8 gap-column">
-        {/* Left: Heading & Description */}
-        <div className="col-span-4">
-          <p className="section-label mb-10">( RECOGNITIONS )</p>
-          <h2 className="display-heading text-[clamp(40px,5vw,82.4px)] mb-8 uppercase">
-            <span className="anim-clip">
-              <span className="anim-move-up">AWARDS &<br/>RECOGNITIONS</span>
-            </span>
-          </h2>
-          {/* 지시사항 §8 반영: 피그마 원문 사용 및 정렬 교정 */}
-          <p className="text-[17.1px] font-light max-w-sm">
-            <span className="anim-clip block">
-              <span className="anim-move-up" data-delay="200">
-                기술과 경험에 대한 깊은 이해를 바탕으로 리서치, 전략, 브랜딩, UX/UI, 개발을 유기적으로 연결합니다.<br /><br />
-                우리는 브랜드와 사용자 모두에게 가치 있는 경험을 만드는 데 집중합니다.
-              </span>
-            </span>
+    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-white border-t border-mine-shaft/10">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20">
+        
+        {/* Left Side: Side Label */}
+        <div className="hidden lg:block">
+          <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 sticky top-[120px]">
+            ( Recognition )
           </p>
         </div>
 
-        {/* Right: Awards List (Left Aligned within Column) */}
-        <div className="col-span-4">
-          {awardsData.map((award, idx) => (
-            <div key={award.name} className="border-t border-alto pt-6 mb-12">
-              <h3 className="text-[25.7px] font-normal uppercase mb-4">
-                <span className="anim-clip">
-                  <span className="anim-move-up" data-delay={idx * 100}>{award.name}</span>
-                </span>
-              </h3>
-              {/* Awwwards & CSS Design Awards items → single sentence */}
-              {award.name === "Awwwards" || award.name === "CSS Design Awards" ? (
-                <p className="anim-clip text-[16.5px] font-light leading-[1.4] text-left">
-                  <span
-                    className="anim-move-up"
-                    data-delay={idx * 100}
-                  >
-                    {award.items.join(', ')}.
-                  </span>
-                </p>
-              ) : (
-                <ul className="list-none p-0 m-0 text-left text-[16.5px] font-light flex flex-col gap-1 leading-none">
-                  {award.items.map((item, i) => (
-                    <li key={i} className="anim-clip">
-                      <span
-                        className="anim-move-up"
-                        data-delay={idx * 100 + i * 50}
-                      >
-                        {item}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
+        {/* Right Side: Content */}
+        <div className="flex flex-col gap-12">
+          
+          {/* Main Heading */}
+          <h2 className="anim-move-up font-inter text-[clamp(40px,5vw,72px)] font-bold leading-[1.05] tracking-[-0.04em] text-mine-shaft">
+            Awards & Recognitions.
+          </h2>
+
+          {/* Awards List */}
+          <div className="flex flex-col border-t border-mine-shaft/10 mt-8">
+            {awardsData.map((award, idx) => (
+              <div
+                key={award.name}
+                className="grid grid-cols-12 items-center py-[40px] border-b border-mine-shaft/10 group transition-colors hover:bg-mine-shaft/[0.02]"
+              >
+                <div className="col-span-6 lg:col-span-4">
+                  <div className="anim-clip block">
+                    <span className="anim-move-up font-inter font-medium text-[20px] lg:text-[24px] tracking-[-0.02em]" data-delay={idx * 60}>
+                      {award.name}
+                    </span>
+                  </div>
+                </div>
+                <div className="col-span-5 lg:col-span-7">
+                  <div className="anim-clip block">
+                    <span className="anim-move-up font-inter font-light text-[14px] lg:text-[15px] leading-relaxed text-mine-shaft/40" data-delay={idx * 60 + 60}>
+                      {award.items.join(" — ")}
+                    </span>
+                  </div>
+                </div>
+                <div className="col-span-1 flex justify-end">
+                  <div className="opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-[-10px] group-hover:translate-x-0">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.5 15.5L15.5 4.5M15.5 4.5H6.5M15.5 4.5V13.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

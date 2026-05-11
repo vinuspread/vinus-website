@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useReveal } from "@/hooks/useReveal";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +16,7 @@ export const VideoSection = () => {
   }, [isLoaded]);
 
   return (
-    <section ref={revealRef as any} className="anim-wrap bg-transparent w-full">
+    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto w-full">
       <div className="relative w-full aspect-video bg-alto overflow-hidden">
         {/* Loading Overlay */}
         <div className={cn(

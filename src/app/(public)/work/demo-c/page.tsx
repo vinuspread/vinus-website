@@ -72,7 +72,7 @@ export default function DemoC() {
       </section>
 
       {/* 라이트 전환 — 메타 */}
-      <div ref={lightRef} className="bg-gallery">
+      <div ref={lightRef} className="bg-white">
         <section className="px-page-padding py-[80px] border-b border-alto flex gap-[80px]">
           {[
             { label: "Client", value: project.client },

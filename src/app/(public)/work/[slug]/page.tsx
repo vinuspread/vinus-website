@@ -2,7 +2,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getProject, projects } from "@/lib/projects";
+import { projects } from "@/lib/projects";
+
+const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
 interface ProjectPageProps {
   params: {
@@ -26,7 +28,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const nextProject = projects[(currentIndex + 1) % projects.length];
 
   return (
-    <main className="bg-gallery">
+    <main className="bg-white">
       {/* 1. Hero 섹션 */}
       <section className="relative w-full h-[80vh] overflow-hidden bg-[#0a0a0a]">
         <Image 
@@ -119,7 +121,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* 6. 이미지 갤러리 */}
       <div className="flex flex-col gap-4 py-[40px] md:py-[80px]">
-        {project.images.map((img, i) => (
+        {(project.images ?? []).map((img, i) => (
           <div key={i} className={`w-full relative ${i % 3 === 0 ? "aspect-[16/9]" : "px-page-padding"}`}>
              {i % 3 === 0 ? (
                 <Image src={img} alt="" fill className="object-cover" />
@@ -128,9 +130,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                    <div className="aspect-[4/3] relative">
                       <Image src={img} alt="" fill className="object-cover" />
                    </div>
-                   {project.images[i+1] && (
+                   {project.images?.[i+1] && (
                       <div className="aspect-[4/3] relative">
-                        <Image src={project.images[i+1]} alt="" fill className="object-cover" />
+                        <Image src={project.images[i+1]!} alt="" fill className="object-cover" />
                       </div>
                    )}
                 </div>

@@ -20,7 +20,7 @@ export default function StoryPage() {
     cat === "All" ? stories.length : stories.filter((s) => s.category === cat).length;
 
   return (
-    <main className="bg-gallery">
+    <main className="bg-white">
 
       <PageHeader
         breadcrumb="Story"
