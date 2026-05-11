@@ -26,6 +26,7 @@ const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'image', label: '이미지' },
   { value: 'parallax-image', label: '패럴랙스 이미지' },
   { value: 'gallery', label: '갤러리' },
+  { value: 'multi-thumbnail', label: '다중썸네일' },
   { value: 'video', label: '비디오' },
   { value: 'embed', label: '임베드' },
   { value: 'divider', label: '구분선' },
@@ -44,6 +45,7 @@ function createBlock(type: BlockType): Block {
     case 'embed': return { id, type, embedType: 'url', url: '', code: '', caption: '', motion: 'none', spacing: 'md' }
     case 'divider': return { id, type, height: 40, motion: 'none', spacing: 'none' }
     case 'file': return { id, type, url: '', label: '', motion: 'none', spacing: 'md' }
+    case 'multi-thumbnail': return { id, type, images: [], columns: 5, spacing: 'md' }
   }
 }
 
@@ -110,6 +112,25 @@ export default function BlockEditor({ blocks, onChange }: Props) {
     onChange([...blocks, createBlock(addType)])
   }
 
+  async function handleMultiThumbnailUpload(files: File[], blockIndex: number, blockId: string) {
+    const imageFiles = files.filter(f => f.type.startsWith('image/'))
+    if (!imageFiles.length) return
+    setUploading(prev => ({ ...prev, [blockId]: true }))
+    try {
+      const urls = await Promise.all(imageFiles.map(uploadFile))
+      const newImages = urls.map((src, i) => ({ src, alt: imageFiles[i].name.replace(/\.[^.]+$/, '') }))
+      const currentBlocks = blocksRef.current
+      const block = currentBlocks[blockIndex]
+      if (block.type === 'multi-thumbnail') {
+        onChange(updateBlock(currentBlocks, blockIndex, { ...block, images: [...block.images, ...newImages] }))
+      }
+    } catch (err) {
+      alert(`업로드 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`)
+    } finally {
+      setUploading(prev => ({ ...prev, [blockId]: false }))
+    }
+  }
+
   function handleImageUpload(blockId: string, index: number, field: 'src' | null, galleryIndex?: number) {
     return async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0]
@@ -147,11 +168,11 @@ export default function BlockEditor({ blocks, onChange }: Props) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400 uppercase tracking-wider">{block.type}</span>
-                {block.type !== 'heading-text' && (
+                {block.type !== 'heading-text' && block.type !== 'multi-thumbnail' && (
                   <>
                     <select
                       value={block.motion}
-                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, motion: e.target.value as Block['motion'] }))}
+                      onChange={(e) => 'motion' in block && onChange(updateBlock(blocks, index, { ...block, motion: e.target.value as never }))}
                       className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                     >
                       <option value="none">모션 없음</option>
@@ -162,7 +183,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                       <option value="curtainReveal">Curtain Reveal</option>
                       <option value="stagger">Stagger</option>
                     </select>
-                    {MOTION_DESC[block.motion] && (
+                    {'motion' in block && MOTION_DESC[block.motion] && (
                       <span className="text-xs text-gray-400">{MOTION_DESC[block.motion]}</span>
                     )}
                   </>
@@ -506,6 +527,66 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 >
                   + 이미지 추가
                 </button>
+              </div>
+            )}
+
+            {block.type === 'multi-thumbnail' && (
+              <div className="space-y-3">
+                {/* 드래그앤드롭 업로드 존 */}
+                <div
+                  className={`border-2 border-dashed rounded p-6 text-center cursor-pointer transition-colors ${uploading[block.id] ? 'border-gray-300 bg-gray-50' : 'border-gray-300 hover:border-black'}`}
+                  onDrop={(e) => {
+                    e.preventDefault()
+                    handleMultiThumbnailUpload(Array.from(e.dataTransfer.files), index, block.id)
+                  }}
+                  onDragOver={(e) => e.preventDefault()}
+                  onClick={() => !uploading[block.id] && (document.getElementById(`mt-upload-${block.id}`) as HTMLInputElement)?.click()}
+                >
+                  {uploading[block.id] ? (
+                    <p className="text-sm text-gray-400">업로드 중...</p>
+                  ) : (
+                    <>
+                      <p className="text-sm text-gray-500">이미지를 드래그하거나 클릭하여 선택</p>
+                      <p className="text-xs text-gray-400 mt-1">여러 장 동시 등록 가능 · 최대 5열 표시</p>
+                    </>
+                  )}
+                  <input
+                    id={`mt-upload-${block.id}`}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      handleMultiThumbnailUpload(Array.from(e.target.files ?? []), index, block.id)
+                      e.target.value = ''
+                    }}
+                  />
+                </div>
+
+                {/* 등록된 썸네일 미리보기 */}
+                {block.images.length > 0 && (
+                  <div className="grid grid-cols-5 gap-2">
+                    {block.images.map((img, gi) => (
+                      <div key={gi} className="relative group aspect-square bg-gray-100">
+                        {img.src && (
+                          <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const images = block.images.filter((_, i) => i !== gi)
+                            onChange(updateBlock(blocks, index, { ...block, images }))
+                          }}
+                          className="absolute top-0.5 right-0.5 bg-black/60 text-white text-[10px] w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <p className="text-xs text-gray-400">{block.images.length}개 등록됨</p>
               </div>
             )}
 

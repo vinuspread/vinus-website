@@ -10,6 +10,7 @@ export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
 export type ImageAlign = 'center' | 'full'
 export type GalleryLayout = 'sequence' | 'sequence-h'
+export type ThumbnailColumns = 2 | 3 | 4 | 5
 export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 export type HeadingWeight = 'light' | 'normal' | 'bold'
 export type EmbedInputType = 'url' | 'code'
@@ -46,6 +47,14 @@ export interface GalleryBlock {
   layout?: GalleryLayout
   fullWidth?: boolean
   motion: MotionType
+  spacing: SpacingType
+}
+
+export interface MultiThumbnailBlock {
+  id: string
+  type: 'multi-thumbnail'
+  images: { src: string; alt: string }[]
+  columns?: ThumbnailColumns
   spacing: SpacingType
 }
 
@@ -112,7 +121,7 @@ export interface ParallaxImageBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | ParallaxImageBlock | GalleryBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
+export type Block = TextBlock | ImageBlock | ParallaxImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
 
 export interface Work {
   id: string
