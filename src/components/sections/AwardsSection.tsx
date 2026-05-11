@@ -29,7 +29,7 @@ export const AwardsSection = () => {
   const ref = useReveal();
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[77px] px-page-padding bg-gallery">
+    <section ref={ref as any} className="anim-wrap py-[77px] px-page-padding bg-transparent">
       <div className="grid grid-cols-8 gap-column">
         {/* Left: Heading & Description */}
         <div className="col-span-4">

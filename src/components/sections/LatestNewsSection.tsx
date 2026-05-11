@@ -12,7 +12,7 @@ export const LatestNewsSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap pt-[80px] px-page-padding bg-gallery pb-[120px]">
+    <section ref={revealRef as any} className="anim-wrap pt-[80px] px-page-padding bg-transparent pb-[120px]">
       {/* Header Row */}
       <div className="flex justify-between items-end mb-6">
         <h2 className="text-[46.5px] tracking-[-1.6px] uppercase leading-none font-inter">

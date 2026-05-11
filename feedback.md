@@ -10,9 +10,42 @@
 
 | 우선순위 | 작업 | 상태 |
 |----------|------|------|
-| 1 | **스택 카드 인터랙션** — 히어로 하단 섹션 전환 효과 구현 (아래 상세 스펙 참고) | ⏳ 대기 |
+| 1 | **스택 카드 인터랙션** — 히어로 하단 섹션 전환 효과 구현 (아래 상세 스펙 참고) | ✅ 완료 (2026-05-08) |
+| 2 | **스택 카드 롤백** — 스택 카드 인터랙션 제거, 원래 방식으로 복구 (아래 상세 스펙 참고) | ⏳ 대기 |
 
 > 각 작업 완료 후 이 표의 상태를 ✅로 변경하고 완료 목록에 추가할 것.
+
+---
+
+## 스택 카드 롤백 지시 — 젬마
+
+스택 카드 인터랙션을 제거하고 원래 방식으로 복구한다.
+
+1. `src/hooks/useStackCards.ts` 파일 삭제
+2. `src/app/(public)/page.tsx`에서 `useStackCards` import 및 훅 호출 제거, `stack-container` div와 `stack-card` section 래퍼 제거 — 각 섹션을 원래처럼 직접 나열
+3. `src/app/globals.css`에서 `.stack-container`, `.stack-card`, `.stack-card.is-stacking` 블록 제거
+4. `page.tsx` 최종 구조:
+
+```tsx
+"use client";
+
+export default function Home() {
+  return (
+    <div className="min-h-screen">
+      <HeroSectionV2 />
+      <WorkGrid limit={4} />
+      <AboutSection />
+      <VideoSection />
+      <ClientsBrandsSection />
+      <AwardsSection />
+      <LatestNewsSection />
+      <ImageSliderSection />
+    </div>
+  );
+}
+```
+
+완료 후 커밋 (브랜치: ui-design).
 
 ---
 
@@ -383,3 +416,18 @@ section.relative.bg-[#0a0a0a]
 | `contact/page.tsx` | ✅ |
 | `lib/projects.ts` | ✅ |
 | `lib/stories.ts` | ✅ |
+| `useStackCards.ts` | ✅ 신규 생성 |
+
+---
+
+## 🟢 최근 업데이트 내역 (2026-05-08)
+
+### 스택 카드 인터랙션 구현 완료 — 젬마
+- **구현 방식**: CSS `sticky` + `useStackCards` 커스텀 훅 기반의 스택 전환 시스템 구축.
+- **주요 수정 사항**:
+  - `src/hooks/useStackCards.ts`: Lenis 스무스 스크롤과 완벽 동기화되는 스크롤 인터랙션 로직 구현.
+  - `src/app/globals.css`: 카드 스케일 다운(0.96) 및 페이드(0.6), 모서리 둥글게(16px) 처리 스타일 추가.
+  - `src/app/(public)/page.tsx`: 섹션 래핑 및 `ImageSliderSection` 제외 처리로 레이아웃 안정성 확보.
+  - `AboutSection.tsx`: 다크 배경 대응을 위한 텍스트 컬러 최적화 및 배경 투명화.
+  - 기타 모든 섹션 배경 투명화 처리로 스택 컨테이너 배경색이 투과되도록 조정.
+- **특이사항**: Lenis 인스턴스를 `window.__lenis`를 통해 전역 참조하여 스크롤 타이밍 오차 제거.

@@ -16,7 +16,7 @@ export const VideoSection = () => {
   }, [isLoaded]);
 
   return (
-    <section ref={revealRef as any} className="anim-wrap h-[1080px] bg-gallery">
+    <section ref={revealRef as any} className="anim-wrap h-[1080px] bg-transparent">
       <div className="relative w-full h-full bg-alto overflow-hidden">
         {/* Loading Overlay */}
         <div className={cn(

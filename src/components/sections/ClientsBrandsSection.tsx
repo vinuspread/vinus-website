@@ -27,7 +27,7 @@ export const ClientsBrandsSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap py-[80px] px-page-padding bg-gallery">
+    <section ref={revealRef as any} className="anim-wrap py-[80px] px-page-padding bg-transparent">
 
       {/* 클라이언트 로고 그리드 */}
       <div className="mb-[80px]">

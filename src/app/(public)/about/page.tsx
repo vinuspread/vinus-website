@@ -66,15 +66,7 @@ export default function AboutPage() {
       {/* 1-1. Location & Image */}
       <section ref={infoRef as any} className="anim-wrap px-page-padding pb-[80px]">
         <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
-          <div className="md:col-span-5 flex flex-col gap-2">
-            <p className="text-[11px] uppercase tracking-widest text-mine-shaft/40 anim-clip block">
-              <span className="anim-move-up">Location</span>
-            </p>
-            <div className="flex flex-col anim-clip block">
-              <p className="text-[15px] leading-snug anim-move-up" data-delay="100">Seoul — Korea</p>
-              <p className="text-[15px] leading-snug anim-move-up" data-delay="150">Working Worldwide</p>
-            </div>
-          </div>
+          <div className="md:col-span-5" />
           <div className="md:col-span-3">
             <div className="aspect-[4/5] relative overflow-hidden anim-clip">
               <div className="anim-move-up-img w-full h-full relative" data-delay="200">

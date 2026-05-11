@@ -14,6 +14,7 @@ export const SmoothScroll = () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
 
+    (window as any).__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
     // Named function so cleanup can actually remove the right reference

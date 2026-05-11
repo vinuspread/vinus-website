@@ -56,7 +56,7 @@ export const HeroSectionV2 = () => {
           { yPercent: 0, stagger: 0.15, duration: 3, ease: "none" }, "-=3")
 
       // [Sequence 3: Main Statement Exit & Deep Parallax]
-        .to(block2Ref.current, { y: -100, opacity: 0, duration: 4, ease: "none" }, "+=2")
+        .to(block2Ref.current, { y: -100, opacity: 0, duration: 4, ease: "none" }, "+=0.5")
         .to(bgRef.current, { yPercent: -70, duration: 12, ease: "none" }, "-=4")
 
       // [Sequence 4: Final Detail Reveal]
@@ -114,7 +114,7 @@ export const HeroSectionV2 = () => {
 
         {/* Stage 2: Main Statement */}
         <div ref={block2Ref} className="absolute w-full max-w-[1600px] flex flex-col items-start text-left opacity-0 pointer-events-none">
-          <div className="font-inter uppercase leading-[1.05] tracking-[-0.05em]" style={{ fontSize: "clamp(60px, 12.5vw, 190px)" }}>
+          <div className="font-inter uppercase leading-[1.05] tracking-[-0.05em]" style={{ fontSize: "clamp(48px, 9vw, 140px)" }}>
             <div className="overflow-hidden"><p className="reveal-line font-light">We focus on</p></div>
             <div className="overflow-hidden"><p className="reveal-line font-bold">the essential</p></div>
             <div className="overflow-hidden"><p className="reveal-line font-light"><span className="font-bold">values</span> of your brand.</p></div>

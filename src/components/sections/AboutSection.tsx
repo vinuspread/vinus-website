@@ -7,7 +7,7 @@ export const AboutSection = () => {
   const ref = useReveal();
 
   return (
-    <section ref={ref as any} className="anim-wrap min-h-[417px] py-[100px] px-page-padding bg-gallery">
+    <section ref={ref as any} className="anim-wrap min-h-[417px] py-[100px] px-page-padding bg-transparent">
       <div className="flex flex-col gap-10 max-w-[920px]">
         {/* Heading */}
         <h2 className="text-[83px] leading-none tracking-[-2.8px] font-normal uppercase font-inter">
@@ -29,7 +29,7 @@ export const AboutSection = () => {
 
         {/* Body & Button */}
         <div>
-          <p className="text-[17px] leading-[1.4] font-medium mb-10 text-mine-shaft/60 max-w-[640px] break-keep">
+          <p className="text-[17px] leading-[1.4] font-medium mb-10 opacity-60 max-w-[640px] break-keep">
             <span className="block overflow-hidden">
               <span className="anim-move-up block" data-delay="200">
                 우리는 브랜드의 본질을 연구하고, 구조적 아름다움을 설계하며, 한계 없는 기술력을 구현합니다.
