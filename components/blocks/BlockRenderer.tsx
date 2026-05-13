@@ -41,7 +41,7 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           (block.type === 'gallery' && block.layout === 'scroll-h')
 
         const wrapClass = isEdgeFull
-          ? `block-spacing-${block.spacing ?? 'md'}`
+          ? `block-spacing-${block.spacing ?? 'md'} edge-full`
           : isFullWidth
             ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
             : `block-spacing-${block.spacing ?? 'md'} max-w-4xl mx-auto px-6 md:px-12`

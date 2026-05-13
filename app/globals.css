@@ -72,12 +72,12 @@ html.lenis, html.lenis body {
 
 /* Block spacing — mobile first, desktop override */
 .block-spacing-none { padding-bottom: 0; }
-.block-spacing-sm   { padding-bottom: 1rem; }     /* mobile 16px */
-.block-spacing-md   { padding-bottom: 1.75rem; }  /* mobile 28px */
-.block-spacing-lg   { padding-bottom: 3rem; }     /* mobile 48px */
-.block-spacing-xl   { padding-bottom: 4rem; }     /* mobile 64px */
-.block-spacing-2xl  { padding-bottom: 6rem; }     /* mobile 96px */
-.block-spacing-3xl  { padding-bottom: 7.5rem; }   /* mobile 120px */
+.block-spacing-sm   { padding-bottom: 0.75rem; }  /* mobile 12px */
+.block-spacing-md   { padding-bottom: 1.25rem; }  /* mobile 20px */
+.block-spacing-lg   { padding-bottom: 2rem; }     /* mobile 32px */
+.block-spacing-xl   { padding-bottom: 3rem; }     /* mobile 48px */
+.block-spacing-2xl  { padding-bottom: 4rem; }     /* mobile 64px */
+.block-spacing-3xl  { padding-bottom: 5rem; }     /* mobile 80px */
 
 @media (min-width: 768px) {
   .block-spacing-sm   { padding-bottom: 1.5rem; }   /* desktop 24px */
@@ -87,6 +87,14 @@ html.lenis, html.lenis body {
   .block-spacing-2xl  { padding-bottom: 12.5rem; }  /* desktop 200px */
   .block-spacing-3xl  { padding-bottom: 15rem; }    /* desktop 240px */
 }
+
+/* edge-full blocks (parallax, scroll-h) get halved mobile spacing */
+.edge-full.block-spacing-sm   { padding-bottom: 0.375rem; }
+.edge-full.block-spacing-md   { padding-bottom: 0.625rem; }
+.edge-full.block-spacing-lg   { padding-bottom: 1rem; }
+.edge-full.block-spacing-xl   { padding-bottom: 1.5rem; }
+.edge-full.block-spacing-2xl  { padding-bottom: 2rem; }
+.edge-full.block-spacing-3xl  { padding-bottom: 2.5rem; }
 
 /* Gallery per-image animations handled by Framer Motion in SequenceGallery.tsx */
 
