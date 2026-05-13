@@ -23,7 +23,7 @@ export default function ScrollHGallery({ images }: { images: { src: string; alt:
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
         <motion.div className="flex gap-[3vw] pl-6 md:pl-16" style={{ x }}>
           {images.map((img, i) => (
-            <div key={i} className="w-[75vw] h-[60vh] flex-shrink-0 relative bg-[#ebebeb]">
+            <div key={i} className="w-[75vw] aspect-[4/3] flex-shrink-0 relative bg-[#ebebeb]">
               {img.src && (
                 <Image
                   src={img.src}
