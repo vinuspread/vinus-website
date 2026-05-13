@@ -9,7 +9,8 @@ export type TextLetterSpacing = '-2' | '-1.5' | '-1' | '-0.5' | '0'
 export type TextFont = 'pretendard' | 'syne'
 export type TextAlign = 'left' | 'center' | 'right'
 export type ImageAlign = 'center' | 'full'
-export type GalleryLayout = 'sequence' | 'sequence-h'
+export type GalleryLayout = 'sequence' | 'sequence-h' | 'scroll-h'
+export type ImageDisplayMode = 'normal' | 'parallax'
 export type ThumbnailColumns = 2 | 3 | 4 | 5
 export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 export type HeadingWeight = 'light' | 'normal' | 'bold'
@@ -34,7 +35,9 @@ export interface ImageBlock {
   type: 'image'
   src: string
   alt: string
+  displayMode?: ImageDisplayMode
   align?: ImageAlign
+  containerHeight?: number
   fullWidth?: boolean
   motion: MotionType
   spacing: SpacingType
@@ -111,17 +114,7 @@ export interface EmbedBlock {
   spacing: SpacingType
 }
 
-export interface ParallaxImageBlock {
-  id: string
-  type: 'parallax-image'
-  src: string
-  alt: string
-  containerHeight?: number
-  motion: MotionType
-  spacing: SpacingType
-}
-
-export type Block = TextBlock | ImageBlock | ParallaxImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
+export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
 
 export interface Work {
   id: string

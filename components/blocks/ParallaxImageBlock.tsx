@@ -3,9 +3,9 @@
 import { useRef } from 'react'
 import Image from 'next/image'
 import { useScroll, useTransform, motion } from 'framer-motion'
-import type { ParallaxImageBlock as ParallaxImageBlockType } from '@/types'
+import type { ImageBlock as ImageBlockType } from '@/types'
 
-export default function ParallaxImageBlock({ block }: { block: ParallaxImageBlockType }) {
+export default function ParallaxImageBlock({ block }: { block: ImageBlockType }) {
   if (!block.src) return null
 
   const ref = useRef<HTMLDivElement>(null)

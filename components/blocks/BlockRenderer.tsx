@@ -1,7 +1,6 @@
 import type { Block } from '@/types'
 import TextBlock from './TextBlock'
 import ImageBlock from './ImageBlock'
-import ParallaxImageBlock from './ParallaxImageBlock'
 import GalleryBlock from './GalleryBlock'
 import MultiThumbnailBlock from './MultiThumbnailBlock'
 import VideoBlock from './VideoBlock'
@@ -19,7 +18,6 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           switch (block.type) {
             case 'text':              return <TextBlock key={block.id} block={block} />
             case 'image':             return <ImageBlock key={block.id} block={block} />
-            case 'parallax-image':    return <ParallaxImageBlock key={block.id} block={block} />
             case 'gallery':           return <GalleryBlock key={block.id} block={block} />
             case 'multi-thumbnail':   return <MultiThumbnailBlock key={block.id} block={block} />
             case 'video':             return <VideoBlock key={block.id} block={block} />
@@ -34,7 +32,6 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
 
         const isFullWidth =
           block.type === 'image' ||
-          block.type === 'parallax-image' ||
           block.type === 'gallery' ||
           ('fullWidth' in block && block.fullWidth === true)
 
