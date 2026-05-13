@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
-import gsap from "gsap";
+import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
 import { ArrowLink } from "@/components/common/ArrowLink";
 
@@ -116,7 +116,7 @@ export const HeroSectionV2 = () => {
   }, []);
 
   return (
-    <div ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
+    <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
       <div ref={metaRef} style={{ opacity: 0 }} className="absolute top-[80px] inset-x-0 z-30 px-page-padding py-[20px] flex flex-col items-end pointer-events-none">
         <span className="font-inter font-bold text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40">Seoul, Korea</span>
         <span className="font-inter font-black text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
@@ -148,7 +148,7 @@ export const HeroSectionV2 = () => {
         </div>
 
         {/* Block 3 */}
-        <div className="w-full h-full flex flex-col justify-start pt-[25vh] px-page-padding gap-8">
+        <div id="hero-b3-content" className="w-full h-full flex flex-col justify-center px-page-padding gap-8">
           <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 3.6vw, 58px)" }}>
             <div className="overflow-hidden py-0.5"><p className="b3-line">More than just creators,</p></div>
             <div className="overflow-hidden py-0.5"><p className="b3-line">VINUSPREAD is a <span className="font-bold">Product Management Group.</span></p></div>

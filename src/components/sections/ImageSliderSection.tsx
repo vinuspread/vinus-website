@@ -47,7 +47,7 @@ export const ImageSliderSection = () => {
               className="min-w-[600px] h-full relative group overflow-hidden"
             >
               <div className="anim-clip w-full h-full">
-                <div className="anim-move-up-img w-full h-full" data-delay={i * 100}>
+                <div className="anim-move-up-img w-full h-full relative" data-delay={i * 100}>
                   <Image src={slide.src} alt={slide.alt} fill className="object-cover" />
                 </div>
               </div>

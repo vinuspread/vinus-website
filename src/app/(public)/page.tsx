@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect } from "react";
 import { HeroSectionV2 as HeroSection } from "@/components/sections/HeroSectionV2";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { VideoSection } from "@/components/sections/VideoSection";
@@ -8,8 +9,20 @@ import { ImageSliderSection } from "@/components/sections/ImageSliderSection";
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { WorkGrid } from "@/components/sections/WorkGrid";
 import { ArrowLink } from "@/components/common/ArrowLink";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
+  useLayoutEffect(() => {
+    // 0. Force scroll to top on reload
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
       <div className="relative">
         <div className="sticky top-0 h-screen overflow-hidden bg-white">
@@ -18,18 +31,10 @@ export default function Home() {
         
         <div 
           id="content-container" 
-          className="relative z-20 bg-white shadow-[0_-1px_0_rgba(0,0,0,0.05),0_-30px_60px_rgba(0,0,0,0.03)] mt-[-20vh]"
+          className="relative z-20"
         >
           {/* 1. Featured Work Section */}
-          <section className="bg-white pb-[100px] pt-0">
-          <div className="px-page-padding mb-16">
-             <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 mb-4">
-              ( Selected Work )
-            </p>
-            <h2 className="anim-move-up font-inter text-[clamp(32px,4vw,56px)] font-bold tracking-[-0.03em]">
-              Crafting premium digital<br />experiences.
-            </h2>
-          </div>
+          <section className="pt-0 pb-0">
           <WorkGrid limit={12} />
           <div className="px-page-padding mt-16 anim-clip">
             <ArrowLink href="/work" className="anim-move-up" data-delay="300">View All Work</ArrowLink>
