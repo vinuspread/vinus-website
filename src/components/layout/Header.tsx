@@ -55,7 +55,7 @@ export const Header = () => {
           <img
             src="/logo.svg"
             alt="Vinuspread"
-            className="h-[22px] w-auto"
+            className="h-[28px] w-auto"
           />
         </Link>
       </div>
@@ -63,7 +63,7 @@ export const Header = () => {
 
 
       {/* Right: Nav */}
-      <nav className="flex-1 flex items-center justify-end gap-10">
+      <nav className="flex-1 flex items-center justify-end gap-12">
         {[
           { label: "vinuspread", href: "/about" },
           { label: "experience", href: "/work" },
@@ -75,7 +75,7 @@ export const Header = () => {
             key={item.label}
             href={item.href}
             className={cn(
-              "text-[12px] uppercase tracking-wider transition-all duration-500 font-inter font-bold",
+              "text-[16px] uppercase tracking-wider transition-all duration-500 font-inter font-bold",
               pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-40 hover:opacity-100"
             )}
           >

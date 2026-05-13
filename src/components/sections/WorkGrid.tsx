@@ -29,48 +29,51 @@ export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
 
     const cards = containerRef.current.querySelectorAll(".project-card-item");
     
-    // 초기 상태
+    // Initial state
     gsap.set(cards, { 
-      y: 100, 
+      y: 60, 
       opacity: 0,
     });
 
-    const scrollWidth = scrollRef.current.scrollWidth;
-    const viewportWidth = window.innerWidth;
-    const xDistance = Math.max(0, scrollWidth - viewportWidth + 320); // 320px extra padding for smooth end
-
-    // 메인 타임라인: 등장과 슬라이드를 유기적으로 통합
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: "top center", 
-        end: isSlider ? `+=${xDistance + 1500}` : "+=500%", 
-        scrub: 4, // 극강의 부드러움을 위해 관성 최대화
-        pin: true,
-        pinSpacing: true,
-        invalidateOnRefresh: true,
-      }
+    // 1. Reveal Animation: Triggers ONCE when the section enters view
+    ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: "top 80%",
+      onEnter: () => {
+        gsap.to(cards, {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.1, // Quick, natural sequence
+        });
+      },
+      once: true
     });
 
-    // 1. 순차적 등장 (빠르게 시작)
-    tl.to(cards, {
-      y: 0,
-      opacity: 1,
-      ease: "power2.out",
-      stagger: 0.8,
-    });
-
-    // 2. 가로 슬라이드 (등장과 자연스럽게 겹치도록 배치)
+    // 2. Horizontal Scroll Logic (only if it's a slider)
     if (isSlider) {
-      tl.to(scrollRef.current, {
+      const scrollWidth = scrollRef.current.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const xDistance = Math.max(0, scrollWidth - viewportWidth + 320);
+
+      gsap.to(scrollRef.current, {
         x: -xDistance,
-        ease: "sine.inOut", // 가속/감속이 부드러운 사인 곡선 사용
-      }, "-=60%"); // 등장 애니메이션이 끝나기 전(약 60% 지점)부터 미리 슬라이드 시작
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: `+=${xDistance + 1000}`,
+          scrub: 1, // Responsive follow
+          pin: true,
+          pinSpacing: true,
+          invalidateOnRefresh: true,
+        }
+      });
     }
 
     return () => {
-      if (tl.scrollTrigger) tl.scrollTrigger.kill();
-      tl.kill();
+      ScrollTrigger.getAll().forEach(st => st.kill());
     };
   }, [filtered, isSlider]);
 

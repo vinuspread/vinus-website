@@ -11,13 +11,17 @@ import { ArrowLink } from "@/components/common/ArrowLink";
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
-      <HeroSection />
-      
-      <div id="content-container" className="relative z-20">
+      <div className="relative">
+        <div className="sticky top-0 h-screen overflow-hidden bg-white">
+          <HeroSection />
+        </div>
         
-        {/* 1. Featured Work Section */}
-        <section className="bg-white py-[100px]">
+        <div 
+          id="content-container" 
+          className="relative z-20 bg-white shadow-[0_-1px_0_rgba(0,0,0,0.05),0_-30px_60px_rgba(0,0,0,0.03)] mt-[-20vh]"
+        >
+          {/* 1. Featured Work Section */}
+          <section className="bg-white pb-[100px] pt-0">
           <div className="px-page-padding mb-16">
              <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 mb-4">
               ( Selected Work )
@@ -32,19 +36,15 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 2. Motto Style About & Purpose */}
         <AboutSection />
-
         <section className="bg-white py-[100px]">
           <ClientsBrandsSection />
         </section>
-
         <section className="bg-white py-[100px]">
           <AwardsSection />
         </section>
+        <ImageSliderSection />
       </div>
-
-      <ImageSliderSection />
     </div>
   );
 }
