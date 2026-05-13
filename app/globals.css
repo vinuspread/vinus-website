@@ -70,14 +70,23 @@ html.lenis, html.lenis body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Block spacing */
+/* Block spacing — mobile first, desktop override */
 .block-spacing-none { padding-bottom: 0; }
-.block-spacing-sm   { padding-bottom: 1.5rem; }   /* 24px */
-.block-spacing-md   { padding-bottom: 3rem; }     /* 48px */
-.block-spacing-lg   { padding-bottom: 5rem; }     /* 80px */
-.block-spacing-xl   { padding-bottom: 7.5rem; }   /* 120px */
-.block-spacing-2xl  { padding-bottom: 12.5rem; }  /* 200px */
-.block-spacing-3xl  { padding-bottom: 15rem; }    /* 240px */
+.block-spacing-sm   { padding-bottom: 1rem; }     /* mobile 16px */
+.block-spacing-md   { padding-bottom: 1.75rem; }  /* mobile 28px */
+.block-spacing-lg   { padding-bottom: 3rem; }     /* mobile 48px */
+.block-spacing-xl   { padding-bottom: 4rem; }     /* mobile 64px */
+.block-spacing-2xl  { padding-bottom: 6rem; }     /* mobile 96px */
+.block-spacing-3xl  { padding-bottom: 7.5rem; }   /* mobile 120px */
+
+@media (min-width: 768px) {
+  .block-spacing-sm   { padding-bottom: 1.5rem; }   /* desktop 24px */
+  .block-spacing-md   { padding-bottom: 3rem; }     /* desktop 48px */
+  .block-spacing-lg   { padding-bottom: 5rem; }     /* desktop 80px */
+  .block-spacing-xl   { padding-bottom: 7.5rem; }   /* desktop 120px */
+  .block-spacing-2xl  { padding-bottom: 12.5rem; }  /* desktop 200px */
+  .block-spacing-3xl  { padding-bottom: 15rem; }    /* desktop 240px */
+}
 
 /* Gallery per-image animations handled by Framer Motion in SequenceGallery.tsx */
 
