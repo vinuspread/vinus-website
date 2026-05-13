@@ -65,7 +65,7 @@ export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
         ease: "none",
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top top",
+          start: "top top", // 컨테이너 상단이 뷰포트 상단에 닿을 때 고정
           end: `+=${xDistance + 800}`,
           scrub: 1,
           pin: true,
@@ -83,7 +83,7 @@ export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
   return (
     <div 
       ref={containerRef} 
-      className={`relative w-full overflow-hidden ${isSlider ? "h-screen flex items-start pt-[55vh]" : "py-24"}`}
+      className={`relative w-full overflow-hidden ${isSlider ? "flex items-start pt-[250px]" : "py-24"}`}
     >
       <div 
         ref={scrollRef}
@@ -97,7 +97,7 @@ export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
             key={project.slug} 
             className={`
               project-card-item flex-shrink-0
-              ${isSlider ? "w-[85vw] md:w-[45vw] lg:w-[28vw]" : "w-full"}
+              ${isSlider ? "w-[85vw] md:w-[58vw] lg:w-[37vw]" : "w-full"}
             `}
           >
             <ProjectCard

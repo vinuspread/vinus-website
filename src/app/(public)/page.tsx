@@ -9,6 +9,7 @@ import { ImageSliderSection } from "@/components/sections/ImageSliderSection";
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { WorkGrid } from "@/components/sections/WorkGrid";
 import { ArrowLink } from "@/components/common/ArrowLink";
+import { Marquee } from "@/components/common/Marquee";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -25,17 +26,28 @@ export default function Home() {
 
   return (
       <div className="relative">
-        <div className="sticky top-0 h-screen overflow-hidden bg-white">
-          <HeroSection />
+        {/* 100vh 스크롤 공간: B3 텍스트 정지 및 자연스러운 섹션 전환 */}
+        <div style={{ height: "100vh" }}>
+          <div className="sticky top-0 h-screen overflow-hidden bg-white">
+            <HeroSection />
+          </div>
         </div>
         
         <div 
           id="content-container" 
           className="relative z-20"
+          style={{ marginTop: "0" }}
         >
+          <div className="mb-[40px] overflow-hidden">
+            <Marquee 
+              text="SELECTED PROJECTS • DIGITAL EXPERIENCE • INNOVATIVE DESIGN • PRODUCT MANAGEMENT • BRAND IDENTITY • " 
+              speed={150} 
+              className="font-inter font-light text-[clamp(40px,6vw,120px)] tracking-tighter text-mine-shaft uppercase"
+            />
+          </div>
           {/* 1. Featured Work Section */}
           <section className="pt-0 pb-0">
-          <WorkGrid limit={12} />
+          <WorkGrid limit={8} />
           <div className="px-page-padding mt-16 anim-clip">
             <ArrowLink href="/work" className="anim-move-up" data-delay="300">View All Work</ArrowLink>
           </div>

@@ -27,9 +27,9 @@ export const ProjectCard = ({
   const delay = delayOffset + (index % 2) * 60;
 
   const content = (
-    <>
+    <div className="flex flex-col">
       {/* Image Container — Managed by parent GSAP */}
-      <div className="w-full h-full relative">
+      <div className="w-full aspect-[920/640] relative overflow-hidden">
         <Image
           src={src}
           alt={alt}
@@ -39,21 +39,19 @@ export const ProjectCard = ({
         />
       </div>
 
-      {/* Gradient removed as per request */}
-
-      {/* Text overlay — Always visible with subtle text shadow for legibility */}
-      <div className="absolute bottom-0 left-0 p-[24px] lg:p-[32px] z-10 w-full pointer-events-none flex flex-col gap-[6px] translate-y-0 opacity-100 transition-all duration-500 ease-out">
-        <p className="text-[10px] lg:text-[11px] text-white uppercase tracking-[0.15em] font-inter leading-none drop-shadow-md">
+      {/* Text Info — Moved outside (below) the image */}
+      <div className="mt-6 flex flex-col gap-[6px] pointer-events-none">
+        <p className="text-[10px] lg:text-[11px] text-mine-shaft/40 uppercase tracking-[0.15em] font-inter leading-none">
           {category}
         </p>
-        <h3 className="text-[20px] lg:text-[24px] text-white uppercase tracking-[-0.03em] leading-tight font-inter font-bold drop-shadow-md">
+        <h3 className="text-[24px] lg:text-[32px] text-mine-shaft tracking-[-0.03em] leading-tight font-inter font-bold">
           {title}
         </h3>
       </div>
-    </>
+    </div>
   );
 
-  const base = `block aspect-[920/640] overflow-hidden relative group ${className}`;
+  const base = `block overflow-hidden relative group ${className}`;
 
   if (href) {
     return (

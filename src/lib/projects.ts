@@ -27,7 +27,7 @@ export const projects: Project[] = [
     title: "NextGen UI",
     category: "UI/UX",
     services: "Digital Design — Web Development",
-    heroImg: "/projects/tech_interface.png",
+    heroImg: "/projects/nextgen_ui_premium.png",
   },
   {
     slug: "minimal-architectural-space",
