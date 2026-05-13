@@ -10,11 +10,12 @@ const ease = [0.65, 0, 0.35, 1] as [number, number, number, number]
 const GRAY_BLUR = 'data:image/gif;base64,R0lGODlhAQABAPAAANbW1gAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
 
 export default function ImageBlock({ block }: { block: ImageBlockType }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, margin: '0px 0px -20% 0px' })
+
   if (!block.src) return null
   if (block.displayMode === 'parallax') return <ParallaxImageBlock block={block} />
 
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '0px 0px -20% 0px' })
   const align = block.align ?? 'full'
 
   return (
