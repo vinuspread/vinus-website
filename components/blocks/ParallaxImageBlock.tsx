@@ -22,7 +22,7 @@ export default function ParallaxImageBlock({ block }: { block: ImageBlockType })
     <div
       ref={ref}
       style={{ height: `${height}px` }}
-      className="-mx-6 md:-mx-16 relative overflow-hidden w-[calc(100%+3rem)] md:w-[calc(100%+8rem)]"
+      className="relative overflow-hidden w-full"
     >
       <motion.div style={{ y, scale: 1.65 }} className="absolute inset-0">
         <Image

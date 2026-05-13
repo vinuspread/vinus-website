@@ -7,11 +7,7 @@ export default function GalleryBlock({ block }: { block: GalleryBlockType }) {
   const images = block.images ?? []
 
   if (block.layout === 'scroll-h') {
-    return (
-      <div className="-mx-6 md:-mx-16 w-[calc(100%+3rem)] md:w-[calc(100%+8rem)]">
-        <ScrollHGallery images={images} />
-      </div>
-    )
+    return <ScrollHGallery images={images} />
   }
 
   return (

@@ -35,9 +35,16 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           block.type === 'gallery' ||
           ('fullWidth' in block && block.fullWidth === true)
 
-        const wrapClass = isFullWidth
-          ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
-          : `block-spacing-${block.spacing ?? 'md'} max-w-4xl mx-auto px-6 md:px-12`
+        // 패럴랙스·스크롤 갤러리는 뷰포트 전체 폭 사용 — 래퍼 max-width/padding 없음
+        const isEdgeFull =
+          (block.type === 'image' && block.displayMode === 'parallax') ||
+          (block.type === 'gallery' && block.layout === 'scroll-h')
+
+        const wrapClass = isEdgeFull
+          ? `block-spacing-${block.spacing ?? 'md'}`
+          : isFullWidth
+            ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
+            : `block-spacing-${block.spacing ?? 'md'} max-w-4xl mx-auto px-6 md:px-12`
 
         const skipMotion =
           block.type === 'heading-text' ||
