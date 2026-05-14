@@ -236,6 +236,8 @@ export const HeroSectionV2 = () => {
     return () => {
       exitTriggerRef.current?.kill();
       ctx.revert();
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.start();
     };
   }, []);
 

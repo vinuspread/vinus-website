@@ -84,7 +84,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
   return (
     <div 
       ref={containerRef} 
-      className={`relative w-full overflow-hidden ${isSlider ? "flex items-start pt-[250px]" : "py-24"}`}
+      className={`relative w-full ${isSlider ? "overflow-hidden flex items-start pt-[250px]" : "py-24"}`}
     >
       <div 
         ref={scrollRef}
