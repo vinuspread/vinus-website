@@ -89,12 +89,14 @@ html.lenis, html.lenis body {
 }
 
 /* edge-full blocks (parallax, scroll-h) get halved mobile spacing */
-.edge-full.block-spacing-sm   { padding-bottom: 0.375rem; }
-.edge-full.block-spacing-md   { padding-bottom: 0.625rem; }
-.edge-full.block-spacing-lg   { padding-bottom: 1rem; }
-.edge-full.block-spacing-xl   { padding-bottom: 1.5rem; }
-.edge-full.block-spacing-2xl  { padding-bottom: 2rem; }
-.edge-full.block-spacing-3xl  { padding-bottom: 2.5rem; }
+@media (max-width: 767px) {
+  .edge-full.block-spacing-sm   { padding-bottom: 0.375rem; }
+  .edge-full.block-spacing-md   { padding-bottom: 0.625rem; }
+  .edge-full.block-spacing-lg   { padding-bottom: 1rem; }
+  .edge-full.block-spacing-xl   { padding-bottom: 1.5rem; }
+  .edge-full.block-spacing-2xl  { padding-bottom: 2rem; }
+  .edge-full.block-spacing-3xl  { padding-bottom: 2.5rem; }
+}
 
 /* Gallery per-image animations handled by Framer Motion in SequenceGallery.tsx */
 
