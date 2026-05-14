@@ -94,7 +94,7 @@ export default async function WorkDetailPage({ params }: Props) {
   const heroImg = typedWork.hero_url || typedWork.thumbnail_url
 
   return (
-    <article className="bg-gallery">
+    <article className="bg-white">
       <JsonLd data={jsonLd} />
 
       {/* 1. Hero 풀스크린 */}
