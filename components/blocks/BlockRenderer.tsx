@@ -41,12 +41,17 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           (block.type === 'gallery' && block.layout === 'scroll-h')
 
         const spacingClass = `block-spacing-${block.spacing ?? 'md'}`
-        const noGap = block.spacing === 'none' ? ' leading-none' : ''
+        // spacing-none 이미지/갤러리 블록은 -mb-px 로 서브픽셀 틈 제거
+        const noGapOverlap =
+          block.spacing === 'none' &&
+          (block.type === 'image' || block.type === 'gallery' || block.type === 'multi-thumbnail')
+            ? ' -mb-px'
+            : ''
         const wrapClass = isEdgeFull
-          ? `${spacingClass}${noGap} edge-full`
+          ? `${spacingClass}${noGapOverlap} edge-full`
           : isFullWidth
-            ? `${spacingClass}${noGap} max-w-[1920px] mx-auto px-6 md:px-16`
-            : `${spacingClass}${noGap} max-w-4xl mx-auto px-6 md:px-12`
+            ? `${spacingClass}${noGapOverlap} max-w-[1920px] mx-auto px-6 md:px-16`
+            : `${spacingClass}${noGapOverlap} max-w-4xl mx-auto px-6 md:px-12`
 
         const skipMotion =
           block.type === 'heading-text' ||
