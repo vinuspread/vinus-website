@@ -1,33 +1,32 @@
 "use client";
 
 import { useReveal } from "@/hooks/useReveal";
-import { useState } from "react";
 import { PageHeader } from "@/components/common/PageHeader";
 
 const primaryServices = [
   {
     index: "01",
-    title: "UI/UX",
-    main: "Intuitive Digital Experience",
-    description:
-      "사용자의 행동과 경험의 흐름을 깊이 이해하고,\n새롭지만 직관적인 인터페이스를 통해 브랜드와 사용자가 자연스럽게 연결되는 디지털 경험을 설계합니다.",
-    tags: ["UI/UX Design", "Design System", "Prototyping"],
+    title: "UI/UX DESIGN",
+    main: ["Strategic Interface &", "Seamless Interaction"],
+    descEn: "We design digital experiences where brand value and user needs align perfectly through deep analysis of user behavior.\nbeyond simple visuals, we create intuitive flows that connect users to brands naturally.",
+    descKo: "사용자의 행동과 경험의 흐름을 깊이 이해하고, 브랜드와 사용자가 자연스럽게 연결되는 직관적인 디지털 경험을 설계합니다.",
+    tags: ["UX STRATEGY", "MOBILE FIRST", "PROTOTYPING"],
   },
   {
     index: "02",
-    title: "Character / Illustration",
-    main: "Characters With Identity",
-    description:
-      "단순한 비주얼을 넘어 브랜드의 성격과 감정을 담아,\n사용자에게 오래 기억되고 다양한 경험 속에서 확장될 수 있는 캐릭터와 일러스트를 만듭니다.",
-    tags: ["Character Design", "Illustration", "Brand Mascot"],
+    title: "CHARACTER / ILLUSTRATION",
+    main: ["Emotive Visuals with", "Bold Identity"],
+    descEn: "We create characters and illustrations that transcend simple visuals to embody the brand's personality and emotions.\nThese visual assets provide a memorable experience and build a lasting emotional bond with the audience.",
+    descKo: "단순한 비주얼을 넘어 브랜드의 성격과 감정을 담아, 사용자에게 오래 기억되고 다양한 경험 속에서 확장될 수 있는 캐릭터와 일러스트를 만듭니다.",
+    tags: ["3D ARTWORK", "BRAND MASCOT", "STORYTELLING"],
   },
   {
     index: "03",
-    title: "Branding",
-    main: "Brands With Meaning",
-    description:
-      "브랜드의 본질과 방향성을 바탕으로 전략과 디자인을 유기적으로 연결하여,\n사용자에게 더 가치 있게 기억될 수 있는 브랜드 경험을 구축합니다.",
-    tags: ["Brand Identity", "Visual System", "Art Direction"],
+    title: "BRANDING",
+    main: ["Cohesive Systems &", "Sustainable Value"],
+    descEn: "Based on the essence of the brand, we organically connect strategy and design to build a brand experience with lasting value.\nWe define a consistent visual language that ensures your brand stands out in any environment.",
+    descKo: "브랜드의 본질을 바탕으로 전략과 디자인을 유기적으로 연결하여, 시간이 흐를수록 더 가치 있게 기억될 수 있는 브랜드 경험을 구축합니다.",
+    tags: ["VISUAL SYSTEM", "BRAND GUIDELINE", "ART DIRECTION"],
   },
 ];
 
@@ -57,124 +56,108 @@ const serviceDetails = [
 export default function ServicesPage() {
   const primaryRef = useReveal();
   const detailRef = useReveal();
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i);
 
   return (
     <main className="bg-white">
-
       <PageHeader
         breadcrumb="Services"
         title={<>Strategic <span className="font-bold">Creative</span> Partner</>}
         description={
-          <>
-            <span className="block">리서치와 전략을 바탕으로 브랜드 아이덴티티, 디지털 디자인,</span>
-            <span className="block mt-[4px]">웹 개발까지 — 처음부터 끝까지 함께합니다.</span>
-          </>
+          <div className="flex flex-col gap-3">
+            <span className="block">
+              From deep research and strategy to brand identity, digital design, and high-performance development — we partner with brands to create lasting value from start to finish.
+            </span>
+            <div className="body-text-ko">
+              <span>리서치와 전략을 바탕으로 브랜드 아이덴티티, 디지털 디자인,</span>
+              <span className="block">웹 개발까지 — 브랜드의 처음부터 끝까지 함께하며 지속 가능한 가치를 창출합니다.</span>
+            </div>
+          </div>
         }
       />
 
       {/* ── Primary Services ── */}
-      <section ref={primaryRef as any} className="anim-wrap border-b border-alto">
+      <section ref={primaryRef as any} className="anim-wrap">
         {primaryServices.map((svc, i) => (
           <div
             key={svc.index}
-            className={`px-page-padding py-[72px] grid grid-cols-1 md:grid-cols-8 gap-column ${
-              i < primaryServices.length - 1 ? "border-b border-alto" : ""
-            }`}
+            className="section-pad border-b border-alto last:border-b-0"
           >
-            {/* 번호 + 서비스명 + Main 카피 */}
-            <div className="md:col-span-3 flex flex-col gap-3 mb-8 md:mb-0">
-              <p className="text-[11px] text-mine-shaft/30 font-inter">{svc.index}</p>
-              <p className="text-[12px] uppercase tracking-[0.1em] text-mine-shaft/50 font-inter">{svc.title}</p>
-              <h2 className="text-[32px] md:text-[40px] leading-[1.1] tracking-[-1.5px] font-inter">
-                <span className="block overflow-hidden">
-                  <span className="anim-move-up block" data-delay={i * 80}>
-                    {svc.main.split(" ").slice(0, -1).join(" ")}
-                  </span>
-                </span>
-                <span className="block overflow-hidden">
-                  <span className="anim-move-up block font-bold" data-delay={i * 80 + 60}>
-                    {svc.main.split(" ").slice(-1)[0]}
-                  </span>
-                </span>
-              </h2>
-            </div>
-
-            {/* 설명 + 태그 */}
-            <div className="md:col-span-4 md:col-start-5 flex flex-col justify-between gap-8">
-              <p className="text-[17px] font-light leading-[1.7] tracking-[-0.3px] text-mine-shaft/70 whitespace-pre-line">
-                <span className="block overflow-hidden">
-                  <span className="anim-move-up block" data-delay={i * 80 + 100}>
-                    {svc.description}
-                  </span>
-                </span>
-              </p>
-              <div className="flex flex-wrap gap-[8px]">
-                {svc.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-[14px] py-[6px] text-[11px] uppercase tracking-[0.08em] border border-alto text-mine-shaft/60"
-                  >
-                    {tag}
+            {/* Content Column - Full Width Left Aligned */}
+            <div className="flex flex-col gap-10 max-w-[1200px]">
+              <h2 className="display-heading">
+                {svc.main.map((line, lineIdx) => (
+                  <span key={lineIdx} className="block overflow-hidden">
+                    <span className="anim-move-up block pb-2" data-delay={i * 80 + lineIdx * 40}>
+                      {line}
+                    </span>
                   </span>
                 ))}
+              </h2>
+
+              <div className="flex flex-col gap-10">
+                <div className="flex flex-col gap-4">
+                  <span className="block overflow-hidden">
+                    <span className="anim-move-up block body-text !text-mine-shaft whitespace-pre-line" data-delay={i * 80 + 100}>
+                      {svc.descEn}
+                    </span>
+                  </span>
+                  <span className="block overflow-hidden">
+                    <span className="anim-move-up block body-text-ko" data-delay={i * 80 + 150}>
+                      {svc.descKo}
+                    </span>
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {svc.tags.map((tag, j) => (
+                    <span
+                      key={tag}
+                      className="anim-move-up px-4 py-2 text-[10px] uppercase tracking-widest bg-mine-shaft/5 text-mine-shaft/40 font-bold rounded-full border border-alto/50"
+                      data-delay={i * 80 + 200 + (j * 30)}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         ))}
       </section>
 
-      {/* ── Full Capabilities Accordion ── */}
-      <section ref={detailRef as any} className="anim-wrap px-page-padding py-[80px] md:py-[120px]">
-        <div className="mb-[60px]">
-          <h2 className="text-[36px] md:text-[56px] leading-none tracking-[-2px] uppercase font-inter">
-            <span className="block overflow-hidden">
-              <span className="anim-move-up block">Full</span>
-            </span>
-            <span className="block overflow-hidden">
-              <span className="anim-move-up block font-bold" data-delay="80">Capabilities</span>
-            </span>
-          </h2>
-        </div>
+      {/* ── Expertise & Disciplines (Dark) ── */}
+      <section ref={detailRef as any} className="anim-wrap bg-mine-shaft text-white section-pad-large">
+        <div className="flex flex-col md:flex-row gap-20">
+          <div className="flex-1">
+            <h3 className="display-heading !text-white mb-6 !text-[48px]">
+              Expertise & <br />
+              Disciplines
+            </h3>
+            <p className="body-text !text-white/50 max-w-[300px]">
+              A comprehensive breakdown of our strategic approach and technical depth.
+            </p>
+          </div>
 
-        <div className="border-t border-alto">
-          {serviceDetails.map((detail, i) => (
-            <div key={detail.category} className="border-b border-alto">
-              <button
-                onClick={() => toggle(i)}
-                className="w-full flex items-center justify-between py-[28px] text-left group"
+          <div className="flex-[1.5] flex flex-col gap-12 pt-12 md:pt-4">
+            {serviceDetails.map((detail, i) => (
+              <div 
+                key={detail.category} 
+                className="grid grid-cols-1 md:grid-cols-12 gap-2 items-baseline anim-move-up"
+                data-delay={i * 40}
               >
-                <div className="flex items-center gap-[48px]">
-                  <span className="text-[11px] text-mine-shaft/30 font-inter w-[24px]">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-[22px] md:text-[28px] tracking-[-0.8px] uppercase font-inter group-hover:opacity-50 transition-opacity">
-                    {detail.category}
-                  </span>
+                <div className="md:col-span-3">
+                  <h4 className="section-label !text-white/40">{detail.category}</h4>
                 </div>
-                <span
-                  className="text-[22px] text-mine-shaft/40 transition-transform duration-300 inline-block"
-                  style={{ transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)" }}
-                >
-                  +
-                </span>
-              </button>
-              {openIndex === i && (
-                <div className="pb-[36px] pl-[72px] flex flex-wrap gap-x-[40px] gap-y-[12px]">
-                  {detail.items.map((item) => (
-                    <span key={item} className="text-[15px] font-light text-mine-shaft/60 tracking-[-0.2px]">
-                      {item}
-                    </span>
-                  ))}
+                <div className="md:col-span-9">
+                  <p className="text-[13px] md:text-[14px] text-white/50 font-medium leading-relaxed">
+                    {detail.items.join(" · ")}
+                  </p>
                 </div>
-              )}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-
     </main>
   );
 }

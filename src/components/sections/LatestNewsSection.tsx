@@ -12,12 +12,12 @@ export const LatestNewsSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap px-page-padding py-[100px] bg-white border-b border-alto">
+    <section ref={revealRef as any} className="anim-wrap section-pad bg-gallery">
       {/* Header Row */}
-      <div className="flex justify-between items-end mb-6">
-        <h2 className="text-[46.5px] tracking-[-1.6px] uppercase leading-none font-inter">
-          <span className="anim-clip">
-            <span className="anim-move-up">Ideas & Insights</span>
+      <div className="flex justify-between items-end mb-12">
+        <h2 className="display-heading uppercase">
+          <span className="block overflow-hidden">
+            <span className="anim-move-up block">Ideas & Insights</span>
           </span>
         </h2>
         <div className="anim-clip">
@@ -27,46 +27,43 @@ export const LatestNewsSection = () => {
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="w-full h-px bg-alto anim-fill-width" />
-
       {/* Articles Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-[48px] pt-[38.4px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-column border-t border-alto pt-12">
         {latest.map((story, idx) => (
-          <Link key={story.slug} href={`/story/${story.slug}`} className="flex-1 grid grid-cols-2 gap-[38.4px] h-[411px] group">
-            {/* Left: Image */}
-            <div className="aspect-[429/371] relative overflow-hidden anim-clip">
+          <Link key={story.slug} href={`/story/${story.slug}`} className="group flex flex-col gap-6">
+            {/* Image */}
+            <div className="aspect-[16/10] relative overflow-hidden">
               <div className="anim-move-up-img w-full h-full relative" data-delay={idx * 150}>
                 {story.thumbnail ? (
                   <Image
                     src={story.thumbnail}
                     alt={story.title}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full bg-alto/40" />
                 )}
               </div>
             </div>
-            {/* Right: Meta + Title */}
+            {/* Content */}
             <div className="flex flex-col gap-3">
-              <p className="text-[14px] uppercase tracking-[0.05em] text-mine-shaft/40 font-inter">
-                <span className="anim-clip block">
-                  <span className="anim-move-up" data-delay={idx * 150 + 100}>
+              <p className="section-label opacity-40">
+                <span className="block overflow-hidden">
+                  <span className="anim-move-up block" data-delay={idx * 150 + 100}>
                     {story.category} · {story.date}
                   </span>
                 </span>
               </p>
-              <h3 className="text-[22px] tracking-[-0.6px] leading-[1.3] font-normal group-hover:opacity-60 transition-opacity">
-                <span className="anim-clip block">
-                  <span className="anim-move-up" data-delay={idx * 150 + 180}>
+              <h3 className="text-[24px] tracking-[-0.02em] leading-[1.3] font-bold group-hover:opacity-60 transition-opacity">
+                <span className="block overflow-hidden">
+                  <span className="anim-move-up block" data-delay={idx * 150 + 180}>
                     {story.title}
                   </span>
                 </span>
               </h3>
               {story.summary && (
-                <p className="text-[14px] font-light text-mine-shaft/50 leading-[1.5] line-clamp-3 mt-2">
+                <p className="body-text-ko !text-[14px] line-clamp-2">
                   {story.summary}
                 </p>
               )}

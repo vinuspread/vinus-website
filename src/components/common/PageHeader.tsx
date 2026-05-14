@@ -34,7 +34,7 @@ export const PageHeader = ({
       <div className="grid grid-cols-1 md:grid-cols-8 gap-x-column">
         {/* 브레드크럼 + 우측 레이블 */}
         <div className="md:col-span-8 mb-6 flex items-center justify-between">
-          <span className="text-[12px] uppercase tracking-wider font-inter opacity-40">
+          <span className="breadcrumb-label">
             {breadcrumb}
           </span>
           {sideLabel && (

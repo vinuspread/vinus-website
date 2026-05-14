@@ -618,6 +618,75 @@ section.relative.bg-[#0a0a0a]
 | `text-transform: uppercase` 전역 적용 | 큰 디스플레이 폰트만 uppercase — 전역 적용 금지 |
 | `framer-motion` 사용 | 금지. `anim-clip > anim-move-up` 패턴으로 대체 |
 | 인라인 `style={{ "--delay": ... }}` | `data-delay="100"` (ms 정수)로 교체 |
+| **`anim-clip`을 블록 요소에 직접 적용** | `.anim-clip { display: inline-block }` → `p`, `h1`, `h2`, `div`에 붙이면 레이아웃 붕괴. **올바른 패턴**: `<span className="block overflow-hidden"><span className="anim-move-up block" data-delay={n}>text</span></span>` |
+
+---
+
+## 애니메이션 텍스트 리빌 — 올바른 패턴 (2026-05-14 확정)
+
+`anim-clip` 클래스는 `display: inline-block`을 강제하므로, 블록 레벨 요소(`p`, `h1`, `h2`)에 직접 붙이면 레이아웃이 깨진다.  
+**항상 아래 span 래퍼 패턴을 사용할 것.**
+
+```tsx
+// ✅ 올바른 패턴
+<h2 className="...heading styles...">
+  <span className="block overflow-hidden">
+    <span className="anim-move-up block" data-delay={0}>첫 번째 줄</span>
+  </span>
+  <span className="block overflow-hidden">
+    <span className="anim-move-up block" data-delay={80}>두 번째 줄</span>
+  </span>
+</h2>
+
+<p className="...body styles...">
+  <span className="block overflow-hidden">
+    <span className="anim-move-up block" data-delay={160}>본문 텍스트</span>
+  </span>
+</p>
+
+// ❌ 금지 패턴 — anim-clip을 블록 요소에 직접 적용
+<h2 className="svc-title-main anim-clip block">...</h2>
+<p className="text-... anim-clip block">...</p>
+```
+
+반복 사용 시 `Clip` 헬퍼 컴포넌트로 추출 가능:
+
+```tsx
+function Clip({ children, delay }: { children: ReactNode; delay?: number }) {
+  return (
+    <span className="block overflow-hidden">
+      <span className="anim-move-up block" data-delay={delay ?? 0}>{children}</span>
+    </span>
+  );
+}
+```
+
+---
+
+## About 페이지 디자인 방향 (2026-05-14 확정)
+
+### 레이아웃 원칙
+- **8컬럼 비대칭 그리드**: 좌측 1컬럼은 소형 레이블 전용, 우측 7컬럼이 콘텐츠
+- **레이블 포맷**: `(About)`, `(Method)`, `(History)`, `(Company)` — 괄호 형식, `text-[11px] font-inter font-bold uppercase tracking-widest text-mine-shaft/30`
+- **오픈 레이아웃**: 박스/카드 테두리 없이 선(`border-alto`)과 여백으로만 섹션 구분
+- **에디토리얼 여백**: 섹션 상단 `pt-[120px]~pt-[160px]`, 이미지와 텍스트 사이 충분한 공간 확보
+
+### 타이포 스케일
+- 대형 헤딩: `clamp(52px, 7.5vw, 112px)`, `font-inter font-bold`, `leading-[0.9]`, `tracking-[-0.04em]`
+- 서브 헤딩: `clamp(48px, 6vw, 88px)`
+- 본문: `text-[15~17px] font-medium leading-[1.8] text-mine-shaft/50`
+- 레이블: `text-[11px] font-inter font-bold uppercase tracking-widest text-mine-shaft/30`
+
+### 이미지 활용
+- 풀 블리드 와이드 이미지: `aspect-[16/7]` 또는 `aspect-[21/8]`, `px-page-padding` 없이 전체 너비
+- 카드 이미지: `aspect-[4/5]` + 하단 그라디언트 오버레이 `bg-gradient-to-t from-black/50`
+- 회사 소개 이미지: `aspect-[3/4]` + `grayscale`
+- 모든 이미지: `next/image fill` + 부모 `relative overflow-hidden`
+
+### 다크 섹션 (Perspective)
+- `bg-mine-shaft` 풀 너비, 좌우 2분할 (이미지 / 텍스트)
+- 텍스트 패딩: `px-[80px] py-[100px]`
+- 강조 줄: `text-white/20` 으로 페이드 처리
 
 ---
 
