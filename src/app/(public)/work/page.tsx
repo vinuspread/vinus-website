@@ -52,7 +52,7 @@ export default function WorkPage() {
       </div>
 
       {/* Projects Grid */}
-      <WorkGrid filter={active} />
+      <WorkGrid filter={active} isSlider={false} />
     </main>
   );
 }

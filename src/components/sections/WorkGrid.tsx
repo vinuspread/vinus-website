@@ -13,16 +13,17 @@ type Category = "All" | "UI/UX" | "Character/Illustration" | "Branding" | "Etc";
 interface WorkGridProps {
   filter?: Category;
   limit?: number;
+  isSlider?: boolean;
 }
 
-export const WorkGrid = ({ filter = "All", limit }: WorkGridProps) => {
+export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: WorkGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const filtered = (filter === "All" ? projects : projects.filter((p) => p.category === filter))
     .slice(0, limit);
-
-  const isSlider = filtered.length > 4;
+  
+  const isSlider = isSliderProp !== undefined ? isSliderProp : filtered.length > 4;
 
   useLayoutEffect(() => {
     if (!containerRef.current || !scrollRef.current) return;

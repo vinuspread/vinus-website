@@ -7,19 +7,19 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowLink } from "@/components/common/ArrowLink";
 
 const B1_LINES = [
-  { text: "Even in the intensity of a fast-changing world,",       bold: false },
-  { text: "we focus on the enduring value of what truly matters,", bold: false },
-  { text: "striving to create beautiful designs that transcend",    bold: true  },
-  { text: "structural and physical boundaries.",                    bold: true  },
+  { text: "In a fast-changing world,", bold: false },
+  { text: "we focus on the essential value of experience.", bold: false },
+  { text: "We design and manage products with clarity, structure, and purpose.", bold: false },
+  { text: "We are VINUSPREAD.", bold: true },
 ];
 
 const B2_LINES = [
-  { text: "We focus on the", size: "clamp(50px, 7vw, 160px)" },
+  { text: "We focus on", size: "clamp(50px, 7vw, 160px)" },
   { 
-    text: "essential values of", 
+    text: "the essential value of", 
     size: "clamp(50px, 7vw, 160px)",
-    highlight: "YOUR BRAND.",
-    highlightSize: "clamp(70px, 10vw, 240px)"
+    highlight: "PRODUCT EXPERIENCE.",
+    highlightSize: "clamp(60px, 9vw, 200px)"
   },
 ];
 
@@ -141,6 +141,7 @@ export const HeroSectionV2 = () => {
             // B3 도달 → lenis 시작, content-container가 자연스럽게 올라오며 B3를 덮음
             if (lenis && newIndex === 2) {
               lenis.start();
+              registerExitTrigger();
             }
           }
         });
@@ -261,16 +262,24 @@ export const HeroSectionV2 = () => {
               </div>
             ))}
           </div>
-          <div className="py-1">
-            <p className="font-pretendard text-[20px] text-mine-shaft/70 max-w-[800px] leading-relaxed">
-              {"빠르게 변화하는 세상의 격랑 속에서도 우리는 진정으로 중요한 것의 영속적인 가치에 집중하며, 구조적·물리적 경계를 초월하는 아름다운 디자인을 만들기 위해 노력합니다.".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
-                  <span className="b1-word inline-block translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
-                </span>
+          <div className="mt-4">
+            <div className="font-pretendard text-[20px] font-medium text-mine-shaft/40 leading-[1.5] max-w-[900px]">
+              {[
+                "빠르게 변화하는 세상 속에서, 우리는 경험의 본질에 집중합니다.",
+                "명확한 구조와 목적을 바탕으로 제품을 설계하고 관리합니다.",
+                "우리는 VINUSPREAD 입니다."
+              ].map((line, i) => (
+                <div key={i} className="py-0.5">
+                  {line.split(" ").map((word, j) => (
+                    <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
+                      <span className="b1-word inline-block translate-y-[100%] opacity-0">
+                        {word}
+                      </span>
+                    </span>
+                  ))}
+                </div>
               ))}
-            </p>
+            </div>
           </div>
         </div>
 
@@ -300,49 +309,68 @@ export const HeroSectionV2 = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
-        <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-4 will-change-transform">
-          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 3.6vw, 58px)" }}>
-            <div className="py-1">
-              {"More than just creators,".split(" ").map((word, i) => (
+          <div className="mt-6">
+            <p className="font-pretendard text-[20px] font-medium text-mine-shaft/40 leading-[1.5]">
+              {"우리는 의미 있는 제품 경험의 본질에 집중합니다.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
-                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
-                </span>
-              ))}
-            </div>
-            <div className="py-1">
-              {"VINUSPREAD is a".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
-                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
-                </span>
-              ))}
-              <span className="inline-block mr-[0.3em] overflow-hidden">
-                <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">Product</span>
-              </span>
-              <span className="inline-block mr-[0.3em] overflow-hidden">
-                <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">Management</span>
-              </span>
-              <span className="inline-block mr-[0.3em] overflow-hidden">
-                <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">Group.</span>
-              </span>
-            </div>
-          </div>
-          <div className="py-1">
-            <p className="font-pretendard text-[20px] text-mine-shaft/70 max-w-[850px] leading-relaxed">
-              {"브랜드와 사용자 모두에게 의미 있는 경험을 만드는 것. 우리는 브랜드의 핵심 본질을 포착하고, 최적의 방향을 설계하며, 진정으로 마음에 울리는 디지털 경험을 구현합니다.".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
-                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                  <span className="b2-word inline-block translate-y-[100%] opacity-0">
                     {word}
                   </span>
                 </span>
               ))}
             </p>
+          </div>
+        </div>
+
+        {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
+        <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-6 will-change-transform">
+          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 4vw, 68px)" }}>
+            <div className="py-1">
+              {"We turn product thinking into experience.".split(" ").map((word, i) => (
+                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
+                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </div>
+            <div className="py-1">
+              {"Structured for clarity and sustainable growth.".split(" ").map((word, i) => (
+                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
+                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </div>
+            <div className="py-1">
+              {"VINUSPREAD.".split(" ").map((word, i) => (
+                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
+                  <span className="b3-word inline-block font-black translate-y-[100%] opacity-0">
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="py-1">
+            <div className="font-pretendard text-[20px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
+              {[
+                "우리는 제품 관점을 경험으로 만듭니다.",
+                "명확한 구조 위에서, 지속 가능한 성장을 설계합니다.",
+                "VINUSPREAD"
+              ].map((line, i) => (
+                <div key={i} className="py-0.5">
+                  {line.split(" ").map((word, j) => (
+                    <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
+                      <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                        {word}
+                      </span>
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="py-2">
             <div className="flex gap-12">

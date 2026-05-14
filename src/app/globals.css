@@ -46,7 +46,6 @@
 
 /* Text reveal — slides up from below clip boundary */
 .anim-move-up {
-  display: block;
   transform: translateY(36px);
   opacity: 0;
   transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),

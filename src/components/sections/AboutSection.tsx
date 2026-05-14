@@ -22,16 +22,15 @@ export const AboutSection = () => {
           
           {/* Main Heading */}
           <h2 className="anim-move-up font-inter text-[clamp(40px,5vw,72px)] font-bold leading-[1.05] tracking-[-0.04em] text-mine-shaft max-w-[900px]">
-            For brands building what's next and entering a phase of growth.
+            Focusing on the enduring value of what truly matters.
           </h2>
 
           {/* Description */}
           <p className="anim-move-up font-inter text-[clamp(18px,1.5vw,22px)] leading-[1.6] text-mine-shaft/60 max-w-[800px] break-keep" data-delay="150">
-            Vinuspread partners with leadership teams at pivotal moments to codify 
-            the strategic idea at the center of the company and turn it into a 
-            brand system the organization can scale. Our work translates vision 
-            into strategy, category differentiation, language, and design systems 
-            that align teams and carry forward into the world.
+            VINUSPREAD partners with visionary leaders to capture the essential essence at the core of their brand. 
+            By transforming strategic insights into beautiful design systems and digital ecosystems, we help 
+            organizations transcend physical and structural boundaries. Our work translates bold vision into 
+            scalable impact, creating experiences that resonate deeply and carry forward into the world.
           </p>
 
           {/* Purpose Section (Merged) */}
