@@ -146,7 +146,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
          <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter mb-12 text-center">Next Project</p>
          <Link
             href={`/work/${nextProject.slug}`}
-            className="block relative w-full h-[60vh] md:h-[80vh] overflow-hidden group rounded-lg"
+            className="block relative w-full h-[60vh] md:h-[80vh] overflow-hidden group"
          >
             <Image
                src={nextProject.heroImg}

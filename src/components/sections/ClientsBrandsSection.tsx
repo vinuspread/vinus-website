@@ -1,9 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useLayoutEffect } from "react";
 import { useReveal } from "@/hooks/useReveal";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { cn } from "@/lib/utils";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const clientLogos = Array.from({ length: 28 }, (_, i) => ({
   name: `client-${String(i + 1).padStart(2, "0")}`,
@@ -27,6 +32,47 @@ const brands = [
 
 export const ClientsBrandsSection = () => {
   const ref = useReveal();
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  useLayoutEffect(() => {
+    if (!imageRef.current) return;
+    const container = imageRef.current.parentElement;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Entrance Animation
+      gsap.fromTo(container, 
+        { y: 100, opacity: 0 }, 
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top 90%",
+          }
+        }
+      );
+
+      // 2. Parallax
+      gsap.fromTo(imageRef.current, 
+        { y: 50 },
+        {
+          y: -50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, [ref]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,12 +82,15 @@ export const ClientsBrandsSection = () => {
   }, []);
 
   return (
-    <section ref={ref as any} className="anim-wrap section-pad bg-white">
-      <div className="flex flex-col gap-12">
+    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-white overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_0.8fr_1.2fr] gap-12 items-start">
         
-        <h2 className="anim-move-up display-heading text-mine-shaft">
-          Brands we&apos;ve worked with.
-        </h2>
+        {/* Left Side: Content (50% width) */}
+        <div className="flex flex-col gap-12">
+          
+          <h2 className="anim-move-up display-heading text-[clamp(40px,5vw,72px)] text-mine-shaft">
+            Brands we&apos;ve worked with.
+          </h2>
 
         {/* Logo Grid */}
         <div className="grid grid-cols-3 md:grid-cols-6 border-t border-alto mb-24">
@@ -90,6 +139,24 @@ export const ClientsBrandsSection = () => {
               </div>
             </div>
           ))}
+        </div>
+        </div>
+
+        {/* Spacer (~20% width) */}
+        <div className="hidden lg:block"></div>
+
+        {/* Right Side: Image (~30% width) */}
+        <div className="hidden lg:flex flex-col">
+          <div className="sticky top-[120px] overflow-hidden aspect-[2/3] w-full">
+            <div className="w-full h-full will-change-transform">
+              <img 
+                ref={imageRef}
+                src="/brands_vertical.png" 
+                alt="Brands Vinuspread"
+                className="w-full h-full object-cover scale-125 will-change-transform"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </section>

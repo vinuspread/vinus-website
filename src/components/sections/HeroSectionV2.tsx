@@ -14,12 +14,12 @@ const B1_LINES = [
 ];
 
 const B2_LINES = [
-  { text: "We focus on", size: "clamp(50px, 7vw, 160px)" },
-  { 
-    text: "the essential value of", 
-    size: "clamp(50px, 7vw, 160px)",
+  { text: "We focus on", size: "calc((100vw - 320px) / 15)" },
+  {
+    text: "the essential value of",
+    size: "calc((100vw - 320px) / 15)",
     highlight: "PRODUCT EXPERIENCE.",
-    highlightSize: "clamp(60px, 9vw, 200px)"
+    highlightSize: "calc((100vw - 320px) / 14)"
   },
 ];
 
@@ -251,7 +251,7 @@ export const HeroSectionV2 = () => {
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
         {/* Block 1 */}
         <div className="w-full h-full flex flex-col justify-start pt-[25vh] px-page-padding gap-8">
-          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 3.6vw, 58px)" }}>
+          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft text-[clamp(32px,3.5vw,48px)]">
             {B1_LINES.map((line, i) => (
               <div key={i} className="py-1">
                 {line.text.split(" ").map((word, j) => (
@@ -265,7 +265,7 @@ export const HeroSectionV2 = () => {
             ))}
           </div>
           <div className="mt-4">
-            <div className="font-pretendard text-[20px] font-medium text-mine-shaft/40 leading-[1.5] max-w-[900px]">
+            <div className="font-pretendard text-[16px] font-medium text-mine-shaft/40 leading-[1.5] max-w-[900px]">
               {[
                 "빠르게 변화하는 세상 속에서, 우리는 경험의 본질에 집중합니다.",
                 "명확한 구조와 목적을 바탕으로 제품을 설계하고 관리합니다.",
@@ -289,7 +289,7 @@ export const HeroSectionV2 = () => {
         <div className="w-full h-full flex flex-col justify-start pt-[25vh] px-page-padding">
           <div className="font-inter uppercase leading-[0.85] tracking-[-0.06em] text-mine-shaft">
             {B2_LINES.map((line, i) => (
-              <div key={i} className="py-2 flex flex-wrap items-baseline" style={{ fontSize: line.size }}>
+              <div key={i} className="py-2 whitespace-nowrap overflow-hidden" style={{ fontSize: line.size }}>
                 {line.text.split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
                     <span className="b2-word inline-block translate-y-[100%] opacity-0">
@@ -298,7 +298,7 @@ export const HeroSectionV2 = () => {
                   </span>
                 ))}
                 {line.highlight && (
-                  <div className="w-full mt-2" style={{ fontSize: line.highlightSize }}>
+                  <div className="w-full mt-2 whitespace-nowrap overflow-hidden" style={{ fontSize: line.highlightSize }}>
                     {line.highlight.split(" ").map((word, k) => (
                       <span key={k} className="inline-block mr-[0.3em] overflow-hidden">
                         <span className="b2-word inline-block font-black translate-y-[100%] opacity-0 text-mine-shaft">
@@ -312,7 +312,7 @@ export const HeroSectionV2 = () => {
             ))}
           </div>
           <div className="mt-6">
-            <p className="font-pretendard text-[20px] font-medium text-mine-shaft/40 leading-[1.5]">
+            <p className="font-pretendard text-[16px] font-medium text-mine-shaft/40 leading-[1.5]">
               {"우리는 의미 있는 제품 경험의 본질에 집중합니다.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
                   <span className="b2-word inline-block translate-y-[100%] opacity-0">
@@ -326,7 +326,7 @@ export const HeroSectionV2 = () => {
 
         {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
         <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-6 will-change-transform">
-          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft" style={{ fontSize: "clamp(28px, 4vw, 68px)" }}>
+          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft text-[clamp(32px,3.5vw,48px)]">
             <div className="py-1">
               {"We turn product thinking into experience.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
@@ -356,10 +356,9 @@ export const HeroSectionV2 = () => {
             </div>
           </div>
           <div className="py-1">
-            <div className="font-pretendard text-[20px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
+            <div className="font-pretendard text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
               {[
-                "우리는 제품 관점을 경험으로 만듭니다.",
-                "명확한 구조 위에서, 지속 가능한 성장을 설계합니다.",
+                "우리는 제품 관점을 경험으로 만듭니다. 명확한 구조 위에서, 지속 가능한 성장을 설계합니다.",
                 "VINUSPREAD"
               ].map((line, i) => (
                 <div key={i} className="py-0.5">

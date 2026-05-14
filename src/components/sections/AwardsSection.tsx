@@ -28,7 +28,7 @@ export const AwardsSection = () => {
     <section ref={ref as any} className="anim-wrap section-pad bg-white">
       <div className="flex flex-col gap-12">
         
-        <h2 className="anim-move-up display-heading text-mine-shaft">
+        <h2 className="anim-move-up display-heading text-[clamp(40px,5vw,72px)] text-mine-shaft">
           Awards & Recognitions.
         </h2>
 

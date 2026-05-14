@@ -2,31 +2,90 @@
 
 import { useReveal } from "@/hooks/useReveal";
 import { ArrowLink } from "@/components/common/ArrowLink";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export const AboutSection = () => {
   const ref = useReveal();
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  useLayoutEffect(() => {
+    if (!imageRef.current) return;
+    const container = imageRef.current.parentElement;
+    if (!container) return;
+
+    const ctx = gsap.context(() => {
+      // 1. Entrance Animation (Container reveals up)
+      gsap.fromTo(container, 
+        { y: 100, opacity: 0 }, 
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          }
+        }
+      );
+
+      // 2. Parallax Effect (Image moves inside container)
+      gsap.fromTo(imageRef.current, 
+        { y: 50 },
+        {
+          y: -50,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+    });
+
+    return () => ctx.revert();
+  }, [ref]);
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-white">
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20">
+    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-white overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr_2fr] gap-12 items-start">
         
-        {/* Left Side: Side Label */}
-        <div className="hidden lg:block">
-          <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 sticky top-[120px]">
-            (About)
-          </p>
+        {/* Left Side: Image (~30% width) */}
+        <div className="hidden lg:flex flex-col">
+          <div className="sticky top-[120px] overflow-hidden aspect-[2/3] w-full">
+            <div className="w-full h-full will-change-transform">
+              <img 
+                ref={imageRef}
+                src="/about_vertical.png" 
+                alt="About Vinuspread"
+                className="w-full h-full object-cover scale-125 will-change-transform"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Right Side: Content */}
+        {/* Spacer (~20% width) */}
+        <div className="hidden lg:block"></div>
+
+        {/* Right Side: Content (50% width) */}
         <div className="flex flex-col gap-12">
           
           {/* Main Heading */}
-          <h2 className="anim-move-up font-inter text-[clamp(40px,5vw,72px)] font-bold leading-[1.05] tracking-[-0.04em] text-mine-shaft max-w-[900px]">
+          <h2 className="anim-move-up display-heading text-[clamp(40px,5vw,72px)] text-mine-shaft">
             Focusing on the enduring value of what truly matters.
           </h2>
 
           {/* Description */}
-          <p className="anim-move-up font-inter text-[clamp(18px,1.5vw,22px)] leading-[1.6] text-mine-shaft/60 max-w-[800px] break-keep" data-delay="150">
+          <p className="anim-move-up font-inter text-[clamp(18px,1.5vw,22px)] leading-[1.6] text-mine-shaft/60 break-keep" data-delay="150">
             VINUSPREAD partners with visionary leaders to capture the essential essence at the core of their brand. 
             By transforming strategic insights into beautiful design systems and digital ecosystems, we help 
             organizations transcend physical and structural boundaries. Our work translates bold vision into 
