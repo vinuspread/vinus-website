@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,6 +9,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export const SmoothScroll = () => {
+  const pathname = usePathname();
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 0.9,
@@ -17,7 +20,6 @@ export const SmoothScroll = () => {
     (window as any).__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
-    // Named function so cleanup can actually remove the right reference
     const tick = (time: number) => lenis.raf(time * 1000);
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
@@ -27,6 +29,16 @@ export const SmoothScroll = () => {
       lenis.destroy();
     };
   }, []);
+
+  // Fail-safe: Restart lenis and refresh ScrollTrigger on route change
+  useEffect(() => {
+    const lenis = (window as any).__lenis;
+    if (lenis) {
+      lenis.start();
+      lenis.scrollTo(0, { immediate: true });
+    }
+    ScrollTrigger.refresh();
+  }, [pathname]);
 
   return null;
 };
