@@ -34,7 +34,7 @@ export default function ScrollHGallery({ images }: { images: { src: string; alt:
   return (
     <div ref={containerRef} style={{ height: `${images.length * 100}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-        <motion.div ref={stripRef} className="flex gap-[3vw] pl-6 md:pl-16 pr-6 md:pr-16" style={{ x }}>
+        <motion.div ref={stripRef} className="flex gap-[3vw] pl-6 md:pl-16" style={{ x }}>
           {images.map((img, i) => (
             <div key={i} className="flex-shrink-0">
               {img.src && (
@@ -48,6 +48,7 @@ export default function ScrollHGallery({ images }: { images: { src: string; alt:
               )}
             </div>
           ))}
+          <div className="flex-shrink-0 w-6 md:w-16" />
         </motion.div>
       </div>
     </div>
