@@ -19,7 +19,7 @@ export default async function WorkPage() {
     .order('sort_order', { ascending: true })
 
   return (
-    <main className="bg-white">
+    <main style={{ backgroundColor: '#ffffff' }}>
       {/* 페이지 헤더 */}
       <section className="pt-[140px] pb-[80px] px-[40px] border-b border-alto">
         <div className="grid grid-cols-1 md:grid-cols-8 gap-[38px]">
