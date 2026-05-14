@@ -40,11 +40,13 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
           (block.type === 'image' && block.displayMode === 'parallax') ||
           (block.type === 'gallery' && block.layout === 'scroll-h')
 
+        const spacingClass = `block-spacing-${block.spacing ?? 'md'}`
+        const noGap = block.spacing === 'none' ? ' leading-none' : ''
         const wrapClass = isEdgeFull
-          ? `block-spacing-${block.spacing ?? 'md'} edge-full`
+          ? `${spacingClass}${noGap} edge-full`
           : isFullWidth
-            ? `block-spacing-${block.spacing ?? 'md'} max-w-[1920px] mx-auto px-6 md:px-16`
-            : `block-spacing-${block.spacing ?? 'md'} max-w-4xl mx-auto px-6 md:px-12`
+            ? `${spacingClass}${noGap} max-w-[1920px] mx-auto px-6 md:px-16`
+            : `${spacingClass}${noGap} max-w-4xl mx-auto px-6 md:px-12`
 
         const skipMotion =
           block.type === 'heading-text' ||

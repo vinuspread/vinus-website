@@ -21,7 +21,7 @@ export default function ImageBlock({ block }: { block: ImageBlockType }) {
   return (
     <div
       ref={ref}
-      className={`relative${align === 'full' ? ' -mx-6 md:-mx-16' : ''}`}
+      className={`relative overflow-hidden${align === 'full' ? ' -mx-6 md:-mx-16' : ''}`}
     >
       {/* 회색 배경: 하단에서 위로 성장, 유지됨 */}
       <motion.div
