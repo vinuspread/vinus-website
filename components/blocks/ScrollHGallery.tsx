@@ -3,9 +3,8 @@
 import { useRef, useCallback } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
-const IMG_W = 640
-const GAP_VW = 3   // gap-[3vw]
-const PAD_PX = 64  // pl-16 (desktop)
+const IMG_VW = 75   // image width in vw
+const GAP_VW = 3    // gap in vw
 
 export default function ScrollHGallery({ images }: { images: { src: string; alt: string }[] }) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -18,10 +17,11 @@ export default function ScrollHGallery({ images }: { images: { src: string; alt:
   const handleLoad = useCallback(() => {
     loadedRef.current += 1
     if (loadedRef.current < images.length) return
-    // all images loaded — compute travel from actual strip width
-    const gap = (GAP_VW / 100) * window.innerWidth
-    const totalW = images.length * IMG_W + (images.length - 1) * gap + PAD_PX
-    travelRef.current = Math.max(0, totalW - window.innerWidth)
+    const vw = window.innerWidth
+    const imgW = (IMG_VW / 100) * vw
+    const gap = (GAP_VW / 100) * vw
+    const totalW = images.length * imgW + (images.length - 1) * gap
+    travelRef.current = Math.max(0, totalW - vw)
   }, [images.length])
 
   if (!images.length) return null
@@ -29,17 +29,16 @@ export default function ScrollHGallery({ images }: { images: { src: string; alt:
   return (
     <div ref={containerRef} style={{ height: `${images.length * 100}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden flex items-center">
-        <motion.div className="flex gap-[3vw] pl-16" style={{ x }}>
+        <motion.div className="flex gap-[3vw] pl-6 md:pl-16" style={{ x }}>
           {images.map((img, i) => (
-            <div key={i} className="flex-shrink-0 bg-[#ebebeb]" style={{ width: IMG_W }}>
+            <div key={i} className="flex-shrink-0 bg-[#ebebeb]" style={{ width: `${IMG_VW}vw` }}>
               {img.src && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={img.src}
                   alt={img.alt}
-                  width={IMG_W}
                   onLoad={handleLoad}
-                  style={{ width: IMG_W, height: 'auto', display: 'block' }}
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
                 />
               )}
             </div>
