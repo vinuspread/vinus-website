@@ -605,9 +605,11 @@ git show origin/ui-design:src/components/layout/Header.tsx \
 git diff HEAD origin/ui-design -- src/app/\(public\)/work/page.tsx
 # → 레이아웃 변경 부분만 선별하여 적용 (Supabase 데이터 주입 코드는 유지)
 
-# 6. CSS 업데이트: globals.css는 통째로 교체 (우리 스타일은 work-blocks.css에 분리되어 있음)
+# 6. CSS 업데이트: globals.css 교체 후 딱 한 줄만 추가
 git show origin/ui-design:src/app/globals.css > app/globals.css
-# ⚠️ work-blocks.css는 절대 건드리지 말 것 — 우리 work 블록 스타일이 여기에 있음
+# ⚠️ 교체 직후 globals.css 맨 위에 아래 한 줄 추가 (없으면 work 블록 간격이 전부 사라짐)
+#    @import "tailwindcss"; 바로 다음 줄에:
+#    @import "./work-blocks.css";
 
 # 7. 빌드 확인
 npm run build
