@@ -15,6 +15,7 @@
   --font-syne: "Syne", "Pretendard Variable", Pretendard, sans-serif;
   --font-inter: "Inter", sans-serif;
   --font-space: "Space Grotesk", sans-serif;
+  --font-pretendard: "Pretendard Variable", Pretendard, sans-serif;
 
   /* ui-design 토큰 */
   --color-mine-shaft: #2a2a2a;
@@ -211,6 +212,55 @@ html.lenis, html.lenis body {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* ── Typography & Layout Utilities ── */
+
+.display-heading {
+  font-family: var(--font-inter);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.section-label {
+  font-family: var(--font-inter);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgb(42 42 42 / 0.4);
+}
+
+.breadcrumb-label {
+  font-family: var(--font-inter);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgb(42 42 42 / 0.55);
+}
+
+.section-pad {
+  padding: 80px var(--spacing-page-padding);
+}
+.section-pad-large {
+  padding: 120px var(--spacing-page-padding);
+}
+
+.body-text {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: -0.2px;
+  color: rgb(42 42 42 / 0.55);
+}
+.body-text-ko {
+  font-family: var(--font-pretendard);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: rgb(42 42 42 / 0.4);
 }
 
 /* Gallery per-image animations handled by Framer Motion in SequenceGallery.tsx */
