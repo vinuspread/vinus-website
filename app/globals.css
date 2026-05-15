@@ -269,6 +269,16 @@
 .block-spacing-md   { margin-bottom: 64px; }
 .block-spacing-lg   { margin-bottom: 96px; }
 .block-spacing-xl   { margin-bottom: 128px; }
+.block-spacing-2xl  { margin-bottom: 200px; }
+.block-spacing-3xl  { margin-bottom: 240px; }
+@media (max-width: 767px) {
+  .block-spacing-sm  { margin-bottom: 16px; }
+  .block-spacing-md  { margin-bottom: 32px; }
+  .block-spacing-lg  { margin-bottom: 48px; }
+  .block-spacing-xl  { margin-bottom: 64px; }
+  .block-spacing-2xl { margin-bottom: 80px; }
+  .block-spacing-3xl { margin-bottom: 80px; }
+}
 
 /* ── HeadingText Block Reveal Animation ─────────────────── */
 .ht-block-heading,
