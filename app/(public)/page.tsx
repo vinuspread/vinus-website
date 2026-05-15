@@ -1,25 +1,21 @@
-import { createClient } from '@/lib/supabase/server'
-import WorkCard from '@/components/work/WorkCard'
-import type { Work } from '@/types'
+import { HeroSection } from '@/components/sections/HeroSection'
+import { AboutSection } from '@/components/sections/AboutSection'
+import { VideoSection } from '@/components/sections/VideoSection'
+import { ClientsBrandsSection } from '@/components/sections/ClientsBrandsSection'
+import { ImageSliderSection } from '@/components/sections/ImageSliderSection'
+import { AwardsSection } from '@/components/sections/AwardsSection'
+import { LatestNewsSection } from '@/components/sections/LatestNewsSection'
 
-export const revalidate = 3600
-
-export default async function HomePage() {
-  const supabase = await createClient()
-  const { data: works } = await supabase
-    .from('work')
-    .select('*')
-    .eq('is_published', true)
-    .order('sort_order', { ascending: true })
-
+export default function Home() {
   return (
-    <div
-      className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1"
-      aria-label="포트폴리오"
-    >
-      {((works as Work[]) ?? []).map(work => (
-        <WorkCard key={work.id} work={work} />
-      ))}
+    <div className="min-h-screen">
+      <HeroSection />
+      <AboutSection />
+      <VideoSection />
+      <ClientsBrandsSection />
+      <ImageSliderSection />
+      <AwardsSection />
+      <LatestNewsSection />
     </div>
   )
 }

@@ -37,14 +37,7 @@
 
 ---
 
-> ## ⚠️ 디자인 기준
->
-> **기존 사이트 https://www.vinus.co.kr 을 기준으로 디자인하세요.**  
-> 이번 작업은 완전히 새로운 디자인을 만드는 것이 아니라, 기존 디자인을 **최대한 유지하면서 리뉴얼**하는 것입니다.  
-> 폰트·여백·색상·레이아웃 모두 기존 사이트를 기준으로 하되, 더 자연스러운 모션과 반응형을 추가해 주세요.  
-> 페이지별 참고 URL → **섹션 9 참고**
 
----
 
 ## 0. 작업 방식
 
@@ -498,7 +491,7 @@ npm run dev
 
 | URL | 설명 |
 |---|---|
-| https://www.vinus.co.kr | **기존 사이트 — 디자인 기준** |
+| https://www.vinus.co.kr | **기존 사이트** |
 | https://vinus-website.vercel.app | 현재 개발 중인 새 사이트 (기능 구조 참고용) |
 
 ---
@@ -558,3 +551,71 @@ npm run dev
 - **스크롤 진입 애니메이션** — 필요한 요소에 `<BlockMotion motion="fadeIn">` 등 적용 (컴포넌트 이미 개발 완료)
 - **Work/Blog 상세 블록 시스템** — `<BlockRenderer>` 컴포넌트 삽입 위치만 지정, 실제 블록 UI는 개발 완료
 - **CMS 연동** — 개발자가 처리, 퍼블리셔는 더미 데이터로 작업
+
+---
+
+## 10. ui-design 업데이트 반영 워크플로
+
+> **배경:** 안티그래비티는 작업을 `ui-design` 브랜치에 계속 업데이트한다.  
+> 업데이트가 생길 때마다 개발자(바이너스프레드)가 `main` 브랜치에 반영해야 한다.
+
+### 10-1. 파일 분류 (반영 방식 결정에 핵심)
+
+| 분류 | 파일 예시 | 업데이트 방식 |
+|---|---|---|
+| **External-only** (안티그래비티가 100% 소유) | `components/layout/Header.tsx`, `components/layout/Footer.tsx`, `components/sections/*`, `app/(public)/page.tsx`, `app/(public)/we/page.tsx`, `app/(public)/services/page.tsx` | 그대로 덮어쓰기 가능 |
+| **Hybrid** (레이아웃은 안티그래비티, 데이터는 개발자) | `app/(public)/work/page.tsx`, `app/(public)/work/[slug]/page.tsx` | 수동 merge 필요 |
+| **Dev-only** (개발자가 100% 소유) | `components/blocks/*`, `lib/supabase/*`, `types/*`, `app/admin/*` | 절대 sync 금지 |
+
+### 10-2. 업데이트 반영 절차
+
+```bash
+# 1. ui-design 브랜치에서 변경 내용 확인
+git fetch origin ui-design
+git diff main...origin/ui-design -- "ui design/src/"
+
+# 2. External-only 파일: 로컬 ui design/ 폴더를 업데이트 후 복사
+# (외부 팀이 ui design/ 폴더를 새 버전으로 교체했을 때)
+cp "ui design/src/components/layout/Header.tsx"     components/layout/Header.tsx
+cp "ui design/src/components/layout/Footer.tsx"     components/layout/Footer.tsx
+cp "ui design/src/components/sections/*.tsx"        components/sections/
+cp "ui design/src/app/(public)/page.tsx"            app/(public)/page.tsx
+cp "ui design/src/app/(public)/about/page.tsx"      app/(public)/we/page.tsx
+cp "ui design/src/app/(public)/services/page.tsx"   app/(public)/services/page.tsx
+cp "ui design/src/app/globals.css"                  # → globals.css의 해당 섹션만 병합
+
+# 3. Hybrid 파일: diff 확인 후 수동 반영
+git diff origin/ui-design -- "ui design/src/app/(public)/work/page.tsx"
+# → 레이아웃 변경 부분만 선별하여 적용 (Supabase 데이터 주입 코드는 유지)
+
+# 4. CSS 업데이트: ui-design globals.css에서 애니메이션·토큰 변경분만 병합
+# app/globals.css의 "ui-design Animation System" 섹션을 업데이트
+
+# 5. 빌드 확인
+npm run build
+
+# 6. 커밋 & 배포
+git add .
+git commit -m "sync: ui-design 업데이트 반영 (날짜)"
+GH_TOKEN="" git push
+```
+
+### 10-3. Hybrid 파일 merge 가이드
+
+Hybrid 파일에서 **개발자가 추가한 코드**는 아래 주석으로 표시되어 있다.  
+안티그래비티의 업데이트를 반영할 때, 이 주석 블록을 보존하고 나머지만 교체한다.
+
+```tsx
+// [VINUS-CMS-START] — 개발자 추가 영역
+import { createClient } from '@/lib/supabase/server'
+// ... Supabase 쿼리, BlockRenderer 등
+// [VINUS-CMS-END]
+```
+
+### 10-4. 주의사항
+
+- **globals.css**: 우리가 추가한 `@theme inline` 토큰과 block spacing 규칙은 절대 삭제 금지  
+  안티그래비티의 `@theme {}` 섹션(색상·spacing·easing)과 애니메이션 클래스만 업데이트
+- **Header**: nav 항목(`We/Work/Blog/Request`)과 로고 이미지(`/images/h1_logo2.png`)는 항상 유지
+- **Footer**: 바이너스프레드 연락처·SNS·Copyright는 항상 유지
+- 빌드가 실패하면 커밋하지 말 것 (`npm run build` 성공 후 push)
