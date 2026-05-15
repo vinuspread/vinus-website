@@ -1,62 +1,117 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { useReveal } from '@/hooks/useReveal'
-import type { Work } from '@/types'
+import { useLayoutEffect, useRef } from "react";
+import { projects } from "@/lib/projects";
+import { ProjectCard } from "@/components/common/ProjectCard";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+type Category = "All" | "UI/UX" | "Character/Illustration" | "Branding" | "Etc";
 
 interface WorkGridProps {
-  works: Work[]
+  filter?: Category;
+  limit?: number;
+  isSlider?: boolean;
 }
 
-export function WorkGrid({ works }: WorkGridProps) {
-  const revealRef = useReveal()
+export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: WorkGridProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const filtered = (filter === "All" ? projects : projects.filter((p) => p.category === filter))
+    .slice(0, limit);
+  
+  const isSlider = isSliderProp !== undefined ? isSliderProp : filtered.length > 4;
+
+  useLayoutEffect(() => {
+    if (!containerRef.current || !scrollRef.current) return;
+
+    const cards = containerRef.current.querySelectorAll(".project-card-item");
+    
+    // 1. Entry Catch-up & Reveal Animation (Scrub-based for 'push-up' feel)
+    gsap.fromTo(cards, 
+      { 
+        y: 300,
+        x: 100, 
+        scale: 0.9,
+        opacity: 0 
+      },
+      { 
+        y: 0,
+        x: 0,
+        scale: 1,
+        opacity: 1,
+        ease: "power2.out",
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "top top",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        }
+      }
+    );
+
+    // 2. Horizontal Scroll Logic (only if it's a slider)
+    if (isSlider) {
+      const scrollWidth = scrollRef.current.scrollWidth;
+      const viewportWidth = window.innerWidth;
+      const xDistance = Math.max(0, scrollWidth - viewportWidth + 300);
+
+      gsap.to(scrollRef.current, {
+        x: -xDistance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top", // 컨테이너 상단이 뷰포트 상단에 닿을 때 고정
+          end: `+=${xDistance + 800}`,
+          scrub: 1,
+          pin: true,
+          pinSpacing: true,
+          invalidateOnRefresh: true,
+        }
+      });
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    };
+  }, [filtered, isSlider]);
 
   return (
-    <div ref={revealRef as any} className="anim-wrap grid grid-cols-1 md:grid-cols-2">
-      {works.map((work, i) => (
-        <Link
-          key={work.slug}
-          href={`/work/${work.slug}`}
-          className="aspect-[920/640] overflow-hidden relative group border-b border-alto md:even:border-l"
-          data-cursor="VIEW"
-        >
-          <div className="anim-clip w-full h-full">
-            <div
-              className="anim-move-up-img w-full h-full relative"
-              data-delay={i % 2 === 0 ? 0 : 60}
-            >
-              {work.thumbnail_url ? (
-                <Image
-                  src={work.thumbnail_url}
-                  alt={work.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full" style={{ backgroundColor: work.thumbnail_color ?? '#d6d6d6' }} />
-              )}
-            </div>
+    <div 
+      ref={containerRef} 
+      className={`relative w-full ${isSlider ? "overflow-hidden flex items-start pt-[250px]" : "py-24"}`}
+    >
+      <div 
+        ref={scrollRef}
+        className={`
+          flex w-full gap-6 lg:gap-10 px-page-padding py-0
+          ${isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"}
+        `}
+      >
+        {filtered.map((project, i) => (
+          <div 
+            key={project.slug} 
+            className={`
+              project-card-item flex-shrink-0
+              ${isSlider ? "w-[85vw] md:w-[58vw] lg:w-[37vw]" : "w-full"}
+            `}
+          >
+            <ProjectCard
+              src={project.heroImg}
+              alt={project.title}
+              category={project.services}
+              title={project.title}
+              href={`/work/${project.slug}`}
+              index={i}
+            />
           </div>
-
-          <div className="absolute bottom-0 left-0 p-[40px] z-10 w-full pointer-events-none">
-            {work.category && (
-              <p className="text-[13px] text-white/70 uppercase tracking-[-0.3px] mb-2 anim-clip block">
-                <span className="anim-move-up" data-delay={(i % 2) * 60 + 100}>
-                  {work.category}
-                </span>
-              </p>
-            )}
-            <h3 className="text-[24px] text-white uppercase tracking-[-0.7px] leading-tight anim-clip block">
-              <span className="anim-move-up" data-delay={(i % 2) * 60 + 200}>
-                {work.title}
-              </span>
-            </h3>
-          </div>
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        </Link>
-      ))}
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};

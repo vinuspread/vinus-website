@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { useReveal } from '@/hooks/useReveal'
-import { WorkGrid } from '@/components/sections/WorkGrid'
-import type { Work } from '@/types'
+import React from "react";
+import { WorkGrid } from "@/components/sections/WorkGrid";
+import { useReveal } from "@/hooks/useReveal";
 
-export function WorkGridClient({ works }: { works: Work[] }) {
-  const revealRef = useReveal()
+export default function WorkPage() {
+  const revealRef = useReveal();
 
   return (
     <main className="bg-gallery">
@@ -19,11 +19,13 @@ export function WorkGridClient({ works }: { works: Work[] }) {
               </span>
             </h1>
           </div>
+          
           <div className="md:col-span-5 md:col-start-4">
             <p className="text-[20px] font-light leading-[1.5] tracking-[-0.3px] anim-clip block">
               <span className="anim-move-up" data-delay="200">
                 우리는 치밀한 리서치와 전략을 바탕으로 브랜드의 정체성을 강화하고,
                 사용자에게 깊은 인상을 남기는 최상의 디지털 결과물을 만들어냅니다.
+                아래는 바이너스가 진행한 대표적인 프로젝트들입니다.
               </span>
             </p>
           </div>
@@ -31,7 +33,7 @@ export function WorkGridClient({ works }: { works: Work[] }) {
       </section>
 
       {/* Projects Grid */}
-      <WorkGrid works={works} />
+      <WorkGrid />
     </main>
-  )
+  );
 }

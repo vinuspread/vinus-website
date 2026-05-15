@@ -1,35 +1,38 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react'
-import { useReveal } from '@/hooks/useReveal'
-import { cn } from '@/lib/utils'
+import { useState, useEffect, useRef } from "react";
+import { useReveal } from "@/hooks/useReveal";
+import { cn } from "@/lib/utils";
 
-export function VideoSection() {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const revealRef = useReveal()
-  const progressRef = useRef<HTMLDivElement>(null)
+export const VideoSection = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const revealRef = useReveal();
+  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isLoaded && progressRef.current) {
-      progressRef.current.style.width = '100%'
+      progressRef.current.style.width = "100%";
     }
-  }, [isLoaded])
+  }, [isLoaded]);
 
   return (
-    <section ref={revealRef as any} className="anim-wrap h-[1080px] flex items-center justify-center bg-gallery">
-      <div className="relative w-[902px] h-[1080px] bg-alto overflow-hidden">
+    <section ref={revealRef as any} className="anim-wrap bg-gallery border-b border-alto w-full">
+      <div className="relative w-full aspect-video bg-alto overflow-hidden">
+        {/* Loading Overlay */}
         <div className={cn(
-          'absolute inset-0 flex items-center justify-center z-10 bg-alto transition-opacity duration-500',
-          isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          "absolute inset-0 flex items-center justify-center z-10 bg-alto transition-opacity duration-500",
+          isLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
         )}>
           <div className="w-[192px] h-[1px] bg-mine-shaft/10 relative">
-            <div
+            <div 
               ref={progressRef}
-              className="absolute left-0 top-0 h-full bg-[#949494] transition-[width] duration-1000 ease-out"
-              style={{ width: '0%' }}
+              className="absolute left-0 top-0 h-full bg-[#949494] transition-[width] duration-1000 ease-out" 
+              style={{ width: "0%" }}
             />
           </div>
         </div>
+
+        {/* Video */}
         <video
           src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
           autoPlay
@@ -42,5 +45,5 @@ export function VideoSection() {
         />
       </div>
     </section>
-  )
-}
+  );
+};

@@ -1,62 +1,82 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils'
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-const navItems = [
-  { label: 'We',      href: '/we' },
-  { label: 'Work',    href: '/work' },
-  { label: 'Blog',    href: '/blog' },
-  { label: 'Request', href: '/request' },
-]
+export const Header = () => {
+  const pathname = usePathname();
+  const [isHidden, setIsHidden] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
+  const lastYRef = useRef(0);
+  const navRef = useRef<HTMLElement>(null);
 
-export default function Header() {
-  const pathname = usePathname()
-  const [isHidden, setIsHidden] = useState(false)
-  const lastYRef = useRef(0)
-
-  const pageLabel = navItems.find(n => pathname.startsWith(n.href))?.label ?? 'Home'
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
-      const y = window.scrollY
-      setIsHidden(y > lastYRef.current && y > 100)
-      lastYRef.current = y
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      const y = window.scrollY;
+      setIsHidden(isHome ? false : y > lastYRef.current && y > 100);
+      lastYRef.current = y;
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHome]);
+
+  useEffect(() => {
+    if (!isHome) { setIsPastHero(true); return; }
+    const hero = document.querySelector("#hero-section");
+    if (!hero) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setIsPastHero(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(hero);
+    return () => obs.disconnect();
+  }, [isHome]);
+
+  const transparent = isHome && !isPastHero;
 
   return (
     <header
+      ref={navRef}
       className={cn(
-        'fixed top-0 left-0 w-full h-[56px] bg-gallery z-[1000] border-b border-alto px-page-padding flex items-center justify-between transition-transform duration-1000 header-enter',
-        isHidden && 'nav-hidden'
+        "fixed top-0 left-0 w-full h-[80px] z-[1000] px-page-padding flex items-center justify-between transition-all duration-500 header-enter",
+        transparent ? "bg-white/80 backdrop-blur-sm border-b border-transparent" : "bg-white border-b border-transparent",
+        isHidden && "nav-hidden"
       )}
     >
       {/* Left: Logo */}
-      <div className="flex items-center gap-4">
+      <div className="flex-1 flex items-center">
         <Link href="/" className="flex items-center">
-          <Image src="/images/h1_logo2.png" alt="바이너스프레드" width={40} height={40} />
+          <img
+            src="/logo.svg"
+            alt="Vinuspread"
+            className="h-[28px] w-auto"
+          />
         </Link>
-        <div className="hidden md:flex items-center gap-2 text-mine-shaft/40 text-[14px]">
-          <span className="nav-dash bg-alto h-[1px]" />
-          {pageLabel}
-        </div>
       </div>
 
+
+
       {/* Right: Nav */}
-      <nav className="flex items-center gap-8">
-        {navItems.map((item) => (
+      <nav className="flex-1 flex items-center justify-end gap-12">
+        {[
+          { label: "vinuspread", href: "/about" },
+          { label: "experience", href: "/work" },
+          { label: "services", href: "/services" },
+          { label: "story", href: "/story" },
+          { label: "Contact", href: "/contact" },
+        ].map((item) => (
           <Link
             key={item.label}
             href={item.href}
             className={cn(
-              'text-[12px] uppercase tracking-wider hover:opacity-50 transition-opacity hidden md:block',
-              pathname.startsWith(item.href) && 'opacity-50'
+              "text-[16px] uppercase tracking-wider transition-all duration-500 font-inter font-bold",
+              pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-40 hover:opacity-100"
             )}
           >
             {item.label}
@@ -64,5 +84,5 @@ export default function Header() {
         ))}
       </nav>
     </header>
-  )
-}
+  );
+};

@@ -23,13 +23,19 @@ const B2_LINES = [
   },
 ];
 
+/**
+ * HeroSectionV2 - Stable Stepped Version
+ * Uses Observer for the premium "stepped" feel requested by the user.
+ * Features a seamless "stacking" transition to the portfolio.
+ * B3 exit: ScrollTrigger scrub animates B3 text upward as portfolio slides in.
+ */
 export const HeroSectionV2 = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const b3ContentRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState<string | null>(null);
-  const [, setIndexState] = useState(0);
+  const [indexState, setIndexState] = useState(0);
   const currentIndex = useRef(0);
   const isAnimating = useRef(false);
   const exitTriggerRef = useRef<ScrollTrigger | null>(null);
@@ -49,74 +55,162 @@ export const HeroSectionV2 = () => {
   }, []);
 
   useLayoutEffect(() => {
-    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
-    window.scrollTo(0, 0);
-
     gsap.registerPlugin(Observer, ScrollTrigger);
     const ctx = gsap.context(() => {
+      // 1. Initial Reveals
       gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.5 });
       gsap.fromTo(
         ".b1-word",
         { opacity: 0, y: 30 },
         {
-          opacity: 1, y: 0,
+          opacity: 1,
+          y: 0,
           stagger: { amount: 0.8, from: "random" },
-          duration: 1.2, delay: 0.8, ease: "power2.out",
+          duration: 1.2,
+          delay: 0.8,
+          ease: "power2.out",
         }
       );
 
+      // B3 exit ScrollTrigger: syncs with window scroll 0 → 100vh
+      // As the portfolio rises from below, B3 text rises and fades out simultaneously
       const registerExitTrigger = () => {
-        if (exitTriggerRef.current) { exitTriggerRef.current.kill(); exitTriggerRef.current = null; }
+        if (exitTriggerRef.current) {
+          exitTriggerRef.current.kill();
+          exitTriggerRef.current = null;
+        }
         if (!b3ContentRef.current) return;
+
+        // Reset position before registering
         gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
+
         const exitAnim = gsap.to(b3ContentRef.current, {
-          y: -window.innerHeight, opacity: 1, ease: "none", paused: true,
+          y: -window.innerHeight, // 포트폴리오가 올라오는 만큼 똑같이 위로 이동
+          opacity: 1, // 사라지지 않고 포트폴리오에 가려질 때까지 유지
+          ease: "none",
+          paused: true,
         });
+
+        // Trigger-less: directly watches scroll position 0 → 100vh
+        // Hero is sticky so at scrollY=0 portfolio is just below viewport,
+        // at scrollY=100vh portfolio top reaches viewport top
         exitTriggerRef.current = ScrollTrigger.create({
           id: "hero-b3-exit",
-          start: 0, end: window.innerHeight, scrub: 1, animation: exitAnim,
+          start: 0,
+          end: window.innerHeight, // 100vh 구간 동안 텍스트 퇴장 및 포트폴리오 진입 동기화
+          scrub: 1,
+          animation: exitAnim,
           onUpdate: (self) => {
-            if (self.progress === 0) gsap.set(b3ContentRef.current!, { y: 0, opacity: 1 });
+            // Safety: if user hasn't scrolled yet, keep B3 visible
+            if (self.progress === 0) {
+              gsap.set(b3ContentRef.current!, { y: 0, opacity: 1 });
+            }
           },
         });
       };
 
       const killExitTrigger = () => {
-        if (exitTriggerRef.current) { exitTriggerRef.current.kill(); exitTriggerRef.current = null; }
-        if (b3ContentRef.current) gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
+        if (exitTriggerRef.current) {
+          exitTriggerRef.current.kill();
+          exitTriggerRef.current = null;
+        }
+        // Reset visual state
+        if (b3ContentRef.current) {
+          gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
+        }
       };
 
       const animateTo = (newIndex: number) => {
         if (isAnimating.current) return;
         isAnimating.current = true;
+
         const lenis = (window as any).__lenis;
         if (lenis && newIndex < 2) lenis.stop();
-        if (currentIndex.current === 2 && newIndex < 2) killExitTrigger();
+
+        // If going back from B3, kill exit trigger
+        if (currentIndex.current === 2 && newIndex < 2) {
+          killExitTrigger();
+        }
 
         const tl = gsap.timeline({
           onComplete: () => {
             isAnimating.current = false;
             currentIndex.current = newIndex;
             setIndexState(newIndex);
-            if (lenis && newIndex === 2) { lenis.start(); registerExitTrigger(); }
+
+            // B3 도달 → lenis 시작, content-container가 자연스럽게 올라오며 B3를 덮음
+            if (lenis && newIndex === 2) {
+              lenis.start();
+              registerExitTrigger();
+            }
           }
         });
 
         tl.to(sliderRef.current, { yPercent: -newIndex * 100, duration: 1.5, ease: "power4.inOut" }, 0);
+        
+        // 이전 모든 슬라이드 텍스트 일괄 퇴장 처리
         tl.to(".b1-word, .b2-word, .b3-word", { opacity: 0, y: -20, duration: 0.4 }, 0);
 
-        if (newIndex === 0) {
-          tl.fromTo(".b1-word", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.0, stagger: { amount: 0.6, from: "random" }, ease: "power2.out" }, 0.4);
-        } else if (newIndex === 1) {
-          tl.fromTo(".b2-word", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 2.0, stagger: { amount: 1.5, from: "random" }, ease: "power2.out" }, 0.8);
-        } else if (newIndex === 2) {
-          tl.fromTo(".b3-word", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.0, stagger: { amount: 0.6, from: "random" }, ease: "power2.out" }, 0.4);
+        const isB1 = newIndex === 0;
+        const isB2 = newIndex === 1;
+        const isB3 = newIndex === 2;
+
+        if (isB1) {
+          // B1: 단어별로 랜덤하게 등장
+          tl.fromTo(
+            ".b1-word",
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.0,
+              stagger: { amount: 0.6, from: "random" },
+              ease: "power2.out",
+            },
+            0.4
+          );
+        } else if (isB2) {
+          // B2: 단어별로 훨씬 더 느리고 긴 호흡으로 등장
+          tl.fromTo(
+            ".b2-word",
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 2.0, // 더 느리게
+              stagger: { amount: 1.5, from: "random" }, // 시간차 대폭 확장
+              ease: "power2.out",
+            },
+            0.8 // 등장 딜레이 추가
+          );
+        } else if (isB3) {
+          // B3: 단어별로 랜덤하게 등장
+          tl.fromTo(
+            ".b3-word",
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1.0,
+              stagger: { amount: 0.6, from: "random" },
+              ease: "power2.out",
+            },
+            0.4
+          );
         }
 
+        // Stacking Sync: Manage the sticky parent's z-index to allow Portfolio to cover at the right time
         const stickyParent = containerRef.current?.parentElement;
-        if (stickyParent) gsap.set(stickyParent, { zIndex: newIndex === 2 ? 10 : 30 });
+        if (stickyParent) {
+          if (newIndex === 2) {
+            gsap.set(stickyParent, { zIndex: 10 });
+          } else {
+            gsap.set(stickyParent, { zIndex: 30 });
+          }
+        }
       };
 
+      // Initial Parent Z-Index
       const stickyParent = containerRef.current?.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
 
@@ -139,7 +233,6 @@ export const HeroSectionV2 = () => {
         preventDefault: false,
       });
     }, containerRef);
-
     return () => {
       exitTriggerRef.current?.kill();
       ctx.revert();
@@ -163,7 +256,9 @@ export const HeroSectionV2 = () => {
               <div key={i} className="py-1">
                 {line.text.split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
-                    <span className={`b1-word inline-block translate-y-[100%] opacity-0 ${line.bold ? "font-bold" : "font-normal"}`}>{word}</span>
+                    <span className={`b1-word inline-block translate-y-[100%] opacity-0 ${line.bold ? "font-bold" : "font-normal"}`}>
+                      {word}
+                    </span>
                   </span>
                 ))}
               </div>
@@ -171,11 +266,17 @@ export const HeroSectionV2 = () => {
           </div>
           <div className="mt-4">
             <div className="font-pretendard text-[16px] font-medium text-mine-shaft/40 leading-[1.5] max-w-[900px]">
-              {["빠르게 변화하는 세상 속에서, 우리는 경험의 본질에 집중합니다.", "명확한 구조와 목적을 바탕으로 제품을 설계하고 관리합니다.", "우리는 VINUSPREAD 입니다."].map((line, i) => (
+              {[
+                "빠르게 변화하는 세상 속에서, 우리는 경험의 본질에 집중합니다.",
+                "명확한 구조와 목적을 바탕으로 제품을 설계하고 관리합니다.",
+                "우리는 VINUSPREAD 입니다."
+              ].map((line, i) => (
                 <div key={i} className="py-0.5">
                   {line.split(" ").map((word, j) => (
                     <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
-                      <span className="b1-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                      <span className="b1-word inline-block translate-y-[100%] opacity-0">
+                        {word}
+                      </span>
                     </span>
                   ))}
                 </div>
@@ -191,14 +292,18 @@ export const HeroSectionV2 = () => {
               <div key={i} className="py-2 whitespace-nowrap overflow-hidden" style={{ fontSize: line.size }}>
                 {line.text.split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
-                    <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                    <span className="b2-word inline-block translate-y-[100%] opacity-0">
+                      {word}
+                    </span>
                   </span>
                 ))}
                 {line.highlight && (
                   <div className="w-full mt-2 whitespace-nowrap overflow-hidden" style={{ fontSize: line.highlightSize }}>
                     {line.highlight.split(" ").map((word, k) => (
                       <span key={k} className="inline-block mr-[0.3em] overflow-hidden">
-                        <span className="b2-word inline-block font-black translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
+                        <span className="b2-word inline-block font-black translate-y-[100%] opacity-0 text-mine-shaft">
+                          {word}
+                        </span>
                       </span>
                     ))}
                   </div>
@@ -210,33 +315,58 @@ export const HeroSectionV2 = () => {
             <p className="font-pretendard text-[16px] font-medium text-mine-shaft/40 leading-[1.5]">
               {"우리는 의미 있는 제품 경험의 본질에 집중합니다.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
-                  <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                  <span className="b2-word inline-block translate-y-[100%] opacity-0">
+                    {word}
+                  </span>
                 </span>
               ))}
             </p>
           </div>
         </div>
 
-        {/* Block 3 */}
+        {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
         <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-6 will-change-transform">
           <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft text-[clamp(32px,3.5vw,48px)]">
-            {["We turn product thinking into experience.", "Structured for clarity and sustainable growth.", "VINUSPREAD."].map((line, i) => (
-              <div key={i} className="py-1">
-                {line.split(" ").map((word, j) => (
-                  <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
-                    <span className={`b3-word inline-block translate-y-[100%] opacity-0 ${i === 2 ? "font-black" : ""}`}>{word}</span>
+            <div className="py-1">
+              {"We turn product thinking into experience.".split(" ").map((word, i) => (
+                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
+                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                    {word}
                   </span>
-                ))}
-              </div>
-            ))}
+                </span>
+              ))}
+            </div>
+            <div className="py-1">
+              {"Structured for clarity and sustainable growth.".split(" ").map((word, i) => (
+                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
+                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </div>
+            <div className="py-1">
+              {"VINUSPREAD.".split(" ").map((word, i) => (
+                <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
+                  <span className="b3-word inline-block font-black translate-y-[100%] opacity-0">
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </div>
           </div>
           <div className="py-1">
             <div className="font-pretendard text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
-              {["우리는 제품 관점을 경험으로 만듭니다. 명확한 구조 위에서, 지속 가능한 성장을 설계합니다.", "VINUSPREAD"].map((line, i) => (
+              {[
+                "우리는 제품 관점을 경험으로 만듭니다. 명확한 구조 위에서, 지속 가능한 성장을 설계합니다.",
+                "VINUSPREAD"
+              ].map((line, i) => (
                 <div key={i} className="py-0.5">
                   {line.split(" ").map((word, j) => (
                     <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
-                      <span className="b3-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                      <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                        {word}
+                      </span>
                     </span>
                   ))}
                 </div>
@@ -245,13 +375,16 @@ export const HeroSectionV2 = () => {
           </div>
           <div className="py-2">
             <div className="flex gap-12">
-              {[{ href: "/work", label: "View Experience" }, { href: "/request", label: "Start a Project" }].map(({ href, label }) => (
-                <span key={href} className="overflow-hidden">
-                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                    <ArrowLink href={href} className="text-[24px] font-semibold gap-6">{label}</ArrowLink>
-                  </span>
+              <span className="overflow-hidden">
+                <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                  <ArrowLink href="/work" className="text-[24px] font-semibold gap-6">View Experience</ArrowLink>
                 </span>
-              ))}
+              </span>
+              <span className="overflow-hidden">
+                <span className="b3-word inline-block translate-y-[100%] opacity-0">
+                  <ArrowLink href="/contact" className="text-[24px] font-semibold gap-6">Start a Project</ArrowLink>
+                </span>
+              </span>
             </div>
           </div>
         </div>

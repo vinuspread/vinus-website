@@ -1,73 +1,76 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { DoubleButton } from '@/components/common/DoubleButton'
-import { useReveal } from '@/hooks/useReveal'
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowLink } from "@/components/common/ArrowLink";
+import { useReveal } from "@/hooks/useReveal";
+import { stories } from "@/lib/stories";
 
-const articles = [
-  {
-    image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=860&h=742&fit=crop&auto=format&q=80',
-    tag: 'Article',
-    date: '3 Feb 2024',
-    readTime: '4 Min Read',
-    title: 'Why Strong Brand Identity Is Important in Web Design',
-  },
-  {
-    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=860&h=742&fit=crop&auto=format&q=80',
-    tag: 'Article',
-    date: '3 Mar 2024',
-    readTime: '4 Min Read',
-    title: 'The Benefits of Aligning Your Team with Your Business Objectives',
-  },
-]
+const latest = [...stories].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 2);
 
-export function LatestNewsSection() {
-  const revealRef = useReveal()
+export const LatestNewsSection = () => {
+  const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap pt-[80px] px-page-padding bg-gallery pb-[120px]">
-      <div className="flex justify-between items-end mb-6">
-        <h2 className="text-[46.5px] tracking-[-1.6px] uppercase leading-none">
-          <span className="anim-clip">
-            <span className="anim-move-up">Latest news</span>
+    <section ref={revealRef as any} className="anim-wrap section-pad bg-gallery">
+      {/* Header Row */}
+      <div className="flex justify-between items-end mb-12">
+        <h2 className="display-heading uppercase">
+          <span className="block overflow-hidden">
+            <span className="anim-move-up block">Ideas & Insights</span>
           </span>
         </h2>
         <div className="anim-clip">
           <div className="anim-move-up" data-delay="100">
-            <DoubleButton labelFront="View All" href="/blog" />
+            <ArrowLink href="/story">View All</ArrowLink>
           </div>
         </div>
       </div>
 
-      <div className="w-full h-px bg-[#ccc4b9]/30 anim-fill-width" />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-[48px] pt-[38.4px]">
-        {articles.map((article, idx) => (
-          <a key={idx} href="/blog" className="flex-1 grid grid-cols-2 gap-[38.4px] h-[411px]">
-            <div className="aspect-[429/371] relative overflow-hidden anim-clip">
+      {/* Articles Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-column border-t border-alto pt-12">
+        {latest.map((story, idx) => (
+          <Link key={story.slug} href={`/story/${story.slug}`} className="group flex flex-col gap-6">
+            {/* Image */}
+            <div className="aspect-[16/10] relative overflow-hidden">
               <div className="anim-move-up-img w-full h-full relative" data-delay={idx * 150}>
-                <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-700 hover:scale-105" />
+                {story.thumbnail ? (
+                  <Image
+                    src={story.thumbnail}
+                    alt={story.title}
+                    fill
+                    className="object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-alto/40" />
+                )}
               </div>
             </div>
+            {/* Content */}
             <div className="flex flex-col gap-3">
-              <p className="text-[16px] uppercase tracking-[-0.38px] font-normal">
-                <span className="anim-clip block">
-                  <span className="anim-move-up" data-delay={idx * 150 + 100}>
-                    {article.tag} <span className="mx-1 text-[#ccc4b9]">•</span> {article.date} <span className="mx-1 text-[#ccc4b9]">•</span> {article.readTime}
+              <p className="section-label opacity-40">
+                <span className="block overflow-hidden">
+                  <span className="anim-move-up block" data-delay={idx * 150 + 100}>
+                    {story.category} · {story.date}
                   </span>
                 </span>
               </p>
-              <h3 className="text-[26.9px] tracking-[-0.86px] uppercase leading-[1.2] font-normal">
-                {article.title.split(' ').map((word, i) => (
-                  <span key={i} className="anim-clip mr-[0.2em] inline-block">
-                    <span className="anim-move-up" data-delay={idx * 150 + 200 + i * 30}>{word}</span>
+              <h3 className="text-[24px] tracking-[-0.02em] leading-[1.3] font-bold group-hover:opacity-60 transition-opacity">
+                <span className="block overflow-hidden">
+                  <span className="anim-move-up block" data-delay={idx * 150 + 180}>
+                    {story.title}
                   </span>
-                ))}
+                </span>
               </h3>
+              {story.summary && (
+                <p className="body-text-ko !text-[14px] line-clamp-2">
+                  {story.summary}
+                </p>
+              )}
             </div>
-          </a>
+          </Link>
         ))}
       </div>
     </section>
-  )
-}
+  );
+};

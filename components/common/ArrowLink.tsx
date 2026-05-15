@@ -18,19 +18,19 @@ export const ArrowLink = ({ href, children, className = "", external, ...props }
 
   const ArrowIcon = () => (
     <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center overflow-hidden">
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
+      <svg 
+        width="20" 
+        height="20" 
+        viewBox="0 0 20 20" 
+        fill="none" 
         xmlns="http://www.w3.org/2000/svg"
         className="transition-transform duration-500 ease-out group-hover:translate-x-1 group-hover:-translate-y-1"
       >
-        <path
-          d="M4.5 15.5L15.5 4.5M15.5 4.5H6.5M15.5 4.5V13.5"
-          stroke="currentColor"
-          strokeWidth="1.2"
-          strokeLinecap="square"
+        <path 
+          d="M4.5 15.5L15.5 4.5M15.5 4.5H6.5M15.5 4.5V13.5" 
+          stroke="currentColor" 
+          strokeWidth="1.2" 
+          strokeLinecap="square" 
           strokeLinejoin="round"
         />
       </svg>

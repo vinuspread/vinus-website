@@ -17,20 +17,24 @@ export const Marquee = ({ text, speed = 50, className = "" }: MarqueeProps) => {
     if (!containerRef.current || !textRef.current) return;
 
     const textWidth = textRef.current.offsetWidth;
-
+    
+    // Create an infinite loop using GSAP
     const tl = gsap.timeline({ repeat: -1 });
+    
     tl.to(textRef.current, {
       x: -textWidth / 2,
       duration: textWidth / speed,
       ease: "none",
     });
 
-    return () => { tl.kill(); };
+    return () => {
+      tl.kill();
+    };
   }, [text, speed]);
 
   return (
-    <div
-      ref={containerRef}
+    <div 
+      ref={containerRef} 
       className={`overflow-hidden whitespace-nowrap w-full bg-transparent ${className}`}
     >
       <div ref={textRef} className="inline-block bg-transparent">

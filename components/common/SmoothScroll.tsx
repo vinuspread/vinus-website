@@ -30,6 +30,7 @@ export const SmoothScroll = () => {
     };
   }, []);
 
+  // Fail-safe: Restart lenis and refresh ScrollTrigger on route change
   useEffect(() => {
     const lenis = (window as any).__lenis;
     if (lenis) {

@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import JsonLd from '@/components/seo/JsonLd'
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
 
@@ -52,8 +59,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
-      <body>
+    <html lang="ko" className={inter.variable} suppressHydrationWarning>
+      <head>
+        <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+      </head>
+      <body suppressHydrationWarning>
         <JsonLd data={organizationLd} />
         <JsonLd data={websiteLd} />
         {children}
