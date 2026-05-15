@@ -4,22 +4,22 @@ import { useReveal } from "@/hooks/useReveal";
 
 const clientLogos = Array.from({ length: 28 }, (_, i) => ({
   name: `client-${String(i + 1).padStart(2, "0")}`,
-  src: `/logos/logo${String(i + 1).padStart(2, "0")}.svg`,
+  src: `/images/logos/logo${String(i + 1).padStart(2, "0")}.svg`,
 }));
 
 const brands = [
-  { name: "DongA Onbook",       services: "Branding — Digital Design — Web Development" },
-  { name: "Samyang",            services: "Digital Design — Web Development" },
-  { name: "Lotte Cinema",       services: "UX/UI Design — App Development" },
-  { name: "Samsung Electronics",services: "Digital Design — Creative Direction" },
-  { name: "Seoul Paik Hospital",services: "Digital Design — Web Development" },
-  { name: "Realty 114",         services: "Strategy — UX/UI Design — App Development" },
-  { name: "Macadamia",          services: "Strategy — UX/UI Design" },
-  { name: "Smart City Jungnang",services: "Strategy — Digital Design" },
-  { name: "CJ CheilJedang",     services: "Digital Design — Creative Direction" },
-  { name: "Hankook Tire",       services: "Digital Design — Web Development" },
-  { name: "Nexon",              services: "Brand Identity — Digital Design" },
-  { name: "LG Electronics",     services: "Digital Design — UX/UI" },
+  { name: "DongA Onbook",       services: "Branding ??Digital Design ??Web Development" },
+  { name: "Samyang",            services: "Digital Design ??Web Development" },
+  { name: "Lotte Cinema",       services: "UX/UI Design ??App Development" },
+  { name: "Samsung Electronics",services: "Digital Design ??Creative Direction" },
+  { name: "Seoul Paik Hospital",services: "Digital Design ??Web Development" },
+  { name: "Realty 114",         services: "Strategy ??UX/UI Design ??App Development" },
+  { name: "Macadamia",          services: "Strategy ??UX/UI Design" },
+  { name: "Smart City Jungnang",services: "Strategy ??Digital Design" },
+  { name: "CJ CheilJedang",     services: "Digital Design ??Creative Direction" },
+  { name: "Hankook Tire",       services: "Digital Design ??Web Development" },
+  { name: "Nexon",              services: "Brand Identity ??Digital Design" },
+  { name: "LG Electronics",     services: "Digital Design ??UX/UI" },
 ];
 
 export const ClientsBrandsSection = () => {
@@ -28,7 +28,7 @@ export const ClientsBrandsSection = () => {
   return (
     <section ref={ref as any} className="anim-wrap px-page-padding py-[120px] bg-white">
 
-      {/* 클라이언트 로고 */}
+      {/* ?�라?�언??로고 */}
       <div className="mb-[140px]">
         <p className="anim-move-up font-inter font-bold text-[11px] tracking-[0.2em] uppercase text-mine-shaft/40 mb-[60px]">
           ( Clients )
@@ -50,7 +50,7 @@ export const ClientsBrandsSection = () => {
         </div>
       </div>
 
-      {/* 브랜드 리스트 */}
+      {/* 브랜??리스??*/}
       <div>
         <p className="anim-move-up font-inter font-bold text-[11px] tracking-[0.2em] uppercase text-mine-shaft/40 mb-[60px]">
           ( Brands We&apos;ve Worked With )
@@ -79,7 +79,7 @@ export const ClientsBrandsSection = () => {
                 </span>
               </div>
               <div className="col-span-1 text-right font-inter text-[12px] text-mine-shaft/25 group-hover:text-mine-shaft/60 transition-colors">
-                →
+                ??
               </div>
             </div>
           ))}

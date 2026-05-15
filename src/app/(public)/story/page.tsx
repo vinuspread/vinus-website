@@ -68,6 +68,7 @@ export default function StoryPage() {
                         alt={story.title}
                         fill
                         className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+                        data-pin-nopin="true"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center opacity-20">
@@ -78,9 +79,9 @@ export default function StoryPage() {
                 </div>
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-3">
-                    <span className="section-label !text-[10px] opacity-40">{story.category}</span>
+                    <span className="section-label !text-[12px] opacity-40">{story.category}</span>
                     <span className="w-1 h-1 bg-mine-shaft/10 rounded-full" />
-                    <span className="section-label !text-[10px] opacity-20">{story.date}</span>
+                    <span className="section-label !text-[12px] opacity-20">{story.date}</span>
                   </div>
                   <h3 className="text-[20px] font-medium leading-[1.3] tracking-tight group-hover:opacity-60 transition-opacity">
                     {story.title}

@@ -26,10 +26,10 @@ export const Footer = () => {
 
   return (
     <footer ref={revealRef as any} className="anim-wrap text-mine-shaft">
-      {/* 9-2. Footer Inner */}
+      {/* Footer Inner */}
       <div className="px-page-padding py-[80px] flex flex-col justify-between">
         <div className="flex flex-col md:grid md:grid-cols-8 md:gap-column">
-          {/* Next Page 영역 */}
+          {/* Next Page */}
           <div className="md:col-span-4 mb-[48px] md:mb-[64px]">
             <p className="text-[12px] md:text-[17.1px] uppercase tracking-[-0.38px] mb-4">
               <span className="anim-clip">
@@ -63,13 +63,12 @@ export const Footer = () => {
             </Link>
           </div>
 
-          {/* Spacer for 8-column layout */}
           <div className="hidden md:block col-span-4" />
 
-          {/* Contact 영역 */}
+          {/* Contact */}
           <div className="md:col-span-2 flex flex-col gap-6 mb-12 md:mb-0">
             <div className="flex flex-col gap-2">
-              <p className="text-[14px] md:text-[15px] uppercase tracking-widest text-mine-shaft font-inter">
+              <p className="text-[14px] md:text-[15px] uppercase tracking-normal text-mine-shaft font-inter">
                 <span className="anim-clip block">
                   <span className="anim-move-up" data-delay="300">CONTACT</span>
                 </span>
@@ -77,7 +76,7 @@ export const Footer = () => {
               <p className="text-[14px] md:text-[16px] font-medium leading-[1.6] md:leading-[1.5] tracking-[-0.3px] text-mine-shaft/60">
                 <span className="anim-clip block">
                   <span className="anim-move-up" data-delay="350">
-                    아이디어를 더 가치 있는 경험으로 만들 준비가 되어 있습니다.<br />
+                    아이디어를 가치있는 경험으로 만들 준비가 되어 있습니다.<br />
                     우리와 함께 다음 가능성을 시작해보세요.
                   </span>
                 </span>
@@ -90,18 +89,17 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Spacer */}
           <div className="hidden md:block col-span-2" />
 
           {/* Business Enquiries & Open Positions */}
           <div className="md:col-span-2 flex flex-col gap-8 md:gap-12 mb-10 md:mb-0">
             <div>
-              <p className="text-[11px] md:text-[14.9px] text-mine-shaft/40 uppercase mb-2">Business enquiries</p>
+              <p className="text-[12px] md:text-[14.9px] text-mine-shaft/40 uppercase mb-2">Business enquiries</p>
               <p className="text-[14px] md:text-[16.9px]">vinus@vinus.co.kr</p>
               <p className="text-[14px] md:text-[16.9px] text-mine-shaft/60 mt-1">TEL : 02-3661-1907 &nbsp; FAX : 02-3661-1906</p>
             </div>
             <div>
-              <p className="text-[11px] md:text-[15px] text-mine-shaft/40 uppercase mb-2">Open Positions</p>
+              <p className="text-[12px] md:text-[15px] text-mine-shaft/40 uppercase mb-2">Open Positions</p>
               <a href="mailto:vinus@vinus.co.kr" className="text-[14px] md:text-[16.9px] hover:underline underline-offset-4">
                 vinus@vinus.co.kr
               </a>
@@ -111,12 +109,12 @@ export const Footer = () => {
           {/* Business Hours & Address */}
           <div className="md:col-span-2 flex flex-col gap-8 md:gap-12">
             <div>
-              <p className="text-[11px] md:text-[15px] text-mine-shaft/40 uppercase mb-2">Business Hours</p>
+              <p className="text-[12px] md:text-[15px] text-mine-shaft/40 uppercase mb-2">Business Hours</p>
               <p className="text-[14px] md:text-[16.8px] uppercase">Monday to Friday</p>
               <p className="text-[14px] md:text-[16.5px] uppercase text-mine-shaft/60 mt-1">10:00 AM – 18:00 PM GMT (+9)</p>
             </div>
             <div>
-              <p className="text-[11px] md:text-[15.1px] text-mine-shaft/40 uppercase mb-2">KOREA</p>
+              <p className="text-[12px] md:text-[15.1px] text-mine-shaft/40 uppercase mb-2">KOREA</p>
               <address className="text-[14px] md:text-[16.5px] not-italic">
                 07802 서울시 강서구 공항대로 227, 1202호
               </address>
@@ -125,11 +123,11 @@ export const Footer = () => {
         </div>
       </div>
 
-      {/* 9-3. Footer Meta 하단 바 */}
+      {/* Footer Meta */}
       <div className="h-[77px] border-t border-alto px-page-padding flex items-center">
         <div className="grid grid-cols-8 w-full items-center">
           <div className="col-span-4 md:col-span-2 flex items-center">
-            <img src="/logo.svg" alt="Vinuspread" className="h-[16px] w-auto" />
+            <img src="/images/logo.svg" alt="Vinuspread" className="h-[16px] w-auto" data-pin-nopin="true" />
           </div>
           <div className="hidden md:flex col-span-2 md:col-span-4 justify-center gap-[38.4px] text-[15.5px]">
             <a href="#" className="hover:underline underline-offset-4">instagram</a>
@@ -138,7 +136,7 @@ export const Footer = () => {
             <a href="#" className="hover:underline underline-offset-4">vinorleague</a>
           </div>
           <div className="col-span-4 md:col-span-2 text-right">
-            <button 
+            <button
               onClick={scrollToTop}
               className="text-[13px] md:text-[15.1px] uppercase hover:underline underline-offset-4"
             >

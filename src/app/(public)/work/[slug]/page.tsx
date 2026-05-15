@@ -1,172 +1,286 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { projects } from "@/lib/projects";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Marquee } from "@/components/common/Marquee";
+import { DetailNavBar } from "@/components/common/DetailNavBar";
 
-const getProject = (slug: string) => projects.find((p) => p.slug === slug);
-
-interface ProjectPageProps {
-  params: Promise<{
-    slug: string;
-  }>;
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
 }
 
-export async function generateMetadata({ params }: ProjectPageProps) {
-  const { slug } = await params;
-  const project = getProject(slug);
-  if (!project) return { title: "Project Not Found — DashDigital®" };
-  return { title: `${project.title} — DashDigital®` };
-}
-
-export default async function ProjectPage({ params }: ProjectPageProps) {
-  const { slug } = await params;
-  const project = getProject(slug);
+export default function ProjectPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
+  const project = projects.find((p) => p.slug === slug);
+  
   if (!project) notFound();
 
   const currentIndex = projects.findIndex((p) => p.slug === project.slug);
   const nextProject = projects[(currentIndex + 1) % projects.length];
+  const prevProject = projects[(currentIndex - 1 + projects.length) % projects.length];
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(".reveal-text", {
+        y: 100,
+        opacity: 0,
+        duration: 1.2,
+        stagger: 0.1,
+        ease: "power4.out",
+      });
+
+      gsap.from(".reveal-img", {
+        scale: 1.1,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power2.out",
+      });
+
+      ScrollTrigger.batch(".scroll-reveal", {
+        onEnter: (elements) => {
+          gsap.fromTo(elements, 
+            { y: 50, opacity: 0 },
+            { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", overwrite: true }
+          );
+        },
+        once: true
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <main className="bg-white">
-      {/* 1. Hero 섹션 */}
-      <section className="relative w-full h-[80vh] overflow-hidden bg-[#0a0a0a]">
-        <Image 
-          src={project.heroImg} 
-          alt={project.title} 
-          fill 
-          className="object-cover opacity-80" 
+    <main ref={containerRef} className="bg-white selection:bg-mine-shaft selection:text-white">
+      {/* 1. Hero Section - Full width but max-content width within it */}
+      <section data-header-dark className="relative w-full h-[90vh] min-h-[700px] overflow-hidden bg-black">
+        <Image
+          src={project.heroImg}
+          alt={project.title}
+          fill
+          className="object-cover opacity-90 reveal-img"
           priority
+          data-pin-nopin="true"
         />
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute bottom-0 left-0 p-page-padding pb-[80px] z-10 w-full">
-          <p className="text-[14px] text-white/70 uppercase tracking-[0.2em] mb-6 font-inter">
-            {project.services}
-          </p>
-          <h1 className="leading-[0.9] tracking-[-0.04em] text-white uppercase max-w-[1400px] font-inter font-normal" style={{ fontSize: "clamp(60px, 8vw, 120px)" }}>
-            {project.title.split(' ').map((word, i) => (
-              <span key={i} className={i % 2 === 1 ? "font-bold" : ""}>
-                {word}{' '}
-              </span>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+        
+        <div className="absolute inset-0 flex flex-col justify-end pb-[10vh] px-page-padding">
+          <div className="max-w-[1920px] mx-auto w-full">
+            {/* Category/Year 제거됨 */}
+            <div className="overflow-hidden">
+              <h1 className="reveal-text leading-[0.85] tracking-[-0.05em] text-white uppercase font-inter font-bold" style={{ fontSize: "clamp(50px, 8vw, 140px)" }}>
+                {project.title}
+              </h1>
+            </div>
+            {project.subtitle && (
+              <div className="overflow-hidden mt-8 max-w-[800px]">
+                <p className="reveal-text text-[18px] md:text-[24px] text-white/70 font-inter font-light leading-relaxed">
+                  {project.subtitle}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Metadata Bar - 1920px constrained */}
+      <section className="border-b border-alto bg-white">
+        <div className="max-w-[1920px] mx-auto px-page-padding py-12 md:py-20">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-20">
+            {[
+              { label: "Client", value: project.client },
+              { label: "Category", value: project.category },
+              { label: "Services", value: project.services },
+              { label: "Awards", value: project.awards || "—" },
+            ].map(({ label, value }, i) => (
+              <div key={label} className="flex flex-col gap-4 scroll-reveal">
+                <span className="text-[12px] uppercase tracking-normal text-mine-shaft/30 font-inter font-bold">
+                  {label}
+                </span>
+                <span className="text-[20px] md:text-[24px] text-mine-shaft font-medium leading-tight">
+                  {value}
+                </span>
+              </div>
             ))}
-          </h1>
-          {project.subtitle && (
-            <p className="text-[17px] text-white/60 uppercase tracking-[0.1em] mt-8 font-inter max-w-[800px] leading-relaxed">
-              {project.subtitle}
-            </p>
-          )}
+          </div>
         </div>
       </section>
 
-      {/* 2. Meta Bar 섹션 */}
-      <section className="px-page-padding bg-white border-b border-alto grid grid-cols-2 md:grid-cols-4">
-        {[
-          { label: "Year", value: project.year },
-          { label: "Client", value: project.client },
-          { label: "Services", value: project.services },
-          { label: "Awards", value: project.awards ? `${project.awards} Awards` : "—" },
-        ].map(({ label, value }, i) => (
-          <div
-            key={label}
-            className={`flex flex-col gap-3 py-[28px] md:py-[48px]
-              ${i % 2 === 0 ? "border-r border-alto" : "pl-[16px]"}
-              ${i < 3 ? "md:border-r md:border-alto" : "md:border-r-0"}
-              ${i > 0 ? "md:pl-[40px]" : "md:pl-0"}
-            `}
-          >
-            <p className="text-[10px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-medium">{label}</p>
-            <p className="text-[16px] leading-snug tracking-[-0.02em] font-medium text-mine-shaft">{value}</p>
-          </div>
-        ))}
-      </section>
+      {/* 3. Story / Overview Section - Editorial Layout */}
+      <section className="bg-white">
+        <div className="max-w-[1920px] mx-auto px-page-padding py-24 md:py-48">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-x-20">
+            {/* Overview */}
+            <div className="lg:col-span-4 scroll-reveal">
+              <div className="mb-8">
+                <span className="text-[12px] uppercase font-bold text-mine-shaft/40 font-inter tracking-normal">Overview</span>
+              </div>
+            </div>
+            <div className="lg:col-span-8 scroll-reveal">
+              <h2 className="text-[32px] md:text-[54px] font-medium leading-[1.1] tracking-[-0.04em] text-mine-shaft mb-12 break-keep">
+                {project.overview}
+              </h2>
+              <div className="h-[1px] w-full bg-alto mb-12" />
+            </div>
 
-      {/* 3. Overview 섹션 */}
-      <section className="px-page-padding py-[60px] md:py-[160px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
-        <div className="md:col-span-3 mb-8 md:mb-0">
-          <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">01</p>
-          <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Overview</p>
-        </div>
-        <div className="md:col-span-9">
-          <p className="text-[22px] md:text-[28px] font-medium leading-[1.3] tracking-[-0.03em] text-mine-shaft break-keep max-w-[1000px]">
-            {project.overview}
-          </p>
-        </div>
-      </section>
-
-      {/* 4. Background 섹션 */}
-      {project.background && (
-        <section className="px-page-padding py-[60px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
-          <div className="md:col-span-3 mb-8 md:mb-0">
-            <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">02</p>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Background</p>
-          </div>
-          <div className="md:col-span-7">
-            <p className="text-[15px] font-normal leading-[1.7] tracking-[-0.01em] text-mine-shaft/70 break-keep">
-              {project.background}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* 5. Approach 섹션 */}
-      {project.approach && (
-        <section className="px-page-padding py-[60px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
-          <div className="md:col-span-3 mb-8 md:mb-0">
-            <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">03</p>
-            <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Approach</p>
-          </div>
-          <div className="md:col-span-7">
-            <p className="text-[15px] font-normal leading-[1.7] tracking-[-0.01em] text-mine-shaft/70 break-keep">
-              {project.approach}
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* 6. 이미지 갤러리 */}
-      <div className="flex flex-col gap-4 py-[40px] md:py-[80px]">
-        {(project.images ?? []).map((img, i) => (
-          <div key={i} className={`w-full relative ${i % 3 === 0 ? "aspect-[16/9]" : "px-page-padding"}`}>
-             {i % 3 === 0 ? (
-                <Image src={img} alt="" fill className="object-cover" />
-             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   <div className="aspect-[4/3] relative">
-                      <Image src={img} alt="" fill className="object-cover" />
-                   </div>
-                   {project.images?.[i+1] && (
-                      <div className="aspect-[4/3] relative">
-                        <Image src={project.images[i+1]!} alt="" fill className="object-cover" />
-                      </div>
-                   )}
+            {/* 02 Background / Goal */}
+            {(project.background || project.goal) && (
+              <>
+                <div className="lg:col-span-4 scroll-reveal">
+                  <div className="mb-8">
+                    <span className="text-[12px] uppercase font-bold text-mine-shaft/40 font-inter tracking-normal">
+                      {project.goal ? "Goal" : "Background"}
+                    </span>
+                  </div>
                 </div>
-             )}
+                <div className="lg:col-span-7 scroll-reveal">
+                  <p className="text-[18px] md:text-[24px] font-normal leading-[1.5] text-mine-shaft/80 break-keep">
+                    {project.goal || project.background}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
-        ))}
+        </div>
+      </section>
+
+      {/* NEW: Vision Section */}
+      {project.vision && (
+        <section className="bg-gallery py-24 md:py-48">
+          <div className="max-w-[1920px] mx-auto px-page-padding">
+            <div className="flex flex-col items-center text-center">
+              {/* Decorative Icon 제거됨 */}
+              <h3 className="text-[clamp(40px,8vw,120px)] font-bold uppercase tracking-[-0.05em] text-mine-shaft mb-12 leading-none scroll-reveal">
+                {project.vision.text}
+              </h3>
+              <p className="max-w-[800px] text-[18px] md:text-[22px] text-mine-shaft/60 leading-relaxed break-keep scroll-reveal">
+                {project.vision.subtext}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NEW: Concept Section */}
+      {project.concept && (
+        <section className="bg-white py-24 md:py-48 border-b border-alto">
+          <div className="max-w-[1920px] mx-auto px-page-padding">
+            <div className="mb-24 md:mb-48 max-w-[1000px]">
+              <span className="text-[12px] uppercase font-bold text-mine-shaft/30 tracking-normal block mb-8 scroll-reveal">
+                Design Concept
+              </span>
+              <h3 className="text-[32px] md:text-[64px] font-medium tracking-[-0.04em] text-mine-shaft leading-[1.1] break-keep scroll-reveal">
+                {project.concept.text}
+              </h3>
+              <p className="mt-8 text-[18px] md:text-[22px] text-mine-shaft/50 max-w-[700px] break-keep scroll-reveal">
+                {project.concept.subtext}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-16">
+              {project.concept.items.map((item, i) => (
+                <div key={i} className="scroll-reveal group">
+                  <div className="aspect-[3/4] relative bg-gallery overflow-hidden mb-8">
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                  </div>
+                  <h4 className="text-[20px] md:text-[24px] font-bold text-mine-shaft mb-4 uppercase tracking-tight">
+                    {item.title}
+                  </h4>
+                  <p className="text-[15px] md:text-[17px] text-mine-shaft/60 break-keep">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 4. Marquee - Visual Break */}
+      <div className="py-12 md:py-24 border-t border-b border-alto overflow-hidden">
+        <Marquee 
+          text={`${project.title.toUpperCase()} • ${project.category.toUpperCase()} • `} 
+          speed={100} 
+          className="text-[clamp(60px,10vw,180px)] font-bold text-mine-shaft/5 tracking-tighter" 
+        />
       </div>
 
-      {/* 7. Next Project 섹션 */}
-      <section className="px-page-padding pt-[80px] md:pt-[120px] pb-[60px] border-t border-alto">
-<Link
-          href={`/work/${nextProject.slug}`}
-          className="flex items-center gap-6 md:gap-10 group w-fit"
-        >
-          <span
-            className="font-inter font-normal uppercase leading-[0.9] tracking-[-0.04em] text-mine-shaft"
-            style={{ fontSize: "clamp(28px, 5vw, 64px)" }}
-          >
-            {nextProject.title}
-          </span>
-          <svg
-            width="24" height="24" viewBox="0 0 24 24"
-            fill="none" stroke="currentColor" strokeWidth="1"
-            strokeLinecap="round" strokeLinejoin="round"
-            className="shrink-0 group-hover:translate-x-3 transition-transform duration-500 md:w-[36px] md:h-[36px]"
-          >
-            <line x1="2" y1="12" x2="22" y2="12" />
-            <polyline points="15 5 22 12 15 19" />
-          </svg>
-        </Link>
+      {/* 5. Image Gallery - Dynamic Layouts */}
+      <section className="bg-white py-24 md:py-48">
+        <div className="max-w-[1920px] mx-auto">
+          <div className="flex flex-col gap-24 md:gap-48">
+            {(project.images ?? []).map((img, i) => (
+              <div key={i} className="scroll-reveal px-page-padding md:px-0">
+                {i % 3 === 0 ? (
+                  /* Full-bleed style (contained in 1920) */
+                  <div className="relative w-full aspect-[21/9] bg-gallery overflow-hidden">
+                    <Image
+                      src={img}
+                      alt={`${project.title} detail ${i}`}
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-[2s] ease-out"
+                      data-pin-nopin="true"
+                    />
+                  </div>
+                ) : i % 3 === 1 ? (
+                  /* Two columns */
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 max-w-[1600px] mx-auto">
+                    <div className="relative aspect-[4/5] bg-gallery overflow-hidden">
+                      <Image
+                        src={img}
+                        alt={`${project.title} detail ${i}`}
+                        fill
+                        className="object-cover"
+                        data-pin-nopin="true"
+                      />
+                    </div>
+                    {project.images?.[i + 1] && (
+                      <div className="relative aspect-[4/5] bg-gallery overflow-hidden mt-20 md:mt-40">
+                        <Image
+                          src={project.images[i + 1]!}
+                          alt={`${project.title} detail ${i + 1}`}
+                          fill
+                          className="object-cover"
+                          data-pin-nopin="true"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Centered large image */
+                  <div className="max-w-[1400px] mx-auto relative aspect-[16/10] bg-gallery overflow-hidden">
+                    <Image
+                      src={img}
+                      alt={`${project.title} detail ${i}`}
+                      fill
+                      className="object-cover"
+                      data-pin-nopin="true"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
+
+      <DetailNavBar
+        prev={{ slug: `/work/${prevProject.slug}`, title: prevProject.title }}
+        next={{ slug: `/work/${nextProject.slug}`, title: nextProject.title }}
+        listHref="/work"
+        listLabel="All Work"
+      />
     </main>
   );
 }

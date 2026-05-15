@@ -24,7 +24,7 @@ export function FilterBar<T extends string>({
           <button
             key={cat}
             onClick={() => onSelect(cat)}
-            className={`text-[12px] uppercase tracking-[0.1em] font-inter font-medium pb-[2px] transition-all duration-300 whitespace-nowrap ${
+            className={`text-[12px] uppercase tracking-normal font-inter font-medium pb-[2px] transition-all duration-300 whitespace-nowrap ${
               active === cat
                 ? "text-mine-shaft border-b border-mine-shaft"
                 : "text-mine-shaft/40 hover:text-mine-shaft"
@@ -35,7 +35,7 @@ export function FilterBar<T extends string>({
           </button>
         ))}
       </div>
-      <span className="hidden md:block text-[12px] uppercase tracking-[0.1em] font-inter font-bold text-mine-shaft">
+      <span className="hidden md:block text-[12px] uppercase tracking-normal font-inter font-bold text-mine-shaft">
         {total} {totalLabel}
       </span>
     </div>

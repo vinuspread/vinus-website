@@ -5,6 +5,7 @@ import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowLink } from "@/components/common/ArrowLink";
+import { useFitText } from "@/hooks/useFitText";
 
 const B1_LINES = [
   { text: "In a fast-changing world,", bold: false },
@@ -13,15 +14,6 @@ const B1_LINES = [
   { text: "We are VINUSPREAD.", bold: true },
 ];
 
-const B2_LINES = [
-  { text: "We focus on", size: "calc((100vw - 320px) / 15)" },
-  {
-    text: "the essential value of",
-    size: "calc((100vw - 320px) / 15)",
-    highlight: "PRODUCT EXPERIENCE.",
-    highlightSize: "calc((100vw - 320px) / 14)"
-  },
-];
 
 /**
  * HeroSectionV2 - Stable Stepped Version
@@ -34,6 +26,9 @@ export const HeroSectionV2 = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const b3ContentRef = useRef<HTMLDivElement>(null);
+  const b2Line1Ref = useFitText();
+  const b2Line2Ref = useFitText();
+  const b2HighlightRef = useFitText();
   const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [indexState, setIndexState] = useState(0);
   const currentIndex = useRef(0);
@@ -244,8 +239,8 @@ export const HeroSectionV2 = () => {
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
       <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[100] flex flex-col items-end pointer-events-none">
-        <span className="font-inter font-bold text-[9px] md:text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40">Seoul, Korea</span>
-        <span className="font-inter font-black text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
+        <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-mine-shaft/40">Seoul, Korea</span>
+        <span className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
       </div>
 
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
@@ -288,30 +283,36 @@ export const HeroSectionV2 = () => {
         {/* Block 2 */}
         <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
           <div className="font-inter uppercase leading-[0.95] lg:leading-[0.85] tracking-[-0.03em] lg:tracking-[-0.06em] text-mine-shaft">
-            {B2_LINES.map((line, i) => (
-              <div key={i} className="py-1 md:py-2 whitespace-normal lg:whitespace-nowrap overflow-hidden" 
-                style={{ fontSize: `clamp(30px, 8.5vw, ${line.size === "calc((100vw - 320px) / 15)" ? "10vw" : line.size})` }}>
-                {line.text.split(" ").map((word, j) => (
+            {/* Line 1: "We focus on" */}
+            <div className="py-1 md:py-2 overflow-hidden">
+              <div ref={b2Line1Ref} className="inline-block whitespace-nowrap">
+                {"We focus on".split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
-                    <span className="b2-word inline-block translate-y-[100%] opacity-0">
-                      {word}
-                    </span>
+                    <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
                   </span>
                 ))}
-                {line.highlight && (
-                  <div className="w-full mt-1 md:mt-2 whitespace-normal lg:whitespace-nowrap overflow-hidden" 
-                    style={{ fontSize: `clamp(30px, 9.5vw, ${line.highlightSize === "calc((100vw - 320px) / 14)" ? "12vw" : line.highlightSize})` }}>
-                    {line.highlight.split(" ").map((word, k) => (
-                      <span key={k} className="inline-block mr-[0.3em] overflow-hidden">
-                        <span className="b2-word inline-block font-black translate-y-[100%] opacity-0 text-mine-shaft">
-                          {word}
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-                )}
               </div>
-            ))}
+            </div>
+            {/* Line 2: "the essential value of" */}
+            <div className="py-1 md:py-2 overflow-hidden">
+              <div ref={b2Line2Ref} className="inline-block whitespace-nowrap">
+                {"the essential value of".split(" ").map((word, j) => (
+                  <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
+                    <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* Line 3: "PRODUCT EXPERIENCE." highlight */}
+            <div className="py-1 md:py-2 overflow-hidden">
+              <div ref={b2HighlightRef} className="inline-block whitespace-nowrap">
+                {"PRODUCT EXPERIENCE.".split(" ").map((word, k) => (
+                  <span key={k} className="inline-block mr-[0.3em] overflow-hidden">
+                    <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="mt-4 md:mt-6">
             <p className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6]">
@@ -350,7 +351,7 @@ export const HeroSectionV2 = () => {
             <div className="py-0.5 md:py-1">
               {"VINUSPREAD.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
-                  <span className="b3-word inline-block font-black translate-y-[100%] opacity-0">
+                  <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">
                     {word}
                   </span>
                 </span>

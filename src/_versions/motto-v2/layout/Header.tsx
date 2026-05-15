@@ -53,7 +53,7 @@ export const Header = () => {
       <div className="flex-1 flex items-center">
         <Link href="/" className="flex items-center">
           <img
-            src="/logo.svg"
+            src="/images/logo.svg"
             alt="Vinuspread"
             className="h-[22px] w-auto"
           />

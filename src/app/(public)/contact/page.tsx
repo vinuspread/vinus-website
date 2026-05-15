@@ -71,7 +71,7 @@ export default function ContactPage() {
           </p>
           <button
             onClick={() => setStatus("idle")}
-            className="text-[13px] tracking-[0.1em] uppercase border-b border-mine-shaft pb-[2px] hover:opacity-50 transition-opacity"
+            className="text-[13px] tracking-normal uppercase border-b border-mine-shaft pb-[2px] hover:opacity-50 transition-opacity"
           >
             Send Another Request
           </button>
@@ -100,7 +100,7 @@ export default function ContactPage() {
           {/* Row 1: Company + Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[60px] gap-y-[48px] mb-[48px]">
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Company
               </label>
               <input
@@ -111,7 +111,7 @@ export default function ContactPage() {
               />
             </div>
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Name <span className="text-mine-shaft">*</span>
               </label>
               <input
@@ -127,7 +127,7 @@ export default function ContactPage() {
           {/* Row 2: Phone + Email */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[60px] gap-y-[48px] mb-[48px]">
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Phone <span className="text-mine-shaft">*</span>
               </label>
               <input
@@ -139,7 +139,7 @@ export default function ContactPage() {
               />
             </div>
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Email <span className="text-mine-shaft">*</span>
               </label>
               <input
@@ -155,7 +155,7 @@ export default function ContactPage() {
           {/* Row 3: Budget + File */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[60px] gap-y-[48px] mb-[64px]">
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Budget <span className="text-mine-shaft">*</span>
               </label>
               <select
@@ -170,20 +170,20 @@ export default function ContactPage() {
               </select>
             </div>
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Attachment
               </label>
               <input
                 name="file"
                 type="file"
-                className="bg-transparent text-[15px] text-mine-shaft/60 focus:outline-none file:mr-4 file:py-1 file:px-3 file:border file:border-alto file:text-[12px] file:tracking-[0.08em] file:uppercase file:bg-transparent file:text-mine-shaft file:cursor-pointer hover:file:border-mine-shaft file:transition-colors"
+                className="bg-transparent text-[15px] text-mine-shaft/60 focus:outline-none file:mr-4 file:py-1 file:px-3 file:border file:border-alto file:text-[12px] file:tracking-normal file:uppercase file:bg-transparent file:text-mine-shaft file:cursor-pointer hover:file:border-mine-shaft file:transition-colors"
               />
             </div>
           </div>
 
           {/* Category */}
           <div className="mb-[64px]">
-            <p className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter mb-[20px]">
+            <p className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter mb-[20px]">
               Category <span className="text-mine-shaft">*</span>
             </p>
             <div className="flex flex-wrap gap-[8px]">
@@ -194,7 +194,7 @@ export default function ContactPage() {
                     key={cat}
                     type="button"
                     onClick={() => toggleCategory(cat)}
-                    className={`px-[18px] py-[8px] text-[13px] tracking-[0.05em] uppercase border transition-colors ${
+                    className={`px-[18px] py-[8px] text-[13px] tracking-normal uppercase border transition-colors ${
                       active
                         ? "bg-mine-shaft text-gallery border-mine-shaft"
                         : "bg-transparent text-mine-shaft border-alto hover:border-mine-shaft"
@@ -210,7 +210,7 @@ export default function ContactPage() {
           {/* Description */}
           <div className="mb-[64px]">
             <div className="flex flex-col gap-[12px] border-b border-alto pb-[12px] focus-within:border-mine-shaft transition-colors">
-              <label className="text-[12px] tracking-[0.08em] uppercase text-mine-shaft/50 font-inter">
+              <label className="text-[12px] tracking-normal uppercase text-mine-shaft/50 font-inter">
                 Project Details <span className="text-mine-shaft">*</span>
               </label>
               <textarea
@@ -239,7 +239,7 @@ export default function ContactPage() {
             disabled={status === "sending"}
             className="group flex items-center gap-[16px] disabled:opacity-40"
           >
-            <span className="text-[13px] tracking-[0.1em] uppercase font-inter border-b border-mine-shaft pb-[2px] group-hover:opacity-50 transition-opacity">
+            <span className="text-[13px] tracking-normal uppercase font-inter border-b border-mine-shaft pb-[2px] group-hover:opacity-50 transition-opacity">
               {status === "sending" ? "Sending..." : "Submit Request"}
             </span>
             <span className="text-[20px] group-hover:translate-x-1 transition-transform">→</span>

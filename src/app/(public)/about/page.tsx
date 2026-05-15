@@ -235,6 +235,7 @@ export default function AboutPage() {
           src="/images/about_bg.png"
           alt=""
           className="absolute inset-0 w-full h-full object-cover opacity-60 scale-110"
+          data-pin-nopin="true"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-mine-shaft/80 via-mine-shaft/40 to-mine-shaft/90" />
 

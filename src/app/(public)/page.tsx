@@ -56,6 +56,14 @@ export default function Home() {
         <section className="bg-white py-[100px]">
           <ClientsBrandsSection />
         </section>
+        <section className="w-full px-page-padding overflow-hidden">
+          <img
+            src="/images/section_full.png"
+            alt=""
+            className="w-full h-[680px] object-cover block"
+            data-pin-nopin="true"
+          />
+        </section>
         <section className="bg-white py-[100px]">
           <AwardsSection />
         </section>

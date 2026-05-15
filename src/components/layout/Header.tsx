@@ -8,37 +8,38 @@ import { cn } from "@/lib/utils";
 export const Header = () => {
   const pathname = usePathname();
   const [isHidden, setIsHidden] = useState(false);
-  const [isPastHero, setIsPastHero] = useState(false);
   const lastYRef = useRef(0);
   const navRef = useRef<HTMLElement>(null);
 
   const isHome = pathname === "/";
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      setIsHidden(isHome ? false : y > lastYRef.current && y > 100);
+      setIsHidden(false);
       lastYRef.current = y;
     };
-
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
   useEffect(() => {
-    if (!isHome) { setIsPastHero(true); return; }
-    const hero = document.querySelector("#hero-section");
-    if (!hero) return;
+    setIsDark(false);
+    const darkSections = document.querySelectorAll("[data-header-dark]");
+    if (!darkSections.length) return;
+    const headerHeight = 80;
     const obs = new IntersectionObserver(
-      ([entry]) => setIsPastHero(!entry.isIntersecting),
-      { threshold: 0 }
+      (entries) => {
+        const anyDark = entries.some((e) => e.isIntersecting);
+        setIsDark(anyDark);
+      },
+      { rootMargin: `0px 0px -${window.innerHeight - headerHeight}px 0px`, threshold: 0 }
     );
-    obs.observe(hero);
+    darkSections.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
-  }, [isHome]);
-
-  const transparent = isHome && !isPastHero;
+  }, [pathname]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -65,7 +66,7 @@ export const Header = () => {
         ref={navRef}
         className={cn(
           "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[1000] px-page-padding flex items-center justify-between transition-all duration-500 header-enter",
-          transparent ? "bg-white/80 backdrop-blur-sm" : "bg-white",
+          "bg-transparent",
           isHidden && !isMenuOpen && "nav-hidden"
         )}
       >
@@ -73,9 +74,11 @@ export const Header = () => {
         <div className="flex-1 flex items-center">
           <Link href="/" className="flex items-center">
             <img
-              src="/logo.svg"
+              src="/images/logo.svg"
               alt="Vinuspread"
-              className="h-[20px] md:h-[28px] w-auto"
+              className={cn("h-[20px] md:h-[28px] w-auto transition-all duration-500", isDark && "invert")}
+
+              data-pin-nopin="true"
             />
           </Link>
         </div>
@@ -87,8 +90,10 @@ export const Header = () => {
               key={item.label}
               href={item.href}
               className={cn(
-                "text-[14px] uppercase tracking-wider transition-all duration-500 font-inter font-bold",
-                pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-40 hover:opacity-100"
+                "text-[14px] uppercase tracking-normal transition-all duration-500 font-inter font-bold",
+                isDark
+                  ? pathname === item.href ? "text-white opacity-100" : "text-white opacity-50 hover:opacity-100"
+                  : pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-40 hover:opacity-100"
               )}
             >
               {item.label}
@@ -104,15 +109,18 @@ export const Header = () => {
             aria-label="Toggle Menu"
           >
             <span className={cn(
-              "w-8 h-[2px] bg-mine-shaft transition-all duration-300 origin-right",
+              "w-8 h-[2px] transition-all duration-300 origin-right",
+              isDark ? "bg-white" : "bg-mine-shaft",
               isMenuOpen && "rotate-[-45deg] translate-x-[4px] translate-y-[-2px]"
             )} />
             <span className={cn(
-              "w-5 h-[2px] bg-mine-shaft transition-all duration-300",
+              "w-5 h-[2px] transition-all duration-300",
+              isDark ? "bg-white" : "bg-mine-shaft",
               isMenuOpen && "opacity-0"
             )} />
             <span className={cn(
-              "w-8 h-[2px] bg-mine-shaft transition-all duration-300 origin-right",
+              "w-8 h-[2px] transition-all duration-300 origin-right",
+              isDark ? "bg-white" : "bg-mine-shaft",
               isMenuOpen && "rotate-[45deg] translate-x-[4px] translate-y-[2px]"
             )} />
           </button>
@@ -121,18 +129,18 @@ export const Header = () => {
 
       {/* Mobile Menu Overlay */}
       <div className={cn(
-        "fixed inset-0 z-[1050] bg-white transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-center px-page-padding",
-        isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-[-100%] opacity-0 pointer-events-none"
+        "fixed inset-0 z-[1050] bg-white opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-center px-page-padding",
+        isMenuOpen ? "translate-y-0" : "translate-y-[-100%] pointer-events-none"
       )}>
-        <nav className="flex flex-col gap-4">
+        <nav className="flex flex-col">
           {navItems.map((item, i) => (
             <Link
               key={item.label}
               href={item.href}
               onClick={() => setIsMenuOpen(false)}
               className={cn(
-                "text-[40px] md:text-[64px] uppercase font-inter font-bold tracking-tighter transition-all duration-500 py-[20px]",
-                pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-20"
+                "text-[40px] md:text-[64px] uppercase font-inter font-bold tracking-tighter transition-all duration-500 py-[24px] md:py-[32px] border-b border-alto/30 last:border-0",
+                pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-20 hover:opacity-100"
               )}
               style={{ transitionDelay: `${i * 50}ms` }}
             >

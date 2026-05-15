@@ -13,7 +13,7 @@ if (typeof window !== "undefined") {
 
 const clientLogos = Array.from({ length: 28 }, (_, i) => ({
   name: `client-${String(i + 1).padStart(2, "0")}`,
-  src: `/logos/logo${String(i + 1).padStart(2, "0")}.svg`,
+  src: `/images/logos/logo${String(i + 1).padStart(2, "0")}.svg`,
 }));
 
 const brands = [
@@ -91,6 +91,7 @@ export const ClientsBrandsSection = () => {
                 src={client.src}
                 alt={client.name}
                 className="max-h-[28px] max-w-full object-contain opacity-100 transition-opacity"
+                data-pin-nopin="true"
               />
             </div>
           ))}
@@ -116,11 +117,12 @@ export const ClientsBrandsSection = () => {
         <div className="hidden lg:flex flex-col">
           <div className="sticky top-[120px] overflow-hidden aspect-[2/3] w-full">
             <div className="w-full h-full will-change-transform">
-              <img 
+              <img
                 ref={imageRef}
-                src="/brands_vertical.png" 
+                src="/images/brands_vertical.png"
                 alt="Brands Vinuspread"
                 className="w-full h-full object-cover scale-125 will-change-transform"
+                data-pin-nopin="true"
               />
             </div>
           </div>

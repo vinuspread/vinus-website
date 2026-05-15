@@ -15,11 +15,11 @@ export const stories: Story[] = [
     category: "Story",
     date: "2025.01.10",
     summary: "디자인 스튜디오 바이너스프레드의 첫 번째 이야기입니다.",
-    thumbnail: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=1920&h=1080&fit=crop&auto=format&q=80",
+    thumbnail: "/images/story_ui_design.png",
     content: `
       <h2>시작하는 이야기</h2>
       <p>바이너스프레드는 단순한 디자인 에이전시를 넘어, 브랜드의 본질을 탐구하고 디지털 환경에서의 새로운 가치를 창출하는 크리에이티브 파트너입니다.</p>
-      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&auto=format&q=80" alt="Studio" />
+      <img src="/images/story_studio.png" alt="Studio" />
       <p>우리는 비즈니스의 문제를 디자인의 시각에서 정의하고, 사용자의 경험을 통해 해결책을 제시합니다. 모든 프로젝트는 깊은 리서치와 전략적 사고에서 시작됩니다.</p>
       <blockquote>
         "디자인은 단순한 장식이 아니라, 브랜드와 사용자가 만나는 가장 강력한 언어입니다."
@@ -33,7 +33,7 @@ export const stories: Story[] = [
     category: "Story",
     date: "2025.02.03",
     summary: "본질에 집중하고 아름다움을 더하는 바이너스프레드의 디자인 철학을 공유합니다.",
-    thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1920&h=1080&fit=crop&auto=format&q=80",
+    thumbnail: "/images/story_branding.png",
     content: `
       <h2>본질(Essence)에 대하여</h2>
       <p>우리는 디자인을 할 때 가장 먼저 '왜(Why)'를 묻습니다. 이 브랜드가 왜 존재해야 하는지, 이 기능이 왜 필요한지를 정의하지 않은 디자인은 힘을 잃기 때문입니다.</p>

@@ -13,7 +13,7 @@ export const WorkSection = () => {
 
       {/* Header row */}
       <div className="px-page-padding py-[40px] flex items-center justify-between border-b border-alto">
-        <p className="font-inter font-bold text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40">
+        <p className="font-inter font-bold text-[12px] tracking-normal uppercase text-mine-shaft/40">
           ( Selected Work )
         </p>
         <div className="anim-move-up" data-delay="100">

@@ -36,12 +36,13 @@ export const ProjectCard = ({
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          data-pin-nopin="true"
         />
       </div>
 
       {/* Text Info — Moved outside (below) the image */}
       <div className="mt-6 flex flex-col gap-[6px] pointer-events-none">
-        <p className="text-[10px] lg:text-[11px] text-mine-shaft/40 uppercase tracking-[0.15em] font-inter leading-none">
+        <p className="text-[12px] text-mine-shaft/40 uppercase tracking-normal font-inter leading-none">
           {category}
         </p>
         <h3 className="text-[24px] lg:text-[32px] text-mine-shaft tracking-[-0.03em] leading-tight font-inter font-bold">

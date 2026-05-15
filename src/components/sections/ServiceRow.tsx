@@ -22,7 +22,7 @@ export const ServiceRow = ({ index, service }: ServiceRowProps) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-8">
-          <span className="text-[11px] text-mine-shaft/40">
+          <span className="text-[12px] text-mine-shaft/40">
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className="text-[32px] tracking-[-0.8px] uppercase">

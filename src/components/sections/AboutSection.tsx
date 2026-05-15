@@ -12,16 +12,32 @@ if (typeof window !== "undefined") {
 
 export const AboutSection = () => {
   const ref = useReveal();
-  const imageRef = useRef<HTMLImageElement>(null);
+  const wrap1Ref = useRef<HTMLDivElement>(null);
+  const wrap2Ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    if (!imageRef.current) return;
+    if (!wrap1Ref.current || !wrap2Ref.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(imageRef.current,
-        { y: 50 },
+      // 첫 번째 이미지 래퍼: 빠르게 위로
+      gsap.fromTo(wrap1Ref.current,
+        { y: 80 },
         {
-          y: -50,
+          y: -80,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ref.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          }
+        }
+      );
+      // 두 번째 이미지 래퍼: 같은 방향, 느리게 (속도차로 시간차 효과)
+      gsap.fromTo(wrap2Ref.current,
+        { y: 30 },
+        {
+          y: -30,
           ease: "none",
           scrollTrigger: {
             trigger: ref.current,
@@ -38,34 +54,43 @@ export const AboutSection = () => {
 
   return (
     <section ref={ref as any} className="anim-wrap py-[80px] md:py-[120px] px-page-padding bg-white overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr_2fr] gap-12 lg:gap-20 items-start">
-        
-        {/* Left Side: Image (~30% width) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start" style={{ gridTemplateColumns: "1fr 1fr" }}>
+
+        {/* Left Side: Two overlapping images */}
         <div className="flex flex-col mb-12 lg:mb-0">
-          <div className="lg:sticky lg:top-[120px] overflow-hidden aspect-[4/5] lg:aspect-[2/3] w-full bg-gallery">
-            <div className="w-full h-full will-change-transform">
-              <img 
-                ref={imageRef}
-                src="/about_vertical.png" 
-                alt="About Vinuspread"
-                className="w-full h-full object-cover scale-110 lg:scale-125 will-change-transform"
-              />
+          <div className="lg:sticky lg:top-[120px] relative w-full">
+            {/* 첫 번째 이미지 */}
+            <div className="overflow-hidden aspect-[4/5] lg:aspect-[2/3] w-[80%] bg-gallery">
+              <div ref={wrap1Ref} className="w-full h-full will-change-transform scale-125">
+                <img
+                  src="/images/about_vertical.png"
+                  alt="About Vinuspread"
+                  className="w-full h-full object-cover"
+                  data-pin-nopin="true"
+                />
+              </div>
+            </div>
+            {/* 두 번째 이미지: 우측 하단에 겹침 */}
+            <div className="absolute bottom-[-8%] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-gallery">
+              <div ref={wrap2Ref} className="w-full h-full will-change-transform scale-110">
+                <img
+                  src="/images/about_vertical2.png"
+                  alt="About Vinuspread 2"
+                  className="w-full h-full object-cover object-[60%_center]"
+                  data-pin-nopin="true"
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Spacer (~20% width) - Hidden on mobile */}
-        <div className="hidden lg:block"></div>
-
-        {/* Right Side: Content (50% width) */}
+        {/* Right Side: Content */}
         <div className="flex flex-col gap-12">
-          
-          {/* Main Heading */}
+
           <h2 className="anim-move-up display-heading text-mine-shaft">
             Focusing on the enduring value of what truly matters.
           </h2>
 
-          {/* Description */}
           <p className="anim-move-up body-text break-keep" data-delay="150">
             VINUSPREAD partners with visionary leaders to capture the essential essence at the core of their brand.
             By transforming strategic insights into beautiful design systems and digital ecosystems, we help
@@ -78,7 +103,6 @@ export const AboutSection = () => {
             깊은 울림을 남기는 경험으로 브랜드의 비전을 세상에 확장시킵니다.
           </p>
 
-          {/* Purpose Section (Merged) */}
           <div className="mt-12">
             <div className="flex flex-col border-t border-mine-shaft/10">
               {[

@@ -108,7 +108,7 @@ export default function ServicesPage() {
                   {svc.tags.map((tag, j) => (
                     <span
                       key={tag}
-                      className="anim-move-up px-4 py-2 text-[10px] uppercase tracking-widest bg-mine-shaft/5 text-mine-shaft/40 font-bold rounded-full border border-alto/50"
+                      className="anim-move-up px-4 py-2 text-[12px] uppercase tracking-normal bg-mine-shaft/5 text-mine-shaft/40 font-bold rounded-full border border-alto/50"
                       data-delay={i * 80 + 200 + (j * 30)}
                     >
                       {tag}

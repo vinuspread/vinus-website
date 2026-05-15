@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
+import { DetailNavBar } from "@/components/common/DetailNavBar";
 import { stories } from "@/lib/stories";
 import { useReveal } from "@/hooks/useReveal";
 import { Clip } from "@/components/common/Clip";
@@ -28,9 +28,9 @@ export default function StoryDetailPage() {
     );
   }
 
-  // Find next/prev for navigation
   const currentIndex = stories.findIndex((s) => s.slug === story.slug);
   const nextStory = stories[(currentIndex + 1) % stories.length];
+  const prevStory = stories[(currentIndex - 1 + stories.length) % stories.length];
 
   return (
     <main className="bg-white min-h-screen">
@@ -63,6 +63,7 @@ export default function StoryDetailPage() {
               fill
               className="object-cover"
               priority
+              data-pin-nopin="true"
             />
           </div>
         </section>
@@ -76,27 +77,12 @@ export default function StoryDetailPage() {
         />
       </article>
 
-      {/* ── Navigation ── */}
-      <footer className="border-t border-alto px-page-padding py-[80px]">
-        <div className="max-w-[1000px] mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-          <Link 
-            href="/story"
-            className="text-[14px] font-inter uppercase tracking-widest text-mine-shaft/40 hover:text-mine-shaft transition-colors flex items-center gap-3"
-          >
-            ← Back to List
-          </Link>
-
-          <Link
-            href={`/story/${nextStory.slug}`}
-            className="group flex flex-col items-end gap-4 text-right"
-          >
-            <span className="section-label !text-[10px] opacity-30">Next Story</span>
-            <span className="display-heading !text-[24px] md:text-[32px] group-hover:opacity-60 transition-opacity">
-              {nextStory.title} →
-            </span>
-          </Link>
-        </div>
-      </footer>
+      <DetailNavBar
+        prev={{ slug: `/story/${prevStory.slug}`, title: prevStory.title }}
+        next={{ slug: `/story/${nextStory.slug}`, title: nextStory.title }}
+        listHref="/story"
+        listLabel="All Stories"
+      />
     </main>
   );
 }

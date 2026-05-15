@@ -1,6 +1,10 @@
 @import "tailwindcss";
 /* CSS Re-compile trigger */
 
+/* Block Pinterest extension save button */
+.PIN_promo_img, [id^="pinterest"], [class*="pinterest-hover"],
+img + div[style*="position: absolute"] { display: none !important; }
+
 @theme {
   /* Colors */
   --color-mine-shaft: #2a2a2a;
@@ -108,7 +112,7 @@
   padding: 3px 6px;
   background: #0f0f0f;
   color: #fafafa;
-  font-size: 10px;
+  font-size: 12px;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
@@ -132,7 +136,7 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 999px;
   padding: 8px 20px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
   text-transform: uppercase;
@@ -214,18 +218,16 @@
 
 .section-label {
   font-family: var(--font-inter);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgb(42 42 42 / 0.4);
 }
 
 .breadcrumb-label {
   font-family: var(--font-inter);
-  font-size: clamp(10px, 2vw, 13px);
+  font-size: clamp(12px, 2vw, 13px);
   font-weight: 700;
-  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgb(42 42 42 / 0.55);
 }
