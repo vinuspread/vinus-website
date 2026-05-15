@@ -559,44 +559,57 @@ npm run dev
 > **배경:** 안티그래비티는 작업을 `ui-design` 브랜치에 계속 업데이트한다.  
 > 업데이트가 생길 때마다 개발자(바이너스프레드)가 `main` 브랜치에 반영해야 한다.
 
+> **⚠️ 중요 — 로컬 `"ui design/"` 폴더에 의존하지 말 것**  
+> 외부 팀이 GitHub에 push하더라도 로컬 폴더는 자동으로 업데이트되지 않는다.  
+> 반드시 `git fetch origin ui-design` 으로 GitHub 최신 커밋을 가져온 후 작업할 것.  
+> 로컬 폴더 기준으로 작업하면 최신 변경사항을 놓치는 문제가 발생한다.
+
 ### 10-1. 파일 분류 (반영 방식 결정에 핵심)
 
 | 분류 | 파일 예시 | 업데이트 방식 |
 |---|---|---|
-| **External-only** (안티그래비티가 100% 소유) | `components/layout/Header.tsx`, `components/layout/Footer.tsx`, `components/sections/*`, `app/(public)/page.tsx`, `app/(public)/we/page.tsx`, `app/(public)/services/page.tsx` | 그대로 덮어쓰기 가능 |
-| **Hybrid** (레이아웃은 안티그래비티, 데이터는 개발자) | `app/(public)/work/page.tsx`, `app/(public)/work/[slug]/page.tsx` | 수동 merge 필요 |
+| **External-only** (안티그래비티가 100% 소유) | `components/layout/Header.tsx`, `components/layout/Footer.tsx`, `components/sections/*`, `app/(public)/page.tsx`, `app/(public)/we/page.tsx`, `app/(public)/services/page.tsx` | git으로 직접 추출 후 덮어쓰기 |
+| **Hybrid** (레이아웃은 안티그래비티, 데이터는 개발자) | `app/(public)/work/page.tsx`, `app/(public)/work/[slug]/page.tsx` | diff 확인 후 수동 merge |
 | **Dev-only** (개발자가 100% 소유) | `components/blocks/*`, `lib/supabase/*`, `types/*`, `app/admin/*` | 절대 sync 금지 |
 
 ### 10-2. 업데이트 반영 절차
 
 ```bash
-# 1. ui-design 브랜치에서 변경 내용 확인
+# 1. GitHub에서 ui-design 최신 커밋 가져오기
 git fetch origin ui-design
-git diff main...origin/ui-design -- "ui design/src/"
 
-# 2. External-only 파일: 로컬 ui design/ 폴더를 업데이트 후 복사
-# (외부 팀이 ui design/ 폴더를 새 버전으로 교체했을 때)
-cp "ui design/src/components/layout/Header.tsx"     components/layout/Header.tsx
-cp "ui design/src/components/layout/Footer.tsx"     components/layout/Footer.tsx
-cp "ui design/src/components/sections/*.tsx"        components/sections/
-cp "ui design/src/app/(public)/page.tsx"            app/(public)/page.tsx
-cp "ui design/src/app/(public)/about/page.tsx"      app/(public)/we/page.tsx
-cp "ui design/src/app/(public)/services/page.tsx"   app/(public)/services/page.tsx
-cp "ui design/src/app/globals.css"                  # → globals.css의 해당 섹션만 병합
+# 2. 어떤 파일이 바뀌었는지 확인 (최신 커밋 기준)
+git show origin/ui-design --stat
 
-# 3. Hybrid 파일: diff 확인 후 수동 반영
-git diff origin/ui-design -- "ui design/src/app/(public)/work/page.tsx"
+# 3. 변경된 파일 내용을 직접 확인
+git show origin/ui-design:src/components/sections/AboutSection.tsx
+
+# 4. External-only 파일: git으로 직접 추출하여 덮어쓰기
+#    (로컬 폴더 복사 방식 사용 금지 — 최신 버전 보장 안 됨)
+git checkout origin/ui-design -- public/logos/
+git checkout origin/ui-design -- public/about_vertical.png
+
+# 컴포넌트 파일 (src/ 경로 → 우리 경로로 변환하여 수동 복사)
+git show origin/ui-design:src/components/sections/AboutSection.tsx \
+  > components/sections/AboutSection.tsx
+
+git show origin/ui-design:src/components/layout/Header.tsx \
+  > components/layout/Header.tsx
+
+# 5. Hybrid 파일: diff 확인 후 수동 반영
+git diff HEAD origin/ui-design -- src/app/\(public\)/work/page.tsx
 # → 레이아웃 변경 부분만 선별하여 적용 (Supabase 데이터 주입 코드는 유지)
 
-# 4. CSS 업데이트: ui-design globals.css에서 애니메이션·토큰 변경분만 병합
-# app/globals.css의 "ui-design Animation System" 섹션을 업데이트
+# 6. CSS 업데이트: ui-design globals.css에서 새 클래스·토큰 변경분만 병합
+git show origin/ui-design:src/app/globals.css
+# → app/globals.css의 @theme 섹션, 애니메이션 클래스 비교 후 추가/수정
 
-# 5. 빌드 확인
+# 7. 빌드 확인
 npm run build
 
-# 6. 커밋 & 배포
+# 8. 커밋 & 배포
 git add .
-git commit -m "sync: ui-design 업데이트 반영 (날짜)"
+git commit -m "sync: ui-design 업데이트 반영 (YYYY-MM-DD)"
 GH_TOKEN="" git push
 ```
 
@@ -614,6 +627,7 @@ import { createClient } from '@/lib/supabase/server'
 
 ### 10-4. 주의사항
 
+- **반드시 `git fetch origin ui-design` 먼저** — 로컬 `"ui design/"` 폴더는 자동 업데이트 안 됨
 - **globals.css**: 우리가 추가한 `@theme inline` 토큰과 block spacing 규칙은 절대 삭제 금지  
   안티그래비티의 `@theme {}` 섹션(색상·spacing·easing)과 애니메이션 클래스만 업데이트
 - **Header**: nav 항목(`We/Work/Blog/Request`)과 로고 이미지(`/images/h1_logo2.png`)는 항상 유지
