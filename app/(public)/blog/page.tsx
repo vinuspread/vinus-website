@@ -1,89 +1,86 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import BlogCard from '@/components/blog/BlogCard'
 import type { Blog } from '@/types'
-import { FadeUp, LetterReveal, MagneticLink } from '@/components/ui/MotionWrapper'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: '바이너스프레드의 이야기, 프로젝트 노트, 다운로드 자료',
+  description: '바이너스프레드의 이야기와 프로젝트 노트',
 }
 
-interface Props {
-  searchParams: Promise<{ category?: string }>
-}
-
-export default async function BlogPage({ searchParams }: Props) {
-  const { category } = await searchParams
-  const activeCategory = category ?? 'all'
-
+export default async function BlogPage() {
   const supabase = await createClient()
-  let query = supabase
+  const { data: posts } = await supabase
     .from('blog')
-    .select('*')
+    .select('id, slug, title, category, thumbnail_url, created_at')
     .eq('is_published', true)
-    .order('sort_order', { ascending: true })
+    .order('created_at', { ascending: false })
 
-  if (activeCategory !== 'all') {
-    query = query.eq('category', activeCategory)
-  }
-
-  const { data: blogs } = await query
-
-  const tabs = [
-    { label: 'All', value: 'all' },
-    { label: 'Story', value: 'Story' },
-    { label: 'Download', value: 'Download' },
-  ]
+  const blogs = (posts ?? []) as Blog[]
 
   return (
-    <main className="pt-32 md:pt-48 pb-32 min-h-screen bg-gray-50/50">
-      <div className="px-6 md:px-12 max-w-[1200px] mx-auto text-center">
-        <header className="mb-16 md:mb-24 flex flex-col items-center">
-          <FadeUp delay={0.2}>
-            <p className="text-sm text-gray-400 tracking-[0.2em] uppercase mb-4 font-syne">
-              Our Thoughts
-            </p>
-          </FadeUp>
-          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-syne font-bold tracking-tighter leading-none uppercase text-black">
-            <LetterReveal text="Journal." delay={0.4} className="justify-center" />
-          </h1>
-        </header>
+    <main className="bg-gallery">
+      {/* Page Header */}
+      <section className="pt-[140px] pb-[80px] px-page-padding border-b border-alto">
+        <div className="grid grid-cols-1 md:grid-cols-8 gap-column">
+          <div className="md:col-span-8 mb-[60px]">
+            <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase">
+              BLOG
+            </h1>
+          </div>
+        </div>
+      </section>
 
-        <FadeUp delay={0.8}>
-          <nav className="flex justify-center gap-8 md:gap-16 mb-16 md:mb-24" aria-label="블로그 카테고리">
-            {tabs.map(tab => (
-              <MagneticLink
-                key={tab.value}
-                href={tab.value === 'all' ? '/blog' : `/blog?category=${tab.value}`}
-                className={`relative pb-3 text-sm md:text-lg tracking-widest uppercase transition-colors ${
-                  activeCategory === tab.value
-                    ? 'text-black font-medium'
-                    : 'text-gray-400 hover:text-gray-900'
-                }`}
+      {/* Posts Grid */}
+      <section className="px-page-padding py-[80px]">
+        {blogs.length === 0 ? (
+          <p className="text-[15px] text-mine-shaft/40 uppercase tracking-wider">No posts yet.</p>
+        ) : (
+          <div className="border-t border-alto">
+            {blogs.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="grid grid-cols-8 gap-column items-start py-[40px] border-b border-alto group"
               >
-                {tab.label}
-                {activeCategory === tab.value && (
-                  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-black" />
-                )}
-              </MagneticLink>
+                <div className="col-span-2">
+                  {post.thumbnail_url ? (
+                    <div className="aspect-[4/3] relative overflow-hidden">
+                      <Image
+                        src={post.thumbnail_url}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                  ) : (
+                    <div className="aspect-[4/3] bg-alto" />
+                  )}
+                </div>
+                <div className="col-span-5 col-start-4 flex flex-col gap-4 pt-2">
+                  {post.category && (
+                    <p className="text-[11px] uppercase tracking-widest text-mine-shaft/40">
+                      {post.category}
+                    </p>
+                  )}
+                  <h2 className="text-[28px] md:text-[36px] tracking-[-1px] leading-[1.1] uppercase group-hover:opacity-60 transition-opacity">
+                    {post.title}
+                  </h2>
+                  <p className="text-[13px] text-mine-shaft/40 uppercase tracking-wider">
+                    {new Date(post.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </p>
+                </div>
+                <div className="col-span-1 flex justify-end pt-2">
+                  <span className="text-[20px] group-hover:translate-x-2 transition-transform">→</span>
+                </div>
+              </Link>
             ))}
-          </nav>
-        </FadeUp>
-
-        <ul className="space-y-0 border-t border-gray-200">
-          {((blogs as Blog[]) ?? []).map((blog, index) => (
-            <li key={blog.id}>
-              <BlogCard blog={blog} index={index} />
-            </li>
-          ))}
-        </ul>
-      </div>
+          </div>
+        )}
+      </section>
     </main>
   )
 }
-
-
