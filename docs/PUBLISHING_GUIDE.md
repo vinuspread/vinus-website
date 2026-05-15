@@ -568,9 +568,14 @@ npm run dev
 
 | 분류 | 파일 예시 | 업데이트 방식 |
 |---|---|---|
-| **External-only** (안티그래비티가 100% 소유) | `components/layout/Header.tsx`, `components/layout/Footer.tsx`, `components/sections/*`, `app/(public)/page.tsx`, `app/(public)/we/page.tsx`, `app/(public)/services/page.tsx` | git으로 직접 추출 후 덮어쓰기 |
+| **External-only** (안티그래비티가 100% 소유) | `components/layout/Header.tsx`, `components/layout/Footer.tsx`, `components/sections/*`, `app/(public)/page.tsx`, `app/(public)/about/page.tsx`, `app/(public)/services/page.tsx`, **`app/globals.css`** | git으로 직접 추출 후 덮어쓰기 |
 | **Hybrid** (레이아웃은 안티그래비티, 데이터는 개발자) | `app/(public)/work/page.tsx`, `app/(public)/work/[slug]/page.tsx` | diff 확인 후 수동 merge |
-| **Dev-only** (개발자가 100% 소유) | `components/blocks/*`, `lib/supabase/*`, `types/*`, `app/admin/*` | 절대 sync 금지 |
+| **Dev-only** (개발자가 100% 소유, **절대 건드리지 말 것**) | `components/blocks/*`, `lib/supabase/*`, `types/*`, `app/admin/*`, **`app/work-blocks.css`**, **`app/layout.tsx`** | sync 시 절대 덮어쓰기 금지 |
+
+> **CSS 파일 분리 구조 (중요)**
+> - `app/globals.css` → **ui-design 소유**. 업데이트 때 통째로 교체해도 됨
+> - `app/work-blocks.css` → **개발자 소유**. Work 페이지 블록 전용 스타일. 절대 건드리지 말 것
+> - `app/layout.tsx` → **개발자 소유**. Syne·Inter 폰트 로드 + work-blocks.css import. 절대 건드리지 말 것
 
 ### 10-2. 업데이트 반영 절차
 
@@ -600,9 +605,9 @@ git show origin/ui-design:src/components/layout/Header.tsx \
 git diff HEAD origin/ui-design -- src/app/\(public\)/work/page.tsx
 # → 레이아웃 변경 부분만 선별하여 적용 (Supabase 데이터 주입 코드는 유지)
 
-# 6. CSS 업데이트: ui-design globals.css에서 새 클래스·토큰 변경분만 병합
-git show origin/ui-design:src/app/globals.css
-# → app/globals.css의 @theme 섹션, 애니메이션 클래스 비교 후 추가/수정
+# 6. CSS 업데이트: globals.css는 통째로 교체 (우리 스타일은 work-blocks.css에 분리되어 있음)
+git show origin/ui-design:src/app/globals.css > app/globals.css
+# ⚠️ work-blocks.css는 절대 건드리지 말 것 — 우리 work 블록 스타일이 여기에 있음
 
 # 7. 빌드 확인
 npm run build
@@ -628,8 +633,9 @@ import { createClient } from '@/lib/supabase/server'
 ### 10-4. 주의사항
 
 - **반드시 `git fetch origin ui-design` 먼저** — 로컬 `"ui design/"` 폴더는 자동 업데이트 안 됨
-- **globals.css**: 우리가 추가한 `@theme inline` 토큰과 block spacing 규칙은 절대 삭제 금지  
-  안티그래비티의 `@theme {}` 섹션(색상·spacing·easing)과 애니메이션 클래스만 업데이트
-- **Header**: nav 항목(`We/Work/Blog/Request`)과 로고 이미지(`/images/h1_logo2.png`)는 항상 유지
+- **`globals.css`**: 이제 통째로 교체해도 됨. 우리 스타일은 `work-blocks.css`로 분리되어 있음
+- **`work-blocks.css`**: 절대 건드리지 말 것. sync와 무관한 파일
+- **`layout.tsx`**: 절대 건드리지 말 것. Syne/Inter 폰트 + work-blocks.css import가 여기에 있음
+- **Header**: 로고 이미지(`/images/h1_logo2.png`)는 ui-design 교체 후 확인 필요 (ui-design은 `/logo.svg` 사용)
 - **Footer**: 바이너스프레드 연락처·SNS·Copyright는 항상 유지
 - 빌드가 실패하면 커밋하지 말 것 (`npm run build` 성공 후 push)

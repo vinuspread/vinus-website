@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap");
 /* CSS Re-compile trigger */
 
 @theme {
@@ -11,7 +10,6 @@
 
   /* Fonts */
   --font-inter: var(--font-inter), "Inter", sans-serif;
-  --font-syne: "Syne", "Inter", sans-serif;
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
   /* Spacing Tokens */
@@ -262,45 +260,3 @@
   color: rgb(42 42 42 / 0.4);
 }
 
-/* ── Block Renderer Spacing ─────────────────────────────── */
-.block-spacing-none { margin-bottom: 0; }
-.block-spacing-xs   { margin-bottom: 16px; }
-.block-spacing-sm   { margin-bottom: 32px; }
-.block-spacing-md   { margin-bottom: 64px; }
-.block-spacing-lg   { margin-bottom: 96px; }
-.block-spacing-xl   { margin-bottom: 128px; }
-.block-spacing-2xl  { margin-bottom: 200px; }
-.block-spacing-3xl  { margin-bottom: 240px; }
-@media (max-width: 767px) {
-  .block-spacing-sm  { margin-bottom: 16px; }
-  .block-spacing-md  { margin-bottom: 32px; }
-  .block-spacing-lg  { margin-bottom: 48px; }
-  .block-spacing-xl  { margin-bottom: 64px; }
-  .block-spacing-2xl { margin-bottom: 80px; }
-  .block-spacing-3xl { margin-bottom: 80px; }
-}
-
-/* ── HeadingText Block Reveal Animation ─────────────────── */
-.ht-block-heading,
-.ht-block-body {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.ht-block-body {
-  transition-delay: 0.3s;
-}
-.ht-block.is-visible .ht-block-heading,
-.ht-block.is-visible .ht-block-body {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── Edge-Full Blocks (parallax, scroll-h) — mobile spacing ─ */
-@media (max-width: 767px) {
-  .edge-full.block-spacing-sm  { padding-bottom: 6px; }
-  .edge-full.block-spacing-md  { padding-bottom: 10px; }
-  .edge-full.block-spacing-lg  { padding-bottom: 16px; }
-  .edge-full.block-spacing-xl  { padding-bottom: 24px; }
-}
