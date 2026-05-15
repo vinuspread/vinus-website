@@ -3,7 +3,6 @@
 import { useLayoutEffect } from "react";
 import { HeroSectionV2 as HeroSection } from "@/components/sections/HeroSectionV2";
 import { AboutSection } from "@/components/sections/AboutSection";
-import { VideoSection } from "@/components/sections/VideoSection";
 import { ClientsBrandsSection } from "@/components/sections/ClientsBrandsSection";
 import { ImageSliderSection } from "@/components/sections/ImageSliderSection";
 import { AwardsSection } from "@/components/sections/AwardsSection";
@@ -42,7 +41,7 @@ export default function Home() {
             <Marquee 
               text="SELECTED PROJECTS • DIGITAL EXPERIENCE • INNOVATIVE DESIGN • PRODUCT MANAGEMENT • BRAND IDENTITY • " 
               speed={150} 
-              className="font-inter font-light text-[clamp(40px,6vw,120px)] tracking-tighter text-mine-shaft uppercase"
+              className="font-inter font-medium text-[clamp(40px,6vw,120px)] tracking-tighter text-mine-shaft uppercase"
             />
           </div>
           {/* 1. Featured Work Section */}

@@ -16,28 +16,9 @@ export const AboutSection = () => {
 
   useLayoutEffect(() => {
     if (!imageRef.current) return;
-    const container = imageRef.current.parentElement;
-    if (!container) return;
 
     const ctx = gsap.context(() => {
-      // 1. Entrance Animation (Container reveals up)
-      gsap.fromTo(container, 
-        { y: 100, opacity: 0 }, 
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 90%",
-            toggleActions: "play none none none",
-          }
-        }
-      );
-
-      // 2. Parallax Effect (Image moves inside container)
-      gsap.fromTo(imageRef.current, 
+      gsap.fromTo(imageRef.current,
         { y: 50 },
         {
           y: -50,
@@ -56,40 +37,45 @@ export const AboutSection = () => {
   }, [ref]);
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-white overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr_2fr] gap-12 items-start">
+    <section ref={ref as any} className="anim-wrap py-[80px] md:py-[120px] px-page-padding bg-white overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr_2fr] gap-12 lg:gap-20 items-start">
         
         {/* Left Side: Image (~30% width) */}
-        <div className="hidden lg:flex flex-col">
-          <div className="sticky top-[120px] overflow-hidden aspect-[2/3] w-full">
+        <div className="flex flex-col mb-12 lg:mb-0">
+          <div className="lg:sticky lg:top-[120px] overflow-hidden aspect-[4/5] lg:aspect-[2/3] w-full bg-gallery">
             <div className="w-full h-full will-change-transform">
               <img 
                 ref={imageRef}
                 src="/about_vertical.png" 
                 alt="About Vinuspread"
-                className="w-full h-full object-cover scale-125 will-change-transform"
+                className="w-full h-full object-cover scale-110 lg:scale-125 will-change-transform"
               />
             </div>
           </div>
         </div>
 
-        {/* Spacer (~20% width) */}
+        {/* Spacer (~20% width) - Hidden on mobile */}
         <div className="hidden lg:block"></div>
 
         {/* Right Side: Content (50% width) */}
         <div className="flex flex-col gap-12">
           
           {/* Main Heading */}
-          <h2 className="anim-move-up display-heading text-[clamp(40px,5vw,72px)] text-mine-shaft">
+          <h2 className="anim-move-up display-heading text-mine-shaft">
             Focusing on the enduring value of what truly matters.
           </h2>
 
           {/* Description */}
-          <p className="anim-move-up font-inter text-[clamp(18px,1.5vw,22px)] leading-[1.6] text-mine-shaft/60 break-keep" data-delay="150">
-            VINUSPREAD partners with visionary leaders to capture the essential essence at the core of their brand. 
-            By transforming strategic insights into beautiful design systems and digital ecosystems, we help 
-            organizations transcend physical and structural boundaries. Our work translates bold vision into 
+          <p className="anim-move-up body-text break-keep" data-delay="150">
+            VINUSPREAD partners with visionary leaders to capture the essential essence at the core of their brand.
+            By transforming strategic insights into beautiful design systems and digital ecosystems, we help
+            organizations transcend physical and structural boundaries. Our work translates bold vision into
             scalable impact, creating experiences that resonate deeply and carry forward into the world.
+          </p>
+          <p className="anim-move-up body-text-ko mt-4" data-delay="200">
+            바이너스프레드는 브랜드의 본질적 가치를 포착하고, 전략적 인사이트를 아름다운 디자인 시스템과 디지털 생태계로 전환합니다.
+            우리는 조직이 물리적·구조적 한계를 넘어설 수 있도록 돕고,
+            깊은 울림을 남기는 경험으로 브랜드의 비전을 세상에 확장시킵니다.
           </p>
 
           {/* Purpose Section (Merged) */}

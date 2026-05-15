@@ -25,31 +25,20 @@ export const Footer = () => {
   };
 
   return (
-    <footer ref={revealRef as any} className="anim-wrap bg-white text-mine-shaft">
-      {/* 9-1. Footer Nav 상단 바 */}
-      <div className="h-[56px] border-b border-alto px-page-padding flex items-center">
-        <div className="grid grid-cols-4 w-full">
-          <div className="col-span-2 hidden md:block" />
-          <div className="col-span-2 flex justify-between text-[14px] uppercase tracking-tight">
-            {/* 메뉴 확보 시 추가 (현재 빈 상태 유지) */}
-            <span className="opacity-0">Menu Item</span>
-          </div>
-        </div>
-      </div>
-
+    <footer ref={revealRef as any} className="anim-wrap text-mine-shaft">
       {/* 9-2. Footer Inner */}
       <div className="px-page-padding py-[80px] flex flex-col justify-between">
-        <div className="grid grid-cols-8 gap-column">
+        <div className="flex flex-col md:grid md:grid-cols-8 md:gap-column">
           {/* Next Page 영역 */}
-          <div className="col-span-8 md:col-span-4 mb-[64px]">
-            <p className="text-[17.1px] uppercase tracking-[-0.38px] mb-4">
+          <div className="md:col-span-4 mb-[48px] md:mb-[64px]">
+            <p className="text-[12px] md:text-[17.1px] uppercase tracking-[-0.38px] mb-4">
               <span className="anim-clip">
                 <span className="anim-move-up">Next Page</span>
               </span>
             </p>
             <Link href={next.href} className="flex items-center gap-8 group w-fit">
               <div className="flex items-start gap-2">
-                <span className="text-[83.5px] md:text-[120px] tracking-[-2.8px] uppercase leading-[0.9] font-normal">
+                <span className="text-[clamp(48px,10vw,120px)] tracking-[-2.8px] md:tracking-[-4px] uppercase leading-[0.9] font-normal">
                   <span className="anim-clip">
                     <span className="anim-move-up" data-delay="100">{next.label}</span>
                   </span>
@@ -57,15 +46,15 @@ export const Footer = () => {
               </div>
               <div className="flex items-center overflow-visible">
                 <svg
-                  width="60"
-                  height="60"
+                  width="40"
+                  height="40"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="0.75"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="group-hover:translate-x-4 transition-transform duration-500"
+                  className="group-hover:translate-x-4 transition-transform duration-500 md:w-[60px] md:h-[60px]"
                 >
                   <line x1="2" y1="12" x2="22" y2="12"></line>
                   <polyline points="15 5 22 12 15 19"></polyline>
@@ -78,14 +67,14 @@ export const Footer = () => {
           <div className="hidden md:block col-span-4" />
 
           {/* Contact 영역 */}
-          <div className="col-span-8 md:col-span-2 flex flex-col gap-6 mb-16 md:mb-0">
+          <div className="md:col-span-2 flex flex-col gap-6 mb-12 md:mb-0">
             <div className="flex flex-col gap-2">
-              <p className="text-[15px] uppercase tracking-widest text-mine-shaft font-inter">
+              <p className="text-[14px] md:text-[15px] uppercase tracking-widest text-mine-shaft font-inter">
                 <span className="anim-clip block">
                   <span className="anim-move-up" data-delay="300">CONTACT</span>
                 </span>
               </p>
-              <p className="text-[16px] font-medium leading-[1.5] tracking-[-0.3px] text-mine-shaft/60">
+              <p className="text-[14px] md:text-[16px] font-medium leading-[1.6] md:leading-[1.5] tracking-[-0.3px] text-mine-shaft/60">
                 <span className="anim-clip block">
                   <span className="anim-move-up" data-delay="350">
                     아이디어를 더 가치 있는 경험으로 만들 준비가 되어 있습니다.<br />
@@ -105,30 +94,30 @@ export const Footer = () => {
           <div className="hidden md:block col-span-2" />
 
           {/* Business Enquiries & Open Positions */}
-          <div className="col-span-4 md:col-span-2 flex flex-col gap-12">
+          <div className="md:col-span-2 flex flex-col gap-8 md:gap-12 mb-10 md:mb-0">
             <div>
-              <p className="text-[14.9px] text-mine-shaft/40 uppercase mb-2">Business enquiries</p>
-              <p className="text-[16.9px]">vinus@vinus.co.kr</p>
-              <p className="text-[16.9px] text-mine-shaft/60 mt-1">TEL : 02-3661-1907 &nbsp; FAX : 02-3661-1906</p>
+              <p className="text-[11px] md:text-[14.9px] text-mine-shaft/40 uppercase mb-2">Business enquiries</p>
+              <p className="text-[14px] md:text-[16.9px]">vinus@vinus.co.kr</p>
+              <p className="text-[14px] md:text-[16.9px] text-mine-shaft/60 mt-1">TEL : 02-3661-1907 &nbsp; FAX : 02-3661-1906</p>
             </div>
             <div>
-              <p className="text-[15px] text-mine-shaft/40 uppercase mb-2">Open Positions</p>
-              <a href="mailto:vinus@vinus.co.kr" className="text-[16.9px] hover:underline underline-offset-4">
+              <p className="text-[11px] md:text-[15px] text-mine-shaft/40 uppercase mb-2">Open Positions</p>
+              <a href="mailto:vinus@vinus.co.kr" className="text-[14px] md:text-[16.9px] hover:underline underline-offset-4">
                 vinus@vinus.co.kr
               </a>
             </div>
           </div>
 
-          {/* Business Hours & Cape Town Address */}
-          <div className="col-span-4 md:col-span-2 flex flex-col gap-12">
+          {/* Business Hours & Address */}
+          <div className="md:col-span-2 flex flex-col gap-8 md:gap-12">
             <div>
-              <p className="text-[15px] text-mine-shaft/40 uppercase mb-2">Business Hours</p>
-              <p className="text-[16.8px] uppercase">Monday to Friday</p>
-              <p className="text-[16.5px] uppercase text-mine-shaft/60 mt-1">10:00 AM – 18:00 PM GMT (+9)</p>
+              <p className="text-[11px] md:text-[15px] text-mine-shaft/40 uppercase mb-2">Business Hours</p>
+              <p className="text-[14px] md:text-[16.8px] uppercase">Monday to Friday</p>
+              <p className="text-[14px] md:text-[16.5px] uppercase text-mine-shaft/60 mt-1">10:00 AM – 18:00 PM GMT (+9)</p>
             </div>
             <div>
-              <p className="text-[15.1px] text-mine-shaft/40 uppercase mb-2">KOREA</p>
-              <address className="text-[16.5px] not-italic">
+              <p className="text-[11px] md:text-[15.1px] text-mine-shaft/40 uppercase mb-2">KOREA</p>
+              <address className="text-[14px] md:text-[16.5px] not-italic">
                 07802 서울시 강서구 공항대로 227, 1202호
               </address>
             </div>
@@ -151,7 +140,7 @@ export const Footer = () => {
           <div className="col-span-4 md:col-span-2 text-right">
             <button 
               onClick={scrollToTop}
-              className="text-[15.1px] uppercase hover:underline underline-offset-4"
+              className="text-[13px] md:text-[15.1px] uppercase hover:underline underline-offset-4"
             >
               Back to top
             </button>

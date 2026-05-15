@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useLayoutEffect } from "react";
 import { useReveal } from "@/hooks/useReveal";
+import { ListRow } from "@/components/common/ListRow";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { cn } from "@/lib/utils";
@@ -16,18 +17,18 @@ const clientLogos = Array.from({ length: 28 }, (_, i) => ({
 }));
 
 const brands = [
-  { name: "DongA Onbook",       services: "Branding — Digital Design — Web Development" },
-  { name: "Samyang",            services: "Digital Design — Web Development" },
-  { name: "Lotte Cinema",       services: "UX/UI Design — App Development" },
-  { name: "Samsung Electronics",services: "Digital Design — Creative Direction" },
-  { name: "Seoul Paik Hospital",services: "Digital Design — Web Development" },
-  { name: "Realty 114",         services: "Strategy — UX/UI Design — App Development" },
-  { name: "Macadamia",          services: "Strategy — UX/UI Design" },
-  { name: "Smart City Jungnang",services: "Strategy — Digital Design" },
-  { name: "CJ CheilJedang",     services: "Digital Design — Creative Direction" },
-  { name: "Hankook Tire",       services: "Digital Design — Web Development" },
-  { name: "Nexon",              services: "Brand Identity — Digital Design" },
-  { name: "LG Electronics",     services: "Digital Design — UX/UI" },
+  { name: "DongA Onbook",       services: "Branding - Digital Design - Web Development" },
+  { name: "Samyang",            services: "Digital Design - Web Development" },
+  { name: "Lotte Cinema",       services: "UX/UI Design - App Development" },
+  { name: "Samsung Electronics",services: "Digital Design - Creative Direction" },
+  { name: "Seoul Paik Hospital",services: "Digital Design - Web Development" },
+  { name: "Realty 114",         services: "Strategy - UX/UI Design - App Development" },
+  { name: "Macadamia",          services: "Strategy - UX/UI Design" },
+  { name: "Smart City Jungnang",services: "Strategy - Digital Design" },
+  { name: "CJ CheilJedang",     services: "Digital Design - Creative Direction" },
+  { name: "Hankook Tire",       services: "Digital Design - Web Development" },
+  { name: "Nexon",              services: "Brand Identity - Digital Design" },
+  { name: "LG Electronics",     services: "Digital Design - UX/UI" },
 ];
 
 export const ClientsBrandsSection = () => {
@@ -36,27 +37,9 @@ export const ClientsBrandsSection = () => {
 
   useLayoutEffect(() => {
     if (!imageRef.current) return;
-    const container = imageRef.current.parentElement;
-    if (!container) return;
 
     const ctx = gsap.context(() => {
-      // 1. Entrance Animation
-      gsap.fromTo(container, 
-        { y: 100, opacity: 0 }, 
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 90%",
-          }
-        }
-      );
-
-      // 2. Parallax
-      gsap.fromTo(imageRef.current, 
+      gsap.fromTo(imageRef.current,
         { y: 50 },
         {
           y: -50,
@@ -88,7 +71,7 @@ export const ClientsBrandsSection = () => {
         {/* Left Side: Content (50% width) */}
         <div className="flex flex-col gap-12">
           
-          <h2 className="anim-move-up display-heading text-[clamp(40px,5vw,72px)] text-mine-shaft">
+          <h2 className="anim-move-up display-heading text-mine-shaft">
             Brands we&apos;ve worked with.
           </h2>
 
@@ -116,28 +99,12 @@ export const ClientsBrandsSection = () => {
         {/* Detailed Brand List */}
         <div className="flex flex-col border-t border-alto">
           {brands.map((brand, idx) => (
-            <div
+            <ListRow
               key={brand.name}
-              className="grid grid-cols-12 items-center py-[32px] border-b border-alto group transition-colors hover:bg-mine-shaft/[0.02]"
-            >
-              <div className="col-span-6 lg:col-span-4">
-                <div className="anim-clip block">
-                  <span className="anim-move-up font-inter font-medium text-[20px] lg:text-[22px] tracking-[-0.02em]" data-delay={idx * 30}>
-                    {brand.name}
-                  </span>
-                </div>
-              </div>
-              <div className="col-span-5 lg:col-span-7">
-                <div className="anim-clip block">
-                  <span className="anim-move-up font-inter font-light text-[15px] leading-relaxed text-mine-shaft/40" data-delay={idx * 30 + 40}>
-                    {brand.services}
-                  </span>
-                </div>
-              </div>
-              <div className="col-span-1 flex justify-end">
-                <span className="opacity-20 group-hover:opacity-100 transition-all duration-300">→</span>
-              </div>
-            </div>
+              label={brand.name}
+              detail={brand.services}
+              delay={idx * 30}
+            />
           ))}
         </div>
         </div>

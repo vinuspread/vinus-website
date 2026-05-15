@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -7,9 +6,9 @@ import { projects } from "@/lib/projects";
 const getProject = (slug: string) => projects.find((p) => p.slug === slug);
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ProjectPageProps) {
@@ -43,7 +42,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           <p className="text-[14px] text-white/70 uppercase tracking-[0.2em] mb-6 font-inter">
             {project.services}
           </p>
-          <h1 className="leading-[0.9] tracking-[-0.04em] text-white uppercase max-w-[1400px] font-inter font-light" style={{ fontSize: "clamp(60px, 8vw, 120px)" }}>
+          <h1 className="leading-[0.9] tracking-[-0.04em] text-white uppercase max-w-[1400px] font-inter font-normal" style={{ fontSize: "clamp(60px, 8vw, 120px)" }}>
             {project.title.split(' ').map((word, i) => (
               <span key={i} className={i % 2 === 1 ? "font-bold" : ""}>
                 {word}{' '}
@@ -68,7 +67,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         ].map(({ label, value }, i) => (
           <div
             key={label}
-            className={`flex flex-col gap-4 py-[48px] ${i < 3 ? "border-r border-alto" : ""} ${i > 0 ? "pl-[40px]" : ""}`}
+            className={`flex flex-col gap-3 py-[28px] md:py-[48px]
+              ${i % 2 === 0 ? "border-r border-alto" : "pl-[16px]"}
+              ${i < 3 ? "md:border-r md:border-alto" : "md:border-r-0"}
+              ${i > 0 ? "md:pl-[40px]" : "md:pl-0"}
+            `}
           >
             <p className="text-[10px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-medium">{label}</p>
             <p className="text-[16px] leading-snug tracking-[-0.02em] font-medium text-mine-shaft">{value}</p>
@@ -77,13 +80,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </section>
 
       {/* 3. Overview 섹션 */}
-      <section className="px-page-padding py-[100px] md:py-[160px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
+      <section className="px-page-padding py-[60px] md:py-[160px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
         <div className="md:col-span-3 mb-8 md:mb-0">
           <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">01</p>
           <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Overview</p>
         </div>
         <div className="md:col-span-9">
-          <p className="text-[22px] md:text-[28px] font-semibold leading-[1.3] tracking-[-0.03em] text-mine-shaft break-keep max-w-[1000px]">
+          <p className="text-[22px] md:text-[28px] font-medium leading-[1.3] tracking-[-0.03em] text-mine-shaft break-keep max-w-[1000px]">
             {project.overview}
           </p>
         </div>
@@ -91,7 +94,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* 4. Background 섹션 */}
       {project.background && (
-        <section className="px-page-padding py-[100px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
+        <section className="px-page-padding py-[60px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
           <div className="md:col-span-3 mb-8 md:mb-0">
             <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">02</p>
             <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Background</p>
@@ -106,7 +109,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* 5. Approach 섹션 */}
       {project.approach && (
-        <section className="px-page-padding py-[100px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
+        <section className="px-page-padding py-[60px] md:py-[140px] grid grid-cols-1 md:grid-cols-12 gap-column border-b border-alto">
           <div className="md:col-span-3 mb-8 md:mb-0">
             <p className="text-[11px] text-mine-shaft/30 mb-3 font-inter font-bold tracking-widest">03</p>
             <p className="text-[11px] uppercase tracking-[0.2em] text-mine-shaft/40 font-inter font-bold">Approach</p>
@@ -142,28 +145,27 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       </div>
 
       {/* 7. Next Project 섹션 */}
-      <section className="px-page-padding pt-[120px] pb-[40px] border-t border-alto">
-         <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40 font-inter mb-12 text-center">Next Project</p>
-         <Link
-            href={`/work/${nextProject.slug}`}
-            className="block relative w-full h-[60vh] md:h-[80vh] overflow-hidden group"
-         >
-            <Image
-               src={nextProject.heroImg}
-               alt={nextProject.title}
-               fill
-               className="object-cover transition-transform duration-1000 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500" />
-            <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-page-padding">
-               <h2 className="text-[60px] md:text-[100px] leading-tight tracking-[-4px] text-white uppercase font-inter font-bold">
-                  {nextProject.title}
-               </h2>
-               <span className="mt-8 text-[14px] uppercase tracking-[0.2em] text-white/80 border border-white/40 px-8 py-3 rounded-full group-hover:bg-white group-hover:text-black transition-all duration-300">
-                  View Project
-               </span>
-            </div>
-         </Link>
+      <section className="px-page-padding pt-[80px] md:pt-[120px] pb-[60px] border-t border-alto">
+<Link
+          href={`/work/${nextProject.slug}`}
+          className="flex items-center gap-6 md:gap-10 group w-fit"
+        >
+          <span
+            className="font-inter font-normal uppercase leading-[0.9] tracking-[-0.04em] text-mine-shaft"
+            style={{ fontSize: "clamp(28px, 5vw, 64px)" }}
+          >
+            {nextProject.title}
+          </span>
+          <svg
+            width="24" height="24" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" strokeWidth="1"
+            strokeLinecap="round" strokeLinejoin="round"
+            className="shrink-0 group-hover:translate-x-3 transition-transform duration-500 md:w-[36px] md:h-[36px]"
+          >
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <polyline points="15 5 22 12 15 19" />
+          </svg>
+        </Link>
       </section>
     </main>
   );

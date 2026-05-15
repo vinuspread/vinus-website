@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeaderDescription } from "@/components/common/PageHeaderDescription";
 
 const budgetOptions = [
   "Under ₩1,000,000",
@@ -65,7 +66,7 @@ export default function ContactPage() {
           <h2 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter mb-[40px]">
             THANK YOU.
           </h2>
-          <p className="text-[17px] tracking-[-0.3px] leading-[1.4] text-mine-shaft/60 mb-[40px]">
+          <p className="body-text mb-[40px]">
             Your request has been received. We&apos;ll be in touch soon.
           </p>
           <button
@@ -85,10 +86,10 @@ export default function ContactPage() {
         breadcrumb="Contact"
         title={<>Begin a New <span className="font-bold">Experience</span></>}
         description={
-          <>
-            <span className="block">당신의 아이디어가 더 가치 있는 경험으로 이어질 수 있도록,</span>
-            <span className="block mt-[4px]">바이너스프레드가 함께 고민하고 제안합니다.</span>
-          </>
+          <PageHeaderDescription
+            en="Every great project starts with a conversation."
+            ko={<><span className="block">당신의 아이디어가 더 가치 있는 경험으로 이어질 수 있도록,</span><span className="block">바이너스프레드가 함께 고민하고 제안합니다.</span></>}
+          />
         }
       />
 

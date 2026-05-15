@@ -2,6 +2,7 @@
 
 import { useReveal } from "@/hooks/useReveal";
 import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeaderDescription } from "@/components/common/PageHeaderDescription";
 
 const primaryServices = [
   {
@@ -63,15 +64,10 @@ export default function ServicesPage() {
         breadcrumb="Services"
         title={<>Strategic <span className="font-bold">Creative</span> Partner</>}
         description={
-          <div className="flex flex-col gap-3">
-            <span className="block">
-              From deep research and strategy to brand identity, digital design, and high-performance development — we partner with brands to create lasting value from start to finish.
-            </span>
-            <div className="body-text-ko">
-              <span>리서치와 전략을 바탕으로 브랜드 아이덴티티, 디지털 디자인,</span>
-              <span className="block">웹 개발까지 — 브랜드의 처음부터 끝까지 함께하며 지속 가능한 가치를 창출합니다.</span>
-            </div>
-          </div>
+          <PageHeaderDescription
+            en="From strategy to design and development — we partner with brands to create lasting value."
+            ko={<>리서치와 전략을 바탕으로 브랜드 아이덴티티, 디지털 디자인, 웹 개발까지<br />- 브랜드의 처음부터 끝까지 함께하며 지속 가능한 가치를 창출합니다.</>}
+          />
         }
       />
 
@@ -80,7 +76,7 @@ export default function ServicesPage() {
         {primaryServices.map((svc, i) => (
           <div
             key={svc.index}
-            className="section-pad border-b border-alto last:border-b-0"
+            className="px-page-padding py-[60px] md:section-pad border-b border-alto last:border-b-0"
           >
             {/* Content Column - Full Width Left Aligned */}
             <div className="flex flex-col gap-10 max-w-[1200px]">
@@ -97,7 +93,7 @@ export default function ServicesPage() {
               <div className="flex flex-col gap-10">
                 <div className="flex flex-col gap-4">
                   <span className="block overflow-hidden">
-                    <span className="anim-move-up block body-text !text-mine-shaft whitespace-pre-line" data-delay={i * 80 + 100}>
+                    <span className="anim-move-up block body-text !text-mine-shaft/70 whitespace-pre-line" data-delay={i * 80 + 100}>
                       {svc.descEn}
                     </span>
                   </span>
@@ -128,8 +124,8 @@ export default function ServicesPage() {
       {/* ── Expertise & Disciplines (Dark) ── */}
       <section ref={detailRef as any} className="anim-wrap bg-mine-shaft text-white section-pad-large">
         <div className="flex flex-col md:flex-row gap-20">
-          <div className="flex-1">
-            <h3 className="display-heading !text-white mb-6 !text-[48px]">
+          <div className="flex-1 mb-10 md:mb-0">
+            <h3 className="display-heading !text-white mb-6">
               Expertise & <br />
               Disciplines
             </h3>
@@ -138,18 +134,18 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="flex-[1.5] flex flex-col gap-12 pt-12 md:pt-4">
+          <div className="flex-[1.5] flex flex-col gap-8 md:gap-12 pt-8 md:pt-4">
             {serviceDetails.map((detail, i) => (
               <div 
                 key={detail.category} 
-                className="grid grid-cols-1 md:grid-cols-12 gap-2 items-baseline anim-move-up"
+                className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-baseline anim-move-up border-b border-white/5 pb-4 last:border-0"
                 data-delay={i * 40}
               >
-                <div className="md:col-span-3">
-                  <h4 className="section-label !text-white/40">{detail.category}</h4>
+                <div className="sm:col-span-3">
+                  <p className="text-[16px] md:text-[18px] text-white font-normal leading-relaxed">{detail.category}</p>
                 </div>
-                <div className="md:col-span-9">
-                  <p className="text-[13px] md:text-[14px] text-white/50 font-medium leading-relaxed">
+                <div className="sm:col-span-9">
+                  <p className="text-[16px] md:text-[18px] text-white/60 font-normal leading-relaxed">
                     {detail.items.join(" · ")}
                   </p>
                 </div>

@@ -243,17 +243,17 @@ export const HeroSectionV2 = () => {
 
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
-      <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[80px] right-page-padding z-[100] flex flex-col items-end pointer-events-none">
-        <span className="font-inter font-bold text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40">Seoul, Korea</span>
-        <span className="font-inter font-black text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
+      <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[100] flex flex-col items-end pointer-events-none">
+        <span className="font-inter font-bold text-[9px] md:text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40">Seoul, Korea</span>
+        <span className="font-inter font-black text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
       </div>
 
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
         {/* Block 1 */}
-        <div className="w-full h-full flex flex-col justify-start pt-[25vh] px-page-padding gap-8">
-          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft text-[clamp(32px,3.5vw,48px)]">
+        <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8">
+          <div className="font-inter leading-[1.2] md:leading-[1.1] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(26px,5.5vw,48px)]">
             {B1_LINES.map((line, i) => (
-              <div key={i} className="py-1">
+              <div key={i} className="py-0.5 md:py-1">
                 {line.text.split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
                     <span className={`b1-word inline-block translate-y-[100%] opacity-0 ${line.bold ? "font-bold" : "font-normal"}`}>
@@ -264,8 +264,8 @@ export const HeroSectionV2 = () => {
               </div>
             ))}
           </div>
-          <div className="mt-4">
-            <div className="font-pretendard text-[16px] font-medium text-mine-shaft/40 leading-[1.5] max-w-[900px]">
+          <div className="mt-2 md:mt-4">
+            <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]">
               {[
                 "빠르게 변화하는 세상 속에서, 우리는 경험의 본질에 집중합니다.",
                 "명확한 구조와 목적을 바탕으로 제품을 설계하고 관리합니다.",
@@ -286,10 +286,11 @@ export const HeroSectionV2 = () => {
         </div>
 
         {/* Block 2 */}
-        <div className="w-full h-full flex flex-col justify-start pt-[25vh] px-page-padding">
-          <div className="font-inter uppercase leading-[0.85] tracking-[-0.06em] text-mine-shaft">
+        <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
+          <div className="font-inter uppercase leading-[0.95] lg:leading-[0.85] tracking-[-0.03em] lg:tracking-[-0.06em] text-mine-shaft">
             {B2_LINES.map((line, i) => (
-              <div key={i} className="py-2 whitespace-nowrap overflow-hidden" style={{ fontSize: line.size }}>
+              <div key={i} className="py-1 md:py-2 whitespace-normal lg:whitespace-nowrap overflow-hidden" 
+                style={{ fontSize: `clamp(30px, 8.5vw, ${line.size === "calc((100vw - 320px) / 15)" ? "10vw" : line.size})` }}>
                 {line.text.split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em] overflow-hidden">
                     <span className="b2-word inline-block translate-y-[100%] opacity-0">
@@ -298,7 +299,8 @@ export const HeroSectionV2 = () => {
                   </span>
                 ))}
                 {line.highlight && (
-                  <div className="w-full mt-2 whitespace-nowrap overflow-hidden" style={{ fontSize: line.highlightSize }}>
+                  <div className="w-full mt-1 md:mt-2 whitespace-normal lg:whitespace-nowrap overflow-hidden" 
+                    style={{ fontSize: `clamp(30px, 9.5vw, ${line.highlightSize === "calc((100vw - 320px) / 14)" ? "12vw" : line.highlightSize})` }}>
                     {line.highlight.split(" ").map((word, k) => (
                       <span key={k} className="inline-block mr-[0.3em] overflow-hidden">
                         <span className="b2-word inline-block font-black translate-y-[100%] opacity-0 text-mine-shaft">
@@ -311,8 +313,8 @@ export const HeroSectionV2 = () => {
               </div>
             ))}
           </div>
-          <div className="mt-6">
-            <p className="font-pretendard text-[16px] font-medium text-mine-shaft/40 leading-[1.5]">
+          <div className="mt-4 md:mt-6">
+            <p className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6]">
               {"우리는 의미 있는 제품 경험의 본질에 집중합니다.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
                   <span className="b2-word inline-block translate-y-[100%] opacity-0">
@@ -325,9 +327,9 @@ export const HeroSectionV2 = () => {
         </div>
 
         {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
-        <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-6 will-change-transform">
-          <div className="font-inter leading-[1.1] tracking-[-0.04em] text-mine-shaft text-[clamp(32px,3.5vw,48px)]">
-            <div className="py-1">
+        <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-5 md:gap-6 will-change-transform">
+          <div className="font-inter leading-[1.2] md:leading-[1.1] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(26px,5.5vw,48px)]">
+            <div className="py-0.5 md:py-1">
               {"We turn product thinking into experience.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
                   <span className="b3-word inline-block translate-y-[100%] opacity-0">
@@ -336,7 +338,7 @@ export const HeroSectionV2 = () => {
                 </span>
               ))}
             </div>
-            <div className="py-1">
+            <div className="py-0.5 md:py-1">
               {"Structured for clarity and sustainable growth.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
                   <span className="b3-word inline-block translate-y-[100%] opacity-0">
@@ -345,7 +347,7 @@ export const HeroSectionV2 = () => {
                 </span>
               ))}
             </div>
-            <div className="py-1">
+            <div className="py-0.5 md:py-1">
               {"VINUSPREAD.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em] overflow-hidden">
                   <span className="b3-word inline-block font-black translate-y-[100%] opacity-0">
@@ -356,7 +358,7 @@ export const HeroSectionV2 = () => {
             </div>
           </div>
           <div className="py-1">
-            <div className="font-pretendard text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
+            <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
               {[
                 "우리는 제품 관점을 경험으로 만듭니다. 명확한 구조 위에서, 지속 가능한 성장을 설계합니다.",
                 "VINUSPREAD"
@@ -374,15 +376,15 @@ export const HeroSectionV2 = () => {
             </div>
           </div>
           <div className="py-2">
-            <div className="flex gap-12">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-12 items-start">
               <span className="overflow-hidden">
                 <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                  <ArrowLink href="/work" className="text-[24px] font-semibold gap-6">View Experience</ArrowLink>
+                  <ArrowLink href="/work" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
                 </span>
               </span>
               <span className="overflow-hidden">
                 <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                  <ArrowLink href="/contact" className="text-[24px] font-semibold gap-6">Start a Project</ArrowLink>
+                  <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
                 </span>
               </span>
             </div>

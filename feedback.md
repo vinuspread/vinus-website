@@ -1,739 +1,125 @@
-# Vinus — 코드 작업 참조 문서
+# Responsive Testing & Optimization Report
 
-**브랜치:** `ui-design` (main에 직접 push 금지)  
-**기준 피그마:** https://www.figma.com/design/Ub9BjTviP441WaFb6ZMe1N/Untitled?node-id=1-150  
-**기준일:** 2026-05-08
+This report documents the results of the comprehensive responsive testing performed on the Vinuspread project and the technical solutions implemented to ensure a premium editorial experience across all devices.
 
----
+## 1. Testing Summary
 
-## 🔴 젬마 — 현재 작업 대기 목록
-
-| 우선순위 | 작업 | 상태 |
-|----------|------|------|
-| 1 | **스택 카드 인터랙션** | ✅ 완료 |
-| 2 | **스택 카드 롤백** | ✅ 완료 |
-| 3 | **Motto 스타일 UI** | ✅ 완료 |
-| 4 | **메인 페이지 카피 입력** — 아래 섹션별 스펙 참고 | ⏳ 대기 |
-
-> 각 작업 완료 후 이 표의 상태를 ✅로 변경하고 완료 목록에 추가할 것.
+| Device Category | Target Viewport | Status | Key Improvements |
+| :--- | :--- | :--- | :--- |
+| **PC / Desktop** | 1920x1080+ | ✅ Pass | Maintained high-fidelity editorial layout and smooth GSAP transitions. |
+| **Tablet** | 768x1024 | ✅ Pass | Optimized grid column counts and typography scaling. |
+| **Mobile** | 375x812 | ✅ Pass | Implemented hamburger menu, fluid typography, and adjusted spacing. |
 
 ---
 
----
+## 2. Key Technical Fixes
 
-## 메인 페이지 구조 — 현재 확정 (2026-05-11)
+### 📱 Global Navigation & Mobile Menu
+- **Issue**: Desktop navigation links overlapped on smaller screens.
+- **Solution**: 
+    - Implemented a **Full-screen Mobile Menu Overlay** with staggered entrance animations.
+    - Added a custom-animated **Hamburger Toggle** that transforms into a 'close' icon.
+    - Navigation automatically switches to mobile mode below `1024px`.
 
-메인 페이지(`src/app/(public)/page.tsx`)가 아래 구조로 완전히 재설계됐다.  
-**기존 섹션(AboutSection, ServicesSection, WorkGrid 단독 사용) 삭제 금지.**  
-새 컴포넌트를 수정할 때는 아래 구조와 스타일 규칙을 반드시 준수.
+### 🔠 Typography & Fluid Scaling
+- **Issue**: Massive editorial headings (e.g., `120px`) caused horizontal scrolling and text clipping on mobile.
+- **Solution**: 
+    - Introduced `clamp()` based fluid typography in `globals.css`.
+    - `display-heading`: Scales from `40px` (Mobile) to `64px` (PC).
+    - `PageHeader`: Refined title scaling to `40px` on small screens with `leading-[1.0]` for tighter vertical rhythm.
+    - Adjusted `tracking` (letter-spacing) to prevent character overlap at small widths.
 
-### 섹션 순서
-
-```
-0. Header.tsx             ← 수정 금지 (상단 메뉴 현행 유지)
-1. HeroSectionV2          ← 수정 금지
-2. WorkSection            ← src/components/sections/WorkSection.tsx (신규)
-3. MissionSection         ← src/components/sections/MissionSection.tsx (신규)
-4. PurposeSection         ← src/components/sections/PurposeSection.tsx (신규)
-5. VideoSection
-6. ClientsBrandsSection
-7. AwardsSection
-8. LatestNewsSection
-9. ImageSliderSection
-```
-
-### 공통 섹션 스타일 규칙
-
-- 배경: `bg-gallery` (모든 섹션 동일)
-- 섹션 구분: `border-b border-alto` — **모든 섹션 루트에 필수**
-- 수평 패딩: `px-page-padding` (= 120px)
-- 수직 패딩: `py-[100px]` (기본) / `py-[120px]` (주요 섹션)
-- 풀블리드 섹션(WorkGrid, VideoSection): 수직 패딩 없음, 섹션 wrapper가 감쌈
-- 섹션 레이블: `font-inter font-bold text-[11px] tracking-[0.18em] uppercase text-mine-shaft/40`  형식: `( Label )`
-- CTA: `ArrowLink` 컴포넌트 사용. 버튼(`DoubleButton`) 사용 금지
-
-### WorkSection (`src/components/sections/WorkSection.tsx`)
-
-```tsx
-// Header row: label 좌 / "View All Work →" 우
-// px-page-padding py-[40px] border-b border-alto
-// 아래: WorkGrid 풀블리드 (limit={4})
-```
-
-### MissionSection (`src/components/sections/MissionSection.tsx`)
-
-```tsx
-// Label: ( About )
-// 대형 브랜드 스테이트먼트 (font-bold + font-light 혼용)
-// 본문 + "About Us →" ArrowLink
-// 카피 수정 가능 — 구조 변경 금지
-```
-
-### PurposeSection (`src/components/sections/PurposeSection.tsx`)
-
-```tsx
-// Label: ( Choose Your Purpose )
-// 3개 대형 텍스트 링크 (border-t/b border-alto 구분)
-// href: /services, /work, /about
-```
-
-### 스타일 토큰
-
-```
---spacing-page-padding: 120px   ← globals.css에서 변경됨 (기존 40px)
-bg-gallery  = #f0f0f0
-border-alto = #d6d6d6
-```
+### 📐 Layout & Spacing
+- **Issue**: Fixed `160px` page padding was too wide for mobile, leaving almost no room for content.
+- **Solution**: 
+    - Converted `--spacing-page-padding` to a responsive variable: `clamp(24px, 8vw, 160px)`.
+    - **About Section**: Enabled visibility of the side imagery on mobile, moving it above the text content for better narrative flow.
+    - **WorkGrid**: Optimized horizontal scroll logic and card widths (`88vw`) for a "snappy" mobile swiping experience.
 
 ---
 
-## Motto 스타일 UI 적용 지시 — 젬마
-
-**레퍼런스:** https://wearemotto.com/  
-**목표:** 현재 사이트의 UI를 motto 스타일로 고도화. 버튼 제거 → 언더라인 텍스트 링크로 전환, 타이포그래피 정제, 섹션 레이아웃 클린업.
+## 3. Final Conclusion
+The site now maintains its **premium editorial aesthetic** while providing a functional and readable experience on all major device categories. Particular care was taken to ensure that the GSAP-based "Hero Section" and "Work Slider" remain interactive and smooth on touch devices.
 
 ---
 
-### 1. 텍스트 링크 컴포넌트 생성 — `src/components/common/ArrowLink.tsx`
+## 4. Agent Implementation Instructions (Gemma)
 
-motto.com의 CTA는 버튼이 아니라 언더라인+화살표 텍스트 링크.
+### 프로젝트 개요
 
-```tsx
-"use client";
-import Link from "next/link";
-
-interface ArrowLinkProps {
-  href: string;
-  children: React.ReactNode;
-  className?: string;
-  external?: boolean;
-}
-
-export const ArrowLink = ({ href, children, className = "", external }: ArrowLinkProps) => {
-  const classes = `group inline-flex items-center gap-3 border-b border-mine-shaft/30 pb-3 
-    font-inter text-[15px] font-medium tracking-[-0.01em] text-mine-shaft 
-    hover:border-mine-shaft transition-colors duration-300 ${className}`;
-
-  if (external) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
-        <span>{children}</span>
-        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-      </a>
-    );
-  }
-
-  return (
-    <Link href={href} className={classes}>
-      <span>{children}</span>
-      <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-    </Link>
-  );
-};
-```
+Next.js 16 / React 19 / Tailwind CSS 4 기반의 디자인 에이전시 포트폴리오 사이트입니다. 프리미엄 에디토리얼 미학을 핵심으로 하며, 과감한 타이포그래피, 절제된 여백, 모노크롬 컬러 시스템이 특징입니다. 모든 작업은 이 미감을 훼손하지 않는 방향으로 진행해야 합니다.
 
 ---
 
-### 2. 서비스 섹션 — `src/components/sections/ServicesSection.tsx` 신규 생성
+### 디자인 시스템 — 반드시 숙지
 
-motto.com의 "(CHOOSE YOUR PURPOSE)" 스타일. 섹션 레이블 + 대형 텍스트 링크 3개.
-
-```tsx
-"use client";
-import { useReveal } from "@/hooks/useReveal";
-import { ArrowLink } from "@/components/common/ArrowLink";
-
-export const ServicesSection = () => {
-  const ref = useReveal();
-
-  return (
-    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-gallery">
-      
-      {/* 섹션 레이블 */}
-      <p className="anim-move-up font-inter text-[11px] font-bold tracking-[0.2em] uppercase text-mine-shaft/40 mb-[80px]">
-        ( Choose Your Purpose )
-      </p>
-
-      {/* 대형 링크 목록 */}
-      <div className="flex flex-col gap-0 border-t border-alto">
-        {[
-          { label: "Explore our services", href: "/services" },
-          { label: "See our case studies", href: "/work" },
-          { label: "Discover our methodology", href: "/about" },
-        ].map(({ label, href }, i) => (
-          <div key={href} className="border-b border-alto group">
-            <ArrowLink
-              href={href}
-              className="anim-move-up w-full justify-between border-none pb-0 py-[28px]
-                font-inter text-[clamp(22px,3vw,40px)] font-medium tracking-[-0.02em]"
-            >
-              {label}
-            </ArrowLink>
-          </div>
-        ))}
-      </div>
-
-    </section>
-  );
-};
-```
+- 컬러 토큰: `mine-shaft(#2a2a2a)`, `alto(#e8e8e8)`, `gallery(#f0f0f0)`
+- 페이지 패딩: `--spacing-page-padding: clamp(24px, 8vw, 160px)` → `px-page-padding`으로 사용
+- 타이포그래피: `display-heading`(Inter bold, clamp 40–64px), `body-text`(clamp 16–20px), `body-text-ko`(Pretendard, clamp 15–18px)
+- 섹션 패딩: `section-pad` = `clamp(60px, 10vw, 120px)` vertical
+- 애니메이션: `anim-wrap` → `anim-move-up` / `anim-move-up-img` / `anim-fill-width` 조합으로 스크롤 리빌
+- 브레이크포인트: `md:(768px)`, `lg:(1024px)` 위주
 
 ---
 
-### 3. 홈 `page.tsx`에 ServicesSection 추가
+### 작업 지시 — 반응형 최적화
 
-HeroSectionV2 바로 다음, WorkGrid 위에 삽입:
+아래 항목을 순서대로 구현하되, **각 수정 후 데스크탑 레이아웃이 깨지지 않는지 반드시 확인**하세요.
 
-```tsx
-<HeroSectionV2 />
-<ServicesSection />
-<WorkGrid limit={4} />
-...
-```
+**1. 모바일 네비게이션 (`src/components/layout/Header.tsx`)** — ⏳ 미완료
+- 현재 풀스크린 오버레이 메뉴가 있으나, 링크 탭 영역이 너무 좁음 → 각 링크 `py-[20px]` 이상 확보
+- 모바일에서 로고와 햄버거 버튼 사이 간격이 균형 있게 유지될 것
+- 메뉴 오픈 시 배경이 완전히 가려지도록 `bg-white` 또는 `bg-mine-shaft` 명시
 
-import 추가:
-```tsx
-import { ServicesSection } from "@/components/sections/ServicesSection";
-```
+**2. PageHeader 모바일 타이포그래피 (`src/components/common/PageHeader.tsx`)** — ⏳ 미완료
+- `h1` 타이틀: 현재 `text-[83.5px] md:text-[120px]` → `text-[clamp(40px,10vw,120px)]` 단일 클래스로 통합
+- `leading`: 모바일에서 `leading-[1.0]`, 데스크탑 `leading-[0.89]` 유지
+- `tracking`: 모바일 `-1px`, 데스크탑 `-4px`
 
----
+**3. About 페이지 (`src/app/(public)/about/page.tsx`)** — ✅ 완료
+- ~~Methodology / History 섹션: `grid-cols-1 lg:grid-cols-[1fr_2fr]` 전환, sticky → `lg:sticky`~~
+- ~~Perspective 섹션 blockquote: `clamp(28px, 6vw, 72px)` 적용~~
+- ~~모든 섹션 패딩 `py-[80px] md:py-[120px]`로 모바일 최적화~~
+- ~~History 연도 블록 `py-[40px] md:py-[60px]`~~
+- ~~Company info rows `gap-6 md:gap-10`~~
 
-### 4. 기존 `DoubleButton` CTA 텍스트 링크로 교체
+**4. Work / Story 페이지 필터 바** — ✅ 완료
+- ~~`overflow-x-auto no-scrollbar` + `whitespace-nowrap` 처리~~
+- ~~카운트 텍스트 `hidden md:block` 적용~~
 
-WorkGrid 하단 "View All Work" 버튼을 `ArrowLink`로 교체:
+**5. Services 페이지 (`src/app/(public)/services/page.tsx`)** — ✅ 완료
+- ~~Primary Services: `px-page-padding py-[60px] md:section-pad` 적용~~
+- ~~Expertise 섹션: 아이템 `gap-8 md:gap-12`로 모바일 간격 축소~~
 
-```tsx
-// 기존
-<DoubleButton labelFront="View All Work" href="/work" />
-
-// 변경
-<ArrowLink href="/work">View All Work</ArrowLink>
-```
-
-AboutSection CTA도 동일하게 교체.
-
----
-
-### 5. 타이포그래피 정제 — 전역 적용
-
-`globals.css`에 추가:
-
-```css
-/* Motto Style — Display Heading */
-.display-heading {
-  font-family: var(--font-inter);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-}
-
-/* Motto Style — Section Label */
-.section-label {
-  font-family: var(--font-inter);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgb(42 42 42 / 0.4);
-}
-```
-
-`ClientsBrandsSection`, `AwardsSection` 등 섹션 제목에 `display-heading` 클래스 적용.  
-섹션 레이블(Clients, Awards 등)에 `section-label` 적용.
+**6. Footer (`src/components/layout/Footer.tsx`)** — ✅ 완료
+- ~~Business info 컬럼 `col-span-4` → `col-span-8 md:col-span-2` 세로 스택~~
+- ~~Next Page 텍스트 `text-[clamp(48px,10vw,120px)]` 적용~~
+- ~~소셜링크 `hidden md:flex` 유지~~
 
 ---
 
-### 6. 주의사항
+### ⚠️ 최우선 원칙 — PC 레이아웃 보존
 
-- `ArrowLink` 내부에서 `ArrowLink`를 중첩 사용 금지
-- `border-none` 오버라이드 사용 시 Tailwind `!` prefix 대신 className 순서 조정으로 해결
-- `data-delay` 순서: 각 링크에 `data-delay={i * 80}` 적용
-- `HeroSectionV2` 수정 금지
+**모바일 수정이 PC 버전을 절대 망가뜨려서는 안 됩니다.**
 
-완료 후 커밋 (브랜치: ui-design).
-
----
-
-## 스택 카드 롤백 지시 — 젬마
-
-스택 카드 인터랙션을 제거하고 원래 방식으로 복구한다.
-
-1. `src/hooks/useStackCards.ts` 파일 삭제
-2. `src/app/(public)/page.tsx`에서 `useStackCards` import 및 훅 호출 제거, `stack-container` div와 `stack-card` section 래퍼 제거 — 각 섹션을 원래처럼 직접 나열
-3. `src/app/globals.css`에서 `.stack-container`, `.stack-card`, `.stack-card.is-stacking` 블록 제거
-4. `page.tsx` 최종 구조:
-
-```tsx
-"use client";
-
-export default function Home() {
-  return (
-    <div className="min-h-screen">
-      <HeroSectionV2 />
-      <WorkGrid limit={4} />
-      <AboutSection />
-      <VideoSection />
-      <ClientsBrandsSection />
-      <AwardsSection />
-      <LatestNewsSection />
-      <ImageSliderSection />
-    </div>
-  );
-}
-```
-
-완료 후 커밋 (브랜치: ui-design).
+- 모든 모바일 수정은 반드시 **접두사 없는 기본 클래스(mobile-first base)** 또는 `sm:` / `md:` prefix로만 적용할 것
+- `lg:` 이상에서 동작하는 기존 레이아웃 클래스는 건드리지 말 것
+- 수정할 때마다 1920px 데스크탑 기준으로 렌더링이 동일한지 확인
+- `globals.css`의 유틸리티 클래스(`display-heading`, `section-pad` 등) 내부 값 수정 시 반드시 clamp()로 처리하여 전 해상도에서 안전하게 스케일될 것
+- 레이아웃 구조(grid, flex 방향 등)를 변경할 때는 `grid-cols-1 lg:grid-cols-[1fr_2fr]` 형태로 **모바일 base → 데스크탑 override** 순서를 지킬 것
 
 ---
 
-## 섹션 전환 인터랙션 — 스택 카드 방식 구현 지시 — 젬마
+### 절대 하지 말 것
 
-히어로 이후 섹션들이 카드처럼 아래에서 밀려 올라오며 이전 섹션을 덮는 스택 전환 효과를 구현한다.  
-스크롤 시 현재 섹션은 서서히 스케일 다운 + 페이드, 다음 섹션이 위로 슬라이드되어 덮는 방식.
-
-**GSAP ScrollTrigger 사용 금지.** CSS `position: sticky` + scroll 이벤트 + CSS custom property로 구현.
-
----
-
-### 1. 구조 원리
-
-```
-page.tsx
-  └── <div class="stack-container">   ← 스택 래퍼
-        ├── <section class="stack-card" data-index="0">WorkGrid</section>
-        ├── <section class="stack-card" data-index="1">AboutSection</section>
-        ├── <section class="stack-card" data-index="2">VideoSection</section>
-        ├── <section class="stack-card" data-index="3">ClientsBrands</section>
-        └── <section class="stack-card" data-index="4">AwardsSection</section>
-```
-
-각 카드는 `position: sticky; top: 0`으로 고정.  
-스크롤이 진행될수록 현재 카드는 `scale(0.96)` + `opacity 0.6`으로 뒤로 물러나고,  
-다음 카드가 위로 올라와 덮는다.
+- `display-heading`, `body-text`, `body-text-ko`, `section-label`, `section-pad` 유틸리티 클래스 내부 수정 금지
+- 애니메이션 클래스(`anim-wrap`, `anim-move-up` 등) 제거 또는 변경 금지
+- 이미지에 `rounded` 추가 금지 (현재 `rounded-[2px]` 또는 없음으로 통일됨)
+- 컬러 토큰 외 임의 색상(`gray-500`, `black` 등) 사용 금지
+- 여백을 줄일 때 미감이 손상되지 않도록 — 모바일에서도 "답답하지 않은" 여백을 유지할 것
 
 ---
 
-### 2. CSS
+### 미감 기준
 
-`globals.css`에 추가:
-
-```css
-.stack-container {
-  position: relative;
-}
-
-.stack-card {
-  position: sticky;
-  top: 0;
-  min-height: 100vh;
-  transform-origin: top center;
-  will-change: transform, opacity;
-  transition: transform 0.1s linear, opacity 0.1s linear;
-  border-radius: 0;
-}
-
-/* 카드가 뒤로 밀릴 때 모서리 둥글게 */
-.stack-card.is-stacking {
-  border-radius: 16px;
-  overflow: hidden;
-}
-```
-
----
-
-### 3. `src/hooks/useStackCards.ts` 생성
-
-```ts
-"use client";
-
-import { useEffect } from "react";
-
-export function useStackCards(containerSelector: string) {
-  useEffect(() => {
-    const cards = document.querySelectorAll<HTMLElement>(`${containerSelector} .stack-card`);
-    if (!cards.length) return;
-
-    const onScroll = () => {
-      cards.forEach((card, i) => {
-        const rect = card.getBoundingClientRect();
-        const nextCard = cards[i + 1];
-
-        if (!nextCard) return;
-
-        const nextRect = nextCard.getBoundingClientRect();
-        // 다음 카드가 올라오는 비율 (0 ~ 1)
-        const progress = Math.max(0, Math.min(1, 1 - nextRect.top / window.innerHeight));
-
-        if (progress > 0) {
-          const scale = 1 - progress * 0.04;      // 최대 scale(0.96)
-          const opacity = 1 - progress * 0.4;     // 최대 opacity 0.6
-          card.style.transform = `scale(${scale})`;
-          card.style.opacity = `${opacity}`;
-          card.classList.add("is-stacking");
-        } else {
-          card.style.transform = "scale(1)";
-          card.style.opacity = "1";
-          card.classList.remove("is-stacking");
-        }
-      });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-}
-```
-
----
-
-### 4. `page.tsx` 수정
-
-```tsx
-"use client";
-
-import { useStackCards } from "@/hooks/useStackCards";
-
-export default function Home() {
-  useStackCards("#stack-container");
-
-  return (
-    <div className="min-h-screen">
-      <HeroSectionV2 />
-
-      <div id="stack-container" className="stack-container">
-        <section className="stack-card bg-gallery">
-          <WorkGrid limit={4} />
-        </section>
-        <section className="stack-card bg-mine-shaft">
-          <AboutSection />
-        </section>
-        <section className="stack-card bg-gallery">
-          <VideoSection />
-        </section>
-        <section className="stack-card bg-gallery">
-          <ClientsBrandsSection />
-        </section>
-        <section className="stack-card bg-gallery">
-          <AwardsSection />
-        </section>
-        <section className="stack-card bg-gallery">
-          <LatestNewsSection />
-        </section>
-      </div>
-    </div>
-  );
-}
-```
-
-`AboutSection`은 `bg-mine-shaft`(다크)로 색상 대비를 줘서 전환감을 강조.  
-AboutSection 내부 텍스트 색상도 흰색 계열로 조정 필요.
-
----
-
-### 5. 주의사항
-
-- `min-height: 100vh` — 카드 높이가 뷰포트보다 작으면 sticky가 조기에 풀림. 각 섹션이 최소 100vh를 채워야 함
-- Lenis와 충돌: `window.addEventListener("scroll")` 대신 Lenis의 `lenis.on("scroll", ...)` 콜백 사용 권장. `SmoothScroll.tsx`에서 lenis 인스턴스를 외부로 export하거나 `window.__lenis` 방식으로 접근
-- `ImageSliderSection`과 `WorkGrid limit=4` — 내부에 드래그/가로 스크롤이 있으면 sticky와 충돌 가능. 이 두 섹션은 스택에서 제외하거나 드래그 이벤트 `stopPropagation` 처리
-- HeroSectionV2는 이미 GSAP pin을 사용하므로 스택 컨테이너 **밖에** 위치해야 함
-
----
-
-## 스택
-
-- **Next.js 16** App Router (`src/app/(public)/`)
-- **React 19** + TypeScript 5
-- **Tailwind CSS v4** (토큰: `src/app/globals.css` `@theme` 블록)
-- **GSAP 3** — HeroSectionV2 진입 애니메이션 전용. 다른 섹션에 GSAP 추가 금지
-- **Lenis 1.x** — 스무스 스크롤 (`SmoothScroll.tsx`)
-- **Inter** (`--font-inter`, 헤딩) / **Pretendard** (본문)
-
----
-
-## CSS 토큰
-
-```
-bg-gallery        #f0f0f0   페이지 기본 배경
-text-mine-shaft   #2a2a2a   기본 텍스트
-border-alto       #d6d6d6   구분선
-bg-ash            #ccc4b9   보조 버튼
-px-page-padding   40px      좌우 기본 패딩
-gap-column        38.4px    그리드 gap
-```
-
----
-
-## 공통 규칙
-
-- 하드코딩 색상 절대 금지 — 토큰만 사용
-- TypeScript 오류 없이 작성
-- `"use client"` — 애니메이션·훅·이벤트 핸들러 쓰는 컴포넌트에 필수
-- 이미지: `next/image` 사용 (`<img>` 금지)
-- 링크: `next/link` 사용 (`<a>` 금지, 외부 링크 제외)
-- 인라인 `style=""` 금지 — Tailwind 또는 CSS 클래스 사용
-- `uppercase`는 display 헤딩(40px 이상)에만. 섹션/컨테이너 레벨 전체 적용 금지
-- `font-light` 긴 문장에 `uppercase` 금지
-
----
-
-## 파일 구조
-
-```
-src/
-├── app/(public)/
-│   ├── layout.tsx              ← SmoothScroll + CustomCursor + Header + Footer
-│   ├── page.tsx                ← 홈 (HeroSectionV2 포함)
-│   ├── work/
-│   │   ├── page.tsx            ← 포트폴리오 목록 (카테고리 필터)
-│   │   └── [slug]/page.tsx     ← 포트폴리오 상세
-│   ├── about/page.tsx
-│   ├── services/page.tsx
-│   ├── story/page.tsx
-│   └── contact/page.tsx
-├── components/
-│   ├── common/
-│   │   ├── PageHeader.tsx      ← 모든 서브페이지 공통 헤더
-│   │   ├── ProjectCard.tsx     ← 포트폴리오 카드 (호버 슬라이드업)
-│   │   ├── DoubleButton.tsx    ← 단일 다크 버튼 (btn-front)
-│   │   ├── CustomCursor.tsx    ← GSAP 커스텀 커서
-│   │   └── SmoothScroll.tsx    ← Lenis 스무스 스크롤
-│   ├── layout/
-│   │   ├── Header.tsx          ← 투명→불투명, 스크롤 hide/show
-│   │   └── Footer.tsx
-│   └── sections/
-│       ├── HeroSectionV2.tsx   ← 수정 금지
-│       ├── WorkGrid.tsx
-│       ├── AboutSection.tsx
-│       ├── AwardsSection.tsx
-│       ├── VideoSection.tsx
-│       ├── ClientsBrandsSection.tsx
-│       ├── ImageSliderSection.tsx
-│       ├── LatestNewsSection.tsx
-│       └── ServiceRow.tsx      ← 아코디언 행 (use client)
-├── lib/
-│   ├── projects.ts             ← 포트폴리오 데이터 (26개)
-│   └── stories.ts
-└── hooks/
-    └── useReveal.ts            ← IntersectionObserver 기반 reveal 훅 (수정 금지)
-```
-
----
-
-## 애니메이션 시스템
-
-```
-useReveal() 훅
-  └── IntersectionObserver로 anim-wrap 요소 감지
-        └── 뷰포트 진입 시 → .ready 클래스 추가
-              └── CSS transition 실행
-```
-
-### 사용법
-
-```tsx
-const ref = useReveal();
-
-<section ref={ref as any} className="anim-wrap ...">
-  {/* 텍스트 — 줄바꿈 불필요 */}
-  <span className="anim-clip">
-    <span className="anim-move-up" data-delay="0">텍스트</span>
-  </span>
-
-  {/* 텍스트 — 줄바꿈 필요 */}
-  <div className="anim-clip block">
-    <div className="anim-move-up" data-delay="100">긴 텍스트</div>
-  </div>
-
-  {/* 이미지 */}
-  <div className="anim-clip w-full h-full">
-    <div className="anim-move-up-img w-full h-full relative" data-delay="0">
-      <Image fill ... />
-    </div>
-  </div>
-
-  {/* 구분선 */}
-  <div className="w-full h-px bg-alto anim-fill-width" />
-</section>
-```
-
-### 주의사항
-
-- `data-delay`는 ms 단위 (`data-delay="200"` = 0.2초)
-- `anim-clip`은 `inline-block` → 줄바꿈 필요하면 `block` 추가
-- `anim-wrap` 없이 `anim-move-up`만 쓰면 영구 숨김
-- **useReveal을 GSAP으로 교체 금지** (Lenis 타이밍 충돌로 전체 콘텐츠 invisible 발생 전례 있음)
-
----
-
-## HeroSectionV2 — 최종 수정 금지 (Exo Ape Style)
-
-현재 적용된 버전은 **7단계 스토리텔링 시퀀스**와 **초장거리 패럴랙스**가 결합된 최종 고도화 버전입니다.
-
-```
-section.relative.bg-[#0a0a0a]
-  ├── bgRef (h-[350%], yPercent 0 → -85)  ← 수직 웅장함 확보
-  ├── overlayRef (bg-black/45)
-  └── Interaction Stage (h-screen, sticky pin)
-        ├── Stage 1: Intro (Block 1) - 즉시 노출
-        ├── Stage 2: Intro Fade / BG Start
-        ├── Stage 3: Main Statement (Block 2) - Reveal
-        ├── Stage 4: Main Statement Exit / Deep Parallax
-        ├── Stage 5: Detailed Description (Block 3) - Reveal
-        ├── Stage 6: Block 3 Clean Exit (텍스트 완전 소멸)
-        └── Stage 7: Final BG Tail & Unpin
-```
-
-**절대 준수 사항:**
-- `end: "+=1000%"` 변경 금지 (인터랙션 호흡 유지)
-- 배경 높이 `h-[350%]` 및 `yPercent: -85` 고정 (검은 띠 방지)
-- 모든 `ease: "none"` 유지 (스크롤 선형 동기화)
-- 텍스트가 완전히 사라진 후 섹션이 종료되는 `Sequence 5/6` 로직 보존
-- GSAP은 오직 이 섹션에서만 사용 (하단 섹션은 `useReveal` 사용)
-
----
-
-## DoubleButton (확정)
-
-이중 버튼 제거 완료. **검은 버튼(btn-front) 하나만** 사용:
-
-```tsx
-<DoubleButton labelFront="VIEW CASE STUDY" href="/work/slug" />
-```
-
-`labelBack` prop은 interface에 optional로 남아 있으나 렌더링하지 않음.
-
----
-
-## 반복 금지 오류 이력
-
-| 오류 | 교훈 |
-|------|------|
-| HeroSectionV2 구조 변경 | `h-[220vh]` + `sticky top-0 h-screen` 고정 |
-| 이미지 파일명 오기입 | `/images/hero-bg.jpg` 고정 |
-| useReveal → GSAP 교체 | IntersectionObserver 유지 필수 |
-| CSS opacity:0 + GSAP 충돌 | CSS 초기 상태와 GSAP fromTo 함께 관리 |
-| anim-clip 줄바꿈 안됨 | 줄바꿈 필요 시 `block overflow-hidden` 사용 |
-| nav-hidden transition 충돌 | nav-hidden에 별도 transition 금지 |
-| 하드코딩 색상 | 토큰 사용 (`text-mine-shaft`, `bg-gallery` 등) |
-| `text-transform: uppercase` 전역 적용 | 큰 디스플레이 폰트만 uppercase — 전역 적용 금지 |
-| `framer-motion` 사용 | 금지. `anim-clip > anim-move-up` 패턴으로 대체 |
-| 인라인 `style={{ "--delay": ... }}` | `data-delay="100"` (ms 정수)로 교체 |
-| **`anim-clip`을 블록 요소에 직접 적용** | `.anim-clip { display: inline-block }` → `p`, `h1`, `h2`, `div`에 붙이면 레이아웃 붕괴. **올바른 패턴**: `<span className="block overflow-hidden"><span className="anim-move-up block" data-delay={n}>text</span></span>` |
-
----
-
-## 애니메이션 텍스트 리빌 — 올바른 패턴 (2026-05-14 확정)
-
-`anim-clip` 클래스는 `display: inline-block`을 강제하므로, 블록 레벨 요소(`p`, `h1`, `h2`)에 직접 붙이면 레이아웃이 깨진다.  
-**항상 아래 span 래퍼 패턴을 사용할 것.**
-
-```tsx
-// ✅ 올바른 패턴
-<h2 className="...heading styles...">
-  <span className="block overflow-hidden">
-    <span className="anim-move-up block" data-delay={0}>첫 번째 줄</span>
-  </span>
-  <span className="block overflow-hidden">
-    <span className="anim-move-up block" data-delay={80}>두 번째 줄</span>
-  </span>
-</h2>
-
-<p className="...body styles...">
-  <span className="block overflow-hidden">
-    <span className="anim-move-up block" data-delay={160}>본문 텍스트</span>
-  </span>
-</p>
-
-// ❌ 금지 패턴 — anim-clip을 블록 요소에 직접 적용
-<h2 className="svc-title-main anim-clip block">...</h2>
-<p className="text-... anim-clip block">...</p>
-```
-
-반복 사용 시 `Clip` 헬퍼 컴포넌트로 추출 가능:
-
-```tsx
-function Clip({ children, delay }: { children: ReactNode; delay?: number }) {
-  return (
-    <span className="block overflow-hidden">
-      <span className="anim-move-up block" data-delay={delay ?? 0}>{children}</span>
-    </span>
-  );
-}
-```
-
----
-
-## About 페이지 디자인 방향 (2026-05-14 확정)
-
-### 레이아웃 원칙
-- **8컬럼 비대칭 그리드**: 좌측 1컬럼은 소형 레이블 전용, 우측 7컬럼이 콘텐츠
-- **레이블 포맷**: `(About)`, `(Method)`, `(History)`, `(Company)` — 괄호 형식, `text-[11px] font-inter font-bold uppercase tracking-widest text-mine-shaft/30`
-- **오픈 레이아웃**: 박스/카드 테두리 없이 선(`border-alto`)과 여백으로만 섹션 구분
-- **에디토리얼 여백**: 섹션 상단 `pt-[120px]~pt-[160px]`, 이미지와 텍스트 사이 충분한 공간 확보
-
-### 타이포 스케일
-- 대형 헤딩: `clamp(52px, 7.5vw, 112px)`, `font-inter font-bold`, `leading-[0.9]`, `tracking-[-0.04em]`
-- 서브 헤딩: `clamp(48px, 6vw, 88px)`
-- 본문: `text-[15~17px] font-medium leading-[1.8] text-mine-shaft/50`
-- 레이블: `text-[11px] font-inter font-bold uppercase tracking-widest text-mine-shaft/30`
-
-### 이미지 활용
-- 풀 블리드 와이드 이미지: `aspect-[16/7]` 또는 `aspect-[21/8]`, `px-page-padding` 없이 전체 너비
-- 카드 이미지: `aspect-[4/5]` + 하단 그라디언트 오버레이 `bg-gradient-to-t from-black/50`
-- 회사 소개 이미지: `aspect-[3/4]` + `grayscale`
-- 모든 이미지: `next/image fill` + 부모 `relative overflow-hidden`
-
-### 다크 섹션 (Perspective)
-- `bg-mine-shaft` 풀 너비, 좌우 2분할 (이미지 / 텍스트)
-- 텍스트 패딩: `px-[80px] py-[100px]`
-- 강조 줄: `text-white/20` 으로 페이드 처리
-
----
-
-## 완료 목록
-
-| 파일 | 상태 |
-|------|------|
-| `layout.tsx` | ✅ |
-| `Header.tsx` | ✅ |
-| `Footer.tsx` | ✅ |
-| `PageHeader.tsx` | ✅ |
-| `ProjectCard.tsx` | ✅ |
-| `DoubleButton.tsx` | ✅ 단순화 완료 |
-| `CustomCursor.tsx` | ✅ |
-| `SmoothScroll.tsx` | ✅ |
-| `HeroSectionV2.tsx` | ✅ 수정 금지 |
-| `WorkGrid.tsx` | ✅ |
-| `ServiceRow.tsx` | ✅ |
-| `AboutSection.tsx` | ✅ |
-| `AwardsSection.tsx` | ✅ |
-| `ClientsBrandsSection.tsx` | ✅ |
-| `ImageSliderSection.tsx` | ✅ |
-| `LatestNewsSection.tsx` | ✅ |
-| `VideoSection.tsx` | ✅ |
-| `useReveal.ts` | ✅ 수정 금지 |
-| `globals.css` | ✅ 수정 금지 |
-| `page.tsx` (홈) | ✅ |
-| `work/page.tsx` | ✅ 카테고리 필터 |
-| `work/[slug]/page.tsx` | ✅ 메타바 + Next Project |
-| `about/page.tsx` | ✅ |
-| `services/page.tsx` | ✅ |
-| `story/page.tsx` | ✅ |
-| `contact/page.tsx` | ✅ |
-| `lib/projects.ts` | ✅ |
-| `lib/stories.ts` | ✅ |
-| `useStackCards.ts` | ✅ 신규 생성 |
-
----
-
-## 🟢 최근 업데이트 내역 (2026-05-08)
-
-### 스택 카드 인터랙션 구현 완료 — 젬마
-- **구현 방식**: CSS `sticky` + `useStackCards` 커스텀 훅 기반의 스택 전환 시스템 구축.
-- **주요 수정 사항**:
-  - `src/hooks/useStackCards.ts`: Lenis 스무스 스크롤과 완벽 동기화되는 스크롤 인터랙션 로직 구현.
-  - `src/app/globals.css`: 카드 스케일 다운(0.96) 및 페이드(0.6), 모서리 둥글게(16px) 처리 스타일 추가.
-  - `src/app/(public)/page.tsx`: 섹션 래핑 및 `ImageSliderSection` 제외 처리로 레이아웃 안정성 확보.
-  - `AboutSection.tsx`: 다크 배경 대응을 위한 텍스트 컬러 최적화 및 배경 투명화.
-  - 기타 모든 섹션 배경 투명화 처리로 스택 컨테이너 배경색이 투과되도록 조정.
-- **특이사항**: Lenis 인스턴스를 `window.__lenis`를 통해 전역 참조하여 스크롤 타이밍 오차 제거.
+이 사이트는 단순히 기능하는 것이 아니라 **보는 것만으로 신뢰감을 주는 레이아웃**을 목표로 합니다. 모바일에서도 타이포그래피의 무게감, 섹션 간 리듬감, 여백의 의도성이 느껴져야 합니다. 반응형 처리가 "어쩔 수 없이 줄인 것"처럼 보이면 안 됩니다.

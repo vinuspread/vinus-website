@@ -84,12 +84,12 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
   return (
     <div 
       ref={containerRef} 
-      className={`relative w-full ${isSlider ? "overflow-hidden flex items-start pt-[250px]" : "py-24"}`}
+      className={`relative w-full ${isSlider ? "overflow-hidden flex items-start pt-[120px] md:pt-[250px]" : "py-16 md:py-24"}`}
     >
       <div 
         ref={scrollRef}
         className={`
-          flex w-full gap-6 lg:gap-10 px-page-padding py-0
+          flex w-full gap-5 md:gap-10 px-page-padding py-0
           ${isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"}
         `}
       >
@@ -98,7 +98,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
             key={project.slug} 
             className={`
               project-card-item flex-shrink-0
-              ${isSlider ? "w-[85vw] md:w-[58vw] lg:w-[37vw]" : "w-full"}
+              ${isSlider ? "w-[88vw] sm:w-[58vw] lg:w-[37vw]" : "w-full"}
             `}
           >
             <ProjectCard

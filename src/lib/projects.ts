@@ -21,6 +21,8 @@ export const projects: Project[] = [
     category: "Branding",
     services: "Brand Identity — Packaging Design",
     heroImg: "/projects/branding_luxury.png",
+    year: "2024",
+    client: "Aura Parfums",
   },
   {
     slug: "tech-interface-design",
@@ -28,6 +30,8 @@ export const projects: Project[] = [
     category: "UI/UX",
     services: "Digital Design — Web Development",
     heroImg: "/projects/nextgen_ui_premium.png",
+    year: "2024",
+    client: "NextGen Labs",
   },
   {
     slug: "minimal-architectural-space",
@@ -35,6 +39,8 @@ export const projects: Project[] = [
     category: "UI/UX",
     services: "Architectural Visualization",
     heroImg: "/projects/minimal_arch.png",
+    year: "2023",
+    client: "Zenith Architecture",
   },
   {
     slug: "futuristic-product-design",
@@ -42,6 +48,8 @@ export const projects: Project[] = [
     category: "Branding",
     services: "Industrial Design — Branding",
     heroImg: "/projects/futuristic_product.png",
+    year: "2023",
+    client: "Titanium Audio",
   },
   {
     slug: "creative-agency-branding",
@@ -49,6 +57,8 @@ export const projects: Project[] = [
     category: "Branding",
     services: "Corporate Identity — Typography",
     heroImg: "/projects/creative_agency_id.png",
+    year: "2023",
+    client: "Loom Creative",
   },
   {
     slug: "abstract-glass-art",
@@ -56,6 +66,8 @@ export const projects: Project[] = [
     category: "Character/Illustration",
     services: "3D Illustration — Digital Art",
     heroImg: "/projects/abstract_glass.png",
+    year: "2022",
+    client: "Prism Gallery",
   },
   {
     slug: "wealth-management-app",
@@ -63,6 +75,8 @@ export const projects: Project[] = [
     category: "UI/UX",
     services: "App Design — Fintech UX",
     heroImg: "/projects/fintech_app.png",
+    year: "2023",
+    client: "FinGold Partners",
   },
   {
     slug: "sustainable-fashion-editorial",
@@ -70,6 +84,8 @@ export const projects: Project[] = [
     category: "Branding",
     services: "Editorial Photography — Branding",
     heroImg: "/projects/sustainable_fashion.png",
+    year: "2022",
+    client: "EcoVogue Fashion",
   },
   {
     slug: "liquid-metal-art",
@@ -77,6 +93,8 @@ export const projects: Project[] = [
     category: "Character/Illustration",
     services: "3D Sculpture — Industrial Art",
     heroImg: "/projects/liquid_metal.png",
+    year: "2022",
+    client: "Mercury Studios",
   },
   {
     slug: "luxury-hotel-branding",
@@ -84,6 +102,8 @@ export const projects: Project[] = [
     category: "Branding",
     services: "Hospitality Branding — Identity",
     heroImg: "/projects/luxury_hotel.png",
+    year: "2024",
+    client: "Regency Hotels",
   },
   {
     slug: "crypto-dashboard-ux",
@@ -91,6 +111,8 @@ export const projects: Project[] = [
     category: "UI/UX",
     services: "Financial Dashboard — Crypto UI",
     heroImg: "/projects/crypto_dashboard.png",
+    year: "2023",
+    client: "EtherFlow Inc.",
   },
   {
     slug: "organic-lifestyle-brand",
@@ -98,5 +120,7 @@ export const projects: Project[] = [
     category: "Branding",
     services: "Lifestyle Branding — Photography",
     heroImg: "/projects/organic_lifestyle.png",
+    year: "2022",
+    client: "Pure Linen Co.",
   },
 ];

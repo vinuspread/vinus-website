@@ -6,6 +6,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { useReveal } from "@/hooks/useReveal";
 import { PageHeader } from "@/components/common/PageHeader";
+import { PageHeaderDescription } from "@/components/common/PageHeaderDescription";
+import { FilterBar } from "@/components/common/FilterBar";
 
 const categories = ["All", "Story", "Notice", "Etc"] as const;
 type Category = (typeof categories)[number];
@@ -26,73 +28,67 @@ export default function StoryPage() {
         breadcrumb="Story"
         noBorder
         title={<>Ideas &amp; <span className="font-bold">Insights</span></>}
-        description="프로젝트와 경험, 그리고 브랜드에 대한 바이너스프레드의 시선과 기록을 담았습니다."
+        description={
+          <PageHeaderDescription
+            en="Thoughts, perspectives, and ideas that drive our work."
+            ko="프로젝트와 경험, 그리고 브랜드에 대한 바이너스프레드의 시선과 기록을 담았습니다."
+          />
+        }
       />
 
       {/* ── Category Filter ── */}
-      <div className="px-page-padding border-b border-alto flex items-center gap-[32px] py-[20px]">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActive(cat)}
-            className={`text-[12px] uppercase tracking-[0.1em] font-inter pb-[2px] transition-all duration-300 ${
-              active === cat
-                ? "text-mine-shaft border-b border-mine-shaft"
-                : "text-mine-shaft/40 hover:text-mine-shaft"
-            }`}
-          >
-            {cat}
-            <span className="ml-[6px] opacity-50">{count(cat)}</span>
-          </button>
-        ))}
-      </div>
+      <FilterBar
+        categories={categories}
+        active={active}
+        onSelect={setActive}
+        count={count}
+        total={stories.length}
+        totalLabel="Stories"
+      />
 
-      {/* ── Story List ── */}
-      <section ref={listRef as any} className="anim-wrap px-page-padding">
+      {/* ── Story Grid ── */}
+      <section ref={listRef as any} className="anim-wrap px-page-padding py-[80px]">
         {filtered.length === 0 ? (
-          <div className="py-[120px] text-center text-[15px] text-mine-shaft/40">
+          <div className="py-[120px] text-center body-text-ko opacity-40">
             등록된 글이 없습니다.
           </div>
         ) : (
-          <div>
-            {filtered.map((story) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16">
+            {filtered.map((story, i) => (
               <Link
                 key={story.slug}
                 href={`/story/${story.slug}`}
-                className="flex items-start gap-[40px] py-[40px] border-b border-alto group hover:bg-white/40 transition-colors px-0"
+                className="group flex flex-col gap-6"
               >
-                {/* 썸네일 */}
-                {story.thumbnail ? (
-                  <div className="flex-shrink-0 w-[160px] h-[100px] relative overflow-hidden">
-                    <Image
-                      src={story.thumbnail}
-                      alt={story.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
+                <div className="aspect-[4/5] relative overflow-hidden rounded-[2px] bg-gallery">
+                  <div className="anim-move-up-img w-full h-full relative" data-delay={i * 60}>
+                    {story.thumbnail ? (
+                      <Image
+                        src={story.thumbnail}
+                        alt={story.title}
+                        fill
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center opacity-20">
+                        <span className="section-label">No Image</span>
+                      </div>
+                    )}
                   </div>
-                ) : (
-                  <div className="flex-shrink-0 w-[160px] h-[100px] bg-alto/40 flex items-center justify-center">
-                    <span className="text-[11px] uppercase tracking-wider text-mine-shaft/30">No Image</span>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    <span className="section-label !text-[10px] opacity-40">{story.category}</span>
+                    <span className="w-1 h-1 bg-mine-shaft/10 rounded-full" />
+                    <span className="section-label !text-[10px] opacity-20">{story.date}</span>
                   </div>
-                )}
-
-                {/* 텍스트 */}
-                <div className="flex-1 flex flex-col gap-[12px]">
-                  <div className="flex items-center gap-[16px]">
-                    <span className="text-[11px] uppercase tracking-[0.1em] text-mine-shaft/40 font-inter">{story.category}</span>
-                    <span className="text-[11px] text-mine-shaft/30">{story.date}</span>
-                  </div>
-                  <h2 className="text-[20px] md:text-[24px] tracking-[-0.5px] leading-snug group-hover:opacity-60 transition-opacity">
+                  <h3 className="text-[20px] font-medium leading-[1.3] tracking-tight group-hover:opacity-60 transition-opacity">
                     {story.title}
-                  </h2>
-                  <p className="text-[14px] font-light text-mine-shaft/50 leading-[1.5] line-clamp-2">
+                  </h3>
+                  <p className="body-text-ko !text-[14px] !text-mine-shaft/40 line-clamp-2">
                     {story.summary}
                   </p>
                 </div>
-
-                {/* 화살표 */}
-                <span className="flex-shrink-0 text-[20px] text-mine-shaft/30 group-hover:translate-x-1 transition-transform mt-[4px]">→</span>
               </Link>
             ))}
           </div>

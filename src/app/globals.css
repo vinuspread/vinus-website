@@ -5,16 +5,16 @@
   /* Colors */
   --color-mine-shaft: #2a2a2a;
   --color-gallery:    #f0f0f0;
-  --color-alto:       #d6d6d6;
+  --color-alto:       #e8e8e8;
   --color-ash:        #ccc4b9;
 
   /* Fonts */
   --font-inter: var(--font-inter), "Inter", sans-serif;
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
-  /* Spacing Tokens */
-  --spacing-page-padding: 160px;
-  --spacing-column:       38.4px;
+  /* Spacing Tokens (Responsive) */
+  --spacing-page-padding: clamp(24px, 8vw, 160px);
+  --spacing-column:       clamp(20px, 3vw, 38.4px);
 
   /* Custom Easings */
   --ease-expo-out: cubic-bezier(.075, .82, .165, 1);
@@ -94,14 +94,14 @@
 }
 
 .nav-hidden {
-  transform: translateY(-56px);
+  transform: translateY(-80px);
 }
 
 /* ------------------------------------------------------------
-   Component Styles (Real-world Analysis)
+   Component Styles
    ------------------------------------------------------------ */
 
-/* Custom Cursor - 지시사항 §6 반영 */
+/* Custom Cursor */
 .cursor {
   position: fixed;
   border: 1px solid #2a2a2a;
@@ -115,6 +115,9 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   white-space: nowrap;
+}
+@media (max-width: 1024px) {
+  .cursor { display: none !important; }
 }
 .cursor-active {
   opacity: 1;
@@ -143,8 +146,6 @@
   color: #ffffff;
   border-color: #222222;
 }
-
-
 
 /* Header Entrance Animation */
 @keyframes fade-in {
@@ -199,63 +200,95 @@
   width: 100%;
 }
 
-.reveal-line {
-  display: block;
-  will-change: transform;
-}
-
 /* ------------------------------------------------------------
-   Motto Style Components
+   Motto Style Components (@utility for @apply)
    ------------------------------------------------------------ */
 
-/* Motto Style — Display Heading */
-.display-heading {
+@utility display-heading {
   font-family: var(--font-inter);
+  font-size: clamp(40px, 6vw, 64px);
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: -0.04em;
 }
 
-/* Motto Style — Section Label */
 .section-label {
   font-family: var(--font-inter);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgb(42 42 42 / 0.4);
 }
 
-/* Page Breadcrumb */
 .breadcrumb-label {
   font-family: var(--font-inter);
-  font-size: 13px;
+  font-size: clamp(10px, 2vw, 13px);
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgb(42 42 42 / 0.55);
 }
 
-/* Page Section Padding */
 .section-pad {
-  padding: 80px var(--spacing-page-padding);
+  padding: clamp(60px, 10vw, 120px) var(--spacing-page-padding);
 }
 .section-pad-large {
-  padding: 120px var(--spacing-page-padding);
+  padding: clamp(80px, 15vw, 160px) var(--spacing-page-padding);
 }
 
-/* Body Text */
-.body-text {
-  font-size: 15px;
+@utility body-text {
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: #333333;
+}
+
+@utility body-text-ko {
+  font-family: var(--font-pretendard);
+  font-size: clamp(15px, 1.4vw, 18px);
   font-weight: 500;
   line-height: 1.6;
-  letter-spacing: -0.2px;
-  color: rgb(42 42 42 / 0.55);
-}
-.body-text-ko {
-  font-family: var(--font-pretendard);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.7;
   color: rgb(42 42 42 / 0.4);
+}
+
+/* ------------------------------------------------------------
+   Editorial Prose (Blog Content)
+   ------------------------------------------------------------ */
+
+.prose-editorial {
+  @apply body-text-ko !text-mine-shaft/80;
+}
+
+.prose-editorial h2 {
+  @apply display-heading !text-[32px] md:text-[40px] mt-24 mb-8 text-mine-shaft;
+}
+
+.prose-editorial h3 {
+  @apply display-heading !text-[24px] md:text-[28px] mt-16 mb-6 text-mine-shaft;
+}
+
+.prose-editorial p {
+  @apply mb-10 leading-[1.8];
+}
+
+.prose-editorial img {
+  @apply w-full h-auto my-16 rounded-[2px];
+}
+
+.prose-editorial blockquote {
+  @apply my-16 pl-10 border-l-2 border-mine-shaft/10 italic text-[24px] md:text-[32px] font-inter text-mine-shaft/60 leading-tight;
+}
+
+.prose-editorial strong {
+  @apply font-bold text-mine-shaft;
+}
+
+.prose-editorial ul {
+  @apply list-disc pl-6 mb-10 flex flex-col gap-2;
+}
+
+.prose-editorial ol {
+  @apply list-decimal pl-6 mb-10 flex flex-col gap-2;
 }
