@@ -4,7 +4,6 @@ import { useLayoutEffect, useRef } from "react";
 import { projects } from "@/lib/projects";
 import { ProjectCard } from "@/components/common/ProjectCard";
 import { gsap } from "@/lib/gsap";
-import { ScrollTrigger } from "@/lib/gsap";
 
 
 type Category = "All" | "UI/UX" | "Character/Illustration" | "Branding" | "Etc";
@@ -33,24 +32,25 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
     const slider = scrollRef.current;
     const cards = container.querySelectorAll(".project-card-item");
 
-    // Entry reveal animation
-    gsap.fromTo(
-      cards,
-      { y: 80, opacity: 0 },
-      {
-        y: 0, opacity: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: container,
-          start: "top bottom",
-          end: "top 60%",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      }
-    );
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        cards,
+        { y: 80, opacity: 0 },
+        {
+          y: 0, opacity: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: container,
+            start: "top bottom",
+            end: "top 60%",
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    }, container);
 
-    if (!isSlider) return;
+    if (!isSlider) return () => ctx.revert();
 
     const getLenis = () => (window as any).__lenis;
     const getMaxScroll = () => slider.scrollWidth - window.innerWidth;
@@ -109,7 +109,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
       container.removeEventListener("mouseenter", onMouseEnter);
       container.removeEventListener("mouseleave", onMouseLeave);
       window.removeEventListener("wheel", onWheel);
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      ctx.revert();
       getLenis()?.start();
     };
   }, [filtered, isSlider]);
