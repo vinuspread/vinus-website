@@ -21,7 +21,7 @@ export const ListRow = ({ label, detail, delay = 0 }: ListRowProps) => (
     {/* Detail */}
     <div className="md:col-span-7">
       <span className="block overflow-hidden">
-        <span className="anim-move-up block font-inter font-medium text-[13px] uppercase tracking-normal leading-relaxed text-mine-shaft/60" data-delay={delay + 40}>
+        <span className="anim-move-up block font-inter font-medium text-[16px] uppercase tracking-normal leading-relaxed text-mine-shaft/60" data-delay={delay + 40}>
           {detail}
         </span>
       </span>

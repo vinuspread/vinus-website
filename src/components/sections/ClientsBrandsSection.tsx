@@ -64,7 +64,7 @@ export const ClientsBrandsSection = () => {
   }, []);
 
   return (
-    <section ref={ref as any} className="anim-wrap bg-white overflow-hidden">
+    <section ref={ref as any} className="anim-wrap section-pad bg-white overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
         
         {/* Left Side: Content (50% width) */}

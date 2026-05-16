@@ -59,9 +59,7 @@ export default function Home() {
         </section>
 
         <AboutSection />
-        <section className="bg-white section-pad">
-          <ClientsBrandsSection />
-        </section>
+        <ClientsBrandsSection />
         <section className="w-full px-page-padding overflow-hidden">
           <img
             src="/images/section_full.png"
@@ -70,9 +68,7 @@ export default function Home() {
             data-pin-nopin="true"
           />
         </section>
-        <section className="bg-white section-pad">
-          <AwardsSection />
-        </section>
+        <AwardsSection />
         <div className="pb-[10vw]">
           <ImageSliderSection />
         </div>

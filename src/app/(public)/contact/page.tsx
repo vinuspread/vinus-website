@@ -71,7 +71,7 @@ export default function ContactPage() {
           </p>
           <button
             onClick={() => setStatus("idle")}
-            className="text-[13px] tracking-normal uppercase border-b border-mine-shaft pb-[2px] hover:opacity-50 transition-opacity"
+            className="text-[16px] tracking-normal uppercase border-b border-mine-shaft pb-[2px] hover:opacity-50 transition-opacity"
           >
             Send Another Request
           </button>
@@ -194,7 +194,7 @@ export default function ContactPage() {
                     key={cat}
                     type="button"
                     onClick={() => toggleCategory(cat)}
-                    className={`px-[18px] py-[8px] text-[13px] tracking-normal uppercase border transition-colors ${
+                    className={`px-[18px] py-[8px] text-[16px] tracking-normal uppercase border transition-colors ${
                       active
                         ? "bg-mine-shaft text-gallery border-mine-shaft"
                         : "bg-transparent text-mine-shaft border-alto hover:border-mine-shaft"
@@ -224,13 +224,13 @@ export default function ContactPage() {
           </div>
 
           {/* Legal */}
-          <p className="text-[13px] text-mine-shaft/40 leading-[1.5] mb-[48px]">
+          <p className="text-[16px] text-mine-shaft/40 leading-[1.5] mb-[48px]">
             Your request will be sent directly to our team via email. No information is stored on our servers.
           </p>
 
           {/* Submit */}
           {status === "error" && (
-            <p className="text-[13px] text-red-500 mb-[24px]">
+            <p className="text-[16px] text-red-500 mb-[24px]">
               Something went wrong. Please try again.
             </p>
           )}
@@ -239,7 +239,7 @@ export default function ContactPage() {
             disabled={status === "sending"}
             className="group flex items-center gap-[16px] disabled:opacity-40"
           >
-            <span className="text-[13px] tracking-normal uppercase font-inter border-b border-mine-shaft pb-[2px] group-hover:opacity-50 transition-opacity">
+            <span className="text-[16px] tracking-normal uppercase font-inter border-b border-mine-shaft pb-[2px] group-hover:opacity-50 transition-opacity">
               {status === "sending" ? "Sending..." : "Submit Request"}
             </span>
             <span className="text-[20px] group-hover:translate-x-1 transition-transform">→</span>

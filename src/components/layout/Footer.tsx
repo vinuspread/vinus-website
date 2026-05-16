@@ -143,7 +143,7 @@ export const Footer = () => {
           <div className="col-span-4 md:col-span-2 text-right">
             <button
               onClick={scrollToTop}
-              className="text-[13px] md:text-[15.1px] uppercase hover:underline underline-offset-4"
+              className="text-[16px] uppercase hover:underline underline-offset-4"
             >
               Back to top
             </button>

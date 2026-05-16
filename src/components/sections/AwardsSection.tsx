@@ -33,7 +33,7 @@ export const AwardsSection = () => {
           Awards & Recognitions.
         </h2>
 
-        <div className="flex flex-col border-t border-alto mt-8">
+        <div className="flex flex-col border-t border-alto">
           {awardsData.map((award, idx) => (
             <ListRow
               key={award.name}
