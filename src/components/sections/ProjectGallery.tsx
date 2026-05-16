@@ -5,9 +5,6 @@ import Image from "next/image";
 import { gsap } from "@/lib/gsap";
 import { ScrollTrigger } from "@/lib/gsap";
 
-if (typeof window !== "undefined") {
-}
-
 interface ProjectGalleryProps {
   images: string[];
 }
