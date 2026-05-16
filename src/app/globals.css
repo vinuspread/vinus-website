@@ -16,9 +16,13 @@ img + div[style*="position: absolute"] { display: none !important; }
   --font-inter: var(--font-inter), "Inter", sans-serif;
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
-  /* Spacing Tokens (Responsive) */
-  --spacing-page-padding: clamp(24px, 8vw, 160px);
-  --spacing-column:       clamp(20px, 3vw, 38.4px);
+  /* ── Grid System (2560px base)
+     2560 = margin(160) × 2 + col(128) × 12 + gutter(64) × 11
+     1920 = margin(160) × 2 + col(88)  × 12 + gutter(48) × 11
+  ── */
+  --spacing-page-padding: clamp(24px, 8vw, 160px);   /* Unified page padding */
+  --spacing-gutter:       clamp(16px, 2.5vw, 64px);
+  --spacing-col:          clamp(40px, 5vw, 128px);
 
   /* Custom Easings */
   --ease-expo-out: cubic-bezier(.075, .82, .165, 1);
@@ -233,10 +237,16 @@ img + div[style*="position: absolute"] { display: none !important; }
 }
 
 .section-pad {
-  padding: clamp(60px, 10vw, 120px) var(--spacing-page-padding);
+  padding-top: clamp(80px, 12vw, 180px);
+  padding-bottom: clamp(80px, 12vw, 180px);
+  padding-left: var(--spacing-page-padding);
+  padding-right: var(--spacing-page-padding);
 }
 .section-pad-large {
-  padding: clamp(80px, 15vw, 160px) var(--spacing-page-padding);
+  padding-top: clamp(100px, 15vw, 240px);
+  padding-bottom: clamp(100px, 15vw, 240px);
+  padding-left: var(--spacing-page-padding);
+  padding-right: var(--spacing-page-padding);
 }
 
 @utility body-text {

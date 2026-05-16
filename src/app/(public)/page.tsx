@@ -21,6 +21,11 @@ export default function Home() {
       history.scrollRestoration = "manual";
     }
     window.scrollTo(0, 0);
+
+    const ctx = gsap.context(() => {
+    });
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -37,7 +42,7 @@ export default function Home() {
           className="relative z-20"
           style={{ marginTop: "0" }}
         >
-          <div className="mb-[40px] overflow-hidden">
+          <div className="mb-[10vw] overflow-hidden">
             <Marquee 
               text="SELECTED PROJECTS • DIGITAL EXPERIENCE • INNOVATIVE DESIGN • PRODUCT MANAGEMENT • BRAND IDENTITY • " 
               speed={150} 
@@ -45,15 +50,17 @@ export default function Home() {
             />
           </div>
           {/* 1. Featured Work Section */}
-          <section className="pt-0 pb-0">
+          <section className="pt-0 pb-0 relative">
           <WorkGrid limit={8} />
+          
+
           <div className="px-page-padding mt-16 anim-clip">
             <ArrowLink href="/work" className="anim-move-up" data-delay="300">View All Work</ArrowLink>
           </div>
         </section>
 
         <AboutSection />
-        <section className="bg-white py-[100px]">
+        <section className="bg-white section-pad">
           <ClientsBrandsSection />
         </section>
         <section className="w-full px-page-padding overflow-hidden">
@@ -64,10 +71,12 @@ export default function Home() {
             data-pin-nopin="true"
           />
         </section>
-        <section className="bg-white py-[100px]">
+        <section className="bg-white section-pad">
           <AwardsSection />
         </section>
-        <ImageSliderSection />
+        <div className="pb-[10vw]">
+          <ImageSliderSection />
+        </div>
       </div>
     </div>
   );

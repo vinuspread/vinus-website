@@ -53,14 +53,14 @@ export const AboutSection = () => {
   }, [ref]);
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[80px] md:py-[120px] px-page-padding bg-white overflow-hidden">
+    <section ref={ref as any} className="anim-wrap section-pad bg-white overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start" style={{ gridTemplateColumns: "1fr 1fr" }}>
 
         {/* Left Side: Two overlapping images */}
         <div className="flex flex-col mb-12 lg:mb-0">
           <div className="lg:sticky lg:top-[120px] relative w-full">
             {/* 첫 번째 이미지 */}
-            <div className="overflow-hidden aspect-[4/5] lg:aspect-[2/3] w-[80%] bg-gallery">
+            <div className="overflow-hidden aspect-[4/5] lg:aspect-[2/3] w-[65%] bg-gallery">
               <div ref={wrap1Ref} className="w-full h-full will-change-transform scale-125">
                 <img
                   src="/images/about_vertical.png"
@@ -71,7 +71,7 @@ export const AboutSection = () => {
               </div>
             </div>
             {/* 두 번째 이미지: 우측 하단에 겹침 */}
-            <div className="absolute bottom-[-8%] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-gallery">
+            <div className="absolute bottom-[-200px] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-gallery">
               <div ref={wrap2Ref} className="w-full h-full will-change-transform scale-110">
                 <img
                   src="/images/about_vertical2.png"

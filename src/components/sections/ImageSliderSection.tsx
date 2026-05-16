@@ -19,8 +19,8 @@ export const ImageSliderSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap h-[538px] py-[40px] bg-white border-b border-alto overflow-hidden">
-      <div className="h-[461px] overflow-hidden">
+    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto overflow-hidden" style={{ height: "500px" }}>
+      <div className="h-full overflow-hidden">
         <div
           className="flex gap-4 h-full w-max"
           style={{

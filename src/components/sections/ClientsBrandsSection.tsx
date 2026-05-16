@@ -65,8 +65,8 @@ export const ClientsBrandsSection = () => {
   }, []);
 
   return (
-    <section ref={ref as any} className="anim-wrap py-[120px] px-page-padding bg-white overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_0.8fr_1.2fr] gap-12 items-start">
+    <section ref={ref as any} className="anim-wrap bg-white overflow-hidden">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
         
         {/* Left Side: Content (50% width) */}
         <div className="flex flex-col gap-12">
@@ -110,12 +110,10 @@ export const ClientsBrandsSection = () => {
         </div>
         </div>
 
-        {/* Spacer (~20% width) */}
-        <div className="hidden lg:block"></div>
-
-        {/* Right Side: Image (~30% width) */}
-        <div className="hidden lg:flex flex-col">
-          <div className="sticky top-[120px] overflow-hidden aspect-[2/3] w-full">
+        {/* Right Side: Images */}
+        <div className="hidden lg:flex flex-col justify-between">
+          {/* First image — top, narrower to create breathing room */}
+          <div className="overflow-hidden w-[80%] self-end" style={{ height: "calc(42vw + 50px)" }}>
             <div className="w-full h-full will-change-transform">
               <img
                 ref={imageRef}
@@ -125,6 +123,15 @@ export const ClientsBrandsSection = () => {
                 data-pin-nopin="true"
               />
             </div>
+          </div>
+          {/* Second image — bottom, contained within column */}
+          <div className="overflow-hidden aspect-[2/3] w-[60%] self-start">
+            <img
+              src="/images/about_vertical.png"
+              alt=""
+              className="w-full h-full object-cover"
+              data-pin-nopin="true"
+            />
           </div>
         </div>
       </div>

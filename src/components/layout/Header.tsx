@@ -102,26 +102,26 @@ export const Header = () => {
         </nav>
 
         {/* Mobile Toggle */}
-        <div className="lg:hidden flex-1 flex justify-end items-center">
+        <div className="lg:hidden flex items-center justify-end">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="relative z-[1100] w-8 h-8 flex flex-col items-end justify-center gap-1.5"
+            className="relative z-[2000] w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none"
             aria-label="Toggle Menu"
           >
             <span className={cn(
-              "w-8 h-[2px] transition-all duration-300 origin-right",
+              "w-8 h-[2px] transition-all duration-300",
               isDark ? "bg-white" : "bg-mine-shaft",
-              isMenuOpen && "rotate-[-45deg] translate-x-[4px] translate-y-[-2px]"
+              isMenuOpen && "rotate-[-45deg] translate-y-[8px]"
             )} />
             <span className={cn(
-              "w-5 h-[2px] transition-all duration-300",
+              "w-8 h-[2px] transition-all duration-300",
               isDark ? "bg-white" : "bg-mine-shaft",
               isMenuOpen && "opacity-0"
             )} />
             <span className={cn(
-              "w-8 h-[2px] transition-all duration-300 origin-right",
+              "w-8 h-[2px] transition-all duration-300",
               isDark ? "bg-white" : "bg-mine-shaft",
-              isMenuOpen && "rotate-[45deg] translate-x-[4px] translate-y-[2px]"
+              isMenuOpen && "rotate-[45deg] translate-y-[-8px]"
             )} />
           </button>
         </div>
@@ -130,7 +130,7 @@ export const Header = () => {
       {/* Mobile Menu Overlay */}
       <div className={cn(
         "fixed inset-0 z-[1050] bg-white opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-center px-page-padding",
-        isMenuOpen ? "translate-y-0" : "translate-y-[-100%] pointer-events-none"
+        isMenuOpen ? "translate-y-0 visible" : "translate-y-[-100%] invisible pointer-events-none"
       )}>
         <nav className="flex flex-col">
           {navItems.map((item, i) => (
