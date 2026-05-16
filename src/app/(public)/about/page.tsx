@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function ScrambleLine({ text, delay = 0, interval = 7000 }: { text: string; delay?: number; interval?: number }) {
+function ScrambleLine({ text, delay = 0 }: { text: string; delay?: number }) {
   const [display, setDisplay] = useState(text);
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -47,16 +47,13 @@ function ScrambleLine({ text, delay = 0, interval = 7000 }: { text: string; dela
     const el = ref.current;
     if (!el) return;
 
-    let loopTimer: ReturnType<typeof setInterval>;
     let firstRun: ReturnType<typeof setTimeout>;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
-
         firstRun = runScramble(delay);
-        loopTimer = setInterval(() => runScramble(delay), interval + delay);
       },
       { threshold: 0.2 }
     );
@@ -65,9 +62,8 @@ function ScrambleLine({ text, delay = 0, interval = 7000 }: { text: string; dela
     return () => {
       observer.disconnect();
       clearTimeout(firstRun);
-      clearInterval(loopTimer);
     };
-  }, [text, delay, interval]);
+  }, [text, delay]);
 
   return <span ref={ref}>{display}</span>;
 }

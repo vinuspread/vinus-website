@@ -43,6 +43,16 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
         },
         once: true,
       });
+
+      ScrollTrigger.batch(".clip-reveal", {
+        onEnter: (elements) => {
+          gsap.fromTo(elements,
+            { clipPath: "inset(100% 0 0 0)" },
+            { clipPath: "inset(0% 0 0 0)", duration: 1.2, stagger: 0.1, ease: "power4.out", overwrite: true }
+          );
+        },
+        once: true,
+      });
     }, containerRef);
 
     return () => ctx.revert();
@@ -202,9 +212,9 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
         <div className="max-w-[1920px] mx-auto">
           <div className="flex flex-col gap-24 md:gap-48">
             {(project.images ?? []).map((img, i) => (
-              <div key={i} className="scroll-reveal px-page-padding md:px-0">
+              <div key={i} className="px-page-padding md:px-0">
                 {i % 3 === 0 ? (
-                  <div className="relative w-full aspect-[21/9] bg-gallery overflow-hidden">
+                  <div className="clip-reveal relative w-full aspect-[21/9] bg-gallery overflow-hidden">
                     <Image
                       src={img}
                       alt={`${project.title} detail ${i}`}
@@ -215,7 +225,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
                   </div>
                 ) : i % 3 === 1 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 max-w-[1600px] mx-auto">
-                    <div className="relative aspect-[4/5] bg-gallery overflow-hidden">
+                    <div className="clip-reveal relative aspect-[4/5] bg-gallery overflow-hidden">
                       <Image
                         src={img}
                         alt={`${project.title} detail ${i}`}
@@ -225,7 +235,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
                       />
                     </div>
                     {project.images?.[i + 1] && (
-                      <div className="relative aspect-[4/5] bg-gallery overflow-hidden mt-20 md:mt-40">
+                      <div className="clip-reveal relative aspect-[4/5] bg-gallery overflow-hidden mt-20 md:mt-40">
                         <Image
                           src={project.images[i + 1]!}
                           alt={`${project.title} detail ${i + 1}`}
@@ -237,7 +247,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
                     )}
                   </div>
                 ) : (
-                  <div className="max-w-[1400px] mx-auto relative aspect-[16/10] bg-gallery overflow-hidden">
+                  <div className="clip-reveal max-w-[1400px] mx-auto relative aspect-[16/10] bg-gallery overflow-hidden">
                     <Image
                       src={img}
                       alt={`${project.title} detail ${i}`}

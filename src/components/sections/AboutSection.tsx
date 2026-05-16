@@ -6,9 +6,6 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { ScrollTrigger } from "@/lib/gsap";
 
-if (typeof window !== "undefined") {
-}
-
 export const AboutSection = () => {
   const ref = useReveal();
   const wrap1Ref = useRef<HTMLDivElement>(null);

@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CustomCursor } from "@/components/common/CustomCursor";
 import { SmoothScroll } from "@/components/common/SmoothScroll";
+import { PageTransition } from "@/components/common/PageTransition";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased" suppressHydrationWarning>
         <SmoothScroll />
+        <PageTransition />
         <CustomCursor />
         <Header />
         <main>{children}</main>
