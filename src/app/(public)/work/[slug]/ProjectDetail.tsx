@@ -74,7 +74,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
         <div className="absolute inset-0 flex flex-col justify-end pb-[10vh] px-page-padding">
           <div className="max-w-[1920px] mx-auto w-full">
             <div className="overflow-hidden">
-              <h1 className="reveal-text leading-[0.85] tracking-[-0.05em] text-white uppercase font-inter font-bold" style={{ fontSize: "clamp(50px, 8vw, 140px)" }}>
+              <h1 className="reveal-text leading-[0.85] tracking-[-0.05em] text-white uppercase font-inter font-bold text-[--fs-hero]">
                 {project.title}
               </h1>
             </div>
@@ -88,7 +88,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
           </div>
         </div>
       </section>
-
+ 
       <section className="border-b border-alto bg-white">
         <div className="max-w-[1920px] mx-auto px-page-padding py-12 md:py-20">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-20">
@@ -99,7 +99,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
               { label: "Awards", value: project.awards || "—" },
             ].map(({ label, value }) => (
               <div key={label} className="flex flex-col gap-4 scroll-reveal">
-                <span className="text-[12px] uppercase tracking-normal text-mine-shaft/30 font-inter font-bold">
+                <span className="label-xs text-mine-shaft/30">
                   {label}
                 </span>
                 <span className="text-[20px] md:text-[24px] text-mine-shaft font-medium leading-tight">
@@ -116,7 +116,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-x-20">
             <div className="lg:col-span-4 scroll-reveal">
               <div className="mb-8">
-                <span className="text-[12px] uppercase font-bold text-mine-shaft/40 font-inter tracking-normal">Overview</span>
+                <span className="label-xs">Overview</span>
               </div>
             </div>
             <div className="lg:col-span-8 scroll-reveal">
@@ -125,12 +125,12 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
               </h2>
               <div className="h-[1px] w-full bg-alto mb-12" />
             </div>
-
+ 
             {(project.background || project.goal) && (
               <>
                 <div className="lg:col-span-4 scroll-reveal">
                   <div className="mb-8">
-                    <span className="text-[12px] uppercase font-bold text-mine-shaft/40 font-inter tracking-normal">
+                    <span className="label-xs">
                       {project.goal ? "Goal" : "Background"}
                     </span>
                   </div>
@@ -145,7 +145,7 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
           </div>
         </div>
       </section>
-
+ 
       {project.vision && (
         <section className="bg-gallery py-24 md:py-48">
           <div className="max-w-[1920px] mx-auto px-page-padding">
@@ -160,12 +160,12 @@ export function ProjectDetail({ project, prevProject, nextProject }: ProjectDeta
           </div>
         </section>
       )}
-
+ 
       {project.concept && (
         <section className="bg-white py-24 md:py-48 border-b border-alto">
           <div className="max-w-[1920px] mx-auto px-page-padding">
             <div className="mb-24 md:mb-48 max-w-[1000px]">
-              <span className="text-[12px] uppercase font-bold text-mine-shaft/30 tracking-normal block mb-8 scroll-reveal">
+              <span className="label-xs !text-mine-shaft/30 block mb-8 scroll-reveal">
                 Design Concept
               </span>
               <h3 className="text-[32px] md:text-[64px] font-medium tracking-[-0.04em] text-mine-shaft leading-[1.1] break-keep scroll-reveal">

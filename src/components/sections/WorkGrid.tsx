@@ -127,7 +127,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
         ref={scrollRef}
         className={`
           flex w-full gap-5 md:gap-10 px-page-padding py-0
-          ${isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"}
+          ${isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}
         `}
       >
         {filtered.map((project, i) => (

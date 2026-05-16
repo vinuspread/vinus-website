@@ -47,13 +47,13 @@ export default function StoryPage() {
       />
 
       {/* ── Story Grid ── */}
-      <section ref={listRef as any} className="anim-wrap px-page-padding py-[80px]">
+      <section ref={listRef as any} className="anim-wrap px-page-padding py-[80px] md:py-[120px]">
         {filtered.length === 0 ? (
           <div className="py-[120px] text-center body-text-ko opacity-40">
             등록된 글이 없습니다.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
             {filtered.map((story, i) => (
               <Link
                 key={story.slug}

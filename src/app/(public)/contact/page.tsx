@@ -94,7 +94,7 @@ export default function ContactPage() {
       />
 
       {/* ── Form ── */}
-      <section className="px-page-padding py-[80px]">
+      <section className="px-page-padding py-[80px] md:py-[120px]">
         <form onSubmit={handleSubmit} className="max-w-[1200px]">
 
           {/* Row 1: Company + Name */}

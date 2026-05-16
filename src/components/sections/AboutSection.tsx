@@ -50,7 +50,7 @@ export const AboutSection = () => {
 
   return (
     <section ref={ref as any} className="anim-wrap section-pad bg-white overflow-hidden">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start" style={{ gridTemplateColumns: "1fr 1fr" }}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
         {/* Left Side: Two overlapping images */}
         <div className="flex flex-col mb-12 lg:mb-0">

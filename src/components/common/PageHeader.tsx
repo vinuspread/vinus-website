@@ -46,7 +46,7 @@ export const PageHeader = ({
 
         {/* 타이틀 */}
         <div className="md:col-span-8 mb-6">
-          <h1 className="text-[clamp(40px,10vw,120px)] leading-[1.0] md:leading-[0.89] tracking-[-1px] md:tracking-[-4px] uppercase font-inter font-normal">
+          <h1 className="text-[clamp(40px,10vw,120px)] leading-[1.1] md:leading-[1.0] tracking-[-1px] md:tracking-[-4px] uppercase font-inter font-normal">
             <span className="block overflow-hidden">
               <span className="anim-move-up block">{title}</span>
             </span>

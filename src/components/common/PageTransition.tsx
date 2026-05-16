@@ -38,8 +38,7 @@ export const PageTransition = () => {
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[9000] bg-mine-shaft pointer-events-none"
-      style={{ transformOrigin: "top" }}
+      className="fixed inset-0 z-[9000] bg-mine-shaft pointer-events-none origin-top"
     />
   );
 };

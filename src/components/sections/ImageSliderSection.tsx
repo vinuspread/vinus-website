@@ -19,13 +19,10 @@ export const ImageSliderSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto overflow-hidden" style={{ height: "500px" }}>
+    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto overflow-hidden h-[500px]">
       <div className="h-full overflow-hidden">
         <div
-          className="flex gap-4 h-full w-max"
-          style={{
-            animation: "marquee-images 30s linear infinite",
-          }}
+          className="flex gap-4 h-full w-max marquee-images"
         >
           {marqueeSlides.map((slide, i) => (
             <div key={i} className="min-w-[600px] h-full relative overflow-hidden flex-shrink-0">
@@ -41,12 +38,6 @@ export const ImageSliderSection = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes marquee-images {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
     </section>
   );
 };

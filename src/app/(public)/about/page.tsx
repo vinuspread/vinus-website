@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/common/PageHeader";
 import { PageHeaderDescription } from "@/components/common/PageHeaderDescription";
 import { Clip } from "@/components/common/Clip";
 import { SectionLabel } from "@/components/common/SectionLabel";
+import { BilingualDesc } from "@/components/common/BilingualDesc";
+import { PillarRow } from "@/components/common/PillarRow";
 import { useEffect, useRef, useState } from "react";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -71,22 +73,22 @@ function ScrambleLine({ text, delay = 0 }: { text: string; delay?: number }) {
 /* ─── 데이터 ─────────────────────────────────────────────── */
 const pillars = [
   {
-    num: "01",
     title: "Think",
     sub: "Problem Discovery",
-    desc: "시장의 데이터와 사용자 행동을 분석하여 진짜 문제를 발견합니다.",
+    descEn: "We analyze market data and user behavior to uncover the real problems worth solving.",
+    descKo: "시장의 데이터와 사용자 행동을 분석하여 진짜 문제를 발견합니다.",
   },
   {
-    num: "02",
     title: "Mind",
     sub: "Product Strategy",
-    desc: "클라이언트의 비즈니스 모델에 진정성을 더해 제품의 코어를 설계합니다.",
+    descEn: "We add authenticity to the client's business model and design the core of the product.",
+    descKo: "클라이언트의 비즈니스 모델에 진정성을 더해 제품의 코어를 설계합니다.",
   },
   {
-    num: "03",
     title: "Behavior",
     sub: "Impact Solution",
-    desc: "사용자의 경험(UX)을 유도하여 비즈니스 임팩트를 만들어내는 행동을 설계합니다.",
+    descEn: "We design behaviors that guide user experience and create measurable business impact.",
+    descKo: "사용자의 경험(UX)을 유도하여 비즈니스 임팩트를 만들어내는 행동을 설계합니다.",
   },
 ];
 
@@ -162,8 +164,7 @@ export default function AboutPage() {
       ══════════════════════════════════════════════════════ */}
       <section className="px-page-padding py-[48px] md:py-[80px] overflow-hidden">
         <p
-          className="font-inter font-normal uppercase leading-[0.9] tracking-[-0.04em] text-mine-shaft"
-          style={{ fontSize: "clamp(72px, 13vw, 200px)" }}
+          className="font-inter font-normal uppercase leading-[0.9] tracking-[-0.04em] text-mine-shaft text-[--fs-display-xl]"
         >
           {["We Make", "Your Ideas", "Visible."].map((line, i) => (
             <span key={i} className="block whitespace-nowrap">
@@ -193,26 +194,15 @@ export default function AboutPage() {
 
           {/* Right: 3-pillars grid */}
           <div className="flex flex-col">
-            {pillars.map(({ num, title, sub, desc }, i) => (
-              <div
-                key={num}
-                className="py-[28px] md:py-[40px] flex flex-col gap-4 md:gap-6 border-b border-alto"
-              >
-                <p className="section-label opacity-30">
-                  <Clip delay={i * 60}>{num}</Clip>
-                </p>
-                <div className="flex flex-col gap-2">
-                  <p className="display-heading !text-[32px]">
-                    <Clip delay={i * 60 + 60}>{title}</Clip>
-                  </p>
-                  <p className="section-label opacity-40">
-                    <Clip delay={i * 60 + 90}>{sub}</Clip>
-                  </p>
-                </div>
-                <p className="body-text-ko">
-                  <Clip delay={i * 60 + 120}>{desc}</Clip>
-                </p>
-              </div>
+            {pillars.map(({ title, sub, descEn, descKo }, i) => (
+              <PillarRow
+                key={title}
+                title={title}
+                sub={sub}
+                descEn={descEn}
+                descKo={descKo}
+                delay={i * 60}
+              />
             ))}
           </div>
 
@@ -224,7 +214,7 @@ export default function AboutPage() {
       ══════════════════════════════════════════════════════ */}
       <section
         ref={s03Ref as any}
-        className="anim-wrap relative px-page-padding py-[100px] md:py-[160px] overflow-hidden"
+        className="anim-wrap relative px-page-padding py-[120px] md:py-[180px] overflow-hidden"
       >
         {/* BG image */}
         <img
@@ -237,8 +227,7 @@ export default function AboutPage() {
 
         <div className="relative z-10 flex flex-col gap-14">
           <blockquote
-            className="font-inter font-bold leading-[1.0] tracking-[-0.04em] text-white"
-            style={{ fontSize: "clamp(28px, 6vw, 72px)" }}
+            className="font-inter font-bold leading-[1.0] tracking-[-0.04em] text-white text-[--fs-display-md]"
           >
             <span className="block text-white/25">우리가 만드는 것은</span>
             <span className="block text-white/25">화면이 아닙니다.</span>
@@ -321,9 +310,9 @@ export default function AboutPage() {
           </div>
 
           {/* Right: info rows */}
-          <div className="flex flex-col gap-6 md:gap-10 pt-4">
+          <div className="flex flex-col divide-y divide-white/10 pt-4">
             {companyInfo.map(({ label, value }) => (
-              <div key={label} className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-baseline border-b border-white/5 pb-4 last:border-0">
+              <div key={label} className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-baseline py-4">
                 <div className="sm:col-span-3">
                   <p className="text-[16px] md:text-[18px] text-white font-normal leading-relaxed">{label}</p>
                 </div>
