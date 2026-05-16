@@ -3,12 +3,11 @@
 import { useEffect, useRef, useLayoutEffect } from "react";
 import { useReveal } from "@/hooks/useReveal";
 import { ListRow } from "@/components/common/ListRow";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
 }
 
 const clientLogos = Array.from({ length: 28 }, (_, i) => ({

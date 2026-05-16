@@ -2,11 +2,10 @@
 
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
 }
 
 interface ProjectGalleryProps {

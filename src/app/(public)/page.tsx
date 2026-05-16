@@ -9,10 +9,9 @@ import { AwardsSection } from "@/components/sections/AwardsSection";
 import { WorkGrid } from "@/components/sections/WorkGrid";
 import { ArrowLink } from "@/components/common/ArrowLink";
 import { Marquee } from "@/components/common/Marquee";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   useLayoutEffect(() => {

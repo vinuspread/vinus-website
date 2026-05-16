@@ -3,11 +3,10 @@
 import { useReveal } from "@/hooks/useReveal";
 import { ArrowLink } from "@/components/common/ArrowLink";
 import { useLayoutEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
 }
 
 export const AboutSection = () => {

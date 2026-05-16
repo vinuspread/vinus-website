@@ -4,13 +4,12 @@ import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
 import { projects } from "@/lib/projects";
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 import { Marquee } from "@/components/common/Marquee";
 import { DetailNavBar } from "@/components/common/DetailNavBar";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
 }
 
 export default function ProjectPage() {

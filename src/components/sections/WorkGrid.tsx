@@ -3,10 +3,9 @@
 import { useLayoutEffect, useRef } from "react";
 import { projects } from "@/lib/projects";
 import { ProjectCard } from "@/components/common/ProjectCard";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
-gsap.registerPlugin(ScrollTrigger);
 
 type Category = "All" | "UI/UX" | "Character/Illustration" | "Branding" | "Etc";
 

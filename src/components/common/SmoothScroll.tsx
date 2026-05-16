@@ -3,10 +3,9 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
-gsap.registerPlugin(ScrollTrigger);
 
 export const SmoothScroll = () => {
   const pathname = usePathname();

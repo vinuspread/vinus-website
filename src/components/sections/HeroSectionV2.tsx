@@ -1,9 +1,9 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
-import { gsap } from "gsap";
-import { Observer } from "gsap/Observer";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap } from "@/lib/gsap";
+import { Observer } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 import { ArrowLink } from "@/components/common/ArrowLink";
 import { useFitText } from "@/hooks/useFitText";
 
@@ -50,7 +50,6 @@ export const HeroSectionV2 = () => {
   }, []);
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(Observer, ScrollTrigger);
     const ctx = gsap.context(() => {
       // 1. Initial Reveals
       gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.5 });
