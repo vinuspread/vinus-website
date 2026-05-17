@@ -16,7 +16,7 @@ export const BilingualDesc = ({
   className = "",
 }: BilingualDescProps) => {
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
+    <div className={cn("flex flex-col gap-2 lg:gap-4", className)}>
       <span className="block overflow-hidden">
         <span
           className="anim-move-up block body-text !text-mine-shaft/70 whitespace-pre-line"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { gsap } from "@/lib/gsap";
 import { Observer } from "@/lib/gsap";
 import { ScrollTrigger } from "@/lib/gsap";
@@ -31,6 +32,9 @@ export const HeroSectionV2 = () => {
   const b2HighlightRef = useFitText();
   const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [, setIndexState] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
   const currentIndex = useRef(0);
   const isAnimating = useRef(false);
   const exitTriggerRef = useRef<ScrollTrigger | null>(null);
@@ -77,13 +81,14 @@ export const HeroSectionV2 = () => {
 
         // Reset position before registering
         gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
+        if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
 
-        const exitAnim = gsap.to(b3ContentRef.current, {
+        const exitAnim = gsap.timeline({ paused: true });
+        exitAnim.to(b3ContentRef.current, {
           y: -window.innerHeight, // 포트폴리오가 올라오는 만큼 똑같이 위로 이동
           opacity: 1, // 사라지지 않고 포트폴리오에 가려질 때까지 유지
           ease: "none",
-          paused: true,
-        });
+        }, 0);
 
         // Trigger-less: directly watches scroll position 0 → 100vh
         // Hero is sticky so at scrollY=0 portfolio is just below viewport,
@@ -98,6 +103,7 @@ export const HeroSectionV2 = () => {
             // Safety: if user hasn't scrolled yet, keep B3 visible
             if (self.progress === 0) {
               gsap.set(b3ContentRef.current!, { y: 0, opacity: 1 });
+              if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
             }
           },
         });
@@ -111,6 +117,9 @@ export const HeroSectionV2 = () => {
         // Reset visual state
         if (b3ContentRef.current) {
           gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
+        }
+        if (metaRef.current) {
+          gsap.set(metaRef.current, { y: 0, opacity: 1 });
         }
       };
 
@@ -244,10 +253,13 @@ export const HeroSectionV2 = () => {
 
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
-      <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none">
-        <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-mine-shaft/40">Seoul, Korea</span>
-        <span className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
-      </div>
+      {mounted && createPortal(
+        <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference">
+          <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-white/50">Seoul, Korea</span>
+          <span className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">{currentTime || "00 : 00 : 00"}</span>
+        </div>,
+        document.body
+      )}
 
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
         {/* Block 1 */}

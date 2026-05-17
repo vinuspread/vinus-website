@@ -61,7 +61,7 @@ export default function Home() {
                 <Marquee
                   text="DIGITAL EXPERIENCE • INNOVATIVE DESIGN • PRODUCT MANAGEMENT • BRAND IDENTITY • CHARACTER&ILLUSTRATION • "
                   speed={150}
-                  className="font-inter font-medium text-[clamp(40px,7vw,120px)] leading-none tracking-tighter text-mine-shaft uppercase"
+                  className="font-inter font-medium text-[clamp(32px,6vw,120px)] leading-none tracking-tighter text-mine-shaft uppercase"
                 />
               </div>
             }

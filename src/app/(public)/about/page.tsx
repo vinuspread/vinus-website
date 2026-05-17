@@ -164,7 +164,7 @@ export default function AboutPage() {
       ══════════════════════════════════════════════════════ */}
       <section className="px-page-padding py-[48px] md:py-[80px] overflow-hidden">
         <p
-          className="font-inter font-normal uppercase leading-[0.9] tracking-[-0.04em] text-mine-shaft text-[--fs-display-xl]"
+          className="font-inter font-normal uppercase leading-[0.9] tracking-[-0.04em] text-mine-shaft text-display-xl"
         >
           {["We Make", "Your Ideas", "Visible."].map((line, i) => (
             <span key={i} className="block whitespace-nowrap">
@@ -227,7 +227,7 @@ export default function AboutPage() {
 
         <div className="relative z-10 flex flex-col gap-14">
           <blockquote
-            className="font-inter font-bold leading-[1.0] tracking-[-0.04em] text-white text-[--fs-display-md]"
+            className="font-inter font-bold leading-[1.0] tracking-[-0.04em] text-white text-display-md"
           >
             <span className="block text-white/25">우리가 만드는 것은</span>
             <span className="block text-white/25">화면이 아닙니다.</span>

@@ -77,7 +77,7 @@ export const Header = () => {
             <img
               src="/images/logo.svg"
               alt="Vinuspread"
-              className={cn("h-[20px] md:h-[28px] w-auto transition-all duration-500", isDark && "invert")}
+              className={cn("h-[24px] md:h-[28px] w-auto transition-all duration-500", isDark && "invert")}
 
               data-pin-nopin="true"
             />
@@ -106,24 +106,59 @@ export const Header = () => {
         <div className="lg:hidden flex items-center justify-end">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="relative z-[2000] w-10 h-10 flex flex-col items-center justify-center gap-1.5 focus:outline-none"
+            className="relative z-[2000] w-10 h-10 flex items-center justify-end focus:outline-none"
             aria-label="Toggle Menu"
           >
-            <span className={cn(
-              "w-8 h-[2px] transition-all duration-300",
-              isDark ? "bg-white" : "bg-mine-shaft",
-              isMenuOpen && "rotate-[-45deg] translate-y-[8px]"
-            )} />
-            <span className={cn(
-              "w-8 h-[2px] transition-all duration-300",
-              isDark ? "bg-white" : "bg-mine-shaft",
-              isMenuOpen && "opacity-0"
-            )} />
-            <span className={cn(
-              "w-8 h-[2px] transition-all duration-300",
-              isDark ? "bg-white" : "bg-mine-shaft",
-              isMenuOpen && "rotate-[45deg] translate-y-[-8px]"
-            )} />
+            <div className="relative w-6 h-6">
+              {/* Closed State SVG (Asymmetric 3-bar menu) */}
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={cn(
+                  "absolute inset-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                  isDark ? "text-white" : "text-mine-shaft",
+                  isMenuOpen ? "opacity-0 scale-75 pointer-events-none" : "opacity-100 scale-100"
+                )}
+              >
+                <rect x="12" y="2" width="12" height="2" fill="currentColor" />
+                <rect x="12" y="20" width="12" height="2" fill="currentColor" />
+                <rect y="11" width="24" height="2" fill="currentColor" />
+              </svg>
+
+              {/* Open State SVG (Perfect Close X) */}
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className={cn(
+                  "absolute inset-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                  isDark ? "text-white" : "text-mine-shaft",
+                  isMenuOpen ? "opacity-100 scale-100" : "opacity-0 scale-75 pointer-events-none"
+                )}
+              >
+                <rect
+                  x="4.22266"
+                  y="2.80762"
+                  width="24"
+                  height="2"
+                  transform="rotate(45 4.22266 2.80762)"
+                  fill="currentColor"
+                />
+                <rect
+                  x="21.1934"
+                  y="4.22168"
+                  width="24"
+                  height="2"
+                  transform="rotate(135 21.1934 4.22168)"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
           </button>
         </div>
       </header>

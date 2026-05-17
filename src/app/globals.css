@@ -224,6 +224,29 @@ img + div[style*="position: absolute"] { display: none !important; }
    Motto Style Components (@utility for @apply)
    ------------------------------------------------------------ */
 
+@utility px-page-padding {
+  padding-left: var(--spacing-page-padding);
+  padding-right: var(--spacing-page-padding);
+}
+@utility pl-page-padding {
+  padding-left: var(--spacing-page-padding);
+}
+@utility pr-page-padding {
+  padding-right: var(--spacing-page-padding);
+}
+@utility right-page-padding {
+  right: var(--spacing-page-padding);
+}
+@utility left-page-padding {
+  left: var(--spacing-page-padding);
+}
+@utility text-display-xl {
+  font-size: clamp(72px, 13vw, 200px);
+}
+@utility text-display-md {
+  font-size: clamp(28px, 6vw, 72px);
+}
+
 @utility display-heading {
   font-family: var(--font-inter);
   font-size: clamp(40px, 6vw, 64px);
