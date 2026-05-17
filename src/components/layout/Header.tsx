@@ -17,7 +17,7 @@ export const Header = () => {
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      setIsHidden(false);
+      setIsHidden(y > lastYRef.current && y > 120);
       lastYRef.current = y;
     };
     handleScroll();
@@ -56,6 +56,7 @@ export const Header = () => {
     { label: "vinuspread", href: "/about" },
     { label: "experience", href: "/work" },
     { label: "services", href: "/services" },
+    { label: "lab", href: "/lab" },
     { label: "story", href: "/story" },
     { label: "Contact", href: "/contact" },
   ];
@@ -65,7 +66,7 @@ export const Header = () => {
       <header
         ref={navRef}
         className={cn(
-          "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[1000] px-page-padding flex items-center justify-between transition-all duration-500 header-enter",
+          "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[1000] px-page-padding flex items-center justify-between transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] header-enter",
           "bg-transparent",
           isHidden && !isMenuOpen && "nav-hidden"
         )}
@@ -90,7 +91,7 @@ export const Header = () => {
               key={item.label}
               href={item.href}
               className={cn(
-                "text-[14px] uppercase tracking-normal transition-all duration-500 font-inter font-bold",
+                "text-[14px] uppercase tracking-normal transition-all duration-300 font-inter font-bold",
                 isDark
                   ? pathname === item.href ? "text-white opacity-100" : "text-white opacity-50 hover:opacity-100"
                   : pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-40 hover:opacity-100"
@@ -142,7 +143,7 @@ export const Header = () => {
                 "text-[40px] md:text-[64px] uppercase font-inter font-bold tracking-tighter transition-all duration-500 py-[24px] md:py-[32px] border-b border-alto/30 last:border-0",
                 pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-20 hover:opacity-100"
               )}
-              style={{ transitionDelay: `${i * 50}ms` }}
+              style={{ transitionDelay: isMenuOpen ? `${i * 80}ms` : "0ms" }}
             >
               {item.label}
             </Link>

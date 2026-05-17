@@ -38,6 +38,24 @@ export const ClientsBrandsSection = () => {
     if (!imageRef.current) return;
 
     const ctx = gsap.context(() => {
+      // 섹션 자체가 아래에서 위로 올라오는 애니메이션
+      if (ref.current) {
+        gsap.fromTo(ref.current,
+          { y: 120 },
+          {
+            y: 0,
+            ease: "power3.out",
+            duration: 1.2,
+            scrollTrigger: {
+              trigger: ref.current,
+              start: "top 90%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      }
+
+      // 우측 이미지 패럴랙스
       gsap.fromTo(imageRef.current,
         { y: 50 },
         {
@@ -64,7 +82,7 @@ export const ClientsBrandsSection = () => {
   }, []);
 
   return (
-    <section ref={ref as any} className="anim-wrap section-pad bg-white overflow-hidden">
+    <section ref={ref as any} className="anim-wrap section-pad bg-white overflow-hidden rounded-t-[32px] mt-[80px] md:mt-[120px]">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
         
         {/* Left Side: Content (50% width) */}

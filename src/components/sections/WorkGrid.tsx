@@ -5,7 +5,6 @@ import { projects } from "@/lib/projects";
 import { ProjectCard } from "@/components/common/ProjectCard";
 import { gsap } from "@/lib/gsap";
 
-
 type Category = "All" | "UI/UX" | "Character/Illustration" | "Branding" | "Etc";
 
 interface WorkGridProps {
@@ -17,8 +16,6 @@ interface WorkGridProps {
 export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: WorkGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const scrollXRef = useRef(0);
-  const isHoveredRef = useRef(false);
 
   const filtered = (filter === "All" ? projects : projects.filter((p) => p.category === filter))
     .slice(0, limit);
@@ -33,6 +30,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
     const cards = container.querySelectorAll(".project-card-item");
 
     const ctx = gsap.context(() => {
+      // 카드 입장 애니메이션
       gsap.fromTo(
         cards,
         { y: 80, opacity: 0 },
@@ -42,101 +40,53 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
           scrollTrigger: {
             trigger: container,
             start: "top bottom",
-            end: "top 60%",
+            end: "top 70%",
             scrub: 1,
             invalidateOnRefresh: true,
           },
         }
       );
+
+      if (!isSlider) return;
+
+      // 수직 스크롤 → 수평 변환 (ScrollTrigger pin)
+      const getMaxScroll = () => slider.scrollWidth - window.innerWidth;
+
+      gsap.to(slider, {
+        x: () => -getMaxScroll(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: () => `+=${getMaxScroll()}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
     }, container);
 
-    if (!isSlider) return () => ctx.revert();
-
-    const getLenis = () => (window as any).__lenis;
-    const getMaxScroll = () => slider.scrollWidth - window.innerWidth;
-
-    const releaseScroll = () => {
-      isHoveredRef.current = false;
-      getLenis()?.start();
-    };
-
-    const onMouseEnter = () => {
-      isHoveredRef.current = true;
-      getLenis()?.stop();
-    };
-
-    const onMouseLeave = () => {
-      releaseScroll();
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      if (!isHoveredRef.current) return;
-
-      const maxScroll = getMaxScroll();
-      const nextX = scrollXRef.current + e.deltaY;
-
-      // 슬라이드 시작 전 위로 스크롤 → 해제
-      if (nextX <= 0 && e.deltaY < 0) {
-        scrollXRef.current = 0;
-        gsap.to(slider, { x: 0, duration: 0.3, ease: "power2.out", overwrite: true });
-        releaseScroll();
-        return;
-      }
-
-      // 슬라이드 끝 → 해제하여 아래로 스크롤 계속
-      if (nextX >= maxScroll && e.deltaY > 0) {
-        scrollXRef.current = maxScroll;
-        gsap.to(slider, { x: -maxScroll, duration: 0.3, ease: "power2.out", overwrite: true });
-        releaseScroll();
-        return;
-      }
-
-      e.preventDefault();
-      scrollXRef.current = Math.max(0, Math.min(maxScroll, nextX));
-      gsap.to(slider, {
-        x: -scrollXRef.current,
-        duration: 0.6,
-        ease: "power2.out",
-        overwrite: true,
-      });
-    };
-
-    container.addEventListener("mouseenter", onMouseEnter);
-    container.addEventListener("mouseleave", onMouseLeave);
-    window.addEventListener("wheel", onWheel, { passive: false });
-
-    return () => {
-      container.removeEventListener("mouseenter", onMouseEnter);
-      container.removeEventListener("mouseleave", onMouseLeave);
-      window.removeEventListener("wheel", onWheel);
-      ctx.revert();
-      getLenis()?.start();
-    };
+    return () => ctx.revert();
   }, [filtered, isSlider]);
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${
-        isSlider
-          ? "overflow-hidden flex items-start"
-          : "py-16 md:py-24"
-      }`}
+      className={`relative w-full ${isSlider ? "overflow-clip" : "py-16 md:py-24"}`}
     >
       <div
         ref={scrollRef}
-        className={`
-          flex w-full gap-5 md:gap-10 px-page-padding py-0
-          ${isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"}
-        `}
+        className={`flex w-full gap-5 md:gap-10 px-page-padding py-0 ${
+          isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+        }`}
       >
         {filtered.map((project, i) => (
           <div
             key={project.slug}
-            className={`
-              project-card-item flex-shrink-0
-              ${isSlider ? "w-[88vw] sm:w-[58vw] lg:w-[37vw]" : "w-full"}
-            `}
+            className={`project-card-item flex-shrink-0 ${
+              isSlider ? "w-[88vw] sm:w-[58vw] lg:w-[37vw]" : "w-full"
+            }`}
           >
             <ProjectCard
               src={project.heroImg}

@@ -70,17 +70,37 @@ export default function ServicesPage() {
     const ctx = gsap.context(() => {
       imageRefs.current.forEach((ref) => {
         if (!ref) return;
+        const outer = ref.parentElement;
+
+        // 진입 reveal
+        if (outer) {
+          gsap.fromTo(outer,
+            { clipPath: "inset(100% 0 0 0)" },
+            {
+              clipPath: "inset(0% 0 0 0)",
+              duration: 1.2,
+              ease: "power4.out",
+              scrollTrigger: { trigger: outer, start: "top 85%", toggleActions: "play none none none" },
+            }
+          );
+          gsap.fromTo(ref,
+            { scale: 1.15 },
+            {
+              scale: 1,
+              duration: 1.2,
+              ease: "power4.out",
+              scrollTrigger: { trigger: outer, start: "top 85%", toggleActions: "play none none none" },
+            }
+          );
+        }
+
+        // 패럴랙스
         gsap.fromTo(ref,
           { y: 60 },
           {
             y: -60,
             ease: "none",
-            scrollTrigger: {
-              trigger: ref,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            }
+            scrollTrigger: { trigger: ref, start: "top bottom", end: "bottom top", scrub: true },
           }
         );
       });

@@ -1,5 +1,7 @@
 "use client";
 
+import { ArrowIcon } from "@/components/common/ArrowIcon";
+
 interface ListRowProps {
   label: string;
   detail: string;
@@ -15,7 +17,7 @@ export const ListRow = ({ label, detail, delay = 0 }: ListRowProps) => (
           {label}
         </span>
       </span>
-      <span className="md:hidden opacity-20 group-hover:opacity-100 transition-all duration-300">→</span>
+      <ArrowIcon className="md:hidden opacity-20 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]" />
     </div>
 
     {/* Detail */}
@@ -29,7 +31,7 @@ export const ListRow = ({ label, detail, delay = 0 }: ListRowProps) => (
 
     {/* Arrow (desktop only) */}
     <div className="hidden md:flex col-span-1 justify-end">
-      <span className="opacity-20 group-hover:opacity-100 transition-all duration-300">→</span>
+      <ArrowIcon className="opacity-20 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]" />
     </div>
   </div>
 );

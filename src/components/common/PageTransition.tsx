@@ -15,23 +15,22 @@ export const PageTransition = () => {
 
     if (isFirstRender.current) {
       isFirstRender.current = false;
-      // Initial page load: just reveal
       gsap.fromTo(overlay,
         { scaleY: 1 },
-        { scaleY: 0, duration: 0.8, ease: "power4.inOut", transformOrigin: "top" }
+        { scaleY: 0, duration: 0.7, ease: "power4.inOut", transformOrigin: "top" }
       );
       return;
     }
 
-    // Route change: sweep in then out
+    // Route change: sweep in then out (일관된 리듬)
     const tl = gsap.timeline();
     tl.fromTo(overlay,
       { scaleY: 0, transformOrigin: "bottom" },
-      { scaleY: 1, duration: 0.5, ease: "power4.inOut" }
+      { scaleY: 1, duration: 0.45, ease: "power4.inOut" }
     ).fromTo(overlay,
       { scaleY: 1, transformOrigin: "top" },
-      { scaleY: 0, duration: 0.6, ease: "power4.inOut" },
-      "+=0.1"
+      { scaleY: 0, duration: 0.45, ease: "power4.inOut" },
+      "+=0.05"
     );
   }, [pathname]);
 

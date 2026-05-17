@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { PageHeaderDescription } from "@/components/common/PageHeaderDescription";
+import { ArrowIcon } from "@/components/common/ArrowIcon";
 
 const budgetOptions = [
   "Under ₩1,000,000",
@@ -242,7 +243,7 @@ export default function ContactPage() {
             <span className="text-[16px] tracking-normal uppercase font-inter border-b border-mine-shaft pb-[2px] group-hover:opacity-50 transition-opacity">
               {status === "sending" ? "Sending..." : "Submit Request"}
             </span>
-            <span className="text-[20px] group-hover:translate-x-1 transition-transform">→</span>
+            <ArrowIcon className="transition-transform duration-200 group-hover:translate-x-[3px] group-hover:-translate-y-[3px]" />
           </button>
 
         </form>

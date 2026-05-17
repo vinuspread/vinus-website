@@ -67,7 +67,7 @@ export default function StoryPage() {
                         src={story.thumbnail}
                         alt={story.title}
                         fill
-                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105"
+                        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-out group-hover:scale-[1.04]"
                         data-pin-nopin="true"
                       />
                     ) : (
