@@ -1,0 +1,12 @@
+﻿Add-Type -AssemblyName System.Drawing
+$img = [System.Drawing.Image]::FromFile("e:\Work\vinus\public\images\about_vertical_3d.png")
+$newHeight = [int]($img.Width * 4 / 3)
+$bmp = New-Object System.Drawing.Bitmap($img.Width, $newHeight)
+$graphics = [System.Drawing.Graphics]::FromImage($bmp)
+$graphics.Clear([System.Drawing.Color]::White)
+$y = [int](($newHeight - $img.Height) / 2)
+$graphics.DrawImage($img, 0, $y, $img.Width, $img.Height)
+$img.Dispose()
+$bmp.Save("e:\Work\vinus\public\images\about_vertical_3d_padded.png", [System.Drawing.Imaging.ImageFormat]::Png)
+$graphics.Dispose()
+$bmp.Dispose()

@@ -230,7 +230,7 @@ export const HeroSectionV2 = () => {
             animateTo(currentIndex.current - 1);
           }
         },
-        tolerance: 10,
+        tolerance: 5,
         preventDefault: false,
       });
     }, containerRef);
@@ -244,7 +244,7 @@ export const HeroSectionV2 = () => {
 
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
-      <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[100] flex flex-col items-end pointer-events-none">
+      <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none">
         <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-mine-shaft/40">Seoul, Korea</span>
         <span className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-mine-shaft mt-1">{currentTime || "00 : 00 : 00"}</span>
       </div>

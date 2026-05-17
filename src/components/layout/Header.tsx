@@ -66,7 +66,7 @@ export const Header = () => {
       <header
         ref={navRef}
         className={cn(
-          "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[1000] px-page-padding flex items-center justify-between transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] header-enter",
+          "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[9999] px-page-padding flex items-center justify-between transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] header-enter",
           "bg-transparent",
           isHidden && !isMenuOpen && "nav-hidden"
         )}
@@ -130,7 +130,7 @@ export const Header = () => {
 
       {/* Mobile Menu Overlay */}
       <div className={cn(
-        "fixed inset-0 z-[1050] bg-white opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-center px-page-padding",
+        "fixed inset-0 z-[9998] bg-white opacity-100 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-center px-page-padding",
         isMenuOpen ? "translate-y-0 visible" : "translate-y-[-100%] invisible pointer-events-none"
       )}>
         <nav className="flex flex-col">

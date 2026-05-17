@@ -52,17 +52,20 @@ export default function Home() {
       </div>
 
       <div id="content-container" className="relative z-20">
-        <div className="mb-[6vw] overflow-hidden">
-          <Marquee
-            text="SELECTED PROJECTS • DIGITAL EXPERIENCE • INNOVATIVE DESIGN • PRODUCT MANAGEMENT • BRAND IDENTITY • "
-            speed={150}
-            className="font-inter font-medium text-[clamp(20px,3.5vw,60px)] tracking-tighter text-mine-shaft uppercase opacity-30"
+        {/* Marquee + WorkGrid — pinned together */}
+        <section className="pt-0 pb-0 relative z-0">
+          <WorkGrid
+            limit={8}
+            marquee={
+              <div className="mb-[48px] overflow-hidden bg-white">
+                <Marquee
+                  text="DIGITAL EXPERIENCE • INNOVATIVE DESIGN • PRODUCT MANAGEMENT • BRAND IDENTITY • CHARACTER&ILLUSTRATION • "
+                  speed={150}
+                  className="font-inter font-medium text-[clamp(40px,7vw,120px)] leading-none tracking-tighter text-mine-shaft uppercase"
+                />
+              </div>
+            }
           />
-        </div>
-
-        {/* Featured Work */}
-        <section className="pt-0 pb-0 relative">
-          <WorkGrid limit={8} />
           <div className="px-page-padding mt-12 flex items-center justify-between">
             <ArrowLink href="/work" className="anim-move-up text-[18px] md:text-[22px] font-semibold" data-delay="300">
               View All Work

@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { projects } from "@/lib/projects";
 import { ProjectCard } from "@/components/common/ProjectCard";
 import { gsap } from "@/lib/gsap";
@@ -11,9 +11,10 @@ interface WorkGridProps {
   filter?: Category;
   limit?: number;
   isSlider?: boolean;
+  marquee?: React.ReactNode;
 }
 
-export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: WorkGridProps) => {
+export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marquee }: WorkGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -54,12 +55,12 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
 
       gsap.to(slider, {
         x: () => -getMaxScroll(),
-        ease: "none",
+        ease: "power1.inOut",
         scrollTrigger: {
           trigger: container,
-          start: "top top",
-          end: () => `+=${getMaxScroll()}`,
-          scrub: 1,
+          start: "top 80px",
+          end: () => `+=${getMaxScroll() * 1.2}`,
+          scrub: 2,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -73,11 +74,12 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp }: Work
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${isSlider ? "overflow-clip" : "py-16 md:py-24"}`}
+      className={`relative w-full ${isSlider ? "overflow-clip bg-white" : "py-16 md:py-24"}`}
     >
+      {isSlider && marquee}
       <div
         ref={scrollRef}
-        className={`flex w-full gap-5 md:gap-10 px-page-padding py-0 ${
+        className={`flex w-full gap-5 md:gap-10 px-page-padding ${
           isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         }`}
       >
