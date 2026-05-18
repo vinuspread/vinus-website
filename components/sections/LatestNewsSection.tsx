@@ -63,7 +63,7 @@ export const LatestNewsSection = () => {
                 </span>
               </h3>
               {story.summary && (
-                <p className="body-text-ko !text-[14px] line-clamp-2">
+                <p className="body-text-ko !text-[16px] line-clamp-2">
                   {story.summary}
                 </p>
               )}

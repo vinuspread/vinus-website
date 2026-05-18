@@ -13,7 +13,7 @@ export const MissionSection = () => {
       <div className="mb-[80px]">
         <h2 className="display-heading text-mine-shaft">
           <span className="block overflow-hidden">
-            <span className="anim-move-up block font-light" data-delay="80">Spread the</span>
+            <span className="anim-move-up block font-normal" data-delay="80">Spread the</span>
           </span>
           <span className="block overflow-hidden">
             <span className="anim-move-up block font-bold" data-delay="140">Beautiful Things.</span>

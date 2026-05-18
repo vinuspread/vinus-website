@@ -27,7 +27,7 @@ export const PageHeader = ({
   return (
     <section
       ref={ref as any}
-      className={`anim-wrap pt-[140px] pb-[80px] px-page-padding${
+      className={`anim-wrap pt-[100px] md:pt-[140px] pb-[60px] md:pb-[80px] px-page-padding${
         noBorder ? "" : " border-b border-alto"
       }`}
     >
@@ -38,7 +38,7 @@ export const PageHeader = ({
             {breadcrumb}
           </span>
           {sideLabel && (
-            <span className="text-[15px] text-mine-shaft/50 font-inter font-medium mb-1">
+            <span className="hidden md:block text-[15px] text-mine-shaft/50 font-inter font-medium mb-1">
               {sideLabel}
             </span>
           )}
@@ -46,7 +46,7 @@ export const PageHeader = ({
 
         {/* 타이틀 */}
         <div className="md:col-span-8 mb-6">
-          <h1 className="text-[83.5px] md:text-[120px] leading-[0.89] tracking-[-4px] uppercase font-inter font-normal">
+          <h1 className="text-[clamp(40px,10vw,120px)] leading-[1.1] md:leading-[1.0] tracking-[-1px] md:tracking-[-4px] uppercase font-inter font-normal">
             <span className="block overflow-hidden">
               <span className="anim-move-up block">{title}</span>
             </span>
@@ -56,13 +56,13 @@ export const PageHeader = ({
         {/* 설명 */}
         {description && (
           <div className="md:col-span-6">
-            <p className="text-[17px] font-medium leading-[1.4] tracking-[-0.3px] text-mine-shaft/60 break-keep">
+            <div className="body-text break-keep">
               <span className="block overflow-hidden">
                 <span className="anim-move-up block" data-delay="200">
                   {description}
                 </span>
               </span>
-            </p>
+            </div>
           </div>
         )}
       </div>

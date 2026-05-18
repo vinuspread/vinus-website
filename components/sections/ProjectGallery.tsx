@@ -2,12 +2,8 @@
 
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+import { gsap } from "@/lib/gsap";
+import { ScrollTrigger } from "@/lib/gsap";
 
 interface ProjectGalleryProps {
   images: string[];
@@ -58,34 +54,37 @@ export const ProjectGallery: React.FC<ProjectGalleryProps> = ({ images }) => {
         >
           {i % 3 === 0 ? (
             <div className="w-full aspect-[16/9] relative overflow-hidden">
-              <Image 
-                src={img} 
-                alt="" 
-                fill 
+              <Image
+                src={img}
+                alt=""
+                fill
                 sizes="100vw"
-                className="object-cover" 
+                className="object-cover"
+                data-pin-nopin="true"
               />
             </div>
           ) : (
             <div className="max-w-[1920px] mx-auto px-page-padding">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
                 <div className="aspect-[4/3] relative overflow-hidden">
-                  <Image 
-                    src={img} 
-                    alt="" 
-                    fill 
+                  <Image
+                    src={img}
+                    alt=""
+                    fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover" 
+                    className="object-cover"
+                    data-pin-nopin="true"
                   />
                 </div>
                 {images[i + 1] && (
                   <div className="aspect-[4/3] relative overflow-hidden">
-                    <Image 
-                      src={images[i + 1]!} 
-                      alt="" 
-                      fill 
+                    <Image
+                      src={images[i + 1]!}
+                      alt=""
+                      fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover" 
+                      className="object-cover"
+                      data-pin-nopin="true"
                     />
                   </div>
                 )}

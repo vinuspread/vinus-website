@@ -2,20 +2,33 @@
 @import "./work-blocks.css";
 /* CSS Re-compile trigger */
 
+/* Block Pinterest extension save button */
+.PIN_promo_img, [id^="pinterest"], [class*="pinterest-hover"],
+img + div[style*="position: absolute"] { display: none !important; }
+
 @theme {
   /* Colors */
   --color-mine-shaft: #2a2a2a;
   --color-gallery:    #f0f0f0;
-  --color-alto:       #d6d6d6;
+  --color-alto:       #e8e8e8;
   --color-ash:        #ccc4b9;
 
   /* Fonts */
   --font-inter: var(--font-inter), "Inter", sans-serif;
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 
-  /* Spacing Tokens */
-  --spacing-page-padding: 160px;
-  --spacing-column:       38.4px;
+  /* Font Sizes */
+  --fs-hero: clamp(50px, 8vw, 140px);
+  --fs-display-xl: clamp(72px, 13vw, 200px);
+  --fs-display-md: clamp(28px, 6vw, 72px);
+
+  /* ── Grid System (2560px base)
+     2560 = margin(160) × 2 + col(128) × 12 + gutter(64) × 11
+     1920 = margin(160) × 2 + col(88)  × 12 + gutter(48) × 11
+  ── */
+  --spacing-page-padding: clamp(24px, 8vw, 160px);   /* Unified page padding */
+  --spacing-gutter:       clamp(16px, 2.5vw, 64px);
+  --spacing-col:          clamp(40px, 5vw, 128px);
 
   /* Custom Easings */
   --ease-expo-out: cubic-bezier(.075, .82, .165, 1);
@@ -45,24 +58,24 @@
   display: inline-block;
 }
 
-/* Text reveal — slides up from below clip boundary */
+/* Text reveal — slides up with unified timing */
 .anim-move-up {
-  transform: translateY(36px);
+  transform: translateY(28px);
   opacity: 0;
-  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.7s ease;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .anim-wrap.ready .anim-move-up {
   transform: translateY(0);
   opacity: 1;
 }
 
-/* Image reveal — subtle scale + fade */
+/* Image reveal — scale + fade unified */
 .anim-move-up-img {
   opacity: 0;
-  transform: scale(1.04);
-  transition: opacity 1.0s ease,
-              transform 1.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(1.06);
+  transition: opacity 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .anim-wrap.ready .anim-move-up-img {
   opacity: 1;
@@ -72,7 +85,7 @@
 /* Divider line fill */
 .anim-fill-width {
   width: 0;
-  transition: width 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .anim-wrap.ready .anim-fill-width {
   width: 100%;
@@ -80,7 +93,7 @@
 
 .anim-fill-height {
   height: 0;
-  transition: height 6s var(--ease-fill);
+  transition: height 1.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .anim-wrap.ready .anim-fill-height {
   height: 100%;
@@ -88,34 +101,38 @@
 
 .nav-dash {
   width: 0;
-  transition: width 0.6s var(--ease-expo-out);
+  transition: width 0.5s var(--ease-expo-out);
 }
 .anim-wrap.ready .nav-dash {
   width: 16px;
 }
 
 .nav-hidden {
-  transform: translateY(-56px);
+  transform: translateY(-80px);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ------------------------------------------------------------
-   Component Styles (Real-world Analysis)
+   Component Styles
    ------------------------------------------------------------ */
 
-/* Custom Cursor - 지시사항 §6 반영 */
+/* Custom Cursor */
 .cursor {
   position: fixed;
   border: 1px solid #2a2a2a;
   padding: 3px 6px;
   background: #0f0f0f;
   color: #fafafa;
-  font-size: 10px;
+  font-size: 12px;
   pointer-events: none;
   z-index: 9999;
   transform: translate(-50%, -50%);
   opacity: 0;
   transition: opacity 0.3s ease;
   white-space: nowrap;
+}
+@media (max-width: 1024px) {
+  .cursor { display: none !important; }
 }
 .cursor-active {
   opacity: 1;
@@ -130,7 +147,7 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 999px;
   padding: 8px 20px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
   text-transform: uppercase;
@@ -144,8 +161,6 @@
   color: #ffffff;
   border-color: #222222;
 }
-
-
 
 /* Header Entrance Animation */
 @keyframes fade-in {
@@ -163,6 +178,12 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Image slider marquee */
+@keyframes marquee-images {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Scroll line pulse animation */
@@ -200,64 +221,130 @@
   width: 100%;
 }
 
-.reveal-line {
-  display: block;
-  will-change: transform;
-}
-
 /* ------------------------------------------------------------
-   Motto Style Components
+   Motto Style Components (@utility for @apply)
    ------------------------------------------------------------ */
 
-/* Motto Style — Display Heading */
-.display-heading {
+@utility px-page-padding {
+  padding-left: var(--spacing-page-padding);
+  padding-right: var(--spacing-page-padding);
+}
+@utility pl-page-padding {
+  padding-left: var(--spacing-page-padding);
+}
+@utility pr-page-padding {
+  padding-right: var(--spacing-page-padding);
+}
+@utility right-page-padding {
+  right: var(--spacing-page-padding);
+}
+@utility left-page-padding {
+  left: var(--spacing-page-padding);
+}
+@utility text-display-xl {
+  font-size: clamp(72px, 13vw, 200px);
+}
+@utility text-display-md {
+  font-size: clamp(28px, 6vw, 72px);
+}
+
+@utility display-heading {
   font-family: var(--font-inter);
+  font-size: clamp(40px, 6vw, 64px);
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.1;
   letter-spacing: -0.04em;
 }
 
-/* Motto Style — Section Label */
 .section-label {
+  @apply label-xs;
+}
+
+@utility label-xs {
   font-family: var(--font-inter);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: rgb(42 42 42 / 0.4);
 }
 
-/* Page Breadcrumb */
+@utility marquee-images {
+  animation: marquee-images 30s linear infinite;
+}
+
 .breadcrumb-label {
   font-family: var(--font-inter);
-  font-size: 13px;
+  font-size: clamp(12px, 2vw, 13px);
   font-weight: 700;
-  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgb(42 42 42 / 0.55);
 }
 
-/* Page Section Padding */
 .section-pad {
-  padding: 80px var(--spacing-page-padding);
+  padding-top: clamp(80px, 10vw, 120px);
+  padding-bottom: clamp(80px, 10vw, 120px);
+  padding-left: var(--spacing-page-padding);
+  padding-right: var(--spacing-page-padding);
 }
 .section-pad-large {
-  padding: 120px var(--spacing-page-padding);
+  padding-top: clamp(120px, 14vw, 180px);
+  padding-bottom: clamp(120px, 14vw, 180px);
+  padding-left: var(--spacing-page-padding);
+  padding-right: var(--spacing-page-padding);
 }
 
-/* Body Text */
-.body-text {
-  font-size: 15px;
+@utility body-text {
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  color: #333333;
+}
+
+@utility body-text-ko {
+  font-family: var(--font-pretendard);
+  font-size: clamp(15px, 1.4vw, 18px);
   font-weight: 500;
   line-height: 1.6;
-  letter-spacing: -0.2px;
-  color: rgb(42 42 42 / 0.55);
-}
-.body-text-ko {
-  font-family: var(--font-pretendard);
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.7;
   color: rgb(42 42 42 / 0.4);
 }
 
+/* ------------------------------------------------------------
+   Editorial Prose (Blog Content)
+   ------------------------------------------------------------ */
+
+.prose-editorial {
+  @apply font-inter text-[17px] text-mine-shaft/50 leading-relaxed;
+}
+
+.prose-editorial h2 {
+  @apply font-inter font-bold text-[clamp(24px,3vw,48px)] tracking-tight leading-tight text-mine-shaft mt-20 mb-6;
+}
+
+.prose-editorial h3 {
+  @apply font-inter font-bold text-[clamp(18px,2vw,28px)] tracking-tight leading-tight text-mine-shaft mt-14 mb-4;
+}
+
+.prose-editorial p {
+  @apply mb-8 leading-[1.8];
+}
+
+.prose-editorial img {
+  @apply w-full h-auto my-16 rounded-[2px];
+}
+
+.prose-editorial blockquote {
+  @apply my-14 pl-10 border-l-2 border-mine-shaft/10 italic text-[clamp(20px,2.5vw,36px)] font-inter text-mine-shaft/40 leading-tight;
+}
+
+.prose-editorial strong {
+  @apply font-bold text-mine-shaft;
+}
+
+.prose-editorial ul {
+  @apply list-disc pl-6 mb-8 flex flex-col gap-2;
+}
+
+.prose-editorial ol {
+  @apply list-decimal pl-6 mb-8 flex flex-col gap-2;
+}

@@ -22,7 +22,7 @@ export const ServiceRow = ({ index, service }: ServiceRowProps) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex items-center gap-8">
-          <span className="text-[11px] text-mine-shaft/40">
+          <span className="text-[12px] text-mine-shaft/40">
             {String(index + 1).padStart(2, "0")}
           </span>
           <span className="text-[32px] tracking-[-0.8px] uppercase">
@@ -30,7 +30,7 @@ export const ServiceRow = ({ index, service }: ServiceRowProps) => {
           </span>
         </div>
         <span className={cn(
-          "text-[20px] transition-transform duration-300 font-light",
+          "text-[20px] transition-transform duration-300 font-normal",
           isOpen ? "rotate-45" : "rotate-0"
         )}>
           +
@@ -46,7 +46,7 @@ export const ServiceRow = ({ index, service }: ServiceRowProps) => {
       >
         <div className="pl-[72px] grid grid-cols-1 md:grid-cols-3 gap-4">
           {service.items.map((item) => (
-            <p key={item} className="text-[15px] font-light text-mine-shaft/60">
+            <p key={item} className="text-[15px] font-normal text-mine-shaft/60">
               {item}
             </p>
           ))}

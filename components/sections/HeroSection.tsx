@@ -5,25 +5,25 @@ import { ProjectCard } from "@/components/common/ProjectCard";
 
 const workImages = [
   {
-    src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=920&h=640&fit=crop&auto=format&q=80",
+    src: "/images/hero_slide_01.png",
     alt: "동아온북",
     tag: "Digital Design - Branding",
     title: "DongA Onbook",
   },
   {
-    src: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=920&h=640&fit=crop&auto=format&q=80",
+    src: "/images/hero_slide_02.png",
     alt: "MACADAMIA",
     tag: "Digital Design - UX/UI",
     title: "Macadamia",
   },
   {
-    src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=920&h=640&fit=crop&auto=format&q=80",
+    src: "/images/hero_slide_03.png",
     alt: "SAMYANG",
     tag: "Digital Design - Web Development",
     title: "Samyang",
   },
   {
-    src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=920&h=640&fit=crop&auto=format&q=80",
+    src: "/images/hero_slide_04.png",
     alt: "SMART CITY JUNGNANG",
     tag: "Digital Design - Strategy",
     title: "Smart City Jungnang",
