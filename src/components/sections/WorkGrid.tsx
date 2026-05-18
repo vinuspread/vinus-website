@@ -31,36 +31,39 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
     const cards = container.querySelectorAll(".project-card-item");
 
     const ctx = gsap.context(() => {
-      // 카드 입장 애니메이션
-      gsap.fromTo(
-        cards,
-        { y: 80, opacity: 0 },
-        {
-          y: 0, opacity: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: container,
-            start: "top bottom",
-            end: "top 70%",
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
-        }
-      );
+      // 카드 입장 애니메이션 (타겟이 존재할 때만 실행)
+      if (cards.length > 0) {
+        gsap.fromTo(
+          cards,
+          { y: 80, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: container,
+              start: "top bottom",
+              end: "top 70%",
+              scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+      }
 
-      if (!isSlider) return;
+      if (!isSlider || !slider) return;
 
       // 수직 스크롤 → 수평 변환 (ScrollTrigger pin)
       const getMaxScroll = () => slider.scrollWidth - window.innerWidth;
 
       gsap.to(slider, {
         x: () => -getMaxScroll(),
-        ease: "power1.inOut",
+        ease: "none", // 스크럽 애니메이션에서는 선형(none) 보간이 가장 자연스럽습니다.
         scrollTrigger: {
           trigger: container,
           start: "top 80px",
-          end: () => `+=${getMaxScroll() * 1.2}`,
-          scrub: 2,
+          end: () => `+=${getMaxScroll() * 1.5}`, // 스크롤 길이를 1.5배로 늘려 부드럽고 여유롭게 전환되도록 개선
+          scrub: 1, // 반응성을 높이기 위해 스크럽 댐핑을 1초로 최적화 (기존 2초는 너무 느리게 쫓아왔음)
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,

@@ -34,7 +34,15 @@ export const HeroSectionV2 = () => {
   const [, setIndexState] = useState(0);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && metaRef.current) {
+      gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.5 });
+    }
+  }, [mounted]);
   const currentIndex = useRef(0);
   const isAnimating = useRef(false);
   const exitTriggerRef = useRef<ScrollTrigger | null>(null);
@@ -55,8 +63,7 @@ export const HeroSectionV2 = () => {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Initial Reveals
-      gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.5 });
+      // 1. Initial Reveals (Only animate DOM classes, metaRef is handled when mounted in useEffect)
       gsap.fromTo(
         ".b1-word",
         { opacity: 0, y: 30 },
