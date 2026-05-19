@@ -29,14 +29,13 @@ export const SmoothScroll = () => {
     };
   }, []);
 
-  // Fail-safe: Restart lenis and refresh ScrollTrigger on route change
+  // Route change: scroll to top and restart lenis
   useEffect(() => {
     const lenis = (window as any).__lenis;
     if (lenis) {
       lenis.start();
       lenis.scrollTo(0, { immediate: true });
     }
-    ScrollTrigger.refresh();
   }, [pathname]);
 
   return null;
