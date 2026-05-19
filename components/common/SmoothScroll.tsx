@@ -16,7 +16,7 @@ export const SmoothScroll = () => {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
 
-    (window as any).__lenis = lenis;
+    window.__lenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
     const tick = (time: number) => lenis.raf(time * 1000);
@@ -31,7 +31,7 @@ export const SmoothScroll = () => {
 
   // Route change: scroll to top and restart lenis
   useEffect(() => {
-    const lenis = (window as any).__lenis;
+    const lenis = window.__lenis;
     if (lenis) {
       lenis.start();
       lenis.scrollTo(0, { immediate: true });

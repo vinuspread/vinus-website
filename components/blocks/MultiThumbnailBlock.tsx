@@ -5,8 +5,7 @@ import Image from 'next/image'
 import { motion, useInView } from 'framer-motion'
 import type { MultiThumbnailBlock as MultiThumbnailBlockType } from '@/types'
 
-const ease = [0.65, 0, 0.35, 1] as [number, number, number, number]
-const GRAY_BLUR = 'data:image/gif;base64,R0lGODlhAQABAPAAANbW1gAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+import { ease, GRAY_BLUR } from '@/lib/constants'
 
 function ThumbnailItem({ img, colDelay }: { img: { src: string; alt: string }; colDelay: number }) {
   const ref = useRef<HTMLDivElement>(null)

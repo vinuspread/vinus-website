@@ -36,7 +36,7 @@ export default function LabPage() {
       </div>
 
       {/* List */}
-      <section ref={listRef as any} className="anim-wrap px-page-padding py-[80px] md:py-[120px]">
+      <section ref={listRef} className="anim-wrap px-page-padding py-[80px] md:py-[120px]">
         <div className="flex flex-col divide-y divide-white/10">
           {experiments.map((exp, i) => {
             const type = typeConfig[exp.type];

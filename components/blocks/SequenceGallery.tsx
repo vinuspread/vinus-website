@@ -4,8 +4,7 @@ import { useRef } from 'react'
 import Image from 'next/image'
 import { motion, useInView } from 'framer-motion'
 
-const ease = [0.65, 0, 0.35, 1] as [number, number, number, number]
-const GRAY_BLUR = 'data:image/gif;base64,R0lGODlhAQABAPAAANbW1gAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+import { ease, GRAY_BLUR } from '@/lib/constants'
 
 function SequenceItem({ img }: { img: { src: string; alt: string } }) {
   const ref = useRef<HTMLDivElement>(null)

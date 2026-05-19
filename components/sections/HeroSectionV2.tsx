@@ -127,7 +127,7 @@ export const HeroSectionV2 = () => {
         if (isAnimating.current) return;
         isAnimating.current = true;
 
-        const lenis = (window as any).__lenis;
+        const lenis = window.__lenis;
         if (lenis && newIndex < 2) lenis.stop();
 
         // If going back from B3, kill exit trigger
@@ -246,7 +246,7 @@ export const HeroSectionV2 = () => {
     return () => {
       exitTriggerRef.current?.kill();
       ctx.revert();
-      const lenis = (window as any).__lenis;
+      const lenis = window.__lenis;
       if (lenis) lenis.start();
     };
   }, []);

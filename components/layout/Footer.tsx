@@ -21,7 +21,7 @@ export const Footer = () => {
   const next = NAV[(currentIndex + 1) % NAV.length];
 
   const scrollToTop = () => {
-    const lenis = (window as any).__lenis;
+    const lenis = window.__lenis;
     if (lenis) {
       lenis.scrollTo(0, { duration: 1.4, easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
     } else {

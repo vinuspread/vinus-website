@@ -122,7 +122,7 @@ export default function ServicesPage() {
       />
 
       {/* ── Primary Services ── */}
-      <section ref={primaryRef as any} className="anim-wrap">
+      <section ref={primaryRef} className="anim-wrap">
         {primaryServices.map((svc, i) => (
           <div
             key={svc.index}
@@ -187,7 +187,7 @@ export default function ServicesPage() {
       </section>
 
       {/* ── Expertise & Disciplines (Dark) ── */}
-      <section ref={detailRef as any} className="anim-wrap bg-mine-shaft text-white px-page-padding py-[120px] md:py-[180px]">
+      <section ref={detailRef} className="anim-wrap bg-mine-shaft text-white px-page-padding py-[120px] md:py-[180px]">
         <div className="flex flex-col md:flex-row gap-20">
           <div className="flex-1 mb-10 md:mb-0">
             <h3 className="display-heading !text-white mb-6">

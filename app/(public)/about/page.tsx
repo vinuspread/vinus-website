@@ -178,7 +178,7 @@ export default function AboutPage() {
           02. METHODOLOGY
       ══════════════════════════════════════════════════════ */}
       <section
-        ref={s02Ref as any}
+        ref={s02Ref}
         className="anim-wrap px-page-padding py-[80px] md:py-[120px]"
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20 items-start">
@@ -213,7 +213,7 @@ export default function AboutPage() {
           03. PERSPECTIVE (dark)
       ══════════════════════════════════════════════════════ */}
       <section
-        ref={s03Ref as any}
+        ref={s03Ref}
         className="anim-wrap relative px-page-padding py-[120px] md:py-[180px] overflow-hidden"
       >
         {/* BG image */}
@@ -249,7 +249,7 @@ export default function AboutPage() {
           04. HISTORY — left: header+stats / right: year grid
       ══════════════════════════════════════════════════════ */}
       <section
-        ref={s04Ref as any}
+        ref={s04Ref}
         className="anim-wrap px-page-padding py-[80px] md:py-[120px]"
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20 items-start">
@@ -293,7 +293,7 @@ export default function AboutPage() {
           05. COMPANY
       ══════════════════════════════════════════════════════ */}
       <section
-        ref={s05Ref as any}
+        ref={s05Ref}
         className="anim-wrap bg-mine-shaft px-page-padding py-[80px] md:py-[120px]"
       >
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20 items-start">

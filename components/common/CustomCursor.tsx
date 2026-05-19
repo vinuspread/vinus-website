@@ -45,8 +45,13 @@ export const CustomCursor = () => {
 
     window.addEventListener("mousemove", onMove);
 
+    // Track registered elements to avoid duplicate listeners and enable cleanup
+    const registered = new WeakSet<Element>();
+
     const addLinkEvents = () => {
       document.querySelectorAll("a, button, [data-cursor]").forEach((el) => {
+        if (registered.has(el)) return;
+        registered.add(el);
         el.addEventListener("mouseenter", onEnterLink);
         el.addEventListener("mouseleave", onLeaveLink);
       });
@@ -59,6 +64,10 @@ export const CustomCursor = () => {
     return () => {
       window.removeEventListener("mousemove", onMove);
       observer.disconnect();
+      document.querySelectorAll("a, button, [data-cursor]").forEach((el) => {
+        el.removeEventListener("mouseenter", onEnterLink);
+        el.removeEventListener("mouseleave", onLeaveLink);
+      });
     };
   }, []);
 

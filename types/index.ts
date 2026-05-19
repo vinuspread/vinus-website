@@ -175,3 +175,9 @@ export interface Faq {
 }
 
 export type Settings = Record<string, string | undefined>
+
+declare global {
+  interface Window {
+    __lenis: import('lenis').default | undefined
+  }
+}

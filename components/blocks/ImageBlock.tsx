@@ -5,9 +5,7 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import type { ImageBlock as ImageBlockType } from '@/types'
 import ParallaxImageBlock from './ParallaxImageBlock'
-
-const ease = [0.65, 0, 0.35, 1] as [number, number, number, number]
-const GRAY_BLUR = 'data:image/gif;base64,R0lGODlhAQABAPAAANbW1gAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='
+import { ease, GRAY_BLUR } from '@/lib/constants'
 
 export default function ImageBlock({ block }: { block: ImageBlockType }) {
   const ref = useRef<HTMLDivElement>(null)

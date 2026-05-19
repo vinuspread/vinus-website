@@ -47,7 +47,7 @@ export default function StoryPage() {
       />
 
       {/* ── Story Grid ── */}
-      <section ref={listRef as any} className="anim-wrap px-page-padding py-[80px] md:py-[120px]">
+      <section ref={listRef} className="anim-wrap px-page-padding py-[80px] md:py-[120px]">
         {filtered.length === 0 ? (
           <div className="py-[120px] text-center body-text-ko opacity-40">
             등록된 글이 없습니다.

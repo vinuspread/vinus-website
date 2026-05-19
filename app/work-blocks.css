@@ -20,7 +20,6 @@
 
 /* ── Block Renderer Spacing ─────────────────────────────── */
 .block-spacing-none { margin-bottom: 0; }
-.block-spacing-xs   { margin-bottom: 16px; }
 .block-spacing-sm   { margin-bottom: 32px; }
 .block-spacing-md   { margin-bottom: 64px; }
 .block-spacing-lg   { margin-bottom: 96px; }

@@ -33,7 +33,7 @@ export default function StoryDetailPage() {
     <main className="bg-white min-h-screen">
 
       {/* ── Hero ── */}
-      <header ref={revealRef as any} className="anim-wrap px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
+      <header ref={revealRef} className="anim-wrap px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
         <div className="flex flex-col gap-8 max-w-[900px]">
           <div className="flex items-center gap-4">
             <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/30">

@@ -36,7 +36,7 @@ export default function LabDetailPage() {
     <main className="bg-mine-shaft min-h-screen" data-header-dark>
 
       {/* ── Hero ── */}
-      <header ref={revealRef as any} className="anim-wrap px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
+      <header ref={revealRef} className="anim-wrap px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
         <div className="flex flex-col gap-8 max-w-[900px]">
           <div className="flex items-center gap-4">
             <span className="font-inter text-[13px] uppercase tracking-widest text-white/30">
