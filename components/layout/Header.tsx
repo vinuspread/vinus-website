@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 //   1. 이 import 줄 추가
 //   2. next/link의 <Link> import 제거
 //   3. 로고 / 데스크탑 네비 / 모바일 메뉴의 <Link> → <TransitionLink>로 교체
+// (logo.svg 경로는 ui-design과 동일하므로 복원 불필요)
 // ─────────────────────────────────────────────────────────────────────────────
 import { TransitionLink } from "@/components/common/TransitionLink";
 
@@ -81,7 +82,7 @@ export const Header = () => {
         <div className="flex-1 flex items-center">
           <TransitionLink href="/" className="flex items-center">
             <img
-              src="/images/h1_logo2.png"
+              src="/images/logo.svg"
               alt="Vinuspread"
               className={cn("h-[24px] md:h-[28px] w-auto transition-all duration-500", isDark && "invert")}
 

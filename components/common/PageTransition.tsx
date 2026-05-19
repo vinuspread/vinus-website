@@ -39,7 +39,7 @@ export const PageTransition = () => {
     >
       <img
         ref={logoRef}
-        src="/images/h1_logo2.png"
+        src="/images/logo.svg"
         alt=""
         aria-hidden="true"
         data-pin-nopin="true"
