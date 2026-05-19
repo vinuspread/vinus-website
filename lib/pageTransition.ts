@@ -18,29 +18,36 @@
 import { gsap } from "@/lib/gsap"
 
 const IN_DURATION   = 0.50  // expo.out  — 아래서 올라와 화면 덮음
-const OUT_DURATION  = 0.75  // power4.in — 위로 쓸려나감
+const OUT_DURATION  = 0.65  // power4.out — 위로 쓸려나감 (빠르게 시작, 부드럽게 끝)
 const LOGO_FADE_IN  = 0.35  // 로고 등장
-const LOGO_FADE_OUT = 0.25  // 로고 퇴장
+const LOGO_FADE_OUT = 0.20  // 로고 퇴장
 
 let overlayEl: HTMLElement | null = null
 let logoEl: HTMLElement | null = null
 let tl: gsap.core.Timeline | null = null
 let outPending = false
 
-export function setOverlay(el: HTMLElement | null) { overlayEl = el }
-export function setLogo(el: HTMLElement | null)    { logoEl = el }
+export function setOverlay(el: HTMLElement | null) {
+  overlayEl = el
+  // GSAP이 처음부터 transform을 소유 — React style prop 간섭 방지
+  if (el) gsap.set(el, { scaleY: 1 })
+}
+
+export function setLogo(el: HTMLElement | null) {
+  logoEl = el
+  if (el) gsap.set(el, { opacity: 0 })
+}
 
 /** 최초 페이지 진입 시 오버레이 위로 퇴장 (로고 없음) */
 export function revealOnLoad() {
   if (!overlayEl) return
   outPending = false
-  if (logoEl) gsap.set(logoEl, { opacity: 0 })
   gsap.killTweensOf(overlayEl)
   gsap.to(overlayEl, {
     scaleY: 0,
     transformOrigin: "top",
     duration: OUT_DURATION,
-    ease: "power4.in",
+    ease: "power4.out",
     delay: 0.10,
   })
 }
@@ -53,7 +60,11 @@ export function revealOnLoad() {
 export function transition(push: () => void) {
   if (!overlayEl) { push(); return }
 
+  // OUT 중 클릭 등 모든 진행 중인 트윈을 먼저 종료
+  gsap.killTweensOf(overlayEl)
+  if (logoEl) gsap.killTweensOf(logoEl)
   tl?.kill()
+  tl = null
   outPending = false
 
   const scaleY = gsap.getProperty(overlayEl, "scaleY") as number
@@ -85,15 +96,15 @@ export function onNavigated() {
   outPending = false
 
   // refs를 지금 즉시 로컬 변수에 캡처.
-  // rAF 등 비동기 콜백 실행 전 모듈 변수가 null로 바뀔 수 있으므로 반드시 필요.
   const overlay = overlayEl
   const logo = logoEl
 
-  // 타임라인(로고 페이드인 포함) 종료 → GSAP 충돌 방지
+  // 타임라인(로고 페이드인 포함) + 모든 개별 트윈 종료
   tl?.kill()
   tl = null
+  gsap.killTweensOf(overlay)
 
-  // 로고 페이드아웃 + overlay OUT (동시 시작, OUT은 LOGO_FADE_OUT 후 시작)
+  // 로고 페이드아웃 후 overlay OUT
   if (logo) {
     gsap.killTweensOf(logo)
     gsap.to(logo, { opacity: 0, duration: LOGO_FADE_OUT, ease: "power2.in" })
@@ -102,7 +113,7 @@ export function onNavigated() {
     scaleY: 0,
     transformOrigin: "top",
     duration: OUT_DURATION,
-    ease: "power4.in",
-    delay: LOGO_FADE_OUT,   // 로고가 완전히 사라진 후 overlay OUT 시작
+    ease: "power4.out",  // 빠르게 시작 → 부드럽게 끝 (율동감)
+    delay: LOGO_FADE_OUT,
   })
 }
