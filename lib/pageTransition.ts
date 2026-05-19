@@ -2,13 +2,13 @@
 // 페이지 전환 GSAP 타임라인 싱글톤.
 //
 // 타이밍 흐름:
-//   click → IN (오버레이 덮음) → push() → 로고 페이드인 → [페이지 로드]
-//   → useEffect([pathname]) → onNavigated() → 로고 페이드아웃 → OUT
+//   click → IN → push() + outPending=true + 로고 페이드인 → [페이지 로드]
+//   → useEffect([pathname]) fires → onNavigated() → tl.kill() → 로고 페이드아웃 → OUT
 //
 // OUT을 pathname useEffect 기반으로 하는 이유:
 //   router.push()는 React concurrent renderer를 통해 비동기 처리됨.
-//   실제 새 페이지가 DOM에 커밋되는 시점은 useEffect([pathname]) 실행 후뿐.
-//   그 이전에 OUT을 시작하면 구 페이지가 노출되어 깜박임 발생.
+//   useEffect([pathname])는 React가 새 페이지를 DOM에 커밋한 후 실행되므로
+//   이것만이 "새 페이지 렌더 완료"를 신뢰할 수 있는 시점.
 //
 // 사용:
 //   PageTransition.tsx → setOverlay / setLogo / revealOnLoad / onNavigated
@@ -73,7 +73,6 @@ export function transition(push: () => void) {
       push()
       outPending = true
     })
-    // IN 완료 후 로고 등장 — 페이지 로드 시간을 자연스럽게 흡수
     .to(logoEl, { opacity: 1, duration: LOGO_FADE_IN, ease: "power2.out", delay: 0.05 })
 }
 
@@ -85,23 +84,25 @@ export function onNavigated() {
   if (!outPending || !overlayEl) return
   outPending = false
 
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      if (!overlayEl) return
+  // refs를 지금 즉시 로컬 변수에 캡처.
+  // rAF 등 비동기 콜백 실행 전 모듈 변수가 null로 바뀔 수 있으므로 반드시 필요.
+  const overlay = overlayEl
+  const logo = logoEl
 
-      // 로고 페이드아웃 후 오버레이 OUT
-      if (logoEl) {
-        gsap.killTweensOf(logoEl)
-        gsap.to(logoEl, { opacity: 0, duration: LOGO_FADE_OUT, ease: "power2.in" })
-      }
+  // 타임라인(로고 페이드인 포함) 종료 → GSAP 충돌 방지
+  tl?.kill()
+  tl = null
 
-      gsap.to(overlayEl, {
-        scaleY: 0,
-        transformOrigin: "top",
-        duration: OUT_DURATION,
-        ease: "power4.in",
-        delay: LOGO_FADE_OUT,  // 로고가 완전히 사라진 후 OUT 시작
-      })
-    })
+  // 로고 페이드아웃 + overlay OUT (동시 시작, OUT은 LOGO_FADE_OUT 후 시작)
+  if (logo) {
+    gsap.killTweensOf(logo)
+    gsap.to(logo, { opacity: 0, duration: LOGO_FADE_OUT, ease: "power2.in" })
+  }
+  gsap.to(overlay, {
+    scaleY: 0,
+    transformOrigin: "top",
+    duration: OUT_DURATION,
+    ease: "power4.in",
+    delay: LOGO_FADE_OUT,   // 로고가 완전히 사라진 후 overlay OUT 시작
   })
 }
