@@ -11,28 +11,31 @@ export default function LabPage() {
   const listRef = useReveal();
 
   return (
-    <main className="bg-mine-shaft min-h-screen" data-header-dark>
+    <main className="min-h-screen bg-mine-shaft" data-header-dark>
 
-      {/* Header — white text on dark */}
-      <div className="[&_*]:!text-white [&_.breadcrumb-label]:!text-white/40 [&_.body-text]:!text-white/50 [&_.body-text-ko]:!text-white/50">
-        <PageHeader
-          breadcrumb="Lab"
-          noBorder
-          title={<>Experiments &amp; <span className="font-bold">Explorations</span></>}
-          description={
-            <PageHeaderDescription
-              en="A space for ideas that don't fit anywhere else - yet."
-              ko="정해진 형식에 머무르지 않습니다. 완성되지 않았더라도 가장 솔직한 우리의 탐구를 이어갑니다."
-            />
-          }
-        />
-      </div>
+      {/* Pink header zone */}
+      <div style={{ backgroundColor: "#FD2F79" }}>
+        {/* Header — white text on dark */}
+        <div className="[&_*]:!text-white [&_.breadcrumb-label]:!text-white/40 [&_.body-text]:!text-white/50 [&_.body-text-ko]:!text-white/50">
+          <PageHeader
+            breadcrumb="Lab"
+            noBorder
+            title={<>Experiments &amp; <span className="font-bold">Explorations</span></>}
+            description={
+              <PageHeaderDescription
+                en="A space for ideas that don't fit anywhere else - yet."
+                ko="정해진 형식에 머무르지 않습니다. 완성되지 않았더라도 가장 솔직한 우리의 탐구를 이어갑니다."
+              />
+            }
+          />
+        </div>
 
-      {/* Filter bar */}
-      <div className="px-page-padding py-[20px] border-b border-white/10 flex items-center gap-4">
-        <span className="section-label !text-white/30">{experiments.length} Experiments</span>
-        <span className="w-1 h-1 rounded-full bg-white/20" />
-        <span className="section-label !text-white/30">2024 — 2025</span>
+        {/* Filter bar */}
+        <div className="px-page-padding py-[20px] border-b border-white/10 flex items-center gap-4">
+          <span className="section-label !text-white/30">{experiments.length} Experiments</span>
+          <span className="w-1 h-1 rounded-full bg-white/20" />
+          <span className="section-label !text-white/30">2024 — 2025</span>
+        </div>
       </div>
 
       {/* List */}

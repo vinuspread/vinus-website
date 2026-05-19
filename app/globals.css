@@ -116,7 +116,11 @@ img + div[style*="position: absolute"] { display: none !important; }
    Component Styles
    ------------------------------------------------------------ */
 
-/* Custom Cursor */
+/* Custom Cursor — OS 포인터 숨김 (데스크탑만) */
+@media (min-width: 1025px) {
+  *, *::before, *::after { cursor: none !important; }
+}
+
 .cursor {
   position: fixed;
   border: 1px solid #2a2a2a;
