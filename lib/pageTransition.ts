@@ -1,35 +1,37 @@
 // ─── [개발팀 생성 파일] ui-design 브랜치에 없는 파일 ─────────────────────────
 // 페이지 전환 GSAP 타임라인 싱글톤.
-// async/await·setTimeout 없이 GSAP 타임라인이 타이밍 전체를 책임집니다.
 //
 // 설계 원칙:
-//   · 오버레이 DOM 참조를 모듈 변수로 보유 → React 리렌더와 무관하게 동작
-//   · tl.kill() 으로 진행 중인 전환을 즉시 취소하고 새 전환 시작
-//   · .call(push) 로 IN 완료 시점에 navigate 정확히 실행
-//   · GSAP delay(0.2s) 로 새 페이지 렌더 대기 → pathname 변경 이벤트 불필요
+//   · IN + navigate: GSAP 타임라인 — IN 완료 시 push() 정확히 호출
+//   · OUT 트리거:    React useEffect([pathname]) — 새 페이지 DOM 커밋 후에만 발동
+//     → router.push()는 비동기(React concurrent). 실제 DOM 반영 시점을
+//       useEffect([pathname]) 없이는 알 수 없으므로 이것만이 신뢰할 수 있는 신호.
+//   · outPending 플래그로 spurious OUT 방지 (초기 로드·중복 클릭 등)
+//   · tl.kill()로 진행 중 전환을 즉시 취소 후 새 전환 시작
 //
 // 사용법:
-//   PageTransition  → setOverlay(el) / revealOnLoad()
-//   TransitionLink  → transition(() => router.push(href))
+//   PageTransition.tsx  → setOverlay / revealOnLoad / onNavigated
+//   TransitionLink.tsx  → transition(() => router.push(href))
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { gsap } from "@/lib/gsap"
 
 const IN_DURATION  = 0.50  // expo.out  — 아래서 올라와 화면 덮음
 const OUT_DURATION = 0.75  // power4.in — 위로 쓸려나감 (slow start → fast sweep)
-const OUT_DELAY    = 0.20  // navigate 후 새 페이지 렌더 대기
 
 let overlayEl: HTMLElement | null = null
 let tl: gsap.core.Timeline | null = null
+let outPending = false   // navigate 후 pathname useEffect를 기다리는 상태
 
-/** PageTransition 마운트 시 오버레이 DOM 요소 등록 */
+/** PageTransition 마운트 시 호출 */
 export function setOverlay(el: HTMLElement | null) {
   overlayEl = el
 }
 
-/** 최초 페이지 진입 시 오버레이를 위로 퇴장 */
+/** 최초 페이지 진입 시 오버레이 위로 퇴장 */
 export function revealOnLoad() {
   if (!overlayEl) return
+  outPending = false
   gsap.killTweensOf(overlayEl)
   gsap.to(overlayEl, {
     scaleY: 0,
@@ -42,29 +44,51 @@ export function revealOnLoad() {
 
 /**
  * 페이지 전환 실행
- * - IN(아래→전체) → push() → OUT(전체→위)
- * - 이미 오버레이가 화면을 덮고 있으면 IN 생략하고 즉시 이동
+ * IN 애니메이션 완료 시 push() 호출 → outPending = true
+ * 실제 OUT은 onNavigated()가 담당 (React useEffect([pathname]) 후 호출됨)
  */
 export function transition(push: () => void) {
   if (!overlayEl) { push(); return }
 
-  // 진행 중인 전환 취소
   tl?.kill()
+  outPending = false
 
-  const currentScaleY = gsap.getProperty(overlayEl, "scaleY") as number
-  tl = gsap.timeline()
+  const scaleY = gsap.getProperty(overlayEl, "scaleY") as number
 
-  if (currentScaleY >= 0.99) {
-    // 이미 전체 화면 덮음: 즉시 이동 후 OUT
+  if (scaleY >= 0.99) {
+    // 이미 화면을 덮고 있음: 즉시 이동, pathname 변경 후 OUT
     push()
-    tl.set(overlayEl, { transformOrigin: "top" })
-      .to(overlayEl, { scaleY: 0, duration: OUT_DURATION, ease: "power4.in", delay: OUT_DELAY })
-  } else {
-    // 정상 흐름: IN → push → OUT
-    tl.set(overlayEl, { transformOrigin: "bottom" })
-      .to(overlayEl, { scaleY: 1, duration: IN_DURATION, ease: "expo.out" })
-      .call(push)                                              // IN 완료 시점에 정확히 navigate
-      .set(overlayEl, { transformOrigin: "top" })              // scaleY:1 상태 → 시각 변화 없음
-      .to(overlayEl, { scaleY: 0, duration: OUT_DURATION, ease: "power4.in", delay: OUT_DELAY })
+    outPending = true
+    return
   }
+
+  tl = gsap.timeline()
+    .set(overlayEl, { transformOrigin: "bottom" })
+    .to(overlayEl, { scaleY: 1, duration: IN_DURATION, ease: "expo.out" })
+    .call(() => {
+      push()          // IN 완료 시점에 정확히 navigate
+      outPending = true
+    })
+}
+
+/**
+ * PageTransition의 useEffect([pathname]) 에서 호출.
+ * = 새 페이지가 실제 DOM에 커밋된 후 — OUT 시작의 유일한 신뢰할 수 있는 시점.
+ */
+export function onNavigated() {
+  if (!outPending || !overlayEl) return
+  outPending = false
+
+  // 브라우저가 새 페이지를 실제로 그릴 때까지 2프레임 대기 후 OUT
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      if (!overlayEl) return
+      gsap.to(overlayEl, {
+        scaleY: 0,
+        transformOrigin: "top",
+        duration: OUT_DURATION,
+        ease: "power4.in",
+      })
+    })
+  })
 }
