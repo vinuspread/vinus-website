@@ -1,67 +1,102 @@
-"use client";
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
+import { getMetaTitle, getMetaDescription } from '@/lib/utils'
+import { Clip } from '@/components/common/Clip'
+import type { Blog } from '@/types'
 
-import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { stories } from "@/lib/stories";
-import { useReveal } from "@/hooks/useReveal";
-import { Clip } from "@/components/common/Clip";
+export const revalidate = 3600
 
-export default function StoryDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const revealRef = useReveal();
+interface Props {
+  params: Promise<{ slug: string }>
+}
 
-  const story = stories.find((s) => s.slug === params.slug);
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`
+}
 
-  if (!story) {
-    return (
-      <div className="min-h-screen flex items-center justify-center flex-col gap-8">
-        <p className="body-text-ko opacity-40">존재하지 않는 게시글입니다.</p>
-        <button onClick={() => router.back()} className="body-text underline underline-offset-4 opacity-40">
-          뒤로 가기
-        </button>
-      </div>
-    );
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('blog')
+    .select('title, meta_title, meta_description, blocks, thumbnail_url')
+    .eq('slug', slug)
+    .single()
+
+  if (!data) return { title: 'Not Found' }
+
+  return {
+    title: getMetaTitle(data.title, data.meta_title),
+    description: getMetaDescription(data.meta_description, data.blocks),
+    openGraph: {
+      title: getMetaTitle(data.title, data.meta_title),
+      description: getMetaDescription(data.meta_description, data.blocks) ?? undefined,
+      images: data.thumbnail_url ? [data.thumbnail_url] : undefined,
+    },
   }
+}
 
-  const currentIndex = stories.findIndex((s) => s.slug === story.slug);
-  const prevStory = stories[(currentIndex - 1 + stories.length) % stories.length];
-  const nextStory = stories[(currentIndex + 1) % stories.length];
+export default async function StoryDetailPage({ params }: Props) {
+  const { slug } = await params
+  const supabase = await createClient()
+
+  const [{ data: story }, { data: allBlogs }] = await Promise.all([
+    supabase.from('blog').select('*').eq('slug', slug).single(),
+    supabase
+      .from('blog')
+      .select('slug, title')
+      .eq('is_published', true)
+      .order('sort_order', { ascending: true }),
+  ])
+
+  if (!story) notFound()
+
+  const blog = story as Blog
+  const list = (allBlogs ?? []) as Pick<Blog, 'slug' | 'title'>[]
+  const currentIdx = list.findIndex((b) => b.slug === slug)
+  const prevStory = list[(currentIdx - 1 + list.length) % list.length]
+  const nextStory = list[(currentIdx + 1) % list.length]
 
   return (
     <main className="bg-white min-h-screen">
 
       {/* ── Hero ── */}
-      <header ref={revealRef} className="anim-wrap px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
+      <header className="px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
         <div className="flex flex-col gap-8 max-w-[900px]">
           <div className="flex items-center gap-4">
             <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/30">
-              <Clip>{story.category}</Clip>
+              <Clip>{blog.category}</Clip>
             </span>
             <span className="w-1 h-1 rounded-full bg-mine-shaft/10" />
             <span className="font-inter text-[12px] text-mine-shaft/20">
-              <Clip delay={30}>{story.date}</Clip>
+              <Clip delay={30}>{formatDate(blog.created_at)}</Clip>
             </span>
           </div>
 
           <h1 className="font-inter font-bold text-mine-shaft text-[clamp(40px,6vw,96px)] tracking-tight leading-[1.0]">
-            <Clip delay={80}>{story.title}</Clip>
+            <Clip delay={80}>{blog.title}</Clip>
           </h1>
 
-          <p className="font-inter text-mine-shaft/50 text-[clamp(18px,2vw,28px)] leading-snug max-w-[600px]">
-            <Clip delay={120}>{story.summary}</Clip>
-          </p>
+          {blog.meta_description && (
+            <p className="font-inter text-mine-shaft/50 text-[clamp(18px,2vw,28px)] leading-snug max-w-[600px]">
+              <Clip delay={120}>{blog.meta_description}</Clip>
+            </p>
+          )}
         </div>
       </header>
 
       {/* ── Featured Image ── */}
-      {story.thumbnail && (
+      {blog.thumbnail_url && (
         <section className="px-page-padding pb-[80px] md:pb-[120px]">
           <div className="w-full aspect-[21/9] relative overflow-hidden bg-gallery">
             <Image
-              src={story.thumbnail}
-              alt={story.title}
+              src={blog.thumbnail_url}
+              alt={blog.title}
               fill
               className="object-cover"
               priority
@@ -71,18 +106,10 @@ export default function StoryDetailPage() {
         </section>
       )}
 
-      {/* ── Content ── */}
-      {story.content && (
-        <article className="px-page-padding pb-[120px] md:pb-[180px]">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 border-t border-alto py-[60px] md:py-[80px]">
-            <div className="md:col-span-3">
-              <p className="font-inter text-[11px] uppercase tracking-widest text-mine-shaft/20 pt-1">Content</p>
-            </div>
-            <div
-              className="md:col-span-9 prose-editorial"
-              dangerouslySetInnerHTML={{ __html: story.content }}
-            />
-          </div>
+      {/* ── Content Blocks ── */}
+      {blog.blocks?.length > 0 && (
+        <article className="pb-[120px] md:pb-[180px] border-t border-alto">
+          <BlockRenderer blocks={blog.blocks} />
         </article>
       )}
 
@@ -91,7 +118,7 @@ export default function StoryDetailPage() {
         <div className="px-page-padding grid grid-cols-3 divide-x divide-alto">
           <Link
             href={`/story/${prevStory.slug}`}
-            className="group flex items-center gap-5 py-10 md:py-14 group transition-colors duration-200"
+            className="group flex items-center gap-5 py-10 md:py-14 transition-colors duration-200"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
               <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -101,7 +128,7 @@ export default function StoryDetailPage() {
 
           <Link
             href="/story"
-            className="group flex items-center justify-center gap-3 py-10 md:py-14 group transition-colors duration-200"
+            className="group flex items-center justify-center gap-3 py-10 md:py-14 transition-colors duration-200"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
               <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
@@ -111,7 +138,7 @@ export default function StoryDetailPage() {
 
           <Link
             href={`/story/${nextStory.slug}`}
-            className="group flex items-center justify-end gap-5 py-10 md:py-14 group transition-colors duration-200"
+            className="group flex items-center justify-end gap-5 py-10 md:py-14 transition-colors duration-200"
           >
             <span className="font-inter font-bold text-[18px] md:text-[22px] text-mine-shaft tracking-tight truncate group-hover:underline underline-offset-4">{nextStory.title}</span>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
@@ -122,5 +149,5 @@ export default function StoryDetailPage() {
       </nav>
 
     </main>
-  );
+  )
 }
