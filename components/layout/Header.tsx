@@ -3,6 +3,12 @@
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+// ─── [개발팀 수정] ui-design 동기화 후 복원 필요 ─────────────────────────────
+// ui-design에서 Header.tsx를 가져온 뒤 아래 항목을 반드시 복원하세요:
+//   1. 이 import 줄 추가
+//   2. next/link의 <Link> import 제거
+//   3. 로고 / 데스크탑 네비 / 모바일 메뉴의 <Link> → <TransitionLink>로 교체
+// ─────────────────────────────────────────────────────────────────────────────
 import { TransitionLink } from "@/components/common/TransitionLink";
 
 export const Header = () => {
