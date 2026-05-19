@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { TransitionLink } from "@/components/common/TransitionLink";
 
 export const Header = () => {
   const pathname = usePathname();
@@ -73,7 +73,7 @@ export const Header = () => {
       >
         {/* Left: Logo */}
         <div className="flex-1 flex items-center">
-          <Link href="/" className="flex items-center">
+          <TransitionLink href="/" className="flex items-center">
             <img
               src="/images/h1_logo2.png"
               alt="Vinuspread"
@@ -81,13 +81,13 @@ export const Header = () => {
 
               data-pin-nopin="true"
             />
-          </Link>
+          </TransitionLink>
         </div>
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex flex-1 items-center justify-end gap-10">
           {navItems.map((item) => (
-            <Link
+            <TransitionLink
               key={item.label}
               href={item.href}
               className={cn(
@@ -98,7 +98,7 @@ export const Header = () => {
               )}
             >
               {item.label}
-            </Link>
+            </TransitionLink>
           ))}
         </nav>
 
@@ -169,8 +169,8 @@ export const Header = () => {
         isMenuOpen ? "translate-y-0 visible" : "translate-y-[-100%] invisible pointer-events-none"
       )}>
         <nav className="flex flex-col">
-          {navItems.map((item, i) => (
-            <Link
+          {navItems.map((item) => (
+            <TransitionLink
               key={item.label}
               href={item.href}
               onClick={() => setIsMenuOpen(false)}
@@ -178,10 +178,9 @@ export const Header = () => {
                 "text-[40px] md:text-[64px] uppercase font-inter font-bold tracking-tighter transition-all duration-500 py-[24px] md:py-[32px] border-b border-alto/30 last:border-0",
                 pathname === item.href ? "text-mine-shaft opacity-100" : "text-mine-shaft opacity-20 hover:opacity-100"
               )}
-              style={{ transitionDelay: isMenuOpen ? `${i * 80}ms` : "0ms" }}
             >
               {item.label}
-            </Link>
+            </TransitionLink>
           ))}
         </nav>
         <div className="mt-20 pt-10 border-t border-alto flex flex-col gap-4">
