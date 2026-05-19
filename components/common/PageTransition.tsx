@@ -1,32 +1,28 @@
 "use client";
 
 // ─── [개발팀 생성 파일] ui-design 브랜치에 없는 파일 ─────────────────────────
-// · 오버레이 DOM 등록 (setOverlay)
+// · 오버레이·로고 DOM 등록 (setOverlay / setLogo)
 // · 최초 진입 시 오버레이 퇴장 (revealOnLoad)
 // · pathname 변경 후 새 페이지 DOM 커밋 확인 → OUT 트리거 (onNavigated)
-//
-// OUT을 pathname useEffect 에서 하는 이유:
-//   router.push() 는 React concurrent renderer를 통해 비동기 처리.
-//   실제 새 페이지가 DOM에 있는 시점은 useEffect([pathname]) 실행 후.
-//   이 시점 이전에 OUT을 시작하면 구 페이지가 노출되어 깜박임 발생.
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { setOverlay, revealOnLoad, onNavigated } from "@/lib/pageTransition";
+import { setOverlay, setLogo, revealOnLoad, onNavigated } from "@/lib/pageTransition";
 
 export const PageTransition = () => {
   const overlayRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-  const isFirst = useRef(true);
+  const logoRef    = useRef<HTMLImageElement>(null);
+  const pathname   = usePathname();
+  const isFirst    = useRef(true);
 
-  // 마운트: 오버레이 등록 + 초기 퇴장
   useEffect(() => {
     const el = overlayRef.current;
     if (!el) return;
     setOverlay(el);
+    setLogo(logoRef.current);
     revealOnLoad();
-    return () => setOverlay(null);
+    return () => { setOverlay(null); setLogo(null); };
   }, []);
 
   // pathname 변경 = 새 페이지 DOM 커밋 완료 → OUT 시작
@@ -39,7 +35,17 @@ export const PageTransition = () => {
     <div
       ref={overlayRef}
       style={{ transform: "scaleY(1)" }}
-      className="fixed inset-0 z-[9000] bg-mine-shaft pointer-events-none"
-    />
+      className="fixed inset-0 z-[9000] bg-mine-shaft pointer-events-none flex items-center justify-center"
+    >
+      <img
+        ref={logoRef}
+        src="/images/h1_logo2.png"
+        alt=""
+        aria-hidden="true"
+        data-pin-nopin="true"
+        style={{ opacity: 0 }}
+        className="h-7 md:h-9 w-auto invert"
+      />
+    </div>
   );
 };
