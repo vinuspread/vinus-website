@@ -26,6 +26,7 @@ const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'image', label: '이미지' },
   { value: 'gallery', label: '갤러리' },
   { value: 'multi-thumbnail', label: '다중썸네일' },
+  { value: 'scroll-story', label: '스크롤 스토리' },
   { value: 'video', label: '비디오' },
   { value: 'embed', label: '임베드' },
   { value: 'divider', label: '구분선' },
@@ -44,6 +45,7 @@ function createBlock(type: BlockType): Block {
     case 'divider': return { id, type, height: 40, motion: 'none', spacing: 'none' }
     case 'file': return { id, type, url: '', label: '', motion: 'none', spacing: 'md' }
     case 'multi-thumbnail': return { id, type, images: [], columns: 5, spacing: 'md' }
+    case 'scroll-story': return { id, type, layout: 'A', slides: [{ image: '', title: '', body: '' }], spacing: 'lg' }
   }
 }
 
@@ -166,7 +168,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400 uppercase tracking-wider">{block.type}</span>
-                {block.type !== 'heading-text' && block.type !== 'multi-thumbnail' && (
+                {block.type !== 'heading-text' && block.type !== 'multi-thumbnail' && block.type !== 'scroll-story' && (
                   <>
                     <select
                       value={block.motion}
@@ -574,6 +576,115 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 )}
 
                 <p className="text-xs text-gray-400">{block.images.length}개 등록됨</p>
+              </div>
+            )}
+
+            {block.type === 'scroll-story' && (
+              <div className="space-y-4">
+                {/* Layout toggle */}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-gray-500">레이아웃</span>
+                  {(['A', 'B'] as const).map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => onChange(updateBlock(blocks, index, { ...block, layout: l }))}
+                      className={`text-xs px-3 py-1 border ${block.layout === l ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}
+                    >
+                      {l === 'A' ? 'A — 이미지 왼쪽' : 'B — 이미지 오른쪽'}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Slides */}
+                {block.slides.map((slide, si) => (
+                  <div key={si} className="border border-gray-100 p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-gray-500">슬라이드 {si + 1}</span>
+                      {block.slides.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const slides = block.slides.filter((_, i) => i !== si)
+                            onChange(updateBlock(blocks, index, { ...block, slides }))
+                          }}
+                          className="text-xs text-red-400 hover:text-red-600"
+                        >
+                          삭제
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Image upload */}
+                    <div className="flex gap-2 items-center">
+                      {slide.image && (
+                        <img src={slide.image} alt="" className="w-16 h-12 object-cover border border-gray-200" />
+                      )}
+                      <label className={`cursor-pointer border px-3 py-1.5 text-xs ${uploading[`${block.id}-ss-${si}`] ? 'border-gray-200 text-gray-400' : 'border-gray-300 hover:bg-gray-50'}`}>
+                        {uploading[`${block.id}-ss-${si}`] ? '업로드 중...' : slide.image ? '이미지 교체' : '이미지 선택'}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0]
+                            if (!file) return
+                            const key = `${block.id}-ss-${si}`
+                            setUploading(prev => ({ ...prev, [key]: true }))
+                            try {
+                              const url = await uploadFile(file)
+                              const slides = block.slides.map((s, i) => i === si ? { ...s, image: url } : s)
+                              onChange(updateBlock(blocksRef.current, index, { ...block, slides }))
+                            } catch (err) {
+                              alert(`업로드 실패: ${err instanceof Error ? err.message : '알 수 없는 오류'}`)
+                            } finally {
+                              setUploading(prev => ({ ...prev, [key]: false }))
+                              e.target.value = ''
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Title */}
+                    <input
+                      type="text"
+                      value={slide.title ?? ''}
+                      onChange={(e) => {
+                        const slides = block.slides.map((s, i) => i === si ? { ...s, title: e.target.value } : s)
+                        onChange(updateBlock(blocks, index, { ...block, slides }))
+                      }}
+                      placeholder="제목 (선택)"
+                      className="w-full border-b border-gray-200 py-1.5 text-sm placeholder:text-gray-300 focus:outline-none focus:border-black bg-transparent"
+                    />
+
+                    {/* Body */}
+                    <textarea
+                      value={slide.body ?? ''}
+                      onChange={(e) => {
+                        const slides = block.slides.map((s, i) => i === si ? { ...s, body: e.target.value } : s)
+                        onChange(updateBlock(blocks, index, { ...block, slides }))
+                      }}
+                      rows={3}
+                      placeholder="내용 (선택)"
+                      className="w-full border border-gray-200 p-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-black resize-none bg-transparent"
+                    />
+                  </div>
+                ))}
+
+                {/* Add slide */}
+                {block.slides.length < 3 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const slides = [...block.slides, { image: '', title: '', body: '' }]
+                      onChange(updateBlock(blocks, index, { ...block, slides }))
+                    }}
+                    className="w-full border border-dashed border-gray-300 py-2 text-xs text-gray-400 hover:border-black hover:text-black transition-colors"
+                  >
+                    + 슬라이드 추가 ({block.slides.length}/3)
+                  </button>
+                )}
               </div>
             )}
 

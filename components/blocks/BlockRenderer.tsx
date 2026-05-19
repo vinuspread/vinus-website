@@ -8,6 +8,7 @@ import DividerBlock from './DividerBlock'
 import FileBlock from './FileBlock'
 import HeadingTextBlock from './HeadingTextBlock'
 import EmbedBlock from './EmbedBlock'
+import ScrollStoryBlock from './ScrollStoryBlock'
 import BlockMotion from './BlockMotion'
 
 export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
@@ -25,10 +26,20 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
             case 'file':              return <FileBlock key={block.id} block={block} />
             case 'heading-text':      return <HeadingTextBlock key={block.id} block={block} />
             case 'embed':             return <EmbedBlock key={block.id} block={block} />
+            case 'scroll-story':      return <ScrollStoryBlock key={block.id} block={block} />
             default:                  return null
           }
         })()
         if (!inner) return null
+
+        // scroll-story: 뷰포트 전체 사용, 래퍼 없이 직접 렌더
+        if (block.type === 'scroll-story') {
+          return (
+            <div key={block.id} className={`block-spacing-${block.spacing ?? 'lg'}`}>
+              {inner}
+            </div>
+          )
+        }
 
         const isFullWidth =
           block.type === 'image' ||

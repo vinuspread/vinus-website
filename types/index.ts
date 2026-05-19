@@ -114,7 +114,21 @@ export interface EmbedBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock
+export interface ScrollStorySlide {
+  image: string
+  title?: string
+  body?: string
+}
+
+export interface ScrollStoryBlock {
+  id: string
+  type: 'scroll-story'
+  layout: 'A' | 'B'
+  slides: ScrollStorySlide[]
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock
 
 export interface Work {
   id: string
