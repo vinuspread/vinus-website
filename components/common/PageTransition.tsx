@@ -4,74 +4,70 @@
 // 페이지 전환 오버레이 컴포넌트. 삭제하거나 덮어쓰지 마세요.
 // TransitionLink.tsx와 세트로 동작합니다.
 //
-// 오버레이 모션 방향: 항상 아래 → 위
-//   · IN  (화면 덮음): 아래서 빠르게 올라와 부드럽게 착지  (scaleY 0→1, origin: bottom, expo.out)
-//   · OUT (화면 열림): 꽉 차있다가 가속하며 위로 쓸려나감  (scaleY 1→0, origin: top,    power4.in)
-// IN = expo.out (fast start, slow settle), OUT = power4.in (slow start → fast sweep off)
+// 이벤트 기반 설계 — pathname 감지 없음, TransitionLink가 전체 타이밍 제어:
+//   page-transition:start → 오버레이 IN  (아래서 올라와 화면 덮음, expo.out)
+//   page-transition:end   → 오버레이 OUT (꽉 찬 상태에서 위로 쓸려나감, power4.in)
+//
+// pathname 변경을 쓰지 않는 이유:
+//   Next.js App Router는 router.push() 직후 URL을 즉시 바꾸지만
+//   새 페이지 컨텐츠는 아직 렌더 전이므로 OUT을 너무 일찍 시작하면 깜박임 발생
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 
-const OVERLAY_IN  = 0.55;  // 오버레이 덮음 (아래→전체)   — expo.out
-const OVERLAY_OUT = 0.85;  // 오버레이 열림 (전체→위 퇴장) — power4.in
-const OVERLAY_OUT_DELAY = 0.10; // 완전히 덮힌 직후 잠깐 유지 후 열림
+const OVERLAY_IN_DURATION  = 0.50; // expo.out  — 아래서 빠르게 올라와 부드럽게 착지
+const OVERLAY_OUT_DURATION = 0.75; // power4.in — 꽉 찬 상태 유지 후 위로 빠르게 퇴장
+const OVERLAY_OUT_DELAY    = 0.05; // OUT 시작 전 짧은 정지
 
 export const PageTransition = () => {
-  const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
-  const isFirst = useRef(true);
 
-  // 초기 진입: 오버레이 위로 퇴장 (아래→위 방향)
+  // 최초 진입: 오버레이 위로 퇴장
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
     gsap.to(overlay, {
       scaleY: 0,
       transformOrigin: "top",
-      duration: OVERLAY_OUT,
+      duration: OVERLAY_OUT_DURATION,
       ease: "power4.in",
-      delay: OVERLAY_OUT_DELAY,
+      delay: 0.10,
     });
   }, []);
 
-  // 라우트 변경 완료 → 오버레이 위로 퇴장
+  // page-transition:start → 오버레이 아래서 올라와 화면 덮음
   useEffect(() => {
     const overlay = overlayRef.current;
     if (!overlay) return;
-
-    if (isFirst.current) {
-      isFirst.current = false;
-      return;
-    }
-
-    gsap.killTweensOf(overlay);
-    gsap.to(overlay, {
-      scaleY: 0,
-      transformOrigin: "top",
-      duration: OVERLAY_OUT,
-      ease: "power4.in",
-      delay: OVERLAY_OUT_DELAY,
-    });
-  }, [pathname]);
-
-  // TransitionLink 신호 수신 → 오버레이 아래서 올라와 화면 덮음
-  useEffect(() => {
-    const overlay = overlayRef.current;
-    if (!overlay) return;
-
     const handleStart = () => {
       gsap.killTweensOf(overlay);
       gsap.fromTo(
         overlay,
         { scaleY: 0, transformOrigin: "bottom" },
-        { scaleY: 1, duration: OVERLAY_IN, ease: "expo.out" }
+        { scaleY: 1, duration: OVERLAY_IN_DURATION, ease: "expo.out" }
       );
     };
-
     window.addEventListener("page-transition:start", handleStart);
     return () => window.removeEventListener("page-transition:start", handleStart);
+  }, []);
+
+  // page-transition:end → 새 페이지 렌더 완료 후 오버레이 위로 퇴장
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    const handleEnd = () => {
+      gsap.killTweensOf(overlay);
+      gsap.to(overlay, {
+        scaleY: 0,
+        transformOrigin: "top",
+        duration: OVERLAY_OUT_DURATION,
+        ease: "power4.in",
+        delay: OVERLAY_OUT_DELAY,
+      });
+    };
+    window.addEventListener("page-transition:end", handleEnd);
+    return () => window.removeEventListener("page-transition:end", handleEnd);
   }, []);
 
   return (
