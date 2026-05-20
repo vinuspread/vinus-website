@@ -9,7 +9,7 @@ export default function BlogTextBlock({ block }: { block: BlogTextBlock }) {
     )
   }
   return (
-    <p className="font-inter text-[16px] md:text-[20px] text-[#333333] leading-[1.8] whitespace-pre-wrap">
+    <p className="font-inter text-[16px] text-[#333333] leading-[1.8] whitespace-pre-wrap">
       {block.content}
     </p>
   )

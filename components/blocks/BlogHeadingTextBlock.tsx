@@ -7,7 +7,7 @@ export default function BlogHeadingTextBlock({ block }: { block: BlogHeadingText
         {block.heading}
       </h3>
       {block.body && (
-        <p className="mt-4 text-[16px] md:text-[20px] text-[#333333] leading-[1.8] whitespace-pre-wrap">
+        <p className="mt-4 text-[16px] text-[#333333] leading-[1.8] whitespace-pre-wrap">
           {block.body}
         </p>
       )}
