@@ -96,6 +96,7 @@ export default function BlogForm({ initialData }: Props) {
     startTransition(async () => {
       try {
         await saveBlog(data)
+        router.push('/admin/blog')
       } catch (err) {
         if (err && typeof err === 'object' && 'digest' in err) throw err
         setError(err instanceof Error ? err.message : '저장 실패')

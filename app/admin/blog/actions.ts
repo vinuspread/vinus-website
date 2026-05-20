@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import type { Block } from '@/types'
 
 export interface BlogFormData {
@@ -19,7 +18,7 @@ export interface BlogFormData {
   sort_order: number
 }
 
-export async function saveBlog(data: BlogFormData) {
+export async function saveBlog(data: BlogFormData): Promise<{ id: string; slug: string }> {
   const supabase = await createClient()
   const payload = {
     title: data.title,
@@ -37,22 +36,27 @@ export async function saveBlog(data: BlogFormData) {
   if (data.id) {
     const { error } = await supabase.from('blog').update(payload).eq('id', data.id)
     if (error) throw new Error(error.message)
+    revalidatePath('/story')
+    revalidatePath(`/story/${data.slug}`, 'page')
+    revalidatePath('/sitemap.xml')
+    return { id: data.id, slug: data.slug }
   } else {
-    const { error } = await supabase.from('blog').insert(payload)
+    const { data: inserted, error } = await supabase.from('blog').insert(payload).select('id').single()
     if (error) throw new Error(error.message)
+    revalidatePath('/story')
+    revalidatePath(`/story/${data.slug}`, 'page')
+    revalidatePath('/sitemap.xml')
+    return { id: inserted.id, slug: data.slug }
   }
-
-  revalidatePath('/blog')
-  revalidatePath(`/blog/${data.slug}`, 'page')
-  revalidatePath('/sitemap.xml')
-  redirect('/admin/blog')
 }
 
 export async function deleteBlog(id: string, slug: string) {
+  const { redirect } = await import('next/navigation')
   const supabase = await createClient()
   const { error } = await supabase.from('blog').delete().eq('id', id)
   if (error) throw new Error(error.message)
-  revalidatePath('/blog')
-  revalidatePath(`/blog/${slug}`, 'page')
+  revalidatePath('/story')
+  revalidatePath(`/story/${slug}`, 'page')
+  revalidatePath('/sitemap.xml')
   redirect('/admin/blog')
 }
