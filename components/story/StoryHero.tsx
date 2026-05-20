@@ -26,7 +26,7 @@ export function StoryHero({ category, date, title, metaDescription }: Props) {
           </span>
         </div>
 
-        <h1 className="font-inter font-bold text-mine-shaft text-[clamp(40px,6vw,96px)] tracking-tight leading-[1.0]">
+        <h1 className="font-inter font-bold text-mine-shaft text-[clamp(13px,2vw,32px)] tracking-tight leading-[1.0]">
           <Clip delay={80}>{title}</Clip>
         </h1>
 
