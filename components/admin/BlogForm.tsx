@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import BlogBlockEditor from './BlogBlockEditor'
 import { saveBlog, deleteBlog, type BlogFormData } from '@/app/admin/blog/actions'
@@ -21,6 +21,30 @@ export default function BlogForm({ initialData }: Props) {
   const [fileUrl, setFileUrl] = useState(initialData?.file_url ?? '')
   const [uploading, setUploading] = useState(false)
   const [thumbnailUploading, setThumbnailUploading] = useState(false)
+  const sidebarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const sidebar = sidebarRef.current
+    if (!sidebar) return
+    const form = sidebar.closest('form')
+    if (!form) return
+    const OFFSET = 32
+
+    const update = () => {
+      const formRect = form.getBoundingClientRect()
+      const shift = Math.max(0, OFFSET - formRect.top)
+      const maxShift = Math.max(0, form.offsetHeight - sidebar.offsetHeight - OFFSET)
+      sidebar.style.transform = `translateY(${Math.min(shift, maxShift)}px)`
+    }
+
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update, { passive: true })
+    update()
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [])
 
   function toSlug(title: string) {
     const slug = title
@@ -231,7 +255,7 @@ export default function BlogForm({ initialData }: Props) {
       {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>
 
-      <div className="sticky top-8 w-40 flex-shrink-0 flex flex-col gap-3">
+      <div ref={sidebarRef} className="w-40 flex-shrink-0 flex flex-col gap-3 self-start">
         <button
           type="submit"
           disabled={isPending}
