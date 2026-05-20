@@ -54,11 +54,14 @@ export async function renameCategory(id: string, newName: string) {
   const oldName = target.name
   const type = target.type as 'work' | 'blog'
 
-  await supabase.from('categories').update({ name: trimmed }).eq('id', id)
-  await supabase.from(type).update({ category: trimmed }).eq('category', oldName)
+  const { error: catErr } = await supabase.from('categories').update({ name: trimmed }).eq('id', id)
+  if (catErr) throw new Error(catErr.message)
 
-  revalidatePath('/admin/categories')
-  revalidatePath(`/admin/${type}`)
+  const { error: postErr } = await supabase.from(type).update({ category: trimmed }).eq('category', oldName)
+  if (postErr) throw new Error(postErr.message)
+
+  revalidatePath('/admin/categories', 'page')
+  revalidatePath(`/admin/${type}`, 'page')
 }
 
 export async function deleteCategory(id: string) {
@@ -74,8 +77,8 @@ export async function deleteCategory(id: string) {
   await supabase.from(type).update({ category: 'etc' }).eq('category', target.name)
   const { error } = await supabase.from('categories').delete().eq('id', id)
   if (error) throw new Error(error.message)
-  revalidatePath('/admin/categories')
-  revalidatePath(`/admin/${type}`)
+  revalidatePath('/admin/categories', 'page')
+  revalidatePath(`/admin/${type}`, 'page')
 }
 
 export async function moveCategory(id: string, direction: 'up' | 'down') {
