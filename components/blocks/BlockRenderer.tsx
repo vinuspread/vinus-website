@@ -10,6 +10,12 @@ import HeadingTextBlock from './HeadingTextBlock'
 import EmbedBlock from './EmbedBlock'
 import ScrollStoryBlock from './ScrollStoryBlock'
 import BlockMotion from './BlockMotion'
+import BlogTextBlock from './BlogTextBlock'
+import BlogQuoteBlock from './BlogQuoteBlock'
+import BlogDividerBlock from './BlogDividerBlock'
+import BlogLinkCardBlock from './BlogLinkCardBlock'
+import BlogVideoBlock from './BlogVideoBlock'
+import BlogCodeBlock from './BlogCodeBlock'
 
 export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
   return (
@@ -27,6 +33,12 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
             case 'heading-text':      return <HeadingTextBlock key={block.id} block={block} />
             case 'embed':             return <EmbedBlock key={block.id} block={block} />
             case 'scroll-story':      return <ScrollStoryBlock key={block.id} block={block} />
+            case 'blog-text':         return <BlogTextBlock key={block.id} block={block} />
+            case 'blog-quote':        return <BlogQuoteBlock key={block.id} block={block} />
+            case 'blog-divider':      return <BlogDividerBlock key={block.id} block={block} />
+            case 'blog-link-card':    return <BlogLinkCardBlock key={block.id} block={block} />
+            case 'blog-video':        return <BlogVideoBlock key={block.id} block={block} />
+            case 'blog-code':         return <BlogCodeBlock key={block.id} block={block} />
             default:                  return null
           }
         })()
