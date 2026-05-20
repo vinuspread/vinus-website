@@ -60,20 +60,33 @@ export default function BlogForm({ initialData }: Props) {
     return slug || `post-${Date.now()}`
   }
 
+  async function uploadToStorage(file: File): Promise<string | null> {
+    const res = await fetch('/api/admin/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: file.name, contentType: file.type }),
+    })
+    const json = await res.json() as { signedUrl?: string; publicUrl?: string; error?: string }
+    if (!res.ok || !json.signedUrl || !json.publicUrl) {
+      setError(json.error ?? '업로드 실패')
+      return null
+    }
+    const uploadRes = await fetch(json.signedUrl, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file,
+    })
+    if (!uploadRes.ok) { setError('파일 업로드 실패'); return null }
+    return json.publicUrl
+  }
+
   async function uploadThumbnail(e: { target: { files?: FileList | null } }) {
     const file = e.target.files?.[0]
     if (!file) return
     setThumbnailUploading(true)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-      const json = await res.json() as { url?: string; error?: string }
-      if (!res.ok || !json.url) {
-        setError(json.error ?? '업로드 실패')
-      } else {
-        setThumbnailUrl(json.url)
-      }
+      const url = await uploadToStorage(file)
+      if (url) setThumbnailUrl(url)
     } catch {
       setError('업로드 중 오류가 발생했습니다.')
     } finally {
@@ -86,15 +99,8 @@ export default function BlogForm({ initialData }: Props) {
     if (!file) return
     setUploading(true)
     try {
-      const fd = new FormData()
-      fd.append('file', file)
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-      const json = await res.json() as { url?: string; error?: string }
-      if (!res.ok || !json.url) {
-        setError(json.error ?? '업로드 실패')
-      } else {
-        setFileUrl(json.url)
-      }
+      const url = await uploadToStorage(file)
+      if (url) setFileUrl(url)
     } catch {
       setError('업로드 중 오류가 발생했습니다.')
     } finally {
