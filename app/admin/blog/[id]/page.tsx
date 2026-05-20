@@ -30,6 +30,7 @@ export default async function AdminBlogEditPage({ params }: Props) {
           file_url: typedBlog.file_url ?? '',
           meta_title: typedBlog.meta_title ?? '',
           meta_description: typedBlog.meta_description ?? '',
+          tags: typedBlog.tags ?? [],
           is_published: typedBlog.is_published,
           sort_order: typedBlog.sort_order,
         }}

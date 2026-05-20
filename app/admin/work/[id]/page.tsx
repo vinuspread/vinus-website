@@ -35,6 +35,7 @@ export default async function AdminWorkEditPage({ params }: Props) {
           blocks: typedWork.blocks ?? [],
           meta_title: typedWork.meta_title ?? '',
           meta_description: typedWork.meta_description ?? '',
+          tags: typedWork.tags ?? [],
           is_published: typedWork.is_published,
         }}
       />
