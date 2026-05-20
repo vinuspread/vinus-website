@@ -58,6 +58,7 @@ export async function renameCategory(id: string, newName: string) {
   await supabase.from(type).update({ category: trimmed }).eq('category', oldName)
 
   revalidatePath('/admin/categories')
+  revalidatePath(`/admin/${type}`)
 }
 
 export async function deleteCategory(id: string) {
@@ -74,6 +75,7 @@ export async function deleteCategory(id: string) {
   const { error } = await supabase.from('categories').delete().eq('id', id)
   if (error) throw new Error(error.message)
   revalidatePath('/admin/categories')
+  revalidatePath(`/admin/${type}`)
 }
 
 export async function moveCategory(id: string, direction: 'up' | 'down') {
