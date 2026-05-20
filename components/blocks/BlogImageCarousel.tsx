@@ -21,9 +21,10 @@ export default function BlogImageCarousel({ images, caption }: Props) {
         <Image
           src={images[current]}
           alt=""
-          width={1200}
-          height={800}
-          className="w-full h-auto object-cover"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="w-full h-auto"
           data-pin-nopin="true"
         />
         {images.length > 1 && (
