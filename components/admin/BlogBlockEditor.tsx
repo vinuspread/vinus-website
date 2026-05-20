@@ -84,6 +84,7 @@ const BLOCK_LABELS: Record<BlogBlockType, string> = {
 export default function BlogBlockEditor({ blocks, onChange }: Props) {
   const [addType, setAddType] = useState<BlogBlockType>('blog-text')
   const [fetchingOg, setFetchingOg] = useState<Record<string, boolean>>({})
+  const [uploadingImg, setUploadingImg] = useState<Record<string, boolean>>({})
   const [movedId, setMovedId] = useState<string | null>(null)
   const blocksRef = useRef(blocks)
   useEffect(() => { blocksRef.current = blocks }, [blocks])
@@ -219,21 +220,27 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                       placeholder="이미지 URL"
                       className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                     />
-                    <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100 whitespace-nowrap">
-                      파일 선택
+                    <label className={`border border-gray-300 px-3 py-2 text-xs whitespace-nowrap ${uploadingImg[block.id] ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}>
+                      {uploadingImg[block.id] ? '업로드 중...' : '파일 선택'}
                       <input
                         type="file"
                         accept="image/*"
+                        disabled={uploadingImg[block.id]}
                         className="hidden"
                         onChange={async (e) => {
                           const file = e.target.files?.[0]
                           if (!file) return
-                          const fd = new FormData()
-                          fd.append('file', file)
-                          const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-                          const json = await res.json() as { url?: string }
-                          if (json.url) onChange(updateBlock(blocks, index, { ...block, src: json.url }))
-                          e.target.value = ''
+                          setUploadingImg(prev => ({ ...prev, [block.id]: true }))
+                          try {
+                            const fd = new FormData()
+                            fd.append('file', file)
+                            const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+                            const json = await res.json() as { url?: string }
+                            if (json.url) onChange(updateBlock(blocksRef.current, index, { ...block, src: json.url }))
+                          } finally {
+                            setUploadingImg(prev => ({ ...prev, [block.id]: false }))
+                            e.target.value = ''
+                          }
                         }}
                       />
                     </label>
