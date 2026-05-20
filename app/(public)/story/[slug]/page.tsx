@@ -126,7 +126,7 @@ export default async function StoryDetailPage({ params }: Props) {
 
       {/* ── Featured Image ── */}
       {blog.thumbnail_url && (
-        <section className="px-page-padding pb-[80px] md:pb-[120px]">
+        <section className="pb-[80px] md:pb-[120px]">
           <BlogThumbParallax src={blog.thumbnail_url} alt={blog.title} />
         </section>
       )}
