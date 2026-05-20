@@ -155,8 +155,7 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                     className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                   >
                     <option value="paragraph">문단 (Paragraph)</option>
-                    <option value="h2">제목 H2</option>
-                    <option value="h3">소제목 H3</option>
+                    <option value="h3">제목</option>
                   </select>
                   <textarea
                     value={block.content}

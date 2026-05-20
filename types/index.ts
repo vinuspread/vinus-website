@@ -15,7 +15,7 @@ export type ThumbnailColumns = 2 | 3 | 4 | 5
 export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 export type HeadingWeight = 'light' | 'normal' | 'bold'
 export type EmbedInputType = 'url' | 'code'
-export type BlogTextVariant = 'paragraph' | 'h2' | 'h3'
+export type BlogTextVariant = 'paragraph' | 'h3'
 export type BlogDividerStyle = 'line' | 'space'
 export type CodeLanguage = 'javascript' | 'typescript' | 'css' | 'html' | 'bash' | 'json' | 'python' | 'text'
 
