@@ -15,7 +15,7 @@ export default function BlogThumbParallax({ src, alt }: Props) {
     target: ref,
     offset: ['start end', 'end start'],
   })
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60])
+  const y = useTransform(scrollYProgress, [0, 1], [90, -90])
 
   return (
     <div ref={ref} className="w-full aspect-[21/9] relative overflow-hidden">
