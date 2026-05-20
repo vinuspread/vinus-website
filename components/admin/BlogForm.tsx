@@ -122,7 +122,8 @@ export default function BlogForm({ initialData }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-3xl">
+    <form onSubmit={handleSubmit} className="flex gap-8 items-start">
+      <div className="flex-1 space-y-8">
       <div className="grid grid-cols-[160px_1fr] gap-4 items-start">
         <label className="text-sm text-gray-500 pt-3">제목 *</label>
         <input
@@ -228,19 +229,20 @@ export default function BlogForm({ initialData }: Props) {
       </div>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
+      </div>
 
-      <div className="flex gap-3 pt-4 border-t border-gray-200">
+      <div className="sticky top-8 w-40 flex-shrink-0 flex flex-col gap-3">
         <button
           type="submit"
           disabled={isPending}
-          className="border border-[#FF3B5C] text-[#FF3B5C] px-8 py-2 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50"
+          className="w-full border border-[#FF3B5C] text-[#FF3B5C] px-4 py-2.5 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50"
         >
           {isPending ? '저장 중...' : '저장'}
         </button>
         <button
           type="button"
           onClick={() => router.push('/admin/blog')}
-          className="border border-black text-black px-6 py-2 text-sm hover:bg-black hover:text-white transition-colors"
+          className="w-full border border-black text-black px-4 py-2.5 text-sm hover:bg-black hover:text-white transition-colors"
         >
           목록
         </button>
@@ -249,7 +251,7 @@ export default function BlogForm({ initialData }: Props) {
             type="button"
             onClick={handleDelete}
             disabled={isPending}
-            className="ml-auto border border-red-400 text-red-500 px-6 py-2 text-sm hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50"
+            className="w-full border border-red-400 text-red-500 px-4 py-2.5 text-sm hover:bg-red-500 hover:text-white transition-colors disabled:opacity-50 mt-4"
           >
             삭제
           </button>
