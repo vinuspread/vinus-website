@@ -12,7 +12,7 @@ export default function BlogImageBlock({ block }: { block: BlogImageBlock }) {
       <img
         src={block.src}
         alt={block.alt ?? ''}
-        className="max-w-full h-auto"
+        className="max-w-full h-auto block mx-auto"
         data-pin-nopin="true"
       />
       {block.caption && (

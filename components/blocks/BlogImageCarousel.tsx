@@ -66,7 +66,7 @@ export default function BlogImageCarousel({ images, caption }: Props) {
                 <img
                   src={src}
                   alt=""
-                  className="max-w-full h-auto block"
+                  className="max-w-full h-auto block mx-auto"
                   data-pin-nopin="true"
                 />
               </div>
