@@ -51,12 +51,10 @@ export async function saveBlog(data: BlogFormData): Promise<{ id: string; slug: 
 }
 
 export async function deleteBlog(id: string, slug: string) {
-  const { redirect } = await import('next/navigation')
   const supabase = await createClient()
   const { error } = await supabase.from('blog').delete().eq('id', id)
   if (error) throw new Error(error.message)
   revalidatePath('/story')
   revalidatePath(`/story/${slug}`, 'page')
   revalidatePath('/sitemap.xml')
-  redirect('/admin/blog')
 }

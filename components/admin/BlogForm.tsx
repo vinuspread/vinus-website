@@ -114,8 +114,8 @@ export default function BlogForm({ initialData }: Props) {
     startTransition(async () => {
       try {
         await deleteBlog(initialData.id, initialData.slug)
+        router.push('/admin/blog')
       } catch (err) {
-        if (err && typeof err === 'object' && 'digest' in err) throw err
         setError(err instanceof Error ? err.message : '삭제 실패')
       }
     })
