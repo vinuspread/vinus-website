@@ -26,9 +26,11 @@ export default function BlogForm({ initialData }: Props) {
   function toSlug(title: string) {
     return title
       .toLowerCase()
-      .replace(/[^a-z0-9가-힣\s-]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
   }
 
   async function uploadThumbnail(e: { target: { files?: FileList | null } }) {
@@ -79,10 +81,16 @@ export default function BlogForm({ initialData }: Props) {
     const form = e.currentTarget
     const get = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value
 
+    const slug = get('slug')
+    if (!/^[a-z0-9-]+$/.test(slug)) {
+      setError('슬러그는 영문 소문자, 숫자, 하이픈(-)만 사용할 수 있습니다. 한글 제목은 슬러그를 직접 영문으로 입력해주세요.')
+      return
+    }
+
     const data: BlogFormData = {
       id: initialData?.id,
       title: get('title'),
-      slug: get('slug'),
+      slug,
       category,
       thumbnail_url: thumbnailUrl,
       blocks,
