@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
-import { Clip } from '@/components/common/Clip'
+import { StoryHero } from '@/components/story/StoryHero'
 import type { Blog } from '@/types'
 
 export const revalidate = 3600
@@ -66,29 +66,12 @@ export default async function StoryDetailPage({ params }: Props) {
     <main className="bg-white min-h-screen">
 
       {/* ── Hero ── */}
-      <header className="px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
-        <div className="flex flex-col gap-8 max-w-[900px]">
-          <div className="flex items-center gap-4">
-            <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/30">
-              <Clip>{blog.category}</Clip>
-            </span>
-            <span className="w-1 h-1 rounded-full bg-mine-shaft/10" />
-            <span className="font-inter text-[12px] text-mine-shaft/20">
-              <Clip delay={30}>{formatDate(blog.created_at)}</Clip>
-            </span>
-          </div>
-
-          <h1 className="font-inter font-bold text-mine-shaft text-[clamp(40px,6vw,96px)] tracking-tight leading-[1.0]">
-            <Clip delay={80}>{blog.title}</Clip>
-          </h1>
-
-          {blog.meta_description && (
-            <p className="font-inter text-mine-shaft/50 text-[clamp(18px,2vw,28px)] leading-snug max-w-[600px]">
-              <Clip delay={120}>{blog.meta_description}</Clip>
-            </p>
-          )}
-        </div>
-      </header>
+      <StoryHero
+        category={blog.category}
+        date={formatDate(blog.created_at)}
+        title={blog.title}
+        metaDescription={blog.meta_description}
+      />
 
       {/* ── Featured Image ── */}
       {blog.thumbnail_url && (
