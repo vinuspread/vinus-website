@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import type { Block, BlogTextVariant, BlogDividerStyle, CodeLanguage } from '@/types'
-import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock, BlogBulletBlock } from '@/types'
+import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock, BlogBulletBlock, BlogImageBlock } from '@/types'
 
-type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock
+type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock | BlogImageBlock
 type BlogBlockType = BlogBlock['type']
 
 interface Props {
@@ -16,6 +16,7 @@ const BLOG_BLOCK_TYPES: { value: BlogBlockType; label: string }[] = [
   { value: 'blog-text',         label: '텍스트' },
   { value: 'blog-heading-text', label: '제목+내용' },
   { value: 'blog-bullet',       label: '불릿 목록' },
+  { value: 'blog-image',        label: '이미지' },
   { value: 'blog-quote',        label: '인용구' },
   { value: 'blog-divider',      label: '구분선' },
   { value: 'blog-link-card',    label: '링크 카드' },
@@ -31,6 +32,7 @@ function createBlogBlock(type: BlogBlockType): BlogBlock {
     case 'blog-text':         return { id, type, variant: 'paragraph', content: '', spacing: 'md' }
     case 'blog-heading-text': return { id, type, heading: '', body: '', spacing: 'md' }
     case 'blog-bullet':       return { id, type, items: [{ text: '', level: 0 as const }], spacing: 'md' }
+    case 'blog-image':        return { id, type, src: '', alt: '', caption: '', spacing: 'md' }
     case 'blog-quote':        return { id, type, quote: '', attribution: '', spacing: 'md' }
     case 'blog-divider':      return { id, type, style: 'line', spacing: 'lg' }
     case 'blog-link-card':    return { id, type, url: '', ogTitle: '', ogDescription: '', ogImage: '', ogSiteName: '', spacing: 'md' }
@@ -41,8 +43,8 @@ function createBlogBlock(type: BlogBlockType): BlogBlock {
 
 function isBlogBlock(b: Block): b is BlogBlock {
   return b.type === 'blog-text' || b.type === 'blog-heading-text' || b.type === 'blog-bullet' ||
-    b.type === 'blog-quote' || b.type === 'blog-divider' || b.type === 'blog-link-card' ||
-    b.type === 'blog-video' || b.type === 'blog-code'
+    b.type === 'blog-image' || b.type === 'blog-quote' || b.type === 'blog-divider' ||
+    b.type === 'blog-link-card' || b.type === 'blog-video' || b.type === 'blog-code'
 }
 
 function moveUp(blocks: Block[], index: number): Block[] {
@@ -71,6 +73,7 @@ const BLOCK_LABELS: Record<BlogBlockType, string> = {
   'blog-text':         '텍스트',
   'blog-heading-text': '제목+내용',
   'blog-bullet':       '불릿 목록',
+  'blog-image':        '이미지',
   'blog-quote':        '인용구',
   'blog-divider':      '구분선',
   'blog-link-card':    '링크 카드',
@@ -197,6 +200,50 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                     rows={4}
                     placeholder="내용 입력"
                     className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
+                  />
+                </div>
+              )}
+
+              {/* blog-image */}
+              {block.type === 'blog-image' && (
+                <div className="space-y-2">
+                  {block.src && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={block.src} alt="" className="w-full max-h-48 object-cover rounded border border-gray-200" />
+                  )}
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={block.src}
+                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
+                      placeholder="이미지 URL"
+                      className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                    />
+                    <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100 whitespace-nowrap">
+                      파일 선택
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0]
+                          if (!file) return
+                          const fd = new FormData()
+                          fd.append('file', file)
+                          const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+                          const json = await res.json() as { url?: string }
+                          if (json.url) onChange(updateBlock(blocks, index, { ...block, src: json.url }))
+                          e.target.value = ''
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    value={block.caption ?? ''}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, caption: e.target.value }))}
+                    placeholder="캡션 (선택)"
+                    className="w-full border-b border-gray-300 py-2 text-sm text-gray-500 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                   />
                 </div>
               )}

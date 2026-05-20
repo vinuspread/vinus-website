@@ -190,6 +190,15 @@ export interface BlogHeadingTextBlock {
   spacing: SpacingType
 }
 
+export interface BlogImageBlock {
+  id: string
+  type: 'blog-image'
+  src: string
+  alt?: string
+  caption?: string
+  spacing: SpacingType
+}
+
 export interface BlogBulletItem {
   text: string
   level: 0 | 1
@@ -203,7 +212,7 @@ export interface BlogBulletBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock
+export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock | BlogImageBlock
 
 export interface Work {
   id: string

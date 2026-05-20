@@ -18,6 +18,7 @@ import BlogVideoBlock from './BlogVideoBlock'
 import BlogCodeBlock from './BlogCodeBlock'
 import BlogHeadingTextBlock from './BlogHeadingTextBlock'
 import BlogBulletBlock from './BlogBulletBlock'
+import BlogImageBlock from './BlogImageBlock'
 
 export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
   return (
@@ -43,6 +44,7 @@ export default function BlockRenderer({ blocks }: { blocks: Block[] }) {
             case 'blog-code':         return <BlogCodeBlock key={block.id} block={block} />
             case 'blog-heading-text': return <BlogHeadingTextBlock key={block.id} block={block} />
             case 'blog-bullet':       return <BlogBulletBlock key={block.id} block={block} />
+            case 'blog-image':        return <BlogImageBlock key={block.id} block={block} />
             default:                  return null
           }
         })()
