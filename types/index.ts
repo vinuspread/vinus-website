@@ -15,6 +15,9 @@ export type ThumbnailColumns = 2 | 3 | 4 | 5
 export type HeadingSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 export type HeadingWeight = 'light' | 'normal' | 'bold'
 export type EmbedInputType = 'url' | 'code'
+export type BlogTextVariant = 'paragraph' | 'h2' | 'h3'
+export type BlogDividerStyle = 'line' | 'space'
+export type CodeLanguage = 'javascript' | 'typescript' | 'css' | 'html' | 'bash' | 'json' | 'python' | 'text'
 
 export interface TextBlock {
   id: string
@@ -128,7 +131,57 @@ export interface ScrollStoryBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock
+export interface BlogTextBlock {
+  id: string
+  type: 'blog-text'
+  variant: BlogTextVariant
+  content: string
+  spacing: SpacingType
+}
+
+export interface BlogQuoteBlock {
+  id: string
+  type: 'blog-quote'
+  quote: string
+  attribution?: string
+  spacing: SpacingType
+}
+
+export interface BlogDividerBlock {
+  id: string
+  type: 'blog-divider'
+  style: BlogDividerStyle
+  spacing: SpacingType
+}
+
+export interface BlogLinkCardBlock {
+  id: string
+  type: 'blog-link-card'
+  url: string
+  ogTitle: string
+  ogDescription: string
+  ogImage: string
+  ogSiteName: string
+  spacing: SpacingType
+}
+
+export interface BlogVideoBlock {
+  id: string
+  type: 'blog-video'
+  url: string
+  caption?: string
+  spacing: SpacingType
+}
+
+export interface BlogCodeBlock {
+  id: string
+  type: 'blog-code'
+  code: string
+  language: CodeLanguage
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock
 
 export interface Work {
   id: string
