@@ -196,6 +196,7 @@ export interface BlogImageBlock {
   src: string
   alt?: string
   caption?: string
+  images?: string[]
   spacing: SpacingType
 }
 

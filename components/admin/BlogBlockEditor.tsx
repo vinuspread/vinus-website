@@ -85,6 +85,8 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
   const [addType, setAddType] = useState<BlogBlockType>('blog-text')
   const [fetchingOg, setFetchingOg] = useState<Record<string, boolean>>({})
   const [uploadingImg, setUploadingImg] = useState<Record<string, boolean>>({})
+  const [pendingFiles, setPendingFiles] = useState<Record<string, { uid: string; file: File; preview: string }[]>>({})
+  const [uploadingAll, setUploadingAll] = useState<Record<string, boolean>>({})
   const [movedId, setMovedId] = useState<string | null>(null)
   const blocksRef = useRef(blocks)
   useEffect(() => { blocksRef.current = blocks }, [blocks])
@@ -207,44 +209,189 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
 
               {/* blog-image */}
               {block.type === 'blog-image' && (
-                <div className="space-y-2">
-                  {block.src && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={block.src} alt="" className="w-full max-h-48 object-cover rounded border border-gray-200" />
+                <div className="space-y-3">
+                  {/* Uploaded images list */}
+                  {(block.images ?? []).length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1.5">업로드된 이미지 ({(block.images ?? []).length}장)</p>
+                      <div className="space-y-1">
+                        {(block.images ?? []).map((url, imgIdx) => (
+                          <div key={imgIdx} className="flex items-center gap-2 border border-gray-100 p-1.5">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={url} alt="" className="w-14 h-10 object-cover shrink-0" />
+                            <span className="flex-1 text-xs text-gray-400 truncate min-w-0">{url}</span>
+                            <div className="flex gap-1 shrink-0">
+                              <button type="button" disabled={imgIdx === 0}
+                                onClick={() => {
+                                  const imgs = [...(block.images ?? [])]
+                                  ;[imgs[imgIdx - 1], imgs[imgIdx]] = [imgs[imgIdx], imgs[imgIdx - 1]]
+                                  onChange(updateBlock(blocks, index, { ...block, images: imgs }))
+                                }}
+                                className="px-1.5 py-0.5 text-xs border border-gray-200 disabled:opacity-30 hover:bg-gray-100">↑</button>
+                              <button type="button" disabled={imgIdx === (block.images ?? []).length - 1}
+                                onClick={() => {
+                                  const imgs = [...(block.images ?? [])]
+                                  ;[imgs[imgIdx], imgs[imgIdx + 1]] = [imgs[imgIdx + 1], imgs[imgIdx]]
+                                  onChange(updateBlock(blocks, index, { ...block, images: imgs }))
+                                }}
+                                className="px-1.5 py-0.5 text-xs border border-gray-200 disabled:opacity-30 hover:bg-gray-100">↓</button>
+                              <button type="button"
+                                onClick={() => {
+                                  const imgs = (block.images ?? []).filter((_, i) => i !== imgIdx)
+                                  onChange(updateBlock(blocks, index, { ...block, images: imgs }))
+                                }}
+                                className="px-1.5 py-0.5 text-xs border border-red-200 text-red-400 hover:bg-red-50">✕</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                  <div className="flex gap-2 items-center">
-                    <input
-                      type="text"
-                      value={block.src}
-                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
-                      placeholder="이미지 URL"
-                      className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                    />
-                    <label className={`border border-gray-300 px-3 py-2 text-xs whitespace-nowrap ${uploadingImg[block.id] ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}>
-                      {uploadingImg[block.id] ? '업로드 중...' : '파일 선택'}
-                      <input
-                        type="file"
-                        accept="image/*"
-                        disabled={uploadingImg[block.id]}
-                        className="hidden"
-                        onChange={async (e) => {
-                          const file = e.target.files?.[0]
-                          if (!file) return
-                          setUploadingImg(prev => ({ ...prev, [block.id]: true }))
+
+                  {/* Drop zone */}
+                  <div
+                    className="border-2 border-dashed border-gray-200 hover:border-gray-400 transition-colors p-4 text-center cursor-pointer"
+                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation() }}
+                    onDrop={(e) => {
+                      e.preventDefault()
+                      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'))
+                      if (!files.length) return
+                      const items = files.map(file => ({ uid: crypto.randomUUID(), file, preview: URL.createObjectURL(file) }))
+                      setPendingFiles(prev => ({ ...prev, [block.id]: [...(prev[block.id] ?? []), ...items] }))
+                    }}
+                    onClick={() => {
+                      const input = document.createElement('input')
+                      input.type = 'file'
+                      input.accept = 'image/*'
+                      input.multiple = true
+                      input.onchange = () => {
+                        const files = Array.from(input.files ?? [])
+                        const items = files.map(file => ({ uid: crypto.randomUUID(), file, preview: URL.createObjectURL(file) }))
+                        setPendingFiles(prev => ({ ...prev, [block.id]: [...(prev[block.id] ?? []), ...items] }))
+                      }
+                      input.click()
+                    }}
+                  >
+                    <p className="text-xs text-gray-400">이미지를 드래그하거나 클릭하여 추가</p>
+                  </div>
+
+                  {/* Pending previews */}
+                  {(pendingFiles[block.id] ?? []).length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-400 mb-1.5">미리보기 ({(pendingFiles[block.id] ?? []).length}장, 미업로드)</p>
+                      <div className="space-y-1">
+                        {(pendingFiles[block.id] ?? []).map((item, pIdx) => {
+                          const pending = pendingFiles[block.id] ?? []
+                          return (
+                            <div key={item.uid} className="flex items-center gap-2 border border-dashed border-gray-200 p-1.5">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={item.preview} alt="" className="w-14 h-10 object-cover shrink-0" />
+                              <span className="flex-1 text-xs text-gray-400 truncate min-w-0">{item.file.name}</span>
+                              <div className="flex gap-1 shrink-0">
+                                <button type="button" disabled={pIdx === 0}
+                                  onClick={() => {
+                                    const p = [...pending]
+                                    ;[p[pIdx - 1], p[pIdx]] = [p[pIdx], p[pIdx - 1]]
+                                    setPendingFiles(prev => ({ ...prev, [block.id]: p }))
+                                  }}
+                                  className="px-1.5 py-0.5 text-xs border border-gray-200 disabled:opacity-30 hover:bg-gray-100">↑</button>
+                                <button type="button" disabled={pIdx === pending.length - 1}
+                                  onClick={() => {
+                                    const p = [...pending]
+                                    ;[p[pIdx], p[pIdx + 1]] = [p[pIdx + 1], p[pIdx]]
+                                    setPendingFiles(prev => ({ ...prev, [block.id]: p }))
+                                  }}
+                                  className="px-1.5 py-0.5 text-xs border border-gray-200 disabled:opacity-30 hover:bg-gray-100">↓</button>
+                                <button type="button"
+                                  onClick={() => {
+                                    URL.revokeObjectURL(item.preview)
+                                    setPendingFiles(prev => ({ ...prev, [block.id]: pending.filter((_, i) => i !== pIdx) }))
+                                  }}
+                                  className="px-1.5 py-0.5 text-xs border border-red-200 text-red-400 hover:bg-red-50">✕</button>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <button
+                        type="button"
+                        disabled={uploadingAll[block.id]}
+                        onClick={async () => {
+                          const pending = pendingFiles[block.id] ?? []
+                          if (!pending.length) return
+                          setUploadingAll(prev => ({ ...prev, [block.id]: true }))
                           try {
-                            const fd = new FormData()
-                            fd.append('file', file)
-                            const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-                            const json = await res.json() as { url?: string }
-                            if (json.url) onChange(updateBlock(blocksRef.current, index, { ...block, src: json.url }))
+                            const urls: string[] = []
+                            for (const item of pending) {
+                              const fd = new FormData()
+                              fd.append('file', item.file)
+                              const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+                              const json = await res.json() as { url?: string }
+                              if (json.url) {
+                                urls.push(json.url)
+                                URL.revokeObjectURL(item.preview)
+                              }
+                            }
+                            const cur = blocksRef.current[index]
+                            if (cur.type === 'blog-image') {
+                              onChange(updateBlock(blocksRef.current, index, { ...cur, images: [...(cur.images ?? []), ...urls] }))
+                            }
+                            setPendingFiles(prev => ({ ...prev, [block.id]: [] }))
                           } finally {
-                            setUploadingImg(prev => ({ ...prev, [block.id]: false }))
-                            e.target.value = ''
+                            setUploadingAll(prev => ({ ...prev, [block.id]: false }))
                           }
                         }}
-                      />
-                    </label>
-                  </div>
+                        className="mt-2 w-full border border-black px-3 py-1.5 text-xs hover:bg-black hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {uploadingAll[block.id] ? '업로드 중...' : `${(pendingFiles[block.id] ?? []).length}장 업로드`}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Legacy single image — only shown when no images array yet */}
+                  {!(block.images?.length) && (
+                    <div className="space-y-2">
+                      {block.src && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={block.src} alt="" className="w-full max-h-48 object-cover rounded border border-gray-200" />
+                      )}
+                      <div className="flex gap-2 items-center">
+                        <input
+                          type="text"
+                          value={block.src}
+                          onChange={(e) => onChange(updateBlock(blocks, index, { ...block, src: e.target.value }))}
+                          placeholder="이미지 URL (단일)"
+                          className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                        />
+                        <label className={`border border-gray-300 px-3 py-2 text-xs whitespace-nowrap ${uploadingImg[block.id] ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100'}`}>
+                          {uploadingImg[block.id] ? '업로드 중...' : '파일 선택'}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={uploadingImg[block.id]}
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0]
+                              if (!file) return
+                              setUploadingImg(prev => ({ ...prev, [block.id]: true }))
+                              try {
+                                const fd = new FormData()
+                                fd.append('file', file)
+                                const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
+                                const json = await res.json() as { url?: string }
+                                if (json.url) onChange(updateBlock(blocksRef.current, index, { ...block, src: json.url }))
+                              } finally {
+                                setUploadingImg(prev => ({ ...prev, [block.id]: false }))
+                                e.target.value = ''
+                              }
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Caption */}
                   <input
                     type="text"
                     value={block.caption ?? ''}

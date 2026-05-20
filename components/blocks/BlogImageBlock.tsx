@@ -1,7 +1,11 @@
 import Image from 'next/image'
 import type { BlogImageBlock } from '@/types'
+import BlogImageCarousel from './BlogImageCarousel'
 
 export default function BlogImageBlock({ block }: { block: BlogImageBlock }) {
+  if (block.images?.length) {
+    return <BlogImageCarousel images={block.images} caption={block.caption} />
+  }
   if (!block.src) return null
   return (
     <figure>
