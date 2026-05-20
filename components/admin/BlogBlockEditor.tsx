@@ -101,6 +101,18 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
     onChange([...blocks, createBlogBlock(addType)])
   }
 
+  async function uploadFile(file: File): Promise<string | null> {
+    const res = await fetch('/api/admin/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: file.name, contentType: file.type }),
+    })
+    const json = await res.json() as { signedUrl?: string; publicUrl?: string }
+    if (!json.signedUrl || !json.publicUrl) return null
+    await fetch(json.signedUrl, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
+    return json.publicUrl
+  }
+
   async function fetchOg(blockId: string, index: number, url: string) {
     if (!url) return
     setFetchingOg(prev => ({ ...prev, [blockId]: true }))
@@ -323,12 +335,9 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                           try {
                             const urls: string[] = []
                             for (const item of pending) {
-                              const fd = new FormData()
-                              fd.append('file', item.file)
-                              const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-                              const json = await res.json() as { url?: string }
-                              if (json.url) {
-                                urls.push(json.url)
+                              const url = await uploadFile(item.file)
+                              if (url) {
+                                urls.push(url)
                                 URL.revokeObjectURL(item.preview)
                               }
                             }
@@ -375,11 +384,8 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                               if (!file) return
                               setUploadingImg(prev => ({ ...prev, [block.id]: true }))
                               try {
-                                const fd = new FormData()
-                                fd.append('file', file)
-                                const res = await fetch('/api/admin/upload', { method: 'POST', body: fd })
-                                const json = await res.json() as { url?: string }
-                                if (json.url) onChange(updateBlock(blocksRef.current, index, { ...block, src: json.url }))
+                                const url = await uploadFile(file)
+                                if (url) onChange(updateBlock(blocksRef.current, index, { ...block, src: url }))
                               } finally {
                                 setUploadingImg(prev => ({ ...prev, [block.id]: false }))
                                 e.target.value = ''
