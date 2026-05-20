@@ -20,6 +20,11 @@ const MOTION_DESC: Record<string, string> = {
 }
 
 type BlockType = Block['type']
+
+function hasMotion(block: Block): block is Extract<Block, { motion: string }> {
+  return 'motion' in block
+}
+
 const BLOCK_TYPES: { value: BlockType; label: string }[] = [
   { value: 'text', label: '텍스트' },
   { value: 'heading-text', label: '제목+텍스트' },
@@ -46,6 +51,7 @@ function createBlock(type: BlockType): Block {
     case 'file': return { id, type, url: '', label: '', motion: 'none', spacing: 'md' }
     case 'multi-thumbnail': return { id, type, images: [], columns: 5, spacing: 'md' }
     case 'scroll-story': return { id, type, layout: 'A', slides: [{ image: '', title: '', body: '' }], spacing: 'lg' }
+    default: throw new Error(`Unknown block type: ${type}`)
   }
 }
 
@@ -168,11 +174,11 @@ export default function BlockEditor({ blocks, onChange }: Props) {
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400 uppercase tracking-wider">{block.type}</span>
-                {block.type !== 'heading-text' && block.type !== 'multi-thumbnail' && block.type !== 'scroll-story' && (
+                {block.type !== 'heading-text' && block.type !== 'multi-thumbnail' && block.type !== 'scroll-story' && !block.type.startsWith('blog-') && hasMotion(block) && (
                   <>
                     <select
                       value={block.motion}
-                      onChange={(e) => 'motion' in block && onChange(updateBlock(blocks, index, { ...block, motion: e.target.value as never }))}
+                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, motion: e.target.value as never }))}
                       className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                     >
                       <option value="none">모션 없음</option>
@@ -183,7 +189,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                       <option value="curtainReveal">Curtain Reveal</option>
                       <option value="stagger">Stagger</option>
                     </select>
-                    {'motion' in block && MOTION_DESC[block.motion] && (
+                    {MOTION_DESC[block.motion] && (
                       <span className="text-xs text-gray-400">{MOTION_DESC[block.motion]}</span>
                     )}
                   </>
