@@ -170,6 +170,7 @@ export interface BlogVideoBlock {
   type: 'blog-video'
   url: string
   caption?: string
+  aspectRatio?: string
   spacing: SpacingType
 }
 

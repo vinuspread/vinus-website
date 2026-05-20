@@ -14,7 +14,7 @@ export default function BlogVideoBlock({ block }: { block: BlogVideoBlock }) {
 
   return (
     <figure>
-      <div className="relative w-full aspect-video bg-gallery overflow-hidden">
+      <div className="relative w-full bg-gallery overflow-hidden" style={{ aspectRatio: block.aspectRatio ?? '16 / 9' }}>
         <iframe
           src={embedUrl}
           title={block.caption ?? 'Video'}

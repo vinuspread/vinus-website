@@ -328,13 +328,37 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
               {/* blog-video */}
               {block.type === 'blog-video' && (
                 <div className="space-y-2">
-                  <input
-                    type="text"
-                    value={block.url}
-                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))}
-                    placeholder="YouTube 또는 Vimeo URL"
-                    className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-                  />
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="text"
+                      value={block.url}
+                      onChange={(e) => onChange(updateBlock(blocks, index, { ...block, url: e.target.value }))}
+                      placeholder="YouTube 또는 Vimeo URL"
+                      className="flex-1 border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                    />
+                    {/vimeo\.com\/(\d+)/.test(block.url) && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          const m = block.url.match(/vimeo\.com\/(\d+)/)
+                          if (!m) return
+                          try {
+                            const res = await fetch(`https://vimeo.com/api/oembed.json?url=https://vimeo.com/${m[1]}`)
+                            const json = await res.json() as { width?: number; height?: number }
+                            if (json.width && json.height) {
+                              onChange(updateBlock(blocks, index, { ...block, aspectRatio: `${json.width} / ${json.height}` }))
+                            }
+                          } catch { /* ignore */ }
+                        }}
+                        className="shrink-0 text-xs border border-gray-300 px-2 py-1 hover:bg-gray-100 whitespace-nowrap"
+                      >
+                        비율 불러오기
+                      </button>
+                    )}
+                  </div>
+                  {block.aspectRatio && (
+                    <p className="text-xs text-gray-400">비율: {block.aspectRatio}</p>
+                  )}
                   <input
                     type="text"
                     value={block.caption ?? ''}
