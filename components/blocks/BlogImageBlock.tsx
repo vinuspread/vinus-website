@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { BlogImageBlock } from '@/types'
 import BlogImageCarousel from './BlogImageCarousel'
 
@@ -9,17 +8,13 @@ export default function BlogImageBlock({ block }: { block: BlogImageBlock }) {
   if (!block.src) return null
   return (
     <figure>
-      <div className="relative w-full overflow-hidden bg-gallery">
-        <Image
-          src={block.src}
-          alt={block.alt ?? ''}
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="max-w-full h-auto"
-          data-pin-nopin="true"
-        />
-      </div>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={block.src}
+        alt={block.alt ?? ''}
+        className="max-w-full h-auto"
+        data-pin-nopin="true"
+      />
       {block.caption && (
         <figcaption className="mt-3 text-xs text-mine-shaft/30 text-left">
           {block.caption}

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
 
 interface Props {
   images: string[]
@@ -63,12 +62,10 @@ export default function BlogImageCarousel({ images, caption }: Props) {
           >
             {slides.map((src, i) => (
               <div key={i} style={{ width: `${slidePct}%` }}>
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
                   src={src}
                   alt=""
-                  width={0}
-                  height={0}
-                  sizes="100vw"
                   className="max-w-full h-auto block"
                   data-pin-nopin="true"
                 />
