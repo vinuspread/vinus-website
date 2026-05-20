@@ -77,8 +77,15 @@ const BLOCK_LABELS: Record<BlogBlockType, string> = {
 export default function BlogBlockEditor({ blocks, onChange }: Props) {
   const [addType, setAddType] = useState<BlogBlockType>('blog-text')
   const [fetchingOg, setFetchingOg] = useState<Record<string, boolean>>({})
+  const [movedId, setMovedId] = useState<string | null>(null)
   const blocksRef = useRef(blocks)
   useEffect(() => { blocksRef.current = blocks }, [blocks])
+
+  function handleMove(newBlocks: Block[], movedBlockId: string) {
+    onChange(newBlocks)
+    setMovedId(movedBlockId)
+    setTimeout(() => setMovedId(null), 800)
+  }
 
   function handleAdd() {
     onChange([...blocks, createBlogBlock(addType)])
@@ -118,7 +125,7 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
           if (!isBlogBlock(block)) return null
 
           return (
-            <div key={block.id} className="border border-gray-200 p-4">
+            <div key={block.id} className={`border p-4 transition-colors duration-300 ${movedId === block.id ? 'border-black bg-gray-50' : 'border-gray-200'}`}>
               {/* Header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -140,9 +147,9 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                   </select>
                 </div>
                 <div className="flex gap-1">
-                  <button type="button" onClick={() => onChange(moveUp(blocks, index))} disabled={index === 0}
+                  <button type="button" onClick={() => handleMove(moveUp(blocks, index), block.id)} disabled={index === 0}
                     className="px-2 py-1 text-xs border border-gray-300 disabled:opacity-30 hover:bg-gray-100">↑</button>
-                  <button type="button" onClick={() => onChange(moveDown(blocks, index))} disabled={index === blocks.length - 1}
+                  <button type="button" onClick={() => handleMove(moveDown(blocks, index), block.id)} disabled={index === blocks.length - 1}
                     className="px-2 py-1 text-xs border border-gray-300 disabled:opacity-30 hover:bg-gray-100">↓</button>
                   <button type="button" onClick={() => onChange(removeBlock(blocks, index))}
                     className="px-2 py-1 text-xs border border-red-300 text-red-500 hover:bg-red-50">삭제</button>

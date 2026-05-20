@@ -111,8 +111,15 @@ async function uploadFile(file: File): Promise<string> {
 export default function BlockEditor({ blocks, onChange }: Props) {
   const [addType, setAddType] = useState<BlockType>('text')
   const [uploading, setUploading] = useState<Record<string, boolean>>({})
+  const [movedId, setMovedId] = useState<string | null>(null)
   const blocksRef = useRef(blocks)
   useEffect(() => { blocksRef.current = blocks }, [blocks])
+
+  function handleMove(newBlocks: Block[], movedBlockId: string) {
+    onChange(newBlocks)
+    setMovedId(movedBlockId)
+    setTimeout(() => setMovedId(null), 800)
+  }
 
   function handleAdd() {
     onChange([...blocks, createBlock(addType)])
@@ -170,7 +177,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
     <div className="space-y-4">
       <div className="space-y-3">
         {blocks.map((block, index) => (
-          <div key={block.id} className="border border-gray-200 p-4">
+          <div key={block.id} className={`border p-4 transition-colors duration-300 ${movedId === block.id ? 'border-black bg-gray-50' : 'border-gray-200'}`}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-400 uppercase tracking-wider">{block.type}</span>
@@ -211,7 +218,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
               <div className="flex gap-1">
                 <button
                   type="button"
-                  onClick={() => onChange(moveUp(blocks, index))}
+                  onClick={() => handleMove(moveUp(blocks, index), block.id)}
                   disabled={index === 0}
                   className="px-2 py-1 text-xs border border-gray-300 disabled:opacity-30 hover:bg-gray-100"
                 >
@@ -219,7 +226,7 @@ export default function BlockEditor({ blocks, onChange }: Props) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => onChange(moveDown(blocks, index))}
+                  onClick={() => handleMove(moveDown(blocks, index), block.id)}
                   disabled={index === blocks.length - 1}
                   className="px-2 py-1 text-xs border border-gray-300 disabled:opacity-30 hover:bg-gray-100"
                 >
