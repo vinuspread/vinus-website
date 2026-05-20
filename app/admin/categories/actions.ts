@@ -39,8 +39,38 @@ export async function addCategory(type: 'work' | 'blog', name: string) {
   revalidatePath('/admin/categories')
 }
 
+export async function renameCategory(id: string, newName: string) {
+  const trimmed = newName.trim()
+  if (!trimmed) throw new Error('카테고리명을 입력해주세요')
+
+  const supabase = await createClient()
+  const { data: target } = await supabase
+    .from('categories')
+    .select('type, name')
+    .eq('id', id)
+    .single()
+  if (!target) throw new Error('카테고리를 찾을 수 없습니다')
+
+  const oldName = target.name
+  const type = target.type as 'work' | 'blog'
+
+  await supabase.from('categories').update({ name: trimmed }).eq('id', id)
+  await supabase.from(type).update({ category: trimmed }).eq('category', oldName)
+
+  revalidatePath('/admin/categories')
+}
+
 export async function deleteCategory(id: string) {
   const supabase = await createClient()
+  const { data: target } = await supabase
+    .from('categories')
+    .select('type, name')
+    .eq('id', id)
+    .single()
+  if (!target) return
+
+  const type = target.type as 'work' | 'blog'
+  await supabase.from(type).update({ category: 'etc' }).eq('category', target.name)
   const { error } = await supabase.from('categories').delete().eq('id', id)
   if (error) throw new Error(error.message)
   revalidatePath('/admin/categories')
