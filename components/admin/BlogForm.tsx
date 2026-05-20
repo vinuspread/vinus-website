@@ -19,18 +19,18 @@ export default function BlogForm({ initialData }: Props) {
   const [category, setCategory] = useState<'Story' | 'Download'>(initialData?.category ?? 'Story')
   const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url ?? '')
   const [fileUrl, setFileUrl] = useState(initialData?.file_url ?? '')
-  const [slugEdited, setSlugEdited] = useState(isEdit)
   const [uploading, setUploading] = useState(false)
   const [thumbnailUploading, setThumbnailUploading] = useState(false)
 
   function toSlug(title: string) {
-    return title
+    const slug = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, '')
       .trim()
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '')
+    return slug || `post-${Date.now()}`
   }
 
   async function uploadThumbnail(e: { target: { files?: FileList | null } }) {
@@ -81,15 +81,12 @@ export default function BlogForm({ initialData }: Props) {
     const form = e.currentTarget
     const get = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value
 
-    const slug = get('slug')
-    if (!/^[a-z0-9-]+$/.test(slug)) {
-      setError('슬러그는 영문 소문자, 숫자, 하이픈(-)만 사용할 수 있습니다. 한글 제목은 슬러그를 직접 영문으로 입력해주세요.')
-      return
-    }
+    const titleValue = get('title')
+    const slug = isEdit ? (initialData?.slug ?? toSlug(titleValue)) : toSlug(titleValue)
 
     const data: BlogFormData = {
       id: initialData?.id,
-      title: get('title'),
+      title: titleValue,
       slug,
       category,
       thumbnail_url: thumbnailUrl,
@@ -98,7 +95,7 @@ export default function BlogForm({ initialData }: Props) {
       meta_title: get('meta_title'),
       meta_description: get('meta_description'),
       is_published: (form.elements.namedItem('is_published') as HTMLInputElement).checked,
-      sort_order: Number(get('sort_order')) || 0,
+      sort_order: initialData?.sort_order ?? 0,
     }
 
     startTransition(async () => {
@@ -132,16 +129,6 @@ export default function BlogForm({ initialData }: Props) {
           name="title"
           required
           defaultValue={initialData?.title}
-          onChange={(e) => { if (!slugEdited) { const slugInput = e.currentTarget.form?.elements.namedItem('slug') as HTMLInputElement; if (slugInput) slugInput.value = toSlug(e.target.value) } }}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
-        />
-
-        <label className="text-sm text-gray-500 pt-3">슬러그 *</label>
-        <input
-          name="slug"
-          required
-          defaultValue={initialData?.slug}
-          onChange={() => setSlugEdited(true)}
           className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
@@ -194,14 +181,6 @@ export default function BlogForm({ initialData }: Props) {
             </div>
           </>
         )}
-
-        <label className="text-sm text-gray-500 pt-3">정렬 순서</label>
-        <input
-          name="sort_order"
-          type="number"
-          defaultValue={initialData?.sort_order ?? 0}
-          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
-        />
 
         <div className="col-span-2 flex items-center gap-3 py-2">
           <label className="relative inline-flex items-center cursor-pointer">
