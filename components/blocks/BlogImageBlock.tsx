@@ -16,7 +16,7 @@ export default function BlogImageBlock({ block }: { block: BlogImageBlock }) {
           width={0}
           height={0}
           sizes="100vw"
-          className="w-full h-auto"
+          className="max-w-full h-auto"
           data-pin-nopin="true"
         />
       </div>
