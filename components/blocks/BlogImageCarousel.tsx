@@ -18,15 +18,26 @@ export default function BlogImageCarousel({ images, caption }: Props) {
   return (
     <figure>
       <div className="relative w-full overflow-hidden bg-gallery select-none">
-        <Image
-          src={images[current]}
-          alt=""
-          width={0}
-          height={0}
-          sizes="100vw"
-          className="w-full h-auto"
-          data-pin-nopin="true"
-        />
+        {/* Slide strip */}
+        <div
+          className="flex"
+          style={{ transform: `translateX(-${current * 100}%)`, transition: 'transform 0.35s ease-in-out' }}
+        >
+          {images.map((src, i) => (
+            <div key={i} className="min-w-full shrink-0">
+              <Image
+                src={src}
+                alt=""
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="w-full h-auto"
+                data-pin-nopin="true"
+              />
+            </div>
+          ))}
+        </div>
+
         {images.length > 1 && (
           <>
             <button
