@@ -193,6 +193,7 @@ export interface BlogHeadingTextBlock {
 export interface BlogBulletItem {
   text: string
   level: 0 | 1
+  href?: string
 }
 
 export interface BlogBulletBlock {

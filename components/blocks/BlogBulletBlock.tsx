@@ -10,7 +10,13 @@ export default function BlogBulletBlock({ block }: { block: BlogBulletBlock }) {
           className={`flex items-center gap-2 text-[16px] md:text-[18px] text-[#333333] leading-[1.7] ${item.level === 1 ? 'ml-6' : ''}`}
         >
           <span className={`shrink-0 rounded-full bg-[#333333] ${item.level === 1 ? 'w-1 h-1' : 'w-1.5 h-1.5'}`} />
-          <span>{item.text}</span>
+          {item.href ? (
+            <a href={item.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:opacity-60 transition-opacity">
+              {item.text}
+            </a>
+          ) : (
+            <span>{item.text}</span>
+          )}
         </li>
       ))}
     </ul>

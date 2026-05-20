@@ -205,42 +205,56 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
               {block.type === 'blog-bullet' && (
                 <div className="space-y-1">
                   {block.items.map((item, itemIdx) => (
-                    <div key={itemIdx} className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const items = block.items.map((it, i) =>
-                            i === itemIdx ? { ...it, level: (it.level === 0 ? 1 : 0) as 0 | 1 } : it
-                          )
-                          onChange(updateBlock(blocks, index, { ...block, items }))
-                        }}
-                        className={`shrink-0 w-6 h-6 text-xs border flex items-center justify-center ${item.level === 1 ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-400'}`}
-                        title="들여쓰기 토글"
-                      >
-                        ↳
-                      </button>
+                    <div key={itemIdx} className="flex flex-col gap-0.5 border-b border-gray-100 pb-1.5">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = block.items.map((it, i) =>
+                              i === itemIdx ? { ...it, level: (it.level === 0 ? 1 : 0) as 0 | 1 } : it
+                            )
+                            onChange(updateBlock(blocks, index, { ...block, items }))
+                          }}
+                          className={`shrink-0 w-6 h-6 text-xs border flex items-center justify-center ${item.level === 1 ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-400'}`}
+                          title="들여쓰기 토글"
+                        >
+                          ↳
+                        </button>
+                        <input
+                          type="text"
+                          value={item.text}
+                          onChange={(e) => {
+                            const items = block.items.map((it, i) =>
+                              i === itemIdx ? { ...it, text: e.target.value } : it
+                            )
+                            onChange(updateBlock(blocks, index, { ...block, items }))
+                          }}
+                          placeholder={`항목 ${itemIdx + 1}`}
+                          className={`flex-1 py-1.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent ${item.level === 1 ? 'pl-4' : ''}`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const items = block.items.filter((_, i) => i !== itemIdx)
+                            onChange(updateBlock(blocks, index, { ...block, items: items.length ? items : [{ text: '', level: 0 }] }))
+                          }}
+                          className="shrink-0 text-xs text-red-400 hover:text-red-600 px-1"
+                        >
+                          ✕
+                        </button>
+                      </div>
                       <input
                         type="text"
-                        value={item.text}
+                        value={item.href ?? ''}
                         onChange={(e) => {
                           const items = block.items.map((it, i) =>
-                            i === itemIdx ? { ...it, text: e.target.value } : it
+                            i === itemIdx ? { ...it, href: e.target.value || undefined } : it
                           )
                           onChange(updateBlock(blocks, index, { ...block, items }))
                         }}
-                        placeholder={`항목 ${itemIdx + 1}`}
-                        className={`flex-1 border-b border-gray-300 py-1.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent ${item.level === 1 ? 'pl-4' : ''}`}
+                        placeholder="링크 URL (선택)"
+                        className="ml-8 w-full py-1 text-xs text-gray-400 placeholder:text-gray-300 focus:outline-none bg-transparent border-b border-gray-100 focus:border-gray-400"
                       />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const items = block.items.filter((_, i) => i !== itemIdx)
-                          onChange(updateBlock(blocks, index, { ...block, items: items.length ? items : [{ text: '', level: 0 }] }))
-                        }}
-                        className="shrink-0 text-xs text-red-400 hover:text-red-600 px-1"
-                      >
-                        ✕
-                      </button>
                     </div>
                   ))}
                   <button
