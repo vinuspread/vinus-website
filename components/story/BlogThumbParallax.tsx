@@ -18,7 +18,7 @@ export default function BlogThumbParallax({ src, alt }: Props) {
   const y = useTransform(scrollYProgress, [0, 1], [90, -90])
 
   return (
-    <div ref={ref} className="w-full aspect-[21/9] relative overflow-hidden">
+    <div ref={ref} className="w-full aspect-[21/6] relative overflow-hidden">
       <motion.div style={{ y, scale: 1.2 }} className="absolute inset-0">
         <Image
           src={src}
