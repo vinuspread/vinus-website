@@ -9,9 +9,6 @@ import { PageHeaderDescription } from "@/components/common/PageHeaderDescription
 import { FilterBar } from "@/components/common/FilterBar";
 import type { Blog } from "@/types";
 
-const CATEGORIES = ["All", "Story", "Notice", "Etc"] as const;
-type Category = (typeof CATEGORIES)[number];
-
 function formatDate(iso: string) {
   const d = new Date(iso);
   return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, "0")}.${String(d.getDate()).padStart(2, "0")}`;
@@ -19,16 +16,18 @@ function formatDate(iso: string) {
 
 interface Props {
   stories: Blog[];
+  categories: string[];
 }
 
-export function StoryListClient({ stories }: Props) {
+export function StoryListClient({ stories, categories }: Props) {
   const listRef = useReveal();
-  const [active, setActive] = useState<Category>("All");
+  const allCategories = ["All", ...categories] as const;
+  const [active, setActive] = useState("All");
 
   const filtered =
     active === "All" ? stories : stories.filter((s) => s.category === active);
 
-  const count = (cat: Category) =>
+  const count = (cat: string) =>
     cat === "All"
       ? stories.length
       : stories.filter((s) => s.category === cat).length;
@@ -48,7 +47,7 @@ export function StoryListClient({ stories }: Props) {
       />
 
       <FilterBar
-        categories={CATEGORIES}
+        categories={allCategories}
         active={active}
         onSelect={setActive}
         count={count}

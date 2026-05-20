@@ -62,6 +62,8 @@ export async function renameCategory(id: string, newName: string) {
 
   revalidatePath('/admin/categories', 'page')
   revalidatePath(`/admin/${type}`, 'page')
+  if (type === 'blog') revalidatePath('/story', 'page')
+  if (type === 'work') revalidatePath('/work', 'page')
 }
 
 export async function deleteCategory(id: string) {
@@ -79,6 +81,8 @@ export async function deleteCategory(id: string) {
   if (error) throw new Error(error.message)
   revalidatePath('/admin/categories', 'page')
   revalidatePath(`/admin/${type}`, 'page')
+  if (type === 'blog') revalidatePath('/story', 'page')
+  if (type === 'work') revalidatePath('/work', 'page')
 }
 
 export async function moveCategory(id: string, direction: 'up' | 'down') {
