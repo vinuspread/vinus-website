@@ -123,7 +123,7 @@ export default function BlogForm({ initialData }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-8 items-start">
-      <div className="flex-1 space-y-8">
+      <div className="flex-1 space-y-8 min-w-0">
       <div className="grid grid-cols-[160px_1fr] gap-4 items-start">
         <label className="text-sm text-gray-500 pt-3">제목 *</label>
         <input
