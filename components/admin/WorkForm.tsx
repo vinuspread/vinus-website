@@ -260,13 +260,13 @@ export default function WorkForm({ initialData }: Props) {
 
         <label className="text-sm text-gray-500 pt-3">Meta 타이틀</label>
         <div className="space-y-1">
-          <input name="meta_title" defaultValue={initialData?.meta_title ?? ''} placeholder={initialData?.title ? `자동: ${initialData.title}` : '비워두면 제목이 자동 사용됩니다'} maxLength={60} className={`w-full ${inputClass}`} />
+          <input name="meta_title" defaultValue={initialData?.meta_title ?? ''} placeholder={initialData?.title ? `자동: ${initialData.title}` : '비워두면 제목이 자동 사용됩니다'} maxLength={60} className={`w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:outline-none focus:border-black bg-transparent`} />
           <p className="text-xs text-gray-400">권장 60자 이내 · 비우면 제목이 그대로 사용됨</p>
         </div>
 
         <label className="text-sm text-gray-500 pt-3">Meta 설명</label>
         <div className="space-y-1">
-          <textarea name="meta_description" defaultValue={initialData?.meta_description ?? ''} placeholder={(() => { const auto = getMetaDescription(null, blocks); return auto ? `자동: ${auto}` : '비워두면 첫 번째 텍스트 블록에서 자동 추출됩니다' })()} maxLength={160} rows={2} className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent resize-none" />
+          <textarea name="meta_description" defaultValue={initialData?.meta_description ?? ''} placeholder={(() => { const auto = getMetaDescription(null, blocks); return auto ? `자동: ${auto}` : '비워두면 첫 번째 텍스트 블록에서 자동 추출됩니다' })()} maxLength={160} rows={2} className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:outline-none focus:border-black bg-transparent resize-none" />
           <p className="text-xs text-gray-400">권장 120~160자 · 비우면 위 회색 미리보기 텍스트가 자동 사용됨</p>
         </div>
 
