@@ -5,9 +5,12 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
+import JsonLd from '@/components/seo/JsonLd'
 import type { Work } from '@/types'
 
 export const revalidate = 3600
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -18,18 +21,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient()
   const { data: work } = await supabase
     .from('work')
-    .select('title, meta_title, meta_description, blocks, thumbnail_url')
+    .select('title, meta_title, meta_description, blocks, thumbnail_url, tags, category')
     .eq('slug', slug)
     .single()
 
   if (!work) return { title: 'Not Found' }
 
+  const title = getMetaTitle(work.title, work.meta_title)
+  const description = getMetaDescription(work.meta_description, work.blocks)
+  const tags: string[] = work.tags ?? []
+  const url = `${SITE_URL}/work/${slug}`
+
   return {
-    title: getMetaTitle(work.title, work.meta_title),
-    description: getMetaDescription(work.meta_description, work.blocks),
+    title,
+    description,
+    keywords: tags.length ? tags.join(', ') : undefined,
+    alternates: { canonical: url },
     openGraph: {
-      title: getMetaTitle(work.title, work.meta_title),
-      description: getMetaDescription(work.meta_description, work.blocks) ?? undefined,
+      type: 'article',
+      url,
+      title,
+      description: description ?? undefined,
+      images: work.thumbnail_url ? [work.thumbnail_url] : undefined,
+      tags: tags.length ? tags : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description ?? undefined,
       images: work.thumbnail_url ? [work.thumbnail_url] : undefined,
     },
   }
@@ -51,9 +70,31 @@ export default async function WorkDetailPage({ params }: Props) {
   const nextWork = allWorks[(currentIdx + 1) % allWorks.length]
 
   const heroSrc = (work as Work).hero_url ?? (work as Work).thumbnail_url
+  const tags: string[] = (work as Work).tags ?? []
+  const url = `${SITE_URL}/work/${slug}`
+  const description = getMetaDescription((work as Work).meta_description, (work as Work).blocks)
+
+  const creativeWorkLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: getMetaTitle((work as Work).title, (work as Work).meta_title),
+    description: description ?? undefined,
+    url,
+    image: (work as Work).thumbnail_url ?? undefined,
+    creator: {
+      '@type': 'Organization',
+      name: '바이너스프레드',
+      url: SITE_URL,
+    },
+    keywords: tags.length ? tags.join(', ') : undefined,
+    genre: (work as Work).category ?? undefined,
+    inLanguage: 'ko-KR',
+  }
 
   return (
     <article className="bg-gallery">
+      <JsonLd data={creativeWorkLd} />
+
       {/* 1. Hero */}
       {heroSrc && (
         <section className="relative w-full h-screen overflow-hidden">
@@ -107,7 +148,18 @@ export default async function WorkDetailPage({ params }: Props) {
         </div>
       )}
 
-      {/* 5. Next Project */}
+      {/* 5. Tags */}
+      {tags.length > 0 && (
+        <div className="px-page-padding pb-16 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span key={tag} className="text-xs text-mine-shaft/40 border border-mine-shaft/15 px-3 py-1">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* 6. Next Project */}
       {nextWork && (
         <section className="px-page-padding py-[80px] md:py-[120px] border-t border-alto flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
           <p className="text-[11px] uppercase tracking-wider text-mine-shaft/40">Next Project</p>

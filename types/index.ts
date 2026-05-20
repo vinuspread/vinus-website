@@ -231,6 +231,7 @@ export interface Work {
   blocks: Block[]
   meta_title: string | null
   meta_description: string | null
+  tags: string[]
   is_published: boolean
   sort_order: number
   created_at: string
@@ -246,6 +247,7 @@ export interface Blog {
   file_url: string | null
   meta_title: string | null
   meta_description: string | null
+  tags: string[]
   is_published: boolean
   sort_order: number
   created_at: string

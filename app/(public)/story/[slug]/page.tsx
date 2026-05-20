@@ -6,9 +6,12 @@ import { createClient } from '@/lib/supabase/server'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import { StoryHero } from '@/components/story/StoryHero'
+import JsonLd from '@/components/seo/JsonLd'
 import type { Blog } from '@/types'
 
 export const revalidate = 3600
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -24,18 +27,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient()
   const { data } = await supabase
     .from('blog')
-    .select('title, meta_title, meta_description, blocks, thumbnail_url')
+    .select('title, meta_title, meta_description, blocks, thumbnail_url, tags, created_at, category')
     .eq('slug', slug)
     .single()
 
   if (!data) return { title: 'Not Found' }
 
+  const title = getMetaTitle(data.title, data.meta_title)
+  const description = getMetaDescription(data.meta_description, data.blocks)
+  const tags: string[] = data.tags ?? []
+  const url = `${SITE_URL}/story/${slug}`
+
   return {
-    title: getMetaTitle(data.title, data.meta_title),
-    description: getMetaDescription(data.meta_description, data.blocks),
+    title,
+    description,
+    keywords: tags.length ? tags.join(', ') : undefined,
+    alternates: { canonical: url },
     openGraph: {
-      title: getMetaTitle(data.title, data.meta_title),
-      description: getMetaDescription(data.meta_description, data.blocks) ?? undefined,
+      type: 'article',
+      url,
+      title,
+      description: description ?? undefined,
+      images: data.thumbnail_url ? [data.thumbnail_url] : undefined,
+      publishedTime: data.created_at,
+      section: data.category,
+      tags: tags.length ? tags : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: description ?? undefined,
       images: data.thumbnail_url ? [data.thumbnail_url] : undefined,
     },
   }
@@ -62,8 +83,37 @@ export default async function StoryDetailPage({ params }: Props) {
   const prevStory = list[(currentIdx - 1 + list.length) % list.length]
   const nextStory = list[(currentIdx + 1) % list.length]
 
+  const tags: string[] = blog.tags ?? []
+  const url = `${SITE_URL}/story/${slug}`
+  const description = getMetaDescription(blog.meta_description, blog.blocks)
+
+  const blogPostingLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: getMetaTitle(blog.title, blog.meta_title),
+    description: description ?? undefined,
+    url,
+    datePublished: blog.created_at,
+    image: blog.thumbnail_url ?? undefined,
+    author: {
+      '@type': 'Organization',
+      name: '바이너스프레드',
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: '바이너스프레드',
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/@profile.png` },
+    },
+    keywords: tags.length ? tags.join(', ') : undefined,
+    articleSection: blog.category,
+    inLanguage: 'ko-KR',
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  }
+
   return (
     <main className="bg-white min-h-screen">
+      <JsonLd data={blogPostingLd} />
 
       {/* ── Hero ── */}
       <StoryHero
@@ -94,6 +144,17 @@ export default async function StoryDetailPage({ params }: Props) {
         <article className="pb-[120px] md:pb-[180px] border-t border-alto">
           <BlockRenderer blocks={blog.blocks} />
         </article>
+      )}
+
+      {/* ── Tags ── */}
+      {tags.length > 0 && (
+        <div className="max-w-4xl mx-auto px-6 md:px-12 pb-16 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span key={tag} className="text-xs text-mine-shaft/40 border border-mine-shaft/15 px-3 py-1">
+              #{tag}
+            </span>
+          ))}
+        </div>
       )}
 
       {/* ── Nav ── */}

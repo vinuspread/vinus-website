@@ -19,6 +19,7 @@ export interface WorkFormData {
   blocks: Block[]
   meta_title: string
   meta_description: string
+  tags: string[]
   is_published: boolean
 }
 
@@ -38,6 +39,7 @@ export async function saveWork(data: WorkFormData): Promise<{ id: string; slug: 
     blocks: data.blocks,
     meta_title: data.meta_title || null,
     meta_description: data.meta_description || null,
+    tags: data.tags ?? [],
     is_published: data.is_published,
   }
 

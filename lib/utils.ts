@@ -16,7 +16,7 @@ export function getMetaTitle(title: string, metaTitle: string | null): string {
 
 export function getMetaDescription(metaDescription: string | null, blocks: Block[]): string | null {
   if (metaDescription) return metaDescription
-  const textBlock = blocks?.find((b) => b.type === 'text')
+  const textBlock = blocks?.find((b) => b.type === 'text' || b.type === 'blog-text')
   if (textBlock && 'content' in textBlock) return String(textBlock.content).slice(0, 160)
   return null
 }

@@ -24,6 +24,8 @@ export default function WorkForm({ initialData }: Props) {
   const [uploading, setUploading] = useState(false)
   const [heroUploading, setHeroUploading] = useState(false)
   const [slug, setSlug] = useState(initialData?.slug ?? '')
+  const [tags, setTags] = useState<string[]>(initialData?.tags ?? [])
+  const [tagInput, setTagInput] = useState('')
 
   function toSlug(title: string) {
     return title
@@ -114,6 +116,7 @@ export default function WorkForm({ initialData }: Props) {
       blocks,
       meta_title: get('meta_title'),
       meta_description: get('meta_description'),
+      tags,
       is_published: (form.elements.namedItem('is_published') as HTMLInputElement).checked,
     }
 
@@ -264,6 +267,34 @@ export default function WorkForm({ initialData }: Props) {
         <div className="space-y-1">
           <textarea name="meta_description" defaultValue={initialData?.meta_description ?? ''} placeholder="비워두면 콘텐츠에서 자동 추출됩니다" maxLength={160} rows={2} className="w-full border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent resize-none" />
           <p className="text-xs text-gray-400">권장 120~160자 · 비우면 첫 번째 텍스트 블록에서 자동 추출</p>
+        </div>
+
+        <label className="text-sm text-gray-500 pt-3">태그 (SEO)</label>
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-1.5 min-h-[28px]">
+            {tags.map((tag) => (
+              <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-xs text-gray-700">
+                #{tag}
+                <button type="button" onClick={() => setTags(tags.filter(t => t !== tag))} className="text-gray-400 hover:text-red-500">✕</button>
+              </span>
+            ))}
+          </div>
+          <input
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault()
+                const val = tagInput.replace(/[#,\s]/g, '').trim()
+                if (val && !tags.includes(val)) setTags([...tags, val])
+                setTagInput('')
+              }
+            }}
+            placeholder="태그 입력 후 Enter 또는 쉼표"
+            className={`w-full ${inputClass}`}
+          />
+          <p className="text-xs text-gray-400">키워드로 입력 · # 없이 입력 · SEO 및 AI 검색 최적화에 반영됨</p>
         </div>
       </div>
 
