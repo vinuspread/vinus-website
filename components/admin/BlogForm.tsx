@@ -125,7 +125,8 @@ export default function BlogForm({ initialData }: Props) {
     startTransition(async () => {
       try {
         await saveBlog(data)
-        router.push('/admin/blog')
+        const goToList = confirm('저장이 완료되었습니다.\n목록으로 이동하시겠습니까?')
+        if (goToList) router.push('/admin/blog')
       } catch (err) {
         if (err && typeof err === 'object' && 'digest' in err) throw err
         setError(err instanceof Error ? err.message : '저장 실패')
