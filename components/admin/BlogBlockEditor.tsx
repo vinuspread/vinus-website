@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import type { Block, BlogTextVariant, BlogDividerStyle, CodeLanguage } from '@/types'
-import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock } from '@/types'
+import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock } from '@/types'
 
-type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock
+type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock
 type BlogBlockType = BlogBlock['type']
 
 interface Props {
@@ -13,12 +13,13 @@ interface Props {
 }
 
 const BLOG_BLOCK_TYPES: { value: BlogBlockType; label: string }[] = [
-  { value: 'blog-text',      label: '텍스트' },
-  { value: 'blog-quote',     label: '인용구' },
-  { value: 'blog-divider',   label: '구분선' },
-  { value: 'blog-link-card', label: '링크 카드' },
-  { value: 'blog-video',     label: '동영상' },
-  { value: 'blog-code',      label: '코드 블록' },
+  { value: 'blog-text',         label: '텍스트' },
+  { value: 'blog-heading-text', label: '제목+내용' },
+  { value: 'blog-quote',        label: '인용구' },
+  { value: 'blog-divider',      label: '구분선' },
+  { value: 'blog-link-card',    label: '링크 카드' },
+  { value: 'blog-video',        label: '동영상' },
+  { value: 'blog-code',         label: '코드 블록' },
 ]
 
 const CODE_LANGUAGES: CodeLanguage[] = ['javascript', 'typescript', 'css', 'html', 'bash', 'json', 'python', 'text']
@@ -26,18 +27,19 @@ const CODE_LANGUAGES: CodeLanguage[] = ['javascript', 'typescript', 'css', 'html
 function createBlogBlock(type: BlogBlockType): BlogBlock {
   const id = crypto.randomUUID()
   switch (type) {
-    case 'blog-text':      return { id, type, variant: 'paragraph', content: '', spacing: 'md' }
-    case 'blog-quote':     return { id, type, quote: '', attribution: '', spacing: 'md' }
-    case 'blog-divider':   return { id, type, style: 'line', spacing: 'lg' }
-    case 'blog-link-card': return { id, type, url: '', ogTitle: '', ogDescription: '', ogImage: '', ogSiteName: '', spacing: 'md' }
-    case 'blog-video':     return { id, type, url: '', caption: '', spacing: 'md' }
-    case 'blog-code':      return { id, type, code: '', language: 'javascript', spacing: 'md' }
+    case 'blog-text':         return { id, type, variant: 'paragraph', content: '', spacing: 'md' }
+    case 'blog-heading-text': return { id, type, heading: '', body: '', spacing: 'md' }
+    case 'blog-quote':        return { id, type, quote: '', attribution: '', spacing: 'md' }
+    case 'blog-divider':      return { id, type, style: 'line', spacing: 'lg' }
+    case 'blog-link-card':    return { id, type, url: '', ogTitle: '', ogDescription: '', ogImage: '', ogSiteName: '', spacing: 'md' }
+    case 'blog-video':        return { id, type, url: '', caption: '', spacing: 'md' }
+    case 'blog-code':         return { id, type, code: '', language: 'javascript', spacing: 'md' }
   }
 }
 
 function isBlogBlock(b: Block): b is BlogBlock {
-  return b.type === 'blog-text' || b.type === 'blog-quote' || b.type === 'blog-divider' ||
-    b.type === 'blog-link-card' || b.type === 'blog-video' || b.type === 'blog-code'
+  return b.type === 'blog-text' || b.type === 'blog-heading-text' || b.type === 'blog-quote' ||
+    b.type === 'blog-divider' || b.type === 'blog-link-card' || b.type === 'blog-video' || b.type === 'blog-code'
 }
 
 function moveUp(blocks: Block[], index: number): Block[] {
@@ -63,12 +65,13 @@ function removeBlock(blocks: Block[], index: number): Block[] {
 }
 
 const BLOCK_LABELS: Record<BlogBlockType, string> = {
-  'blog-text':      '텍스트',
-  'blog-quote':     '인용구',
-  'blog-divider':   '구분선',
-  'blog-link-card': '링크 카드',
-  'blog-video':     '동영상',
-  'blog-code':      '코드 블록',
+  'blog-text':         '텍스트',
+  'blog-heading-text': '제목+내용',
+  'blog-quote':        '인용구',
+  'blog-divider':      '구분선',
+  'blog-link-card':    '링크 카드',
+  'blog-video':        '동영상',
+  'blog-code':         '코드 블록',
 }
 
 export default function BlogBlockEditor({ blocks, onChange }: Props) {
@@ -162,6 +165,26 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                     onChange={(e) => onChange(updateBlock(blocks, index, { ...block, content: e.target.value }))}
                     rows={block.variant === 'paragraph' ? 5 : 2}
                     placeholder={block.variant === 'paragraph' ? '본문 텍스트 입력' : '제목 입력'}
+                    className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
+                  />
+                </div>
+              )}
+
+              {/* blog-heading-text */}
+              {block.type === 'blog-heading-text' && (
+                <div className="space-y-2">
+                  <input
+                    type="text"
+                    value={block.heading}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, heading: e.target.value }))}
+                    placeholder="제목 입력"
+                    className="w-full border-b border-gray-300 py-2 text-sm font-medium text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+                  />
+                  <textarea
+                    value={block.body}
+                    onChange={(e) => onChange(updateBlock(blocks, index, { ...block, body: e.target.value }))}
+                    rows={4}
+                    placeholder="내용 입력"
                     className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
                   />
                 </div>

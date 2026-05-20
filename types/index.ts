@@ -181,7 +181,15 @@ export interface BlogCodeBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock
+export interface BlogHeadingTextBlock {
+  id: string
+  type: 'blog-heading-text'
+  heading: string
+  body: string
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock
 
 export interface Work {
   id: string
