@@ -57,10 +57,20 @@ export async function GET(req: Request) {
       try { ogSiteName = new URL(url).hostname.replace(/^www\./, '') } catch { ogSiteName = '' }
     }
 
+    const rawImage = getMeta('image')
+    let ogImage = ''
+    if (rawImage) {
+      try {
+        ogImage = new URL(rawImage, url).href
+      } catch {
+        ogImage = rawImage
+      }
+    }
+
     return NextResponse.json({
       ogTitle,
       ogDescription: getMeta('description'),
-      ogImage: getMeta('image'),
+      ogImage,
       ogSiteName,
     })
   } catch {
