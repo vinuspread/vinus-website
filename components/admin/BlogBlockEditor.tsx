@@ -343,7 +343,8 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                             }
                             const cur = blocksRef.current[index]
                             if (cur.type === 'blog-image') {
-                              onChange(updateBlock(blocksRef.current, index, { ...cur, images: [...(cur.images ?? []), ...urls] }))
+                              // src 초기화: images[]가 생기면 단일이미지 필드는 비움
+                              onChange(updateBlock(blocksRef.current, index, { ...cur, src: '', images: [...(cur.images ?? []), ...urls] }))
                             }
                             setPendingFiles(prev => ({ ...prev, [block.id]: [] }))
                           } finally {
