@@ -1,12 +1,13 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
+
 import { createClient } from '@/lib/supabase/server'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import { StoryHero } from '@/components/story/StoryHero'
 import JsonLd from '@/components/seo/JsonLd'
+import BlogThumbParallax from '@/components/story/BlogThumbParallax'
 import type { Blog } from '@/types'
 
 export const revalidate = 3600
@@ -126,16 +127,7 @@ export default async function StoryDetailPage({ params }: Props) {
       {/* ── Featured Image ── */}
       {blog.thumbnail_url && (
         <section className="px-page-padding pb-[80px] md:pb-[120px]">
-          <div className="w-full aspect-[21/9] relative overflow-hidden bg-gallery">
-            <Image
-              src={blog.thumbnail_url}
-              alt={blog.title}
-              fill
-              className="object-cover"
-              priority
-              data-pin-nopin="true"
-            />
-          </div>
+          <BlogThumbParallax src={blog.thumbnail_url} alt={blog.title} />
         </section>
       )}
 
