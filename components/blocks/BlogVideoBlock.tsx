@@ -24,7 +24,7 @@ export default function BlogVideoBlock({ block }: { block: BlogVideoBlock }) {
         />
       </div>
       {block.caption && (
-        <figcaption className="mt-3 font-inter text-xs text-mine-shaft/30 text-center">
+        <figcaption className="mt-3 font-inter text-xs text-mine-shaft/30 text-left">
           {block.caption}
         </figcaption>
       )}

@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import type { Block, BlogTextVariant, BlogDividerStyle, CodeLanguage } from '@/types'
-import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock } from '@/types'
+import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock, BlogBulletBlock } from '@/types'
 
-type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock
+type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock
 type BlogBlockType = BlogBlock['type']
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
 const BLOG_BLOCK_TYPES: { value: BlogBlockType; label: string }[] = [
   { value: 'blog-text',         label: '텍스트' },
   { value: 'blog-heading-text', label: '제목+내용' },
+  { value: 'blog-bullet',       label: '불릿 목록' },
   { value: 'blog-quote',        label: '인용구' },
   { value: 'blog-divider',      label: '구분선' },
   { value: 'blog-link-card',    label: '링크 카드' },
@@ -29,6 +30,7 @@ function createBlogBlock(type: BlogBlockType): BlogBlock {
   switch (type) {
     case 'blog-text':         return { id, type, variant: 'paragraph', content: '', spacing: 'md' }
     case 'blog-heading-text': return { id, type, heading: '', body: '', spacing: 'md' }
+    case 'blog-bullet':       return { id, type, items: [{ text: '', level: 0 as const }], spacing: 'md' }
     case 'blog-quote':        return { id, type, quote: '', attribution: '', spacing: 'md' }
     case 'blog-divider':      return { id, type, style: 'line', spacing: 'lg' }
     case 'blog-link-card':    return { id, type, url: '', ogTitle: '', ogDescription: '', ogImage: '', ogSiteName: '', spacing: 'md' }
@@ -38,8 +40,9 @@ function createBlogBlock(type: BlogBlockType): BlogBlock {
 }
 
 function isBlogBlock(b: Block): b is BlogBlock {
-  return b.type === 'blog-text' || b.type === 'blog-heading-text' || b.type === 'blog-quote' ||
-    b.type === 'blog-divider' || b.type === 'blog-link-card' || b.type === 'blog-video' || b.type === 'blog-code'
+  return b.type === 'blog-text' || b.type === 'blog-heading-text' || b.type === 'blog-bullet' ||
+    b.type === 'blog-quote' || b.type === 'blog-divider' || b.type === 'blog-link-card' ||
+    b.type === 'blog-video' || b.type === 'blog-code'
 }
 
 function moveUp(blocks: Block[], index: number): Block[] {
@@ -67,6 +70,7 @@ function removeBlock(blocks: Block[], index: number): Block[] {
 const BLOCK_LABELS: Record<BlogBlockType, string> = {
   'blog-text':         '텍스트',
   'blog-heading-text': '제목+내용',
+  'blog-bullet':       '불릿 목록',
   'blog-quote':        '인용구',
   'blog-divider':      '구분선',
   'blog-link-card':    '링크 카드',
@@ -194,6 +198,58 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                     placeholder="내용 입력"
                     className="w-full border-b border-gray-300 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
                   />
+                </div>
+              )}
+
+              {/* blog-bullet */}
+              {block.type === 'blog-bullet' && (
+                <div className="space-y-1">
+                  {block.items.map((item, itemIdx) => (
+                    <div key={itemIdx} className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const items = block.items.map((it, i) =>
+                            i === itemIdx ? { ...it, level: (it.level === 0 ? 1 : 0) as 0 | 1 } : it
+                          )
+                          onChange(updateBlock(blocks, index, { ...block, items }))
+                        }}
+                        className={`shrink-0 w-6 h-6 text-xs border flex items-center justify-center ${item.level === 1 ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-400'}`}
+                        title="들여쓰기 토글"
+                      >
+                        ↳
+                      </button>
+                      <input
+                        type="text"
+                        value={item.text}
+                        onChange={(e) => {
+                          const items = block.items.map((it, i) =>
+                            i === itemIdx ? { ...it, text: e.target.value } : it
+                          )
+                          onChange(updateBlock(blocks, index, { ...block, items }))
+                        }}
+                        placeholder={`항목 ${itemIdx + 1}`}
+                        className={`flex-1 border-b border-gray-300 py-1.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent ${item.level === 1 ? 'pl-4' : ''}`}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const items = block.items.filter((_, i) => i !== itemIdx)
+                          onChange(updateBlock(blocks, index, { ...block, items: items.length ? items : [{ text: '', level: 0 }] }))
+                        }}
+                        className="shrink-0 text-xs text-red-400 hover:text-red-600 px-1"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => onChange(updateBlock(blocks, index, { ...block, items: [...block.items, { text: '', level: 0 }] }))}
+                    className="mt-1 text-xs text-gray-400 hover:text-black border border-dashed border-gray-300 px-3 py-1 w-full"
+                  >
+                    + 항목 추가
+                  </button>
                 </div>
               )}
 

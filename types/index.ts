@@ -189,7 +189,19 @@ export interface BlogHeadingTextBlock {
   spacing: SpacingType
 }
 
-export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock
+export interface BlogBulletItem {
+  text: string
+  level: 0 | 1
+}
+
+export interface BlogBulletBlock {
+  id: string
+  type: 'blog-bullet'
+  items: BlogBulletItem[]
+  spacing: SpacingType
+}
+
+export type Block = TextBlock | ImageBlock | GalleryBlock | MultiThumbnailBlock | VideoBlock | DividerBlock | FileBlock | HeadingTextBlock | EmbedBlock | ScrollStoryBlock | BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock
 
 export interface Work {
   id: string
