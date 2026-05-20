@@ -64,7 +64,7 @@ export const Header = () => {
     { label: "experience", href: "/work" },
     { label: "services", href: "/services" },
     { label: "lab", href: "/lab" },
-    { label: "story", href: "/story" },
+    { label: "blog", href: "/story" },
     { label: "Contact", href: "/contact" },
   ];
 
