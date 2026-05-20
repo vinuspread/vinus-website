@@ -34,6 +34,16 @@ export async function GET(req: Request) {
 
     const html = await res.text()
 
+    function decodeEntities(s: string): string {
+      return s
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    }
+
     function getMeta(prop: string): string {
       const patterns = [
         new RegExp(`<meta[^>]+property=["']og:${prop}["'][^>]+content=["']([^"']+)["']`, 'i'),
@@ -42,7 +52,7 @@ export async function GET(req: Request) {
       ]
       for (const re of patterns) {
         const m = html.match(re)
-        if (m?.[1]) return m[1].trim()
+        if (m?.[1]) return decodeEntities(m[1].trim())
       }
       return ''
     }

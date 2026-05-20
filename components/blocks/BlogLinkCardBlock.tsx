@@ -14,6 +14,7 @@ export default function BlogLinkCardBlock({ block }: { block: BlogLinkCardBlock 
           <img
             src={block.ogImage}
             alt=""
+            referrerPolicy="no-referrer"
             className="w-full h-full object-cover"
           />
         </div>
