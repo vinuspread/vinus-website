@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import BlockEditor from './BlockEditor'
+import BlogBlockEditor from './BlogBlockEditor'
 import { saveBlog, deleteBlog, type BlogFormData } from '@/app/admin/blog/actions'
 import type { Block } from '@/types'
 
@@ -236,7 +236,7 @@ export default function BlogForm({ initialData }: Props) {
 
       <div>
         <p className="text-sm text-gray-500 mb-4">콘텐츠 블록</p>
-        <BlockEditor blocks={blocks} onChange={setBlocks} />
+        <BlogBlockEditor blocks={blocks} onChange={setBlocks} />
       </div>
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
