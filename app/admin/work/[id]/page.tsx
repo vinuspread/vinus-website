@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import WorkForm from '@/components/admin/WorkForm'
+import { getCategories } from '@/app/admin/categories/actions'
 import type { Work } from '@/types'
 
 interface Props {
@@ -9,17 +10,22 @@ interface Props {
 
 export default async function AdminWorkEditPage({ params }: Props) {
   const { id } = await params
-  const supabase = await createClient()
+  const [supabase, cats] = await Promise.all([
+    createClient(),
+    getCategories('work'),
+  ])
   const { data: work } = await supabase.from('work').select('*').eq('id', id).single()
 
   if (!work) notFound()
 
   const typedWork = work as Work
+  const categories = cats.map(c => c.name)
 
   return (
     <div>
       <h1 className="text-4xl font-bold mb-10">{typedWork.title}</h1>
       <WorkForm
+        categories={categories}
         initialData={{
           id: typedWork.id,
           title: typedWork.title,
@@ -27,7 +33,7 @@ export default async function AdminWorkEditPage({ params }: Props) {
           subtitle: typedWork.subtitle ?? '',
           summary: typedWork.summary ?? '',
           client_name: typedWork.client_name ?? '',
-          category: typedWork.category ?? 'web',
+          category: typedWork.category ?? '',
           period: typedWork.period ?? '',
           hero_url: typedWork.hero_url ?? '',
           hero_type: typedWork.hero_type ?? 'image',

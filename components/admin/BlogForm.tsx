@@ -9,15 +9,20 @@ import type { Block } from '@/types'
 
 interface Props {
   initialData?: BlogFormData & { id: string }
+  categories?: string[]
 }
 
-export default function BlogForm({ initialData }: Props) {
+function todayString() {
+  return new Date().toISOString().slice(0, 10)
+}
+
+export default function BlogForm({ initialData, categories = [] }: Props) {
   const isEdit = !!initialData
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [blocks, setBlocks] = useState<Block[]>(initialData?.blocks ?? [])
-  const [category, setCategory] = useState<'Story' | 'Download'>(initialData?.category ?? 'Story')
+  const [category, setCategory] = useState(initialData?.category ?? (categories[0] ?? ''))
   const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url ?? '')
   const [fileUrl, setFileUrl] = useState(initialData?.file_url ?? '')
   const [uploading, setUploading] = useState(false)
@@ -130,6 +135,7 @@ export default function BlogForm({ initialData }: Props) {
       tags,
       is_published: (form.elements.namedItem('is_published') as HTMLInputElement).checked,
       sort_order: initialData?.sort_order ?? 0,
+      published_at: get('published_at') || undefined,
     }
 
     startTransition(async () => {
@@ -171,12 +177,19 @@ export default function BlogForm({ initialData }: Props) {
         <label className="text-sm text-gray-500 pt-3">카테고리</label>
         <select
           value={category}
-          onChange={(e) => setCategory(e.target.value as 'Story' | 'Download')}
+          onChange={(e) => setCategory(e.target.value)}
           className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         >
-          <option value="Story">Story</option>
-          <option value="Download">Download</option>
+          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
+
+        <label className="text-sm text-gray-500 pt-3">날짜</label>
+        <input
+          name="published_at"
+          type="date"
+          defaultValue={initialData?.created_at ? initialData.created_at.slice(0, 10) : todayString()}
+          className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
+        />
 
         <label className="text-sm text-gray-500 pt-3">썸네일</label>
         <div className="flex flex-col gap-2">
@@ -199,24 +212,20 @@ export default function BlogForm({ initialData }: Props) {
           </div>
         </div>
 
-        {category === 'Download' && (
-          <>
-            <label className="text-sm text-gray-500 pt-3">첨부 파일</label>
-            <div className="flex gap-2 items-center">
-              <input
-                type="text"
-                value={fileUrl}
-                onChange={(e) => setFileUrl(e.target.value)}
-                placeholder="파일 URL"
-                className="flex-1 border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
-              />
-              <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100">
-                {uploading ? '업로드 중...' : '파일 선택'}
-                <input type="file" className="hidden" onChange={uploadFile} />
-              </label>
-            </div>
-          </>
-        )}
+        <label className="text-sm text-gray-500 pt-3">첨부 파일</label>
+        <div className="flex gap-2 items-center">
+          <input
+            type="text"
+            value={fileUrl}
+            onChange={(e) => setFileUrl(e.target.value)}
+            placeholder="파일 URL"
+            className="flex-1 border-b border-gray-300 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
+          />
+          <label className="cursor-pointer border border-gray-300 px-3 py-2 text-xs hover:bg-gray-100">
+            {uploading ? '업로드 중...' : '파일 선택'}
+            <input type="file" className="hidden" onChange={uploadFile} />
+          </label>
+        </div>
 
         <div className="col-span-2 flex items-center gap-3 py-2">
           <label className="relative inline-flex items-center cursor-pointer">

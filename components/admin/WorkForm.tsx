@@ -7,13 +7,12 @@ import { saveWork, deleteWork, type WorkFormData } from '@/app/admin/work/action
 import { getMetaDescription } from '@/lib/utils'
 import type { Block } from '@/types'
 
-const CATEGORIES = ['web', 'mobile', 'character', 'product', 'etc']
-
 interface Props {
   initialData?: WorkFormData & { id: string }
+  categories?: string[]
 }
 
-export default function WorkForm({ initialData }: Props) {
+export default function WorkForm({ initialData, categories = [] }: Props) {
   const isEdit = !!initialData
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -186,7 +185,7 @@ export default function WorkForm({ initialData }: Props) {
 
         <label className="text-sm text-gray-500 pt-3">카테고리</label>
         <select name="category" defaultValue={initialData?.category ?? 'web'} className={inputClass}>
-          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          {categories.map((c: string) => <option key={c} value={c}>{c}</option>)}
         </select>
 
         <label className="text-sm text-gray-500 pt-3">개발기간</label>

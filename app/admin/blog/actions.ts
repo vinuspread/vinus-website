@@ -8,7 +8,7 @@ export interface BlogFormData {
   id?: string
   title: string
   slug: string
-  category: 'Story' | 'Download'
+  category: string
   thumbnail_url: string
   blocks: Block[]
   file_url: string
@@ -17,6 +17,8 @@ export interface BlogFormData {
   tags: string[]
   is_published: boolean
   sort_order: number
+  published_at?: string
+  created_at?: string
 }
 
 export async function saveBlog(data: BlogFormData): Promise<{ id: string; slug: string }> {
@@ -33,6 +35,7 @@ export async function saveBlog(data: BlogFormData): Promise<{ id: string; slug: 
     tags: data.tags ?? [],
     is_published: data.is_published,
     sort_order: data.sort_order,
+    ...(data.published_at ? { created_at: new Date(data.published_at).toISOString() } : {}),
   }
 
   if (data.id) {
