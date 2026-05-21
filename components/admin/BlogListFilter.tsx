@@ -65,10 +65,10 @@ export default function BlogListFilter({ blogs }: Props) {
         </colgroup>
         <thead>
           <tr className="border-b border-gray-200">
-            <th className="text-left py-3 font-normal text-gray-500">제목</th>
-            <th className="text-left py-3 font-normal text-gray-500">카테고리</th>
-            <th className="text-left py-3 font-normal text-gray-500">작성일시</th>
-            <th className="text-left py-3 font-normal text-gray-500">순서</th>
+            <th className="text-left py-3 pr-4 font-normal text-gray-500">제목</th>
+            <th className="text-left py-3 pr-4 font-normal text-gray-500">카테고리</th>
+            <th className="text-left py-3 pr-4 font-normal text-gray-500">작성일시</th>
+            <th className="text-left py-3 pr-4 font-normal text-gray-500">순서</th>
             <th className="text-left py-3 font-normal text-gray-500">공개</th>
           </tr>
         </thead>
@@ -79,14 +79,14 @@ export default function BlogListFilter({ blogs }: Props) {
             </tr>
           ) : filtered.map((blog) => (
             <tr key={blog.id} className="border-b border-gray-100 hover:bg-gray-50">
-              <td className="py-3">
+              <td className="py-3 pr-4">
                 <Link href={`/admin/blog/${blog.id}`} className="hover:underline">
                   {blog.title}
                 </Link>
               </td>
-              <td className="py-3 text-gray-500">{blog.category ?? '-'}</td>
-              <td className="py-3 text-gray-500 whitespace-nowrap">{formatDateTime(blog.created_at)}</td>
-              <td className="py-3 text-gray-500">{blog.sort_order}</td>
+              <td className="py-3 pr-4 text-gray-500">{blog.category ?? '-'}</td>
+              <td className="py-3 pr-4 text-gray-500 whitespace-nowrap">{formatDateTime(blog.created_at)}</td>
+              <td className="py-3 pr-4 text-gray-500">{blog.sort_order}</td>
               <td className="py-3">{blog.is_published ? '✓' : '-'}</td>
             </tr>
           ))}
