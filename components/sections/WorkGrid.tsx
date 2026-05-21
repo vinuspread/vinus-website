@@ -20,9 +20,11 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const filtered = works
-    ? works.slice(0, limit)
-    : (filter === "All" ? projects : projects.filter((p) => p.category === filter)).slice(0, limit);
+  const baseList = works && works.length > 0
+    ? works
+    : (filter === "All" ? projects : projects.filter((p) => p.category === filter));
+
+  const filtered = [...baseList].sort(() => Math.random() - 0.5).slice(0, limit);
 
   const isSlider = isSliderProp !== undefined ? isSliderProp : filtered.length > 4;
 
