@@ -15,7 +15,7 @@ export function StoryHero({ category, date, title, metaDescription }: Props) {
 
   return (
     <header ref={ref} className="anim-wrap px-page-padding pt-[140px] md:pt-[200px] pb-[80px]">
-      <div className="flex flex-col gap-8 max-w-[900px]">
+      <div className="flex flex-col gap-8">
         <div className="flex items-center gap-4">
           <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/30">
             <Clip>{category}</Clip>
