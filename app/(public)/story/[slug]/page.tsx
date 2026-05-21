@@ -152,7 +152,7 @@ export default async function StoryDetailPage({ params }: Props) {
 
       {/* ── Content Blocks ── */}
       {blog.blocks?.length > 0 && (
-        <article className="pb-[120px] md:pb-[180px] border-t border-alto">
+        <article className="pb-[120px] md:pb-[180px]">
           <BlockRenderer blocks={blog.blocks} />
         </article>
       )}
