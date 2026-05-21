@@ -311,6 +311,16 @@ export default function WorkForm({ initialData, categories = [] }: Props) {
         <button type="submit" disabled={isPending} className="w-full border border-[#FF3B5C] text-[#FF3B5C] px-4 py-2.5 text-sm hover:bg-[#FF3B5C] hover:text-white transition-colors disabled:opacity-50">
           {isPending ? '저장 중...' : '저장'}
         </button>
+        {slug && (
+          <a
+            href={`/work/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full border border-gray-400 text-gray-600 px-4 py-2.5 text-sm hover:bg-gray-100 transition-colors text-center"
+          >
+            미리보기
+          </a>
+        )}
         <button type="button" onClick={() => router.push('/admin/work')} className="w-full border border-black text-black px-4 py-2.5 text-sm hover:bg-black hover:text-white transition-colors">
           목록
         </button>

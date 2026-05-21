@@ -22,6 +22,7 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [blocks, setBlocks] = useState<Block[]>(initialData?.blocks ?? [])
+  const [slug, setSlug] = useState(initialData?.slug ?? '')
   const [category, setCategory] = useState(initialData?.category ?? (categories[0] ?? ''))
   const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail_url ?? '')
   const [fileUrl, setFileUrl] = useState(initialData?.file_url ?? '')
@@ -171,6 +172,7 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
           name="title"
           required
           defaultValue={initialData?.title}
+          onChange={(e) => { if (!isEdit) setSlug(toSlug(e.target.value)) }}
           className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
         />
 
@@ -314,6 +316,16 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
         >
           {isPending ? '저장 중...' : '저장'}
         </button>
+        {slug && (
+          <a
+            href={`/story/${slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full border border-gray-400 text-gray-600 px-4 py-2.5 text-sm hover:bg-gray-100 transition-colors text-center"
+          >
+            미리보기
+          </a>
+        )}
         <button
           type="button"
           onClick={() => router.push('/admin/blog')}
