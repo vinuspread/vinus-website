@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 
 export const revalidate = 86400
 export const dynamic = 'force-static'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
-  const supabase = await createClient()
+  const supabase = createPublicClient()
 
   const { data: works } = await supabase
     .from('work')
