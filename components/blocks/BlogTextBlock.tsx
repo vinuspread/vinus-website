@@ -10,7 +10,7 @@ export default function BlogTextBlock({ block }: { block: BlogTextBlock }) {
   }
   if (block.variant === 'lead') {
     return (
-      <p className={`font-inter text-[clamp(18px,2vw,24px)] text-mine-shaft leading-[1.6] whitespace-pre-wrap break-keep ${block.bold ? 'font-bold' : 'font-medium'}`}>
+      <p className="text-[clamp(18px,2vw,24px)] text-mine-shaft leading-[1.6] whitespace-pre-wrap break-keep font-bold italic" style={{ fontFamily: 'var(--font-noto-serif-kr)' }}>
         {block.content}
       </p>
     )

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Syne } from 'next/font/google'
+import { Inter, Syne, Noto_Serif_KR } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import JsonLd from '@/components/seo/JsonLd'
@@ -14,6 +14,13 @@ const syne = Syne({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-syne',
+})
+
+const notoSerifKr = Noto_Serif_KR({
+  subsets: ['latin'],
+  weight: ['700'],
+  display: 'swap',
+  variable: '--font-noto-serif-kr',
 })
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://vinus.co.kr'
@@ -66,7 +73,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${inter.variable} ${syne.variable}`} suppressHydrationWarning>
+    <html lang="ko" className={`${inter.variable} ${syne.variable} ${notoSerifKr.variable}`} suppressHydrationWarning>
       <head>
         <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
       </head>

@@ -16,6 +16,7 @@ img + div[style*="position: absolute"] { display: none !important; }
   /* Fonts */
   --font-inter: var(--font-inter), "Inter", sans-serif;
   --font-pretendard: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  --font-noto-serif-kr: var(--font-noto-serif-kr), "Noto Serif KR", serif;
 
   /* Font Sizes */
   --fs-hero: clamp(50px, 8vw, 140px);
