@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import BlockEditor from './BlockEditor'
 import { saveWork, deleteWork, type WorkFormData } from '@/app/admin/work/actions'
@@ -26,6 +26,7 @@ export default function WorkForm({ initialData, categories = [] }: Props) {
   const [slug, setSlug] = useState(initialData?.slug ?? '')
   const [tags, setTags] = useState<string[]>(initialData?.tags ?? [])
   const [tagInput, setTagInput] = useState('')
+  const submittingRef = useRef(false)
 
   function toSlug(title: string) {
     return title
@@ -100,6 +101,8 @@ export default function WorkForm({ initialData, categories = [] }: Props) {
 
   function handleSubmit(e: { preventDefault: () => void; currentTarget: HTMLFormElement }) {
     e.preventDefault()
+    if (submittingRef.current || isPending) return
+    submittingRef.current = true
     setError('')
     const form = e.currentTarget
     const get = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value
@@ -137,6 +140,8 @@ export default function WorkForm({ initialData, categories = [] }: Props) {
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : '저장 실패')
+      } finally {
+        submittingRef.current = false
       }
     })
   }

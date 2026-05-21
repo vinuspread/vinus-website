@@ -31,6 +31,7 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
   const [tags, setTags] = useState<string[]>(initialData?.tags ?? [])
   const [tagInput, setTagInput] = useState('')
   const sidebarRef = useRef<HTMLDivElement>(null)
+  const submittingRef = useRef(false)
 
   useEffect(() => {
     const sidebar = sidebarRef.current
@@ -120,6 +121,8 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
 
   function handleSubmit(e: { preventDefault: () => void; currentTarget: HTMLFormElement }) {
     e.preventDefault()
+    if (submittingRef.current || isPending) return
+    submittingRef.current = true
     setError('')
     const form = e.currentTarget
     const get = (name: string) => (form.elements.namedItem(name) as HTMLInputElement).value
@@ -154,6 +157,8 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
             typeof (err as { digest: unknown }).digest === 'string' &&
             (err as { digest: string }).digest.startsWith('NEXT_REDIRECT')) throw err
         setError(err instanceof Error ? err.message : '저장 실패')
+      } finally {
+        submittingRef.current = false
       }
     })
   }
