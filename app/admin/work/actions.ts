@@ -51,13 +51,22 @@ export async function saveWork(data: WorkFormData): Promise<{ id: string; slug: 
     revalidatePath('/sitemap.xml')
     return { id: data.id, slug: data.slug }
   } else {
-    const { data: inserted, error } = await supabase.from('work').insert(payload).select('id').single()
-    if (error) throw new Error(error.message)
-    if (!inserted) throw new Error('저장 실패: 데이터가 삽입되지 않았습니다')
+    let slug = payload.slug
+    let attempt = 0
+    let inserted: { id: string } | null = null
+    while (attempt < 5) {
+      const trySlug = attempt === 0 ? slug : `${slug}-${attempt}`
+      const { data: row, error } = await supabase
+        .from('work').insert({ ...payload, slug: trySlug }).select('id').single()
+      if (!error && row) { inserted = row; slug = trySlug; break }
+      if (error?.code !== '23505') throw new Error(error?.message ?? '저장 실패')
+      attempt++
+    }
+    if (!inserted) throw new Error('슬러그가 중복됩니다. 제목을 변경해주세요.')
     revalidatePath('/work')
-    revalidatePath(`/work/${data.slug}`, 'page')
+    revalidatePath(`/work/${slug}`, 'page')
     revalidatePath('/sitemap.xml')
-    return { id: inserted.id, slug: data.slug }
+    return { id: inserted.id, slug }
   }
 }
 
