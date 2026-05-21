@@ -3,12 +3,15 @@ import HomeClient from './HomeClient'
 
 export default async function Home() {
   const supabase = createPublicClient()
-  const { data: works } = await supabase
+  const { data: all } = await supabase
     .from('work')
     .select('slug, title, subtitle, thumbnail_url, category')
     .eq('is_published', true)
     .order('sort_order', { ascending: true })
-    .limit(8)
 
-  return <HomeClient works={works ?? []} />
+  const works = (all ?? [])
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 6)
+
+  return <HomeClient works={works} />
 }

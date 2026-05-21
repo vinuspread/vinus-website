@@ -66,7 +66,7 @@ export default function HomeClient({ works }: Props) {
         <section className="pt-0 pb-0 relative z-0">
           <WorkGrid
             works={works}
-            limit={8}
+            limit={6}
             marquee={
               <div className="mb-[48px] overflow-hidden bg-white">
                 <Marquee
