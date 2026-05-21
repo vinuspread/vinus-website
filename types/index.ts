@@ -135,6 +135,7 @@ export interface BlogTextBlock {
   id: string
   type: 'blog-text'
   variant: BlogTextVariant
+  bold?: boolean
   content: string
   spacing: SpacingType
 }
