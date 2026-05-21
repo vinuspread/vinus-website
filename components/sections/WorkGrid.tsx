@@ -90,6 +90,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
           const isWork = 'thumbnail_url' in item
           const src = isWork ? (item.thumbnail_url ?? '') : (item as typeof projects[number]).heroImg
           const category = isWork ? (item.category ?? '') : (item as typeof projects[number]).services
+          if (!src) return null
           return (
             <div
               key={item.slug}

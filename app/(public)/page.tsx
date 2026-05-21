@@ -10,6 +10,7 @@ export default async function Home() {
     .order('sort_order', { ascending: true })
 
   const works = (all ?? [])
+    .filter(w => !!w.thumbnail_url)
     .sort(() => Math.random() - 0.5)
     .slice(0, 6)
 
