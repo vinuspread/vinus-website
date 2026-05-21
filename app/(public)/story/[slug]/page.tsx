@@ -89,9 +89,9 @@ export default async function StoryDetailPage({ params }: Props) {
 
   const blog = story as Blog
   const list = (allBlogs ?? []) as Pick<Blog, 'slug' | 'title'>[]
-  const currentIdx = list.findIndex((b) => b.slug === slug)
-  const prevStory = list[(currentIdx - 1 + list.length) % list.length]
-  const nextStory = list[(currentIdx + 1) % list.length]
+  const currentIdx = list.length > 0 ? list.findIndex((b) => b.slug === slug) : -1
+  const prevStory = list.length > 0 ? list[(currentIdx - 1 + list.length) % list.length] : null
+  const nextStory = list.length > 0 ? list[(currentIdx + 1) % list.length] : null
 
   const tags: string[] = blog.tags ?? []
   const url = `${SITE_URL}/story/${slug}`
@@ -166,39 +166,45 @@ export default async function StoryDetailPage({ params }: Props) {
       )}
 
       {/* ── Nav ── */}
-      <nav className="border-t border-b border-alto bg-white">
-        <div className="px-page-padding grid grid-cols-3 divide-x divide-alto">
-          <Link
-            href={`/story/${prevStory.slug}`}
-            className="group flex items-center gap-5 py-10 md:py-14 transition-colors duration-200"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            <span className="font-inter font-bold text-[18px] md:text-[22px] text-mine-shaft tracking-tight truncate group-hover:underline underline-offset-4">{prevStory.title}</span>
-          </Link>
+      {(prevStory || nextStory) && (
+        <nav className="border-t border-b border-alto bg-white">
+          <div className="px-page-padding grid grid-cols-3 divide-x divide-alto">
+            {prevStory ? (
+              <Link
+                href={`/story/${prevStory.slug}`}
+                className="group flex items-center gap-5 py-10 md:py-14 transition-colors duration-200"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                <span className="font-inter font-bold text-[18px] md:text-[22px] text-mine-shaft tracking-tight truncate group-hover:underline underline-offset-4">{prevStory.title}</span>
+              </Link>
+            ) : <div />}
 
-          <Link
-            href="/story"
-            className="group flex items-center justify-center gap-3 py-10 md:py-14 transition-colors duration-200"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
-              <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
-            </svg>
-            <span className="font-inter font-bold text-[22px] text-mine-shaft/30 group-hover:text-mine-shaft transition-colors">All Stories</span>
-          </Link>
+            <Link
+              href="/story"
+              className="group flex items-center justify-center gap-3 py-10 md:py-14 transition-colors duration-200"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
+                <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
+              </svg>
+              <span className="font-inter font-bold text-[22px] text-mine-shaft/30 group-hover:text-mine-shaft transition-colors">All Stories</span>
+            </Link>
 
-          <Link
-            href={`/story/${nextStory.slug}`}
-            className="group flex items-center justify-end gap-5 py-10 md:py-14 transition-colors duration-200"
-          >
-            <span className="font-inter font-bold text-[18px] md:text-[22px] text-mine-shaft tracking-tight truncate group-hover:underline underline-offset-4">{nextStory.title}</span>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-      </nav>
+            {nextStory ? (
+              <Link
+                href={`/story/${nextStory.slug}`}
+                className="group flex items-center justify-end gap-5 py-10 md:py-14 transition-colors duration-200"
+              >
+                <span className="font-inter font-bold text-[18px] md:text-[22px] text-mine-shaft tracking-tight truncate group-hover:underline underline-offset-4">{nextStory.title}</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-mine-shaft/20 group-hover:text-mine-shaft transition-colors shrink-0">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ) : <div />}
+          </div>
+        </nav>
+      )}
 
     </main>
   )

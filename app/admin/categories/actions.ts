@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { revalidatePath } from 'next/cache'
 
 export interface Category {
@@ -11,7 +12,7 @@ export interface Category {
 }
 
 export async function getCategories(type: 'work' | 'blog'): Promise<Category[]> {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('categories')
     .select('id, type, name, sort_order')

@@ -47,6 +47,7 @@ export async function saveBlog(data: BlogFormData): Promise<{ id: string; slug: 
   } else {
     const { data: inserted, error } = await supabase.from('blog').insert(payload).select('id').single()
     if (error) throw new Error(error.message)
+    if (!inserted) throw new Error('저장 실패: 데이터가 삽입되지 않았습니다')
     revalidatePath('/story')
     revalidatePath(`/story/${data.slug}`, 'page')
     revalidatePath('/sitemap.xml')

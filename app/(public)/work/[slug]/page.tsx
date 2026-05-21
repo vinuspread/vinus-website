@@ -75,8 +75,8 @@ export default async function WorkDetailPage({ params }: Props) {
   if (!(work as Work).is_published && !isAdmin) notFound()
 
   const allWorks = (works ?? []) as Pick<Work, 'slug' | 'title' | 'thumbnail_url' | 'thumbnail_color'>[]
-  const currentIdx = allWorks.findIndex((w) => w.slug === slug)
-  const nextWork = allWorks[(currentIdx + 1) % allWorks.length]
+  const currentIdx = allWorks.length > 0 ? allWorks.findIndex((w) => w.slug === slug) : -1
+  const nextWork = allWorks.length > 0 ? allWorks[(currentIdx + 1) % allWorks.length] : null
 
   const heroSrc = (work as Work).hero_url ?? (work as Work).thumbnail_url
   const tags: string[] = (work as Work).tags ?? []
