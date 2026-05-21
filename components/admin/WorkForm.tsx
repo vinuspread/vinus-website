@@ -123,6 +123,7 @@ export default function WorkForm({ initialData, categories = [] }: Props) {
     startTransition(async () => {
       try {
         const result = await saveWork(data)
+        setSlug(result.slug)
         const goToList = confirm('저장이 완료되었습니다.\n목록으로 이동하시겠습니까?')
         if (goToList) {
           router.push('/admin/work')
