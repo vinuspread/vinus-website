@@ -2,9 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react'
 import type { Block, BlogTextVariant, BlogDividerStyle, CodeLanguage } from '@/types'
-import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock, BlogBulletBlock, BlogImageBlock } from '@/types'
+import type { BlogTextBlock, BlogQuoteBlock, BlogDividerBlock, BlogLinkCardBlock, BlogVideoBlock, BlogCodeBlock, BlogHeadingTextBlock, BlogBulletBlock, BlogImageBlock, BlogCalloutBlock } from '@/types'
 
-type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock | BlogImageBlock
+type BlogBlock = BlogTextBlock | BlogQuoteBlock | BlogDividerBlock | BlogLinkCardBlock | BlogVideoBlock | BlogCodeBlock | BlogHeadingTextBlock | BlogBulletBlock | BlogImageBlock | BlogCalloutBlock
 type BlogBlockType = BlogBlock['type']
 
 interface Props {
@@ -22,6 +22,7 @@ const BLOG_BLOCK_TYPES: { value: BlogBlockType; label: string }[] = [
   { value: 'blog-link-card',    label: '링크 카드' },
   { value: 'blog-video',        label: '동영상' },
   { value: 'blog-code',         label: '코드 블록' },
+  { value: 'blog-callout',      label: '강조 문구' },
 ]
 
 const CODE_LANGUAGES: CodeLanguage[] = ['javascript', 'typescript', 'css', 'html', 'bash', 'json', 'python', 'text']
@@ -38,13 +39,15 @@ function createBlogBlock(type: BlogBlockType): BlogBlock {
     case 'blog-link-card':    return { id, type, url: '', ogTitle: '', ogDescription: '', ogImage: '', ogSiteName: '', spacing: 'md' }
     case 'blog-video':        return { id, type, url: '', caption: '', spacing: 'md' }
     case 'blog-code':         return { id, type, code: '', language: 'javascript', spacing: 'md' }
+    case 'blog-callout':      return { id, type, text: '', spacing: 'lg' }
   }
 }
 
 function isBlogBlock(b: Block): b is BlogBlock {
   return b.type === 'blog-text' || b.type === 'blog-heading-text' || b.type === 'blog-bullet' ||
     b.type === 'blog-image' || b.type === 'blog-quote' || b.type === 'blog-divider' ||
-    b.type === 'blog-link-card' || b.type === 'blog-video' || b.type === 'blog-code'
+    b.type === 'blog-link-card' || b.type === 'blog-video' || b.type === 'blog-code' ||
+    b.type === 'blog-callout'
 }
 
 function moveUp(blocks: Block[], index: number): Block[] {
@@ -79,6 +82,7 @@ const BLOCK_LABELS: Record<BlogBlockType, string> = {
   'blog-link-card':    '링크 카드',
   'blog-video':        '동영상',
   'blog-code':         '코드 블록',
+  'blog-callout':      '강조 문구',
 }
 
 export default function BlogBlockEditor({ blocks, onChange }: Props) {
@@ -589,6 +593,17 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                     className="w-full border-b border-gray-300 py-2 text-sm text-gray-500 placeholder:text-gray-400 focus:outline-none focus:border-black bg-transparent"
                   />
                 </div>
+              )}
+
+              {/* blog-callout */}
+              {block.type === 'blog-callout' && (
+                <textarea
+                  value={block.text}
+                  onChange={(e) => onChange(updateBlock(blocks, index, { ...block, text: e.target.value }))}
+                  rows={3}
+                  placeholder="강조할 문장을 입력하세요"
+                  className="w-full border border-gray-200 p-3 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black resize-none bg-transparent"
+                />
               )}
 
               {/* blog-code */}
