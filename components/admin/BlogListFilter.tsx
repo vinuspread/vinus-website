@@ -55,7 +55,14 @@ export default function BlogListFilter({ blogs }: Props) {
         )}
       </div>
 
-      <table className="w-full text-sm">
+      <table className="w-full text-sm table-fixed">
+        <colgroup>
+          <col className="w-auto" />
+          <col style={{ width: '100px' }} />
+          <col style={{ width: '130px' }} />
+          <col style={{ width: '56px' }} />
+          <col style={{ width: '48px' }} />
+        </colgroup>
         <thead>
           <tr className="border-b border-gray-200">
             <th className="text-left py-3 font-normal text-gray-500">제목</th>
