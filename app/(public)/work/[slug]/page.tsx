@@ -57,8 +57,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const isAdmin = !!user
+  let isAdmin = false
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    isAdmin = !!user
+  } catch { /* 재렌더링 컨텍스트에서 세션 없음 */ }
 
   const [{ data: work }, { data: works }] = await Promise.all([
     supabase.from('work').select('*').eq('slug', slug).single(),
