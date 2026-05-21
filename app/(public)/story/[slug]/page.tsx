@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import { StoryHero } from '@/components/story/StoryHero'
@@ -25,7 +26,7 @@ function formatDate(iso: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data } = await supabase
     .from('blog')
     .select('title, meta_title, meta_description, blocks, thumbnail_url, tags, created_at, category')
@@ -65,16 +66,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function StoryDetailPage({ params }: Props) {
   const { slug } = await params
-  const supabase = await createClient()
+  const pub = createPublicClient()
+
   let isAdmin = false
   try {
-    const { data: { user } } = await supabase.auth.getUser()
+    const auth = await createClient()
+    const { data: { user } } = await auth.auth.getUser()
     isAdmin = !!user
   } catch { /* 재렌더링 컨텍스트에서 세션 없음 */ }
 
   const [{ data: story }, { data: allBlogs }] = await Promise.all([
-    supabase.from('blog').select('*').eq('slug', slug).single(),
-    supabase
+    pub.from('blog').select('*').eq('slug', slug).single(),
+    pub
       .from('blog')
       .select('slug, title')
       .eq('is_published', true)

@@ -1,9 +1,9 @@
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import { WorkPageClient } from './WorkPageClient'
 import type { Work } from '@/types'
 
 export default async function WorkPage() {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data: works } = await supabase
     .from('work')
     .select('*')

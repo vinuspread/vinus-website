@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/public'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { getMetaTitle, getMetaDescription } from '@/lib/utils'
 import JsonLd from '@/components/seo/JsonLd'
@@ -18,7 +19,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const { data: work } = await supabase
     .from('work')
     .select('title, meta_title, meta_description, blocks, thumbnail_url, tags, category')
@@ -56,16 +57,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params
-  const supabase = await createClient()
+  const pub = createPublicClient()
+
   let isAdmin = false
   try {
-    const { data: { user } } = await supabase.auth.getUser()
+    const auth = await createClient()
+    const { data: { user } } = await auth.auth.getUser()
     isAdmin = !!user
   } catch { /* 재렌더링 컨텍스트에서 세션 없음 */ }
 
   const [{ data: work }, { data: works }] = await Promise.all([
-    supabase.from('work').select('*').eq('slug', slug).single(),
-    supabase.from('work').select('slug, title, thumbnail_url, thumbnail_color').eq('is_published', true).order('sort_order', { ascending: true }),
+    pub.from('work').select('*').eq('slug', slug).single(),
+    pub.from('work').select('slug, title, thumbnail_url, thumbnail_color').eq('is_published', true).order('sort_order', { ascending: true }),
   ])
 
   if (!work) notFound()
