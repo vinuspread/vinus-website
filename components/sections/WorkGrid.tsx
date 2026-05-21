@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useRef } from "react";
 import { projects } from "@/lib/projects";
 import { ProjectCard } from "@/components/common/ProjectCard";
 import { gsap } from "@/lib/gsap";
+import type { WorkItem } from "@/app/(public)/HomeClient";
 
 type Category = "All" | "UI/UX" | "Character/Illustration" | "Branding" | "Etc";
 
@@ -12,14 +13,16 @@ interface WorkGridProps {
   limit?: number;
   isSlider?: boolean;
   marquee?: React.ReactNode;
+  works?: WorkItem[];
 }
 
-export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marquee }: WorkGridProps) => {
+export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marquee, works }: WorkGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const filtered = (filter === "All" ? projects : projects.filter((p) => p.category === filter))
-    .slice(0, limit);
+  const filtered = works
+    ? works.slice(0, limit)
+    : (filter === "All" ? projects : projects.filter((p) => p.category === filter)).slice(0, limit);
 
   const isSlider = isSliderProp !== undefined ? isSliderProp : filtered.length > 4;
 
@@ -83,23 +86,28 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
           isSlider ? "flex-nowrap" : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         }`}
       >
-        {filtered.map((project, i) => (
-          <div
-            key={project.slug}
-            className={`project-card-item flex-shrink-0 ${
-              isSlider ? "w-[88vw] sm:w-[58vw] lg:w-[37vw]" : "w-full"
-            }`}
-          >
-            <ProjectCard
-              src={project.heroImg}
-              alt={project.title}
-              category={project.services}
-              title={project.title}
-              href={`/work/${project.slug}`}
-              index={i}
-            />
-          </div>
-        ))}
+        {filtered.map((item, i) => {
+          const isWork = 'thumbnail_url' in item
+          const src = isWork ? (item.thumbnail_url ?? '') : (item as typeof projects[number]).heroImg
+          const category = isWork ? (item.category ?? '') : (item as typeof projects[number]).services
+          return (
+            <div
+              key={item.slug}
+              className={`project-card-item flex-shrink-0 ${
+                isSlider ? "w-[88vw] sm:w-[58vw] lg:w-[37vw]" : "w-full"
+              }`}
+            >
+              <ProjectCard
+                src={src}
+                alt={item.title}
+                category={category}
+                title={item.title}
+                href={`/work/${item.slug}`}
+                index={i}
+              />
+            </div>
+          )
+        })}
       </div>
     </div>
   );
