@@ -1,14 +1,20 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import type { Work } from '@/types'
+import { getCategories } from '@/app/admin/categories/actions'
+import WorkListFilter from '@/components/admin/WorkListFilter'
 import RevalidateButton from './RevalidateButton'
 
 export default async function AdminWorkPage() {
   const supabase = await createClient()
-  const { data: works } = await supabase
-    .from('work')
-    .select('id, title, category, is_published, sort_order, created_at')
-    .order('sort_order', { ascending: true })
+  const [{ data: works }, categories] = await Promise.all([
+    supabase
+      .from('work')
+      .select('id, title, category, is_published, sort_order')
+      .order('sort_order', { ascending: true }),
+    getCategories('work'),
+  ])
+
+  const categoryNames = categories.map((c) => c.name)
 
   return (
     <div>
@@ -24,30 +30,7 @@ export default async function AdminWorkPage() {
           </Link>
         </div>
       </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-gray-200">
-            <th className="text-left py-3 font-normal text-gray-500">제목</th>
-            <th className="text-left py-3 font-normal text-gray-500">카테고리</th>
-            <th className="text-left py-3 font-normal text-gray-500">순서</th>
-            <th className="text-left py-3 font-normal text-gray-500">공개</th>
-          </tr>
-        </thead>
-        <tbody>
-          {((works as Work[]) ?? []).map((work) => (
-            <tr key={work.id} className="border-b border-gray-100 hover:bg-gray-50">
-              <td className="py-3">
-                <Link href={`/admin/work/${work.id}`} className="hover:underline">
-                  {work.title}
-                </Link>
-              </td>
-              <td className="py-3 text-gray-500">{work.category ?? '-'}</td>
-              <td className="py-3 text-gray-500">{work.sort_order}</td>
-              <td className="py-3">{work.is_published ? '✓' : '-'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <WorkListFilter works={works ?? []} categories={categoryNames} />
     </div>
   )
 }

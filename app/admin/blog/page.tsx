@@ -1,13 +1,19 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import type { Blog } from '@/types'
+import { getCategories } from '@/app/admin/categories/actions'
+import BlogListFilter from '@/components/admin/BlogListFilter'
 
 export default async function AdminBlogPage() {
   const supabase = await createClient()
-  const { data: blogs } = await supabase
-    .from('blog')
-    .select('id, title, category, is_published, sort_order')
-    .order('sort_order', { ascending: true })
+  const [{ data: blogs }, categories] = await Promise.all([
+    supabase
+      .from('blog')
+      .select('id, title, category, is_published, sort_order')
+      .order('sort_order', { ascending: true }),
+    getCategories('blog'),
+  ])
+
+  const categoryNames = categories.map((c) => c.name)
 
   return (
     <div>
@@ -20,30 +26,7 @@ export default async function AdminBlogPage() {
           + 새 Blog
         </Link>
       </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-gray-200">
-            <th className="text-left py-3 font-normal text-gray-500">제목</th>
-            <th className="text-left py-3 font-normal text-gray-500">카테고리</th>
-            <th className="text-left py-3 font-normal text-gray-500">순서</th>
-            <th className="text-left py-3 font-normal text-gray-500">공개</th>
-          </tr>
-        </thead>
-        <tbody>
-          {((blogs as Blog[]) ?? []).map((blog) => (
-            <tr key={blog.id} className="border-b border-gray-100 hover:bg-gray-50">
-              <td className="py-3">
-                <Link href={`/admin/blog/${blog.id}`} className="hover:underline">
-                  {blog.title}
-                </Link>
-              </td>
-              <td className="py-3 text-gray-500">{blog.category}</td>
-              <td className="py-3 text-gray-500">{blog.sort_order}</td>
-              <td className="py-3">{blog.is_published ? '✓' : '-'}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <BlogListFilter blogs={blogs ?? []} categories={categoryNames} />
     </div>
   )
 }
