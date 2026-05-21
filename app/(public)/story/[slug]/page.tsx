@@ -69,14 +69,17 @@ export default async function StoryDetailPage({ params }: Props) {
   const pub = createPublicClient()
 
   let isAdmin = false
+  let authClient: Awaited<ReturnType<typeof createClient>> | null = null
   try {
-    const auth = await createClient()
-    const { data: { user } } = await auth.auth.getUser()
+    authClient = await createClient()
+    const { data: { user } } = await authClient.auth.getUser()
     isAdmin = !!user
   } catch { /* 재렌더링 컨텍스트에서 세션 없음 */ }
 
+  const storyClient = isAdmin && authClient ? authClient : pub
+
   const [{ data: story }, { data: allBlogs }] = await Promise.all([
-    pub.from('blog').select('*').eq('slug', slug).single(),
+    storyClient.from('blog').select('*').eq('slug', slug).single(),
     pub
       .from('blog')
       .select('slug, title')

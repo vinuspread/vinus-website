@@ -60,14 +60,17 @@ export default async function WorkDetailPage({ params }: Props) {
   const pub = createPublicClient()
 
   let isAdmin = false
+  let authClient: Awaited<ReturnType<typeof createClient>> | null = null
   try {
-    const auth = await createClient()
-    const { data: { user } } = await auth.auth.getUser()
+    authClient = await createClient()
+    const { data: { user } } = await authClient.auth.getUser()
     isAdmin = !!user
   } catch { /* 재렌더링 컨텍스트에서 세션 없음 */ }
 
+  const workClient = isAdmin && authClient ? authClient : pub
+
   const [{ data: work }, { data: works }] = await Promise.all([
-    pub.from('work').select('*').eq('slug', slug).single(),
+    workClient.from('work').select('*').eq('slug', slug).single(),
     pub.from('work').select('slug, title, thumbnail_url, thumbnail_color').eq('is_published', true).order('sort_order', { ascending: true }),
   ])
 
