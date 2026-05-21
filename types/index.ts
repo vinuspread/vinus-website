@@ -185,6 +185,7 @@ export interface BlogCodeBlock {
 export interface BlogHeadingTextBlock {
   id: string
   type: 'blog-heading-text'
+  headingLevel?: 'h3' | 'h5'
   heading: string
   body: string
   spacing: SpacingType

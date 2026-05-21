@@ -202,6 +202,18 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
               {/* blog-heading-text */}
               {block.type === 'blog-heading-text' && (
                 <div className="space-y-2">
+                  <div className="flex gap-1">
+                    {(['h3', 'h5'] as const).map((lvl) => (
+                      <button
+                        key={lvl}
+                        type="button"
+                        onClick={() => onChange(updateBlock(blocks, index, { ...block, headingLevel: lvl }))}
+                        className={`text-xs px-3 py-1 border ${(block.headingLevel ?? 'h3') === lvl ? 'border-black bg-black text-white' : 'border-gray-300 text-gray-600 hover:bg-gray-50'}`}
+                      >
+                        {lvl.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
                   <input
                     type="text"
                     value={block.heading}
