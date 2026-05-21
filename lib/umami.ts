@@ -58,16 +58,22 @@ export async function getUmamiStats(days = 7): Promise<UmamiData | null> {
 
     if (!statsRes.ok) return null
 
-    const raw = await statsRes.json() as { pageviews?: { value: number }; visitors?: { value: number }; visits?: { value: number }; bounces?: { value: number } }
+    const raw = await statsRes.json() as Record<string, number | { value: number } | undefined>
     const topPages: UmamiPage[] = pagesRes.ok ? await pagesRes.json() as UmamiPage[] : []
     const topReferrers: UmamiPage[] = refRes.ok ? await refRes.json() as UmamiPage[] : []
 
+    const num = (field: number | { value: number } | undefined): number => {
+      if (typeof field === 'number') return field
+      if (field && typeof field === 'object') return (field as { value: number }).value ?? 0
+      return 0
+    }
+
     return {
       stats: {
-        pageviews: raw.pageviews?.value ?? 0,
-        visitors: raw.visitors?.value ?? 0,
-        visits: raw.visits?.value ?? 0,
-        bounces: raw.bounces?.value ?? 0,
+        pageviews: num(raw.pageviews),
+        visitors: num(raw.visitors),
+        visits: num(raw.visits),
+        bounces: num(raw.bounces),
       },
       topPages,
       topReferrers,
