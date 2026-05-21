@@ -1,19 +1,13 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { getCategories } from '@/app/admin/categories/actions'
 import BlogListFilter from '@/components/admin/BlogListFilter'
 
 export default async function AdminBlogPage() {
   const supabase = await createClient()
-  const [{ data: blogs }, categories] = await Promise.all([
-    supabase
-      .from('blog')
-      .select('id, title, category, is_published, sort_order')
-      .order('sort_order', { ascending: true }),
-    getCategories('blog'),
-  ])
-
-  const categoryNames = categories.map((c) => c.name)
+  const { data: blogs } = await supabase
+    .from('blog')
+    .select('id, title, category, is_published, sort_order')
+    .order('sort_order', { ascending: true })
 
   return (
     <div>
@@ -26,7 +20,7 @@ export default async function AdminBlogPage() {
           + 새 Blog
         </Link>
       </div>
-      <BlogListFilter blogs={blogs ?? []} categories={categoryNames} />
+      <BlogListFilter blogs={blogs ?? []} />
     </div>
   )
 }

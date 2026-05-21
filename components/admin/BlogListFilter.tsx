@@ -13,33 +13,20 @@ interface BlogItem {
 
 interface Props {
   blogs: BlogItem[]
-  categories: string[]
 }
 
-export default function BlogListFilter({ blogs, categories }: Props) {
+export default function BlogListFilter({ blogs }: Props) {
   const [q, setQ] = useState('')
-  const [cat, setCat] = useState('all')
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase()
-    return blogs.filter((b) => {
-      if (cat !== 'all' && b.category !== cat) return false
-      if (query && !b.title.toLowerCase().includes(query)) return false
-      return true
-    })
-  }, [blogs, q, cat])
+    if (!query) return blogs
+    return blogs.filter((b) => b.title.toLowerCase().includes(query))
+  }, [blogs, q])
 
   return (
     <div>
       <div className="flex gap-2 mb-6">
-        <select
-          value={cat}
-          onChange={(e) => setCat(e.target.value)}
-          className="border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-black bg-white"
-        >
-          <option value="all">전체 카테고리</option>
-          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
         <input
           type="text"
           value={q}
@@ -47,9 +34,9 @@ export default function BlogListFilter({ blogs, categories }: Props) {
           placeholder="제목 검색"
           className="flex-1 border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-black"
         />
-        {(q || cat !== 'all') && (
+        {q && (
           <button
-            onClick={() => { setQ(''); setCat('all') }}
+            onClick={() => setQ('')}
             className="px-3 py-2 text-sm text-gray-400 hover:text-black border border-gray-200"
           >
             초기화

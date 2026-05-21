@@ -13,33 +13,20 @@ interface WorkItem {
 
 interface Props {
   works: WorkItem[]
-  categories: string[]
 }
 
-export default function WorkListFilter({ works, categories }: Props) {
+export default function WorkListFilter({ works }: Props) {
   const [q, setQ] = useState('')
-  const [cat, setCat] = useState('all')
 
   const filtered = useMemo(() => {
     const query = q.trim().toLowerCase()
-    return works.filter((w) => {
-      if (cat !== 'all' && w.category !== cat) return false
-      if (query && !w.title.toLowerCase().includes(query)) return false
-      return true
-    })
-  }, [works, q, cat])
+    if (!query) return works
+    return works.filter((w) => w.title.toLowerCase().includes(query))
+  }, [works, q])
 
   return (
     <div>
       <div className="flex gap-2 mb-6">
-        <select
-          value={cat}
-          onChange={(e) => setCat(e.target.value)}
-          className="border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-black bg-white"
-        >
-          <option value="all">전체 카테고리</option>
-          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-        </select>
         <input
           type="text"
           value={q}
@@ -47,9 +34,9 @@ export default function WorkListFilter({ works, categories }: Props) {
           placeholder="제목 검색"
           className="flex-1 border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-black"
         />
-        {(q || cat !== 'all') && (
+        {q && (
           <button
-            onClick={() => { setQ(''); setCat('all') }}
+            onClick={() => setQ('')}
             className="px-3 py-2 text-sm text-gray-400 hover:text-black border border-gray-200"
           >
             초기화

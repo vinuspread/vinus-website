@@ -1,20 +1,14 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { getCategories } from '@/app/admin/categories/actions'
 import WorkListFilter from '@/components/admin/WorkListFilter'
 import RevalidateButton from './RevalidateButton'
 
 export default async function AdminWorkPage() {
   const supabase = await createClient()
-  const [{ data: works }, categories] = await Promise.all([
-    supabase
-      .from('work')
-      .select('id, title, category, is_published, sort_order')
-      .order('sort_order', { ascending: true }),
-    getCategories('work'),
-  ])
-
-  const categoryNames = categories.map((c) => c.name)
+  const { data: works } = await supabase
+    .from('work')
+    .select('id, title, category, is_published, sort_order')
+    .order('sort_order', { ascending: true })
 
   return (
     <div>
@@ -30,7 +24,7 @@ export default async function AdminWorkPage() {
           </Link>
         </div>
       </div>
-      <WorkListFilter works={works ?? []} categories={categoryNames} />
+      <WorkListFilter works={works ?? []} />
     </div>
   )
 }
