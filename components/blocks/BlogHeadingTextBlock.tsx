@@ -4,7 +4,7 @@ export default function BlogHeadingTextBlock({ block }: { block: BlogHeadingText
   const level = block.headingLevel ?? 'h3'
   const headingClass = level === 'h3'
     ? 'font-bold text-[clamp(18px,2vw,28px)] tracking-tight leading-tight text-mine-shaft break-keep'
-    : 'font-semibold text-[clamp(14px,1.2vw,18px)] tracking-tight leading-tight text-mine-shaft break-keep'
+    : 'font-semibold text-[clamp(17px,1.5vw,22px)] tracking-tight leading-tight text-mine-shaft break-keep'
 
   return (
     <div>
