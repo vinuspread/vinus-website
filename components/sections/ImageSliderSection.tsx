@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useReveal } from "@/hooks/useReveal";
 
 const slides = [
-  { src: "/images/slider_01.png", alt: "Project 1", wide: false },
-  { src: "/images/slider_02.png", alt: "Project 2", wide: true },
-  { src: "/images/slider_03.png", alt: "Project 3", wide: false },
-  { src: "/images/slider_04.png", alt: "Project 4", wide: true },
-  { src: "/images/slider_05.png", alt: "Project 5", wide: false },
-  { src: "/images/slider_06.png", alt: "Project 6", wide: true },
+  { src: "https://picsum.photos/seed/s1/800/600", alt: "Project 1", wide: false },
+  { src: "https://picsum.photos/seed/s2/1200/800", alt: "Project 2", wide: true },
+  { src: "https://picsum.photos/seed/s3/800/600", alt: "Project 3", wide: false },
+  { src: "https://picsum.photos/seed/s4/1200/800", alt: "Project 4", wide: true },
+  { src: "https://picsum.photos/seed/s5/800/600", alt: "Project 5", wide: false },
+  { src: "https://picsum.photos/seed/s6/1200/800", alt: "Project 6", wide: true },
 ];
 
 const marqueeSlides = [...slides, ...slides];

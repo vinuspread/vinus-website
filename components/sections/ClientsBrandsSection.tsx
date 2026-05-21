@@ -125,7 +125,7 @@ export const ClientsBrandsSection = () => {
         <div className="hidden lg:flex flex-col justify-between gap-8">
           <div ref={clipImg1Ref} className="overflow-hidden w-[80%] self-end" style={{ height: "calc(42vw + 50px)", clipPath: "inset(100% 0 0 0)" }}>
             <img
-              src="/images/brands_vertical.png"
+              src="https://picsum.photos/seed/brands/800/1200"
               alt="Brands Vinuspread"
               className="w-full h-full object-cover scale-125 will-change-transform"
               data-pin-nopin="true"

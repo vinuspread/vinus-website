@@ -91,7 +91,7 @@ export default function HomeClient({ works }: Props) {
           <section className="sticky top-0 w-full h-[100vh] overflow-hidden">
             <img
               ref={fullImgRef}
-              src="/images/section_full.png"
+              src="https://picsum.photos/seed/full/2000/1200"
               alt=""
               className="w-full h-full object-cover block will-change-transform"
               data-pin-nopin="true"

@@ -96,7 +96,7 @@ export const AboutSection = () => {
           {/* 이미지 1 */}
           <div ref={clip1Ref} className="overflow-hidden aspect-[4/5] w-[65%] bg-gallery" style={{ clipPath: "inset(100% 0 0 0)" }}>
             <div ref={scale1Ref} className="w-full h-full" style={{ scale: "1.2" }}>
-              <img src="/images/about_vertical.png" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
+              <img src="https://picsum.photos/seed/about1/800/1000" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
             </div>
           </div>
 
@@ -104,7 +104,7 @@ export const AboutSection = () => {
           <div ref={clip2Ref} className="absolute bottom-[-120px] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0 0 0)" }}>
             <div ref={scale2Ref} className="w-full h-full" style={{ scale: "1.2" }}>
               <div className="absolute inset-x-0 will-change-transform" style={{ height: "190%", top: "-45%" }}>
-                <img src="/images/about_vertical_glass.png" alt="About Vinuspread 2" className="w-full h-full object-cover" data-pin-nopin="true" />
+                <img src="https://picsum.photos/seed/about2/800/1000" alt="About Vinuspread 2" className="w-full h-full object-cover" data-pin-nopin="true" />
               </div>
             </div>
           </div>
@@ -114,7 +114,7 @@ export const AboutSection = () => {
         <div className="lg:hidden">
           <div ref={clip1MRef} className="overflow-hidden aspect-[4/5] w-full bg-gallery" style={{ clipPath: "inset(100% 0 0 0)" }}>
             <div ref={scale1MRef} className="w-full h-full" style={{ scale: "1.2" }}>
-              <img src="/images/about_vertical.png" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
+              <img src="https://picsum.photos/seed/about1/800/1000" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
             </div>
           </div>
         </div>
