@@ -62,7 +62,10 @@ export default function WorkForm({ initialData, categories = [] }: Props) {
       headers: { 'Content-Type': contentType },
       body: file,
     })
-    if (!uploadRes.ok) throw new Error('파일 업로드 실패')
+    if (!uploadRes.ok) {
+      const errText = await uploadRes.text().catch(() => '')
+      throw new Error(`파일 업로드 실패 (${uploadRes.status}${errText ? ': ' + errText.slice(0, 100) : ''})`)
+    }
 
     return json.publicUrl
   }

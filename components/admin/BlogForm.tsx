@@ -79,10 +79,14 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
     }
     const uploadRes = await fetch(json.signedUrl, {
       method: 'PUT',
-      headers: { 'Content-Type': file.type },
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
       body: file,
     })
-    if (!uploadRes.ok) { setError('파일 업로드 실패'); return null }
+    if (!uploadRes.ok) {
+      const errText = await uploadRes.text().catch(() => '')
+      setError(`파일 업로드 실패 (${uploadRes.status}${errText ? ': ' + errText.slice(0, 100) : ''})`)
+      return null
+    }
     return json.publicUrl
   }
 
