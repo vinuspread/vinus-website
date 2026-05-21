@@ -78,7 +78,7 @@ export default function BlogListFilter({ blogs }: Props) {
                 </Link>
               </td>
               <td className="py-3 text-gray-500">{blog.category ?? '-'}</td>
-              <td className="py-3 text-gray-400 text-xs whitespace-nowrap">{formatDateTime(blog.created_at)}</td>
+              <td className="py-3 text-gray-500 whitespace-nowrap">{formatDateTime(blog.created_at)}</td>
               <td className="py-3 text-gray-500">{blog.sort_order}</td>
               <td className="py-3">{blog.is_published ? '✓' : '-'}</td>
             </tr>
