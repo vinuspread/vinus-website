@@ -17,7 +17,6 @@ export interface BlogFormData {
   tags: string[]
   is_published: boolean
   sort_order: number
-  published_at?: string
   created_at?: string
 }
 
@@ -35,6 +34,7 @@ export async function saveBlog(data: BlogFormData): Promise<{ id: string; slug: 
     tags: data.tags ?? [],
     is_published: data.is_published,
     sort_order: data.sort_order,
+    ...(data.created_at ? { created_at: data.created_at } : {}),
   }
 
   if (data.id) {

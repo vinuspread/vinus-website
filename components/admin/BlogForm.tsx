@@ -140,7 +140,7 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
       tags,
       is_published: (form.elements.namedItem('is_published') as HTMLInputElement).checked,
       sort_order: initialData?.sort_order ?? 0,
-      published_at: get('published_at') || undefined,
+      created_at: get('created_at') || undefined,
     }
 
     startTransition(async () => {
@@ -194,7 +194,7 @@ export default function BlogForm({ initialData, categories = [] }: Props) {
 
         <label className="text-sm text-gray-500 pt-3">날짜</label>
         <input
-          name="published_at"
+          name="created_at"
           type="date"
           defaultValue={initialData?.created_at ? initialData.created_at.slice(0, 10) : todayString()}
           className="border-b border-gray-300 py-3 text-sm text-gray-900 focus:outline-none focus:border-black bg-transparent"
