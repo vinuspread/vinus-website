@@ -66,6 +66,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function StoryDetailPage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const isAdmin = !!user
 
   const [{ data: story }, { data: allBlogs }] = await Promise.all([
     supabase.from('blog').select('*').eq('slug', slug).single(),
@@ -77,6 +79,7 @@ export default async function StoryDetailPage({ params }: Props) {
   ])
 
   if (!story) notFound()
+  if (!story.is_published && !isAdmin) notFound()
 
   const blog = story as Blog
   const list = (allBlogs ?? []) as Pick<Blog, 'slug' | 'title'>[]
@@ -115,6 +118,13 @@ export default async function StoryDetailPage({ params }: Props) {
   return (
     <main className="bg-white min-h-screen">
       <JsonLd data={blogPostingLd} />
+
+      {/* ── 관리자 미리보기 배너 ── */}
+      {isAdmin && !blog.is_published && (
+        <div className="sticky top-0 z-50 bg-amber-400 text-amber-900 text-xs font-medium text-center py-2 px-4">
+          비공개 글 미리보기 — 관리자에게만 표시됩니다
+        </div>
+      )}
 
       {/* ── Hero ── */}
       <StoryHero

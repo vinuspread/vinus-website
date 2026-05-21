@@ -57,6 +57,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params
   const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const isAdmin = !!user
 
   const [{ data: work }, { data: works }] = await Promise.all([
     supabase.from('work').select('*').eq('slug', slug).single(),
@@ -64,6 +66,7 @@ export default async function WorkDetailPage({ params }: Props) {
   ])
 
   if (!work) notFound()
+  if (!(work as Work).is_published && !isAdmin) notFound()
 
   const allWorks = (works ?? []) as Pick<Work, 'slug' | 'title' | 'thumbnail_url' | 'thumbnail_color'>[]
   const currentIdx = allWorks.findIndex((w) => w.slug === slug)
@@ -94,6 +97,13 @@ export default async function WorkDetailPage({ params }: Props) {
   return (
     <article className="bg-gallery">
       <JsonLd data={creativeWorkLd} />
+
+      {/* 관리자 미리보기 배너 */}
+      {isAdmin && !(work as Work).is_published && (
+        <div className="sticky top-0 z-50 bg-amber-400 text-amber-900 text-xs font-medium text-center py-2 px-4">
+          비공개 글 미리보기 — 관리자에게만 표시됩니다
+        </div>
+      )}
 
       {/* 1. Hero */}
       {heroSrc && (
