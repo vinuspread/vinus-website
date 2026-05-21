@@ -47,7 +47,7 @@ export async function getUmamiStats(days = 7): Promise<UmamiData | null> {
   const startAt = endAt - days * 24 * 60 * 60 * 1000
   const qs = `startAt=${startAt}&endAt=${endAt}`
   const headers = { Authorization: `Bearer ${token}` }
-  const opts = { headers, next: { revalidate: 300 } }
+  const opts = { headers, cache: 'no-store' as const }
 
   try {
     const [statsRes, pagesRes, refRes] = await Promise.all([
