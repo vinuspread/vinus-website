@@ -47,6 +47,14 @@ export default function Sidebar() {
             </Link>
           )
         })}
+        <a
+          href="https://vinus-content-builder.vercel.app/collected"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm py-2 px-3 text-gray-600 hover:text-black hover:bg-gray-100 transition-colors"
+        >
+          콘텐츠빌더 ↗
+        </a>
       </nav>
       <button
         onClick={handleLogout}
