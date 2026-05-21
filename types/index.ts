@@ -1,7 +1,7 @@
 // types/index.ts
 
 export type MotionType = 'none' | 'fadeIn' | 'slideUp' | 'textReveal' | 'curtainReveal' | 'zoomIn' | 'stagger'
-export type SpacingType = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
+export type SpacingType = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
 export type TextVariant = 'body' | 'heading' | 'subheading' | 'caption'
 export type TextSize = '14' | '16' | '18' | '20'
 export type TextWeight = 'regular' | 'medium' | 'bold'

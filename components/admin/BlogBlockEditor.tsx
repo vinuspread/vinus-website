@@ -160,6 +160,7 @@ export default function BlogBlockEditor({ blocks, onChange }: Props) {
                     className="text-xs border border-gray-200 px-2 py-1 text-gray-600 bg-transparent focus:outline-none focus:border-black"
                   >
                     <option value="none">간격 없음</option>
+                    <option value="xs">간격 14px</option>
                     <option value="sm">간격 24px</option>
                     <option value="md">간격 48px</option>
                     <option value="lg">간격 80px</option>
