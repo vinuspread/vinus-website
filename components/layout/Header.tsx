@@ -20,15 +20,22 @@ export const Header = () => {
 
   const isHome = pathname === "/";
   const [isDark, setIsDark] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
-      setIsHidden(y > lastYRef.current && y > 120);
+      const delta = y - lastYRef.current;
+      if (delta > 4 && y > 40) {
+        setIsHidden(true);
+      } else if (delta < -4) {
+        setIsHidden(false);
+      }
+      setIsScrolled(y > 10);
       lastYRef.current = y;
     };
     handleScroll();
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isHome]);
 
@@ -73,8 +80,12 @@ export const Header = () => {
       <header
         ref={navRef}
         className={cn(
-          "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[9999] px-page-padding flex items-center justify-between transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] header-enter",
-          "bg-transparent",
+          "fixed top-0 left-0 w-full h-[60px] md:h-[80px] z-[9999] px-page-padding flex items-center justify-between transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] header-enter",
+          isScrolled && !isMenuOpen
+            ? isDark
+              ? "bg-black/40 backdrop-blur-md"
+              : "bg-white/60 backdrop-blur-md"
+            : "bg-transparent",
           isHidden && !isMenuOpen && "nav-hidden"
         )}
       >
