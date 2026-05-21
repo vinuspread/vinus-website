@@ -54,6 +54,20 @@ export const HeroSectionV2 = () => {
   }, []);
 
   useLayoutEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 1024px)").matches || ('ontouchstart' in window);
+
+    // 모바일: stepped navigation 없이 B3 상태로 바로 시작 + lenis 유지
+    if (isMobile) {
+      const lenis = window.__lenis;
+      if (lenis) lenis.start();
+      gsap.set(sliderRef.current, { yPercent: -200 });
+      gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.3 });
+      gsap.fromTo(".b3-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" });
+      const stickyParent = containerRef.current?.parentElement;
+      if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // 1. Initial Reveals
       gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.5 });
@@ -249,6 +263,7 @@ export const HeroSectionV2 = () => {
       const lenis = window.__lenis;
       if (lenis) lenis.start();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
