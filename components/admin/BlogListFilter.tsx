@@ -9,6 +9,14 @@ interface BlogItem {
   category: string | null
   is_published: boolean
   sort_order: number
+  created_at: string
+}
+
+function formatDateTime(iso: string) {
+  const d = new Date(iso)
+  const date = d.toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace('.', '')
+  const time = d.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })
+  return `${date} ${time}`
 }
 
 interface Props {
@@ -49,6 +57,7 @@ export default function BlogListFilter({ blogs }: Props) {
           <tr className="border-b border-gray-200">
             <th className="text-left py-3 font-normal text-gray-500">제목</th>
             <th className="text-left py-3 font-normal text-gray-500">카테고리</th>
+            <th className="text-left py-3 font-normal text-gray-500">작성일시</th>
             <th className="text-left py-3 font-normal text-gray-500">순서</th>
             <th className="text-left py-3 font-normal text-gray-500">공개</th>
           </tr>
@@ -56,7 +65,7 @@ export default function BlogListFilter({ blogs }: Props) {
         <tbody>
           {filtered.length === 0 ? (
             <tr>
-              <td colSpan={4} className="py-10 text-center text-gray-400 text-sm">검색 결과가 없습니다</td>
+              <td colSpan={5} className="py-10 text-center text-gray-400 text-sm">검색 결과가 없습니다</td>
             </tr>
           ) : filtered.map((blog) => (
             <tr key={blog.id} className="border-b border-gray-100 hover:bg-gray-50">
@@ -66,6 +75,7 @@ export default function BlogListFilter({ blogs }: Props) {
                 </Link>
               </td>
               <td className="py-3 text-gray-500">{blog.category ?? '-'}</td>
+              <td className="py-3 text-gray-400 text-xs whitespace-nowrap">{formatDateTime(blog.created_at)}</td>
               <td className="py-3 text-gray-500">{blog.sort_order}</td>
               <td className="py-3">{blog.is_published ? '✓' : '-'}</td>
             </tr>

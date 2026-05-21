@@ -6,7 +6,7 @@ export default async function AdminBlogPage() {
   const supabase = await createClient()
   const { data: blogs } = await supabase
     .from('blog')
-    .select('id, title, category, is_published, sort_order')
+    .select('id, title, category, is_published, sort_order, created_at')
     .order('sort_order', { ascending: true })
 
   return (
