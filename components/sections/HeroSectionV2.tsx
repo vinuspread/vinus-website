@@ -36,9 +36,11 @@ export const HeroSectionV2 = () => {
 
   useEffect(() => setMounted(true), []);
 
-  // 시계 portal이 렌더된 후 슬라이드 다운 + 페이드인
+  // 시계 portal이 렌더된 후 초기 숨김 → 슬라이드 다운 + 페이드인
+  // gsap.set으로 초기 상태 설정 (React inline style 없이) → 리렌더에 영향받지 않음
   useEffect(() => {
     if (!mounted || !metaRef.current) return;
+    gsap.set(metaRef.current, { opacity: 0, y: -14 });
     gsap.to(metaRef.current, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out", delay: 0.4 });
   }, [mounted]);
   const currentIndex = useRef(0);
@@ -272,10 +274,7 @@ export const HeroSectionV2 = () => {
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
       {mounted && createPortal(
         <div
-          ref={(el) => {
-            (metaRef as any).current = el;
-            if (el) gsap.set(el, { opacity: 0, y: -14 });
-          }}
+          ref={metaRef}
           className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference"
         >
           <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-white/50">Seoul, Korea</span>
