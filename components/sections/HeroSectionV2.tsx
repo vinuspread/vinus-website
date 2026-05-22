@@ -6,7 +6,6 @@ import { gsap } from "@/lib/gsap";
 import { Observer } from "@/lib/gsap";
 import { ScrollTrigger } from "@/lib/gsap";
 import { ArrowLink } from "@/components/common/ArrowLink";
-import { useFitText } from "@/hooks/useFitText";
 
 const B1_LINES = [
   { text: "We are a product studio", bold: false },
