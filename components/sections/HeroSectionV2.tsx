@@ -316,7 +316,7 @@ export const HeroSectionV2 = () => {
         <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
           <div className="font-inter leading-[1.2] md:leading-[1.05] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(32px,5.5vw,68px)]">
             {/* Line 1 */}
-            <div className="py-0.5 md:py-1 overflow-hidden">
+            <div className="py-0.5 md:py-1">
               {"We take responsibility for".split(" ").map((word, j) => (
                 <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
@@ -324,7 +324,7 @@ export const HeroSectionV2 = () => {
               ))}
             </div>
             {/* Line 2 */}
-            <div className="py-0.5 md:py-1 overflow-hidden">
+            <div className="py-0.5 md:py-1">
               {"design, planning, development,".split(" ").map((word, j) => (
                 <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
@@ -332,7 +332,7 @@ export const HeroSectionV2 = () => {
               ))}
             </div>
             {/* Line 3 */}
-            <div className="py-0.5 md:py-1 overflow-hidden">
+            <div className="py-0.5 md:py-1">
               {"operation, and consulting.".split(" ").map((word, k) => (
                 <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
