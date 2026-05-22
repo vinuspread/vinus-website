@@ -96,7 +96,7 @@ export const ClientsBrandsSection = () => {
               <div
                 key={client.name}
                 className={cn(
-                  "border-b border-r border-alto h-[100px] flex items-center justify-center p-5 transition-all duration-500",
+                  "border-b border-r border-alto h-[72px] md:h-[100px] flex items-center justify-center p-3 md:p-5 transition-all duration-500",
                   (i + 1) % 3 === 0 ? "border-r-0" : "",
                   "md:border-r",
                   (i + 1) % 6 === 0 ? "md:border-r-0" : ""
@@ -105,7 +105,7 @@ export const ClientsBrandsSection = () => {
                 <img
                   src={client.src}
                   alt={client.name}
-                  className="max-h-[28px] max-w-full object-contain"
+                  className="max-h-[20px] md:max-h-[28px] max-w-full object-contain"
                   data-pin-nopin="true"
                 />
               </div>
@@ -123,7 +123,7 @@ export const ClientsBrandsSection = () => {
 
         {/* Right */}
         <div className="hidden lg:flex flex-col justify-between gap-8">
-          <div ref={clipImg1Ref} className="overflow-hidden w-[80%] self-end" style={{ height: "calc(42vw + 50px)", clipPath: "inset(100% 0 0 0)" }}>
+          <div ref={clipImg1Ref} className="overflow-hidden w-[80%] self-end" style={{ height: "44vw", clipPath: "inset(100% 0 0 0)" }}>
             <img
               src="https://picsum.photos/seed/brands/800/1200"
               alt="Brands Vinuspread"

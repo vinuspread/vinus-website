@@ -13,7 +13,7 @@ export const ListRow = ({ label, detail, delay = 0 }: ListRowProps) => (
     {/* Label + arrow (mobile: same line) */}
     <div className="md:col-span-4 flex items-center justify-between md:block">
       <span className="block overflow-hidden">
-        <span className="anim-move-up block text-[20px] lg:text-[24px] font-inter !text-mine-shaft font-medium tracking-[-0.02em]" data-delay={delay}>
+        <span className="anim-move-up block text-[18px] md:text-[20px] lg:text-[24px] font-inter !text-mine-shaft font-medium tracking-[-0.02em]" data-delay={delay}>
           {label}
         </span>
       </span>

@@ -95,7 +95,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
             <div
               key={item.slug}
               className={`project-card-item flex-shrink-0 ${
-                isSlider ? "w-[88vw] sm:w-[58vw] lg:w-[37vw]" : "w-full"
+                isSlider ? "w-[88vw] sm:w-[58vw] md:w-[45vw] lg:w-[37vw]" : "w-full"
               }`}
             >
               <ProjectCard

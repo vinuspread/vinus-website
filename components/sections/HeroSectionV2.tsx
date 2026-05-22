@@ -278,7 +278,7 @@ export const HeroSectionV2 = () => {
           className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference"
         >
           <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-white/50">Seoul, Korea</span>
-          <span ref={timeDisplayRef} className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00 : 00 : 00</span>
+          <span ref={timeDisplayRef} className="font-inter font-bold text-[20px] md:text-[28px] lg:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00 : 00 : 00</span>
         </div>,
         document.body
       )}

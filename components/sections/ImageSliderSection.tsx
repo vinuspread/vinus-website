@@ -18,13 +18,13 @@ export const ImageSliderSection = () => {
   const revealRef = useReveal();
 
   return (
-    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto overflow-hidden h-[500px] group/slider">
+    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto overflow-hidden h-[240px] md:h-[380px] lg:h-[500px] group/slider">
       <div className="h-full overflow-hidden">
         <div className="flex gap-4 h-full w-max marquee-images group-hover/slider:[animation-play-state:paused]">
           {marqueeSlides.map((slide, i) => (
             <div
               key={i}
-              className={`${slide.wide ? "min-w-[780px]" : "min-w-[420px]"} h-full relative overflow-hidden flex-shrink-0`}
+              className={`${slide.wide ? "min-w-[75vw] md:min-w-[55vw] lg:min-w-[46vw]" : "min-w-[65vw] md:min-w-[38vw] lg:min-w-[25vw]"} h-full relative overflow-hidden flex-shrink-0`}
             >
               <Image
                 src={slide.src}

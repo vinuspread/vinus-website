@@ -122,7 +122,7 @@ export const AboutSection = () => {
           </div>
 
           {/* 이미지 2 */}
-          <div ref={clip2Ref} className="absolute bottom-[-120px] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
+          <div ref={clip2Ref} className="absolute bottom-[-70%] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale2Ref} className="w-full h-full" style={{ scale: "1.2" }}>
               <div className="absolute inset-x-0 will-change-transform" style={{ height: "190%", top: "-45%" }}>
                 <img src="https://picsum.photos/seed/about2/800/1000" alt="About Vinuspread 2" className="w-full h-full object-cover" data-pin-nopin="true" />
