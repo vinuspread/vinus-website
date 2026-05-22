@@ -68,15 +68,15 @@ export const AboutSection = () => {
       // 4. 잠시 멈춤
       tl.to({}, { duration: 0.4 });
 
-      // 5. 이미지2 퇴장: 위로 이동하면서 clip-path 접힘
-      tl.to(clip2Ref.current, { clipPath: "inset(0% 0% 100% 0%)", y: "-40%", duration: 1.3, ease: "power3.in" });
+      // 5. 이미지1 퇴장: 위로 올라가며 사라짐
+      tl.to(clip1Ref.current, { y: "-120%", opacity: 0, duration: 1.0, ease: "power3.in" });
 
-      // 6. 이미지1 퇴장: 위로 이동하면서 clip-path 접힘
-      tl.to(clip1Ref.current, { clipPath: "inset(0% 0% 100% 0%)", y: "-40%", duration: 1.0, ease: "power3.in" });
+      // 6. 이미지2 퇴장: 위로 올라가며 사라짐
+      tl.to(clip2Ref.current, { y: "-120%", opacity: 0, duration: 1.0, ease: "power3.in" });
 
-      // 7. 텍스트 역순 퇴장: 링크 → 한글 → 영문 → 제목 순서로 개별 퇴장
+      // 7. 텍스트 입장 순서와 동일하게 퇴장: 제목 → 영문 → 한글 → 링크
       const textItems = gsap.utils.toArray<HTMLElement>(".about-text-item");
-      tl.to([...textItems].reverse(), {
+      tl.to(textItems, {
         opacity: 0,
         y: -40,
         stagger: 0.18,
