@@ -1,8 +1,16 @@
 import type { Metadata } from 'next'
 import { Inter, Syne, Noto_Serif_KR } from 'next/font/google'
+import localFont from 'next/font/local'
 import Script from 'next/script'
 import './globals.css'
 import JsonLd from '@/components/seo/JsonLd'
+
+const pretendard = localFont({
+  src: '../public/fonts/PretendardVariable.woff2',
+  variable: '--font-pretendard',
+  display: 'swap',
+  weight: '45 920',
+})
 
 const inter = Inter({
   subsets: ['latin'],
@@ -73,10 +81,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${inter.variable} ${syne.variable} ${notoSerifKr.variable}`} suppressHydrationWarning>
-      <head>
-        <link rel="stylesheet" as="style" crossOrigin="anonymous" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
-      </head>
+    <html lang="ko" className={`${pretendard.variable} ${inter.variable} ${syne.variable} ${notoSerifKr.variable}`} suppressHydrationWarning>
+      <head></head>
       <body suppressHydrationWarning>
         <JsonLd data={organizationLd} />
         <JsonLd data={websiteLd} />
