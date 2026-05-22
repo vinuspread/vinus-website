@@ -10,10 +10,12 @@ export const AboutSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
 
   // desktop refs
-  const clip1Ref  = useRef<HTMLDivElement>(null);
-  const scale1Ref = useRef<HTMLDivElement>(null);
-  const clip2Ref  = useRef<HTMLDivElement>(null);
-  const scale2Ref = useRef<HTMLDivElement>(null);
+  const clip1Ref   = useRef<HTMLDivElement>(null);
+  const scale1Ref  = useRef<HTMLDivElement>(null);
+  const clip2Ref   = useRef<HTMLDivElement>(null);
+  const scale2Ref  = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const rightColRef = useRef<HTMLDivElement>(null);
 
   // mobile refs
   const clip1MRef  = useRef<HTMLDivElement>(null);
@@ -46,31 +48,40 @@ export const AboutSection = () => {
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
       // 초기 상태 세팅
-      gsap.set(clip1Ref.current,  { clipPath: "inset(100% 0 0 0)" });
+      gsap.set(clip1Ref.current,  { clipPath: "inset(100% 0% 0% 0%)" });
       gsap.set(scale1Ref.current, { scale: 1.2 });
-      gsap.set(clip2Ref.current,  { clipPath: "inset(100% 0 0 0)" });
+      gsap.set(clip2Ref.current,  { clipPath: "inset(100% 0% 0% 0%)" });
       gsap.set(scale2Ref.current, { scale: 1.2 });
       gsap.set(".about-text-item", { opacity: 0, y: 50 });
 
-      // 1. 이미지 1 리빌
-      tl.to(clip1Ref.current,  { clipPath: "inset(0% 0 0 0)", duration: 1.2 }, 0)
+      // 1. 이미지 1 입장
+      tl.to(clip1Ref.current,  { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 }, 0)
         .to(scale1Ref.current, { scale: 1, duration: 1.2 }, 0);
 
       // 2. 텍스트 순차 등장
       tl.to(".about-text-item", { opacity: 1, y: 0, stagger: 0.18, duration: 0.9 }, 0.6);
 
-      // 3. 이미지 2 리빌
-      tl.to(clip2Ref.current,  { clipPath: "inset(0% 0 0 0)", duration: 1.2 }, 1.0)
+      // 3. 이미지 2 입장
+      tl.to(clip2Ref.current,  { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 }, 1.0)
         .to(scale2Ref.current, { scale: 1, duration: 1.2 }, 1.0);
 
-      // 4. 잠시 멈춤 (빈 구간)
-      tl.to({}, { duration: 0.6 });
+      // 4. 잠시 멈춤
+      tl.to({}, { duration: 0.4 });
+
+      // 5. 이미지 컬럼 퇴장 (위로 슬라이드)
+      tl.to(leftColRef.current, { y: "-110%", duration: 1.0, ease: "power3.in" });
+
+      // 6. 텍스트 컬럼 퇴장 (위로 슬라이드)
+      tl.to(rightColRef.current, { y: "-110%", opacity: 0, duration: 0.9, ease: "power3.in" });
+
+      // 7. 마무리
+      tl.to({}, { duration: 0.3 });
 
       ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=2800",
-        scrub: 1.0,
+        end: "+=2000",
+        scrub: 0.8,
         pin: true,
         anticipatePin: 1,
         animation: tl,
@@ -92,16 +103,16 @@ export const AboutSection = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
         {/* Left: desktop */}
-        <div className="hidden lg:block relative">
+        <div ref={leftColRef} className="hidden lg:block relative">
           {/* 이미지 1 */}
-          <div ref={clip1Ref} className="overflow-hidden aspect-[4/5] w-[65%] bg-gallery" style={{ clipPath: "inset(100% 0 0 0)" }}>
+          <div ref={clip1Ref} className="overflow-hidden aspect-[4/5] w-[65%] bg-gallery" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale1Ref} className="w-full h-full" style={{ scale: "1.2" }}>
               <img src="https://picsum.photos/seed/about1/800/1000" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
             </div>
           </div>
 
           {/* 이미지 2 */}
-          <div ref={clip2Ref} className="absolute bottom-[-120px] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0 0 0)" }}>
+          <div ref={clip2Ref} className="absolute bottom-[-120px] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale2Ref} className="w-full h-full" style={{ scale: "1.2" }}>
               <div className="absolute inset-x-0 will-change-transform" style={{ height: "190%", top: "-45%" }}>
                 <img src="https://picsum.photos/seed/about2/800/1000" alt="About Vinuspread 2" className="w-full h-full object-cover" data-pin-nopin="true" />
@@ -112,7 +123,7 @@ export const AboutSection = () => {
 
         {/* Left: mobile */}
         <div className="lg:hidden">
-          <div ref={clip1MRef} className="overflow-hidden aspect-[4/5] w-full bg-gallery" style={{ clipPath: "inset(100% 0 0 0)" }}>
+          <div ref={clip1MRef} className="overflow-hidden aspect-[4/5] w-full bg-gallery" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale1MRef} className="w-full h-full" style={{ scale: "1.2" }}>
               <img src="https://picsum.photos/seed/about1/800/1000" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
             </div>
@@ -120,7 +131,7 @@ export const AboutSection = () => {
         </div>
 
         {/* Right: 텍스트 */}
-        <div className="flex flex-col gap-12">
+        <div ref={rightColRef} className="flex flex-col gap-12">
           <h2 className="about-text-item display-heading text-mine-shaft">
             Focusing on the enduring value of what truly matters.
           </h2>

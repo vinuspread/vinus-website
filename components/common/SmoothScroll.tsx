@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "@/lib/gsap";
@@ -10,7 +10,7 @@ import { ScrollTrigger } from "@/lib/gsap";
 export const SmoothScroll = () => {
   const pathname = usePathname();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const lenis = new Lenis({
       duration: 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),

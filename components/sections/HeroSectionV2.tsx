@@ -30,23 +30,27 @@ export const HeroSectionV2 = () => {
   const b2Line1Ref = useFitText();
   const b2Line2Ref = useFitText();
   const b2HighlightRef = useFitText();
-  const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [, setIndexState] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const timeDisplayRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => setMounted(true), []);
+
+  // 시계 portal이 렌더된 후 슬라이드 다운 + 페이드인
+  useEffect(() => {
+    if (!mounted || !metaRef.current) return;
+    gsap.to(metaRef.current, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out", delay: 0.4 });
+  }, [mounted]);
   const currentIndex = useRef(0);
   const isAnimating = useRef(false);
   const exitTriggerRef = useRef<ScrollTrigger | null>(null);
 
   useEffect(() => {
+    const pad = (n: number) => String(n).padStart(2, "0");
     const updateTime = () => {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString("en-US", {
-        hour12: false, hour: "2-digit", minute: "2-digit", second: "2-digit",
-        timeZone: "Asia/Seoul",
-      });
-      setCurrentTime(timeStr.replace(/:/g, " : "));
+      if (!timeDisplayRef.current) return;
+      const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+      timeDisplayRef.current.textContent = `${pad(now.getHours())} : ${pad(now.getMinutes())} : ${pad(now.getSeconds())}`;
     };
     updateTime();
     const timer = setInterval(updateTime, 1000);
@@ -61,7 +65,6 @@ export const HeroSectionV2 = () => {
       const lenis = window.__lenis;
       if (lenis) lenis.start();
       gsap.set(sliderRef.current, { yPercent: -200 });
-      gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.3 });
       gsap.fromTo(".b3-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" });
       const stickyParent = containerRef.current?.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
@@ -70,7 +73,6 @@ export const HeroSectionV2 = () => {
 
     const ctx = gsap.context(() => {
       // 1. Initial Reveals
-      gsap.to(metaRef.current, { opacity: 1, duration: 1, delay: 0.5 });
       gsap.fromTo(
         ".b1-word",
         { opacity: 0, y: 30 },
@@ -269,9 +271,15 @@ export const HeroSectionV2 = () => {
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
       {mounted && createPortal(
-        <div ref={metaRef} style={{ opacity: 0 }} className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference">
+        <div
+          ref={(el) => {
+            (metaRef as any).current = el;
+            if (el) gsap.set(el, { opacity: 0, y: -14 });
+          }}
+          className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference"
+        >
           <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-white/50">Seoul, Korea</span>
-          <span className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">{currentTime || "00 : 00 : 00"}</span>
+          <span ref={timeDisplayRef} className="font-inter font-bold text-[24px] md:text-[32px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00 : 00 : 00</span>
         </div>,
         document.body
       )}
