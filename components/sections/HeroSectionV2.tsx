@@ -3,7 +3,6 @@
 import { useLayoutEffect, useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { gsap } from "@/lib/gsap";
-import { Observer } from "@/lib/gsap";
 import { ScrollTrigger } from "@/lib/gsap";
 import { ArrowLink } from "@/components/common/ArrowLink";
 
@@ -21,275 +20,252 @@ export const HeroSectionV2 = () => {
   const videoOverlayRef = useRef<HTMLDivElement>(null);
   const video1Ref       = useRef<HTMLVideoElement>(null);
   const video2Ref       = useRef<HTMLVideoElement>(null);
+  const floatingWeRef   = useRef<HTMLDivElement>(null);
 
-  const [, setIndexState] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => setMounted(true), []);
 
+  // 시계
+  useEffect(() => {
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const tick = () => {
+      if (!timeDisplayRef.current) return;
+      const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+      timeDisplayRef.current.textContent =
+        `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // meta 입장 (포탈 마운트 후 실행)
   useEffect(() => {
     if (!mounted || !metaRef.current) return;
     gsap.set(metaRef.current, { opacity: 0, y: -14 });
     gsap.to(metaRef.current, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out", delay: 0.4 });
   }, [mounted]);
 
-  const currentIndex  = useRef(0);
-  const isAnimating   = useRef(false);
-  const exitTriggerRef = useRef<ScrollTrigger | null>(null);
-
-  useEffect(() => {
-    const pad = (n: number) => String(n).padStart(2, "0");
-    const updateTime = () => {
-      if (!timeDisplayRef.current) return;
-      const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-      timeDisplayRef.current.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
+  // 메인 애니메이션 — 포탈 마운트 후 실행
   useLayoutEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 1024px)").matches || ('ontouchstart' in window);
+    if (!mounted) return;
+
+    const isMobile = window.matchMedia("(max-width: 1024px)").matches;
 
     if (isMobile) {
-      const lenis = window.__lenis;
-      if (lenis) lenis.start();
-      gsap.fromTo(".b1-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" });
+      gsap.fromTo(
+        ".b1-word",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" }
+      );
       const stickyParent = containerRef.current?.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
       return;
     }
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".b1-word",
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, stagger: { amount: 0.6, from: "random" }, duration: 1.0, delay: 0.6, ease: "power2.out" }
-      );
+      const section = containerRef.current;
+      const fw = floatingWeRef.current;
+      const vo = videoOverlayRef.current;
+      if (!section || !fw || !vo) return;
 
-      const registerExitTrigger = () => {
-        if (exitTriggerRef.current) { exitTriggerRef.current.kill(); exitTriggerRef.current = null; }
-        if (!b3ContentRef.current) return;
-        gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
-        if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
-        const exitAnim = gsap.timeline({ paused: true });
-        exitAnim.to(b3ContentRef.current, { y: -window.innerHeight, opacity: 1, ease: "none" }, 0);
-        exitTriggerRef.current = ScrollTrigger.create({
-          id: "hero-b3-exit",
-          start: 0,
-          end: window.innerHeight,
-          scrub: 1,
-          animation: exitAnim,
-          onUpdate: (self) => {
-            if (self.progress === 0) {
-              gsap.set(b3ContentRef.current!, { y: 0, opacity: 1 });
-              if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
-            }
-          },
-        });
-      };
+      const weB1 = section.querySelector('[data-we="1"]') as HTMLElement | null;
+      const weB2 = section.querySelector('[data-we="2"]') as HTMLElement | null;
+      const weB3 = section.querySelector('[data-we="3"]') as HTMLElement | null;
+      if (!weB1 || !weB2 || !weB3) return;
 
-      const killExitTrigger = () => {
-        if (exitTriggerRef.current) { exitTriggerRef.current.kill(); exitTriggerRef.current = null; }
-        if (b3ContentRef.current) gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
-        if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
-      };
+      // 플로팅 We 폰트 맞춤
+      const b1Style = window.getComputedStyle(weB1);
+      Object.assign(fw.style, {
+        fontFamily:    b1Style.fontFamily,
+        fontWeight:    b1Style.fontWeight,
+        letterSpacing: b1Style.letterSpacing,
+        fontSize:      b1Style.fontSize,
+        lineHeight:    "1",
+      });
 
-      const animateTo = (newIndex: number) => {
-        if (isAnimating.current) return;
-        isAnimating.current = true;
+      // 위치 측정 (애니메이션 전)
+      const r1 = weB1.getBoundingClientRect();
+      const r2 = weB2.getBoundingClientRect(); // 100vh 아래
+      const r3 = weB3.getBoundingClientRect(); // 200vh 아래
 
-        const lenis = window.__lenis;
-        if (lenis && newIndex < 2) lenis.stop();
-        if (currentIndex.current === 2 && newIndex < 2) killExitTrigger();
+      const cx = window.innerWidth  / 2 - r1.width  / 2;
+      const cy = window.innerHeight / 2 - r1.height / 2;
 
-        const oldIndex  = currentIndex.current;
-        const isForward = newIndex > oldIndex;
+      // 슬라이더 이동 후 화면 좌표
+      const b2x = r2.left;
+      const b2y = r2.top  - window.innerHeight;
+      const b3x = r3.left;
+      const b3y = r3.top  - 2 * window.innerHeight;
 
-        const onDone = () => {
-          isAnimating.current = false;
-          currentIndex.current = newIndex;
-          setIndexState(newIndex);
-          if (lenis && newIndex === 2) { lenis.start(); registerExitTrigger(); }
-        };
+      // 초기 상태
+      gsap.set(".b1-word, .b2-word, .b3-word", { opacity: 0, y: 30 });
+      gsap.set(".b3-scroll-hint", { opacity: 0, y: 8 });
+      gsap.set(sliderRef.current, { yPercent: 0 });
+      gsap.set(vo, { clipPath: "inset(50% 50% 50% 50%)" });
+      gsap.set(fw, {
+        opacity: 0, x: r1.left, y: r1.top,
+        transformPerspective: 900, rotationY: 0,
+        filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+      });
 
-        const stickyParent = containerRef.current?.parentElement;
-        if (stickyParent) gsap.set(stickyParent, { zIndex: newIndex === 2 ? 10 : 30 });
+      const tl = gsap.timeline();
 
-        // ── We 전환 + 비디오 (전진 시만) ──────────────────────────────
-        if (isForward && videoOverlayRef.current) {
-          const weFromEl = document.querySelector(`[data-we="${oldIndex + 1}"]`) as HTMLElement | null;
-          const weToEl   = document.querySelector(`[data-we="${newIndex + 1}"]`) as HTMLElement | null;
+      // ── B1 입장 ──────────────────────────────────────────────
+      tl.to(".b1-word", {
+        opacity: 1, y: 0,
+        stagger: { amount: 0.5, from: "random" },
+        duration: 1.0, ease: "power2.out",
+      }, 0);
+      tl.to({}, { duration: 0.6 });
 
-          if (weFromEl && weToEl) {
-            const fromRect = weFromEl.getBoundingClientRect();
-            const toRect   = weToEl.getBoundingClientRect();
+      // ── B1 → B2 전환 ─────────────────────────────────────────
+      tl.addLabel("t12");
 
-            // 슬라이더 이동 후 target "We"의 실제 화면 좌표
-            const targetX = toRect.left;
-            const targetY = toRect.top - (newIndex - oldIndex) * window.innerHeight;
+      tl.set(weB1, { opacity: 0 }, "t12");
+      tl.set(fw, {
+        opacity: 1, x: r1.left, y: r1.top,
+        scale: 1, rotationY: 0,
+        filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+      }, "t12");
 
-            // 플로팅 "We" 생성
-            const computed  = window.getComputedStyle(weFromEl);
-            const floatingWe = document.createElement("div");
-            floatingWe.textContent = "We";
-            floatingWe.setAttribute("data-floating-we", "true");
-            Object.assign(floatingWe.style, {
-              position:      "fixed",
-              top:           "0",
-              left:          "0",
-              fontFamily:    computed.fontFamily,
-              fontSize:      computed.fontSize,
-              fontWeight:    computed.fontWeight,
-              letterSpacing: computed.letterSpacing,
-              color:         computed.color,
-              lineHeight:    "1",
-              zIndex:        "5001",
-              pointerEvents: "none",
-              whiteSpace:    "nowrap",
-            });
-            document.body.appendChild(floatingWe);
-            gsap.set(floatingWe, {
-              x: fromRect.left,
-              y: fromRect.top,
-              transformPerspective: 900,
-              rotationY: 0,
-              filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
-            });
+      // B1 나머지 퇴장
+      tl.to(".b1-word:not([data-we='1'])", {
+        opacity: 0, y: -25, stagger: 0.04, duration: 0.6, ease: "power2.in",
+      }, "t12");
 
-            gsap.set(weFromEl, { opacity: 0 });
-            gsap.set(weToEl,   { opacity: 0 });
+      // 플로팅 We → 화면 중앙 (3D)
+      tl.to(fw, {
+        x: cx, y: cy, scale: 1.15,
+        rotationY: 14,
+        filter: "drop-shadow(10px 22px 32px rgba(0,0,0,0.38))",
+        duration: 0.8, ease: "power2.inOut",
+      }, "t12+=0.1");
 
-            // 화면 중앙 좌표 (We 크기 기준)
-            const cx = window.innerWidth  / 2 - fromRect.width  / 2;
-            const cy = window.innerHeight / 2 - fromRect.height / 2;
+      // 비디오1 직사각형 열림
+      tl.set(video1Ref.current, { display: "block" }, "t12+=0.3");
+      tl.set(video2Ref.current, { display: "none"  }, "t12+=0.3");
+      tl.to(vo, {
+        clipPath: "inset(28% 8% 28% 8%)",
+        duration: 0.7, ease: "power2.out",
+      }, "t12+=0.4");
 
-            // 비디오 준비
-            const videoEl      = newIndex === 1 ? video1Ref.current : video2Ref.current;
-            const otherVideoEl = newIndex === 1 ? video2Ref.current : video1Ref.current;
-            if (videoEl) {
-              videoEl.style.display = "block";
-              if (otherVideoEl) otherVideoEl.style.display = "none";
-              videoEl.currentTime = 0;
-              videoEl.play().catch(() => {});
-            }
+      // 슬라이더 이동
+      tl.to(sliderRef.current, {
+        yPercent: -100, duration: 1.4, ease: "power3.inOut",
+      }, "t12+=0.5");
 
-            const tl = gsap.timeline({ onComplete: onDone });
+      // 플로팅 We → B2 착지 (3D 복귀)
+      tl.to(fw, {
+        x: b2x, y: b2y, scale: 1,
+        rotationY: 0,
+        filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+        duration: 0.8, ease: "power2.inOut",
+      }, "t12+=0.9");
 
-            // 슬라이더 이동
-            tl.to(sliderRef.current, { yPercent: -newIndex * 100, duration: 1.5, ease: "power4.inOut" }, 0);
+      // 비디오 닫힘
+      tl.to(vo, {
+        clipPath: "inset(50% 50% 50% 50%)",
+        duration: 0.7, ease: "power2.in",
+      }, "t12+=1.1");
 
-            // We 외 단어 퇴장
-            tl.to(`.b${oldIndex + 1}-word:not([data-we="${oldIndex + 1}"])`, { opacity: 0, y: -20, duration: 0.35 }, 0);
-            tl.to(".b3-scroll-hint", { opacity: 0, duration: 0.2 }, 0);
+      tl.set(fw,   { opacity: 0 }, "t12+=1.7");
+      tl.set(weB2, { opacity: 1 }, "t12+=1.7");
 
-            // We → 화면 중앙 (3D 회전 + 그림자 강조)
-            tl.to(floatingWe, {
-              x: cx, y: cy, scale: 1.15,
-              rotationY: 14,
-              filter: "drop-shadow(10px 22px 32px rgba(0,0,0,0.38))",
-              duration: 0.5, ease: "power2.in",
-            }, 0.08);
+      // B2 단어 입장
+      tl.to(".b2-word:not([data-we='2'])", {
+        opacity: 1, y: 0,
+        stagger: { amount: 0.4, from: "random" },
+        duration: 0.9, ease: "power2.out",
+      }, "t12+=1.8");
 
-            // 비디오 열림
-            tl.fromTo(
-              videoOverlayRef.current,
-              { clipPath: "circle(0% at 50% 50%)" },
-              { clipPath: "circle(40% at 50% 50%)", duration: 0.38, ease: "power2.out" },
-              0.18
-            );
+      tl.to({}, { duration: 0.6 });
 
-            // We → 착지 (3D 복귀 + 그림자 소멸)
-            tl.to(floatingWe, {
-              x: targetX, y: targetY, scale: 1,
-              rotationY: 0,
-              filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
-              duration: 0.5, ease: "power2.out",
-              onComplete: () => {
-                gsap.set(weToEl, { opacity: 1 });
-                if (document.body.contains(floatingWe)) document.body.removeChild(floatingWe);
-              }
-            }, 0.62);
+      // ── B2 → B3 전환 ─────────────────────────────────────────
+      tl.addLabel("t23");
 
-            // 비디오 닫힘
-            tl.to(videoOverlayRef.current, {
-              clipPath: "circle(0% at 50% 50%)",
-              duration: 0.38, ease: "power2.in",
-              onComplete: () => { if (videoEl) videoEl.pause(); }
-            }, 0.62);
+      tl.set(weB2, { opacity: 0 }, "t23");
+      tl.set(fw, {
+        opacity: 1, x: b2x, y: b2y,
+        scale: 1, rotationY: 0,
+        filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+      }, "t23");
 
-            // 새 섹션 단어 등장 (We 제외)
-            const staggerAmt = newIndex === 1 ? 0.4 : 0.6;
-            const dur        = newIndex === 1 ? 0.9 : 1.0;
-            tl.fromTo(
-              `.b${newIndex + 1}-word:not([data-we="${newIndex + 1}"])`,
-              { opacity: 0, y: 30 },
-              { opacity: 1, y: 0, duration: dur, stagger: { amount: staggerAmt, from: "random" }, ease: "power2.out" },
-              0.85
-            );
+      // B2 나머지 퇴장
+      tl.to(".b2-word:not([data-we='2'])", {
+        opacity: 0, y: -25, stagger: 0.04, duration: 0.6, ease: "power2.in",
+      }, "t23");
 
-            if (newIndex === 2) {
-              gsap.fromTo(".b3-scroll-hint", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 1.0 });
-            }
+      // 플로팅 We → 화면 중앙 (3D)
+      tl.to(fw, {
+        x: cx, y: cy, scale: 1.15,
+        rotationY: 14,
+        filter: "drop-shadow(10px 22px 32px rgba(0,0,0,0.38))",
+        duration: 0.8, ease: "power2.inOut",
+      }, "t23+=0.1");
 
-            return;
-          }
-        }
+      // 비디오2 직사각형 열림
+      tl.set(video1Ref.current, { display: "none"  }, "t23+=0.3");
+      tl.set(video2Ref.current, { display: "block" }, "t23+=0.3");
+      tl.to(vo, {
+        clipPath: "inset(28% 8% 28% 8%)",
+        duration: 0.7, ease: "power2.out",
+      }, "t23+=0.4");
 
-        // ── 일반 전환 (후진 or fallback) ──────────────────────────────
-        const tl = gsap.timeline({ onComplete: onDone });
-        tl.to(sliderRef.current, { yPercent: -newIndex * 100, duration: 1.5, ease: "power4.inOut" }, 0);
-        tl.to(".b1-word, .b2-word, .b3-word", { opacity: 0, y: -20, duration: 0.4 }, 0);
-        tl.to(".b3-scroll-hint", { opacity: 0, duration: 0.2 }, 0);
+      // 슬라이더 이동
+      tl.to(sliderRef.current, {
+        yPercent: -200, duration: 1.4, ease: "power3.inOut",
+      }, "t23+=0.5");
 
-        const staggerAmt = newIndex === 1 ? 0.4 : 0.6;
-        const dur        = newIndex === 1 ? 0.9 : 1.0;
-        tl.fromTo(
-          `.b${newIndex + 1}-word`,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: dur, stagger: { amount: staggerAmt, from: "random" }, ease: "power2.out" },
-          0.4
-        );
+      // 플로팅 We → B3 착지
+      tl.to(fw, {
+        x: b3x, y: b3y, scale: 1,
+        rotationY: 0,
+        filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+        duration: 0.8, ease: "power2.inOut",
+      }, "t23+=0.9");
 
-        if (newIndex === 2) {
-          gsap.fromTo(".b3-scroll-hint", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 1.0 });
-        }
-      };
+      // 비디오 닫힘
+      tl.to(vo, {
+        clipPath: "inset(50% 50% 50% 50%)",
+        duration: 0.7, ease: "power2.in",
+      }, "t23+=1.1");
 
-      const stickyParent = containerRef.current?.parentElement;
+      tl.set(fw,   { opacity: 0 }, "t23+=1.7");
+      tl.set(weB3, { opacity: 1 }, "t23+=1.7");
+
+      // B3 단어 입장
+      tl.to(".b3-word:not([data-we='3'])", {
+        opacity: 1, y: 0,
+        stagger: { amount: 0.5, from: "random" },
+        duration: 1.0, ease: "power2.out",
+      }, "t23+=1.8");
+
+      tl.to(".b3-scroll-hint", {
+        opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
+      }, "t23+=2.6");
+
+      tl.to({}, { duration: 0.5 });
+
+      // ── ScrollTrigger ─────────────────────────────────────────
+      const stickyParent = section.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
 
-      Observer.create({
-        target: window,
-        type: "wheel,touch,pointer",
-        onDown: (self) => {
-          if (!isAnimating.current && currentIndex.current < 2) {
-            self.event.preventDefault();
-            animateTo(currentIndex.current + 1);
-          }
-        },
-        onUp: (self) => {
-          if (!isAnimating.current && currentIndex.current > 0 && window.scrollY < 10) {
-            self.event.preventDefault();
-            animateTo(currentIndex.current - 1);
-          }
-        },
-        tolerance: 5,
-        preventDefault: false,
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "+=4500",
+        pin: true,
+        scrub: 1,
+        animation: tl,
+        invalidateOnRefresh: true,
       });
     }, containerRef);
 
-    return () => {
-      exitTriggerRef.current?.kill();
-      ctx.revert();
-      document.querySelectorAll("[data-floating-we]").forEach(el => el.remove());
-      const lenis = window.__lenis;
-      if (lenis) lenis.start();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => ctx.revert();
+  }, [mounted]);
 
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
@@ -301,36 +277,41 @@ export const HeroSectionV2 = () => {
           className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference"
         >
           <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-white/50">Seoul, Korea</span>
-          <span ref={timeDisplayRef} className="font-inter font-bold text-[20px] md:text-[28px] lg:text-[28px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00:00:00</span>
+          <span ref={timeDisplayRef} className="font-inter font-bold text-[20px] md:text-[28px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00:00:00</span>
         </div>,
         document.body
       )}
 
-      {/* 비디오 오버레이 포탈 */}
+      {/* 비디오 오버레이 + 플로팅 We 포탈 */}
       {mounted && createPortal(
-        <div
-          ref={videoOverlayRef}
-          className="fixed inset-0 pointer-events-none z-[500]"
-          style={{ clipPath: "circle(0% at 50% 50%)" }}
-        >
-          <video
-            ref={video1Ref}
-            src="/videos/videos_01.mp4"
-            className="w-full h-full object-cover"
-            muted
-            playsInline
-            preload="auto"
-          />
-          <video
-            ref={video2Ref}
-            src="/videos/videos_02.mp4"
-            className="w-full h-full object-cover"
-            style={{ display: "none" }}
-            muted
-            playsInline
-            preload="auto"
-          />
-        </div>,
+        <>
+          <div
+            ref={videoOverlayRef}
+            className="fixed inset-0 pointer-events-none z-[500]"
+            style={{ clipPath: "inset(50% 50% 50% 50%)" }}
+          >
+            <video
+              ref={video1Ref}
+              src="/videos/videos_01.mp4"
+              className="w-full h-full object-cover"
+              muted playsInline autoPlay loop preload="auto"
+            />
+            <video
+              ref={video2Ref}
+              src="/videos/videos_02.mp4"
+              className="w-full h-full object-cover"
+              style={{ display: "none" }}
+              muted playsInline autoPlay loop preload="auto"
+            />
+          </div>
+          <div
+            ref={floatingWeRef}
+            className="fixed top-0 left-0 pointer-events-none z-[5001] font-inter tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft"
+            style={{ opacity: 0, whiteSpace: "nowrap", willChange: "transform, filter" }}
+          >
+            We
+          </div>
+        </>,
         document.body
       )}
 
@@ -384,7 +365,7 @@ export const HeroSectionV2 = () => {
           </div>
         </div>
 
-        {/* Block 2 - 데스크톱 전용 */}
+        {/* Block 2 — 데스크톱 전용 */}
         <div className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
             <div className="py-0.5 md:py-1">
@@ -404,7 +385,7 @@ export const HeroSectionV2 = () => {
             <div className="py-0.5 md:py-1">
               {"operation, and consulting.".split(" ").map((word, k) => (
                 <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
+                  <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0">{word}</span>
                 </span>
               ))}
             </div>
@@ -420,7 +401,7 @@ export const HeroSectionV2 = () => {
           </div>
         </div>
 
-        {/* Block 3 - 데스크톱 전용 */}
+        {/* Block 3 — 데스크톱 전용 */}
         <div id="hero-b3-content" ref={b3ContentRef} className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding gap-5 md:gap-6 will-change-transform">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(60px,5.5vw,90px)]">
             <div className="py-0.5 md:py-1">
