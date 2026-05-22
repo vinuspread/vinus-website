@@ -61,7 +61,6 @@ export const HeroSectionV2 = () => {
     if (isMobile) {
       const lenis = window.__lenis;
       if (lenis) lenis.start();
-      gsap.set(sliderRef.current, { yPercent: -200 });
       gsap.fromTo(".b3-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" });
       const stickyParent = containerRef.current?.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
@@ -279,7 +278,7 @@ export const HeroSectionV2 = () => {
 
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
         {/* Block 1 */}
-        <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8">
+        <div className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding gap-6 md:gap-8">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
             {B1_LINES.map((line, i) => (
               <div key={i} className="py-0.5 md:py-1">
@@ -313,7 +312,7 @@ export const HeroSectionV2 = () => {
         </div>
 
         {/* Block 2 */}
-        <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
+        <div className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
             {/* Line 1 */}
             <div className="py-0.5 md:py-1">
