@@ -52,7 +52,7 @@ export const HeroSectionV2 = () => {
     const updateTime = () => {
       if (!timeDisplayRef.current) return;
       const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
-      timeDisplayRef.current.textContent = `${pad(now.getHours())} : ${pad(now.getMinutes())} : ${pad(now.getSeconds())}`;
+      timeDisplayRef.current.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     };
     updateTime();
     const timer = setInterval(updateTime, 1000);
@@ -277,7 +277,7 @@ export const HeroSectionV2 = () => {
           className="fixed top-[70px] md:top-[80px] right-page-padding z-[9999] flex flex-col items-end pointer-events-none mix-blend-difference"
         >
           <span className="font-inter font-bold text-[12px] tracking-normal uppercase text-white/50">Seoul, Korea</span>
-          <span ref={timeDisplayRef} className="font-inter font-bold text-[20px] md:text-[28px] lg:text-[28px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00 : 00 : 00</span>
+          <span ref={timeDisplayRef} className="font-inter font-bold text-[20px] md:text-[28px] lg:text-[28px] tabular-nums tracking-[-0.02em] uppercase text-white mt-1">00:00:00</span>
         </div>,
         document.body
       )}
