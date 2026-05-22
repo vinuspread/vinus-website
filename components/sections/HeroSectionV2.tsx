@@ -319,30 +319,30 @@ export const HeroSectionV2 = () => {
         {/* Block 2 */}
         <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
           <div className="font-inter uppercase leading-[0.95] lg:leading-[0.85] tracking-[-0.03em] lg:tracking-[-0.06em] text-mine-shaft">
-            {/* Line 1: "We focus on" */}
+            {/* Line 1 */}
             <div className="py-1 md:py-2 overflow-hidden">
               <div ref={b2Line1Ref} className="inline-block whitespace-nowrap">
-                {"We focus on".split(" ").map((word, j) => (
+                {"We take responsibility for".split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                     <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
                   </span>
                 ))}
               </div>
             </div>
-            {/* Line 2: "the essential value of" */}
+            {/* Line 2 */}
             <div className="py-1 md:py-2 overflow-hidden">
               <div ref={b2Line2Ref} className="inline-block whitespace-nowrap">
-                {"the essential value of".split(" ").map((word, j) => (
+                {"design, planning, development,".split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                     <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
                   </span>
                 ))}
               </div>
             </div>
-            {/* Line 3: "PRODUCT EXPERIENCE." highlight */}
+            {/* Line 3 */}
             <div className="py-1 md:py-2 overflow-hidden">
               <div ref={b2HighlightRef} className="inline-block whitespace-nowrap">
-                {"PRODUCT EXPERIENCE.".split(" ").map((word, k) => (
+                {"operation, and consulting.".split(" ").map((word, k) => (
                   <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                     <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
                   </span>
@@ -352,7 +352,7 @@ export const HeroSectionV2 = () => {
           </div>
           <div className="mt-4 md:mt-6">
             <p className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6]">
-              {"우리는 의미 있는 제품 경험의 본질에 집중합니다.".split(" ").map((word, i) => (
+              {"우리는 디자인과 기획, 개발과 운영 그리고 컨설팅을 책임집니다.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b2-word inline-block translate-y-[100%] opacity-0">
                     {word}
@@ -367,7 +367,7 @@ export const HeroSectionV2 = () => {
         <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center px-page-padding gap-5 md:gap-6 will-change-transform">
           <div className="font-inter leading-[1.2] md:leading-[1.05] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(32px,5.5vw,68px)]">
             <div className="py-0.5 md:py-1">
-              {"We turn product thinking into experience.".split(" ").map((word, i) => (
+              {"We work alongside our clients, designing".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b3-word inline-block translate-y-[100%] opacity-0">
                     {word}
@@ -376,7 +376,7 @@ export const HeroSectionV2 = () => {
               ))}
             </div>
             <div className="py-0.5 md:py-1">
-              {"Structured for clarity and sustainable growth.".split(" ").map((word, i) => (
+              {"sustainable growth on a foundation of clarity.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b3-word inline-block translate-y-[100%] opacity-0">
                     {word}
@@ -385,7 +385,7 @@ export const HeroSectionV2 = () => {
               ))}
             </div>
             <div className="py-0.5 md:py-1">
-              {"VINUSPREAD.".split(" ").map((word, i) => (
+              {"We are VINUSPREAD.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
                   <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">
                     {word}
@@ -397,8 +397,7 @@ export const HeroSectionV2 = () => {
           <div className="py-1">
             <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
               {[
-                "우리는 제품 관점을 경험으로 만듭니다. 명확한 구조 위에서, 지속 가능한 성장을 설계합니다.",
-                "VINUSPREAD"
+                "우리는 고객과 함께, 명확한 구조 위에서 지속 가능한 성장을 설계합니다."
               ].map((line, i) => (
                 <div key={i} className="py-0.5">
                   {line.split(" ").map((word, j) => (
