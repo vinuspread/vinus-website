@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 const clientLogos = Array.from({ length: 28 }, (_, i) => ({
   name: `client-${String(i + 1).padStart(2, "0")}`,
-  src: `/images/logos/logo${String(i + 1).padStart(2, "0")}.svg`,
+  src: `/images/logos/logo${String(i + 1).padStart(2, "0")}.jpg`,
 }));
 
 const brands = [
