@@ -58,12 +58,12 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
 
       gsap.to(slider, {
         x: () => -getMaxScroll(),
-        ease: "power1.inOut",
+        ease: "none",
         scrollTrigger: {
           trigger: container,
-          start: "center center",
-          end: () => `+=${getMaxScroll() * 1.2}`,
-          scrub: 2,
+          start: "top top",
+          end: () => `+=${getMaxScroll()}`,
+          scrub: 1,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
