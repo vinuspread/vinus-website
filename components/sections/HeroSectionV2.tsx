@@ -26,9 +26,6 @@ export const HeroSectionV2 = () => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const b3ContentRef = useRef<HTMLDivElement>(null);
-  const b2Line1Ref = useFitText();
-  const b2Line2Ref = useFitText();
-  const b2HighlightRef = useFitText();
   const [, setIndexState] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
@@ -318,36 +315,30 @@ export const HeroSectionV2 = () => {
 
         {/* Block 2 */}
         <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
-          <div className="font-inter uppercase leading-[0.95] lg:leading-[0.85] tracking-[-0.03em] lg:tracking-[-0.06em] text-mine-shaft">
+          <div className="font-inter leading-[1.2] md:leading-[1.05] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(32px,5.5vw,68px)]">
             {/* Line 1 */}
-            <div className="py-1 md:py-2 overflow-hidden">
-              <div ref={b2Line1Ref} className="inline-block whitespace-nowrap">
-                {"We take responsibility for".split(" ").map((word, j) => (
-                  <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
-                    <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
-                  </span>
-                ))}
-              </div>
+            <div className="py-0.5 md:py-1 overflow-hidden">
+              {"We take responsibility for".split(" ").map((word, j) => (
+                <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
+                  <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                </span>
+              ))}
             </div>
             {/* Line 2 */}
-            <div className="py-1 md:py-2 overflow-hidden">
-              <div ref={b2Line2Ref} className="inline-block whitespace-nowrap">
-                {"design, planning, development,".split(" ").map((word, j) => (
-                  <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
-                    <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
-                  </span>
-                ))}
-              </div>
+            <div className="py-0.5 md:py-1 overflow-hidden">
+              {"design, planning, development,".split(" ").map((word, j) => (
+                <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
+                  <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                </span>
+              ))}
             </div>
             {/* Line 3 */}
-            <div className="py-1 md:py-2 overflow-hidden">
-              <div ref={b2HighlightRef} className="inline-block whitespace-nowrap">
-                {"operation, and consulting.".split(" ").map((word, k) => (
-                  <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
-                    <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
-                  </span>
-                ))}
-              </div>
+            <div className="py-0.5 md:py-1 overflow-hidden">
+              {"operation, and consulting.".split(" ").map((word, k) => (
+                <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip" }}>
+                  <span className="b2-word inline-block font-bold translate-y-[100%] opacity-0 text-mine-shaft">{word}</span>
+                </span>
+              ))}
             </div>
           </div>
           <div className="mt-4 md:mt-6">
