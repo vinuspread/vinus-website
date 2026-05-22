@@ -250,7 +250,7 @@ img + div[style*="position: absolute"] { display: none !important; }
 
 @utility display-heading {
   font-family: var(--font-inter);
-  font-size: clamp(40px, 6vw, 64px);
+  font-size: clamp(40px, 6vw, 72px);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.04em;
