@@ -357,7 +357,7 @@ export const HeroSectionV2 = () => {
         <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-5 md:gap-6 will-change-transform">
           <div className="font-inter leading-[1.2] md:leading-[1.05] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(32px,5.5vw,68px)]">
             <div className="py-0.5 md:py-1">
-              {"We work alongside our clients, designing".split(" ").map((word, i) => (
+              {"We work with our clients to design".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
                   <span className="b3-word inline-block translate-y-[100%] opacity-0">
                     {word}
@@ -366,7 +366,7 @@ export const HeroSectionV2 = () => {
               ))}
             </div>
             <div className="py-0.5 md:py-1">
-              {"sustainable growth on a foundation of clarity.".split(" ").map((word, i) => (
+              {"sustainable growth on clear structure.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
                   <span className="b3-word inline-block translate-y-[100%] opacity-0">
                     {word}
