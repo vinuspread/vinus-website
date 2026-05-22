@@ -61,7 +61,7 @@ export const HeroSectionV2 = () => {
     if (isMobile) {
       const lenis = window.__lenis;
       if (lenis) lenis.start();
-      gsap.fromTo(".b3-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" });
+      gsap.fromTo(".b1-word", { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" });
       const stickyParent = containerRef.current?.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
       return;
@@ -278,7 +278,7 @@ export const HeroSectionV2 = () => {
 
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
         {/* Block 1 */}
-        <div className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding gap-6 md:gap-8">
+        <div className="flex w-full h-full flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
             {B1_LINES.map((line, i) => (
               <div key={i} className="py-0.5 md:py-1">
@@ -307,6 +307,21 @@ export const HeroSectionV2 = () => {
                   ))}
                 </div>
               ))}
+            </div>
+          </div>
+          {/* 모바일 전용 링크 */}
+          <div className="lg:hidden py-2">
+            <div className="flex flex-col gap-6 items-start">
+              <span className="overflow-hidden">
+                <span className="b1-word inline-block translate-y-[100%] opacity-0">
+                  <ArrowLink href="/work" className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
+                </span>
+              </span>
+              <span className="overflow-hidden">
+                <span className="b1-word inline-block translate-y-[100%] opacity-0">
+                  <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
+                </span>
+              </span>
             </div>
           </div>
         </div>
@@ -352,8 +367,8 @@ export const HeroSectionV2 = () => {
           </div>
         </div>
 
-        {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
-        <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-5 md:gap-6 will-change-transform">
+        {/* Block 3 - 데스크톱 전용 */}
+        <div id="hero-b3-content" ref={b3ContentRef} className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding gap-5 md:gap-6 will-change-transform">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(60px,5.5vw,90px)]">
             <div className="py-0.5 md:py-1">
               {"We work with our clients to design".split(" ").map((word, i) => (
