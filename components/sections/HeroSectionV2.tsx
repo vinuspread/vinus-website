@@ -62,20 +62,19 @@ export const HeroSectionV2 = () => {
       const section = containerRef.current;
       if (!section) return;
 
-      // 초기 상태
-      gsap.set(".b1-word, .b2-word, .b3-word", { opacity: 0, y: 30 });
+      // 초기 상태 — B2/B3만 숨김, B1은 별도 로드 애니메이션으로 처리
+      gsap.set(".b2-word, .b3-word", { opacity: 0, y: 30 });
       gsap.set(".b3-scroll-hint", { opacity: 0, y: 8 });
       gsap.set(sliderRef.current, { yPercent: 0 });
 
-      const tl = gsap.timeline();
+      // B1 로드 입장 (스크롤 무관, 페이지 진입 시 바로 실행)
+      gsap.fromTo(".b1-word",
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, stagger: { amount: 0.5, from: "random" }, duration: 1.0, delay: 0.6, ease: "power2.out" }
+      );
 
-      // ── B1 입장 ──
-      tl.to(".b1-word", {
-        opacity: 1, y: 0,
-        stagger: { amount: 0.5, from: "random" },
-        duration: 1.0, ease: "power2.out",
-      }, 0);
-      tl.to({}, { duration: 0.6 });
+      const tl = gsap.timeline();
+      tl.to({}, { duration: 0.8 }); // B1 노출 상태 유지 구간
 
       // ── B1 → B2 ──
       tl.addLabel("t12");
