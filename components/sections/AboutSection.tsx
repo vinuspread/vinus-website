@@ -58,12 +58,12 @@ export const AboutSection = () => {
       tl.to(clip1Ref.current,  { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 }, 0)
         .to(scale1Ref.current, { scale: 1, duration: 1.2 }, 0);
 
-      // 2. 텍스트 순차 등장
-      tl.to(".about-text-item", { opacity: 1, y: 0, stagger: 0.18, duration: 0.9 }, 0.6);
-
-      // 3. 이미지 2 입장
+      // 2. 이미지 2 입장
       tl.to(clip2Ref.current,  { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 }, 1.0)
         .to(scale2Ref.current, { scale: 1, duration: 1.2 }, 1.0);
+
+      // 3. 텍스트 순차 등장 (이미지2 절반 노출 후)
+      tl.to(".about-text-item", { opacity: 1, y: 0, stagger: 0.18, duration: 0.9 }, 1.6);
 
       // 4. 잠시 멈춤
       tl.to({}, { duration: 0.4 });
