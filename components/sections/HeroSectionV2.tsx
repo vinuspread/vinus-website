@@ -280,7 +280,7 @@ export const HeroSectionV2 = () => {
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
         {/* Block 1 */}
         <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8">
-          <div className="font-inter leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(68px,5.5vw,100px)]">
+          <div className="font-inter leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
             {B1_LINES.map((line, i) => (
               <div key={i} className="py-0.5 md:py-1">
                 {line.text.split(" ").map((word, j) => (
@@ -314,7 +314,7 @@ export const HeroSectionV2 = () => {
 
         {/* Block 2 */}
         <div className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding">
-          <div className="font-inter leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(68px,5.5vw,100px)]">
+          <div className="font-inter leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
             {/* Line 1 */}
             <div className="py-0.5 md:py-1">
               {"We take responsibility for".split(" ").map((word, j) => (
