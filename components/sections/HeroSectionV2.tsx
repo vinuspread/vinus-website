@@ -13,33 +13,29 @@ const B1_LINES = [
   { text: "client products with AI.", bold: true },
 ];
 
-
-/**
- * HeroSectionV2 - Stable Stepped Version
- * Uses Observer for the premium "stepped" feel requested by the user.
- * Features a seamless "stacking" transition to the portfolio.
- * B3 exit: ScrollTrigger scrub animates B3 text upward as portfolio slides in.
- */
 export const HeroSectionV2 = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const metaRef = useRef<HTMLDivElement>(null);
-  const b3ContentRef = useRef<HTMLDivElement>(null);
+  const containerRef    = useRef<HTMLDivElement>(null);
+  const sliderRef       = useRef<HTMLDivElement>(null);
+  const metaRef         = useRef<HTMLDivElement>(null);
+  const b3ContentRef    = useRef<HTMLDivElement>(null);
+  const videoOverlayRef = useRef<HTMLDivElement>(null);
+  const video1Ref       = useRef<HTMLVideoElement>(null);
+  const video2Ref       = useRef<HTMLVideoElement>(null);
+
   const [, setIndexState] = useState(0);
   const [mounted, setMounted] = useState(false);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => setMounted(true), []);
 
-  // 시계 portal이 렌더된 후 초기 숨김 → 슬라이드 다운 + 페이드인
-  // gsap.set으로 초기 상태 설정 (React inline style 없이) → 리렌더에 영향받지 않음
   useEffect(() => {
     if (!mounted || !metaRef.current) return;
     gsap.set(metaRef.current, { opacity: 0, y: -14 });
     gsap.to(metaRef.current, { opacity: 1, y: 0, duration: 0.9, ease: "power2.out", delay: 0.4 });
   }, [mounted]);
-  const currentIndex = useRef(0);
-  const isAnimating = useRef(false);
+
+  const currentIndex  = useRef(0);
+  const isAnimating   = useRef(false);
   const exitTriggerRef = useRef<ScrollTrigger | null>(null);
 
   useEffect(() => {
@@ -57,7 +53,6 @@ export const HeroSectionV2 = () => {
   useLayoutEffect(() => {
     const isMobile = window.matchMedia("(max-width: 1024px)").matches || ('ontouchstart' in window);
 
-    // 모바일: stepped navigation 없이 B3 상태로 바로 시작 + lenis 유지
     if (isMobile) {
       const lenis = window.__lenis;
       if (lenis) lenis.start();
@@ -68,51 +63,26 @@ export const HeroSectionV2 = () => {
     }
 
     const ctx = gsap.context(() => {
-      // 1. Initial Reveals
       gsap.fromTo(
         ".b1-word",
         { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          stagger: { amount: 0.6, from: "random" },
-          duration: 1.0,
-          delay: 0.6,
-          ease: "power2.out",
-        }
+        { opacity: 1, y: 0, stagger: { amount: 0.6, from: "random" }, duration: 1.0, delay: 0.6, ease: "power2.out" }
       );
 
-      // B3 exit ScrollTrigger: syncs with window scroll 0 → 100vh
-      // As the portfolio rises from below, B3 text rises and fades out simultaneously
       const registerExitTrigger = () => {
-        if (exitTriggerRef.current) {
-          exitTriggerRef.current.kill();
-          exitTriggerRef.current = null;
-        }
+        if (exitTriggerRef.current) { exitTriggerRef.current.kill(); exitTriggerRef.current = null; }
         if (!b3ContentRef.current) return;
-
-        // Reset position before registering
         gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
         if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
-
         const exitAnim = gsap.timeline({ paused: true });
-        exitAnim.to(b3ContentRef.current, {
-          y: -window.innerHeight, // 포트폴리오가 올라오는 만큼 똑같이 위로 이동
-          opacity: 1, // 사라지지 않고 포트폴리오에 가려질 때까지 유지
-          ease: "none",
-        }, 0);
-
-        // Trigger-less: directly watches scroll position 0 → 100vh
-        // Hero is sticky so at scrollY=0 portfolio is just below viewport,
-        // at scrollY=100vh portfolio top reaches viewport top
+        exitAnim.to(b3ContentRef.current, { y: -window.innerHeight, opacity: 1, ease: "none" }, 0);
         exitTriggerRef.current = ScrollTrigger.create({
           id: "hero-b3-exit",
           start: 0,
-          end: window.innerHeight, // 100vh 구간 동안 텍스트 퇴장 및 포트폴리오 진입 동기화
+          end: window.innerHeight,
           scrub: 1,
           animation: exitAnim,
           onUpdate: (self) => {
-            // Safety: if user hasn't scrolled yet, keep B3 visible
             if (self.progress === 0) {
               gsap.set(b3ContentRef.current!, { y: 0, opacity: 1 });
               if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
@@ -122,17 +92,9 @@ export const HeroSectionV2 = () => {
       };
 
       const killExitTrigger = () => {
-        if (exitTriggerRef.current) {
-          exitTriggerRef.current.kill();
-          exitTriggerRef.current = null;
-        }
-        // Reset visual state
-        if (b3ContentRef.current) {
-          gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
-        }
-        if (metaRef.current) {
-          gsap.set(metaRef.current, { y: 0, opacity: 1 });
-        }
+        if (exitTriggerRef.current) { exitTriggerRef.current.kill(); exitTriggerRef.current = null; }
+        if (b3ContentRef.current) gsap.set(b3ContentRef.current, { y: 0, opacity: 1 });
+        if (metaRef.current) gsap.set(metaRef.current, { y: 0, opacity: 1 });
       };
 
       const animateTo = (newIndex: number) => {
@@ -141,97 +103,161 @@ export const HeroSectionV2 = () => {
 
         const lenis = window.__lenis;
         if (lenis && newIndex < 2) lenis.stop();
+        if (currentIndex.current === 2 && newIndex < 2) killExitTrigger();
 
-        // If going back from B3, kill exit trigger
-        if (currentIndex.current === 2 && newIndex < 2) {
-          killExitTrigger();
+        const oldIndex  = currentIndex.current;
+        const isForward = newIndex > oldIndex;
+
+        const onDone = () => {
+          isAnimating.current = false;
+          currentIndex.current = newIndex;
+          setIndexState(newIndex);
+          if (lenis && newIndex === 2) { lenis.start(); registerExitTrigger(); }
+        };
+
+        const stickyParent = containerRef.current?.parentElement;
+        if (stickyParent) gsap.set(stickyParent, { zIndex: newIndex === 2 ? 10 : 30 });
+
+        // ── We 전환 + 비디오 (전진 시만) ──────────────────────────────
+        if (isForward && videoOverlayRef.current) {
+          const weFromEl = document.querySelector(`[data-we="${oldIndex + 1}"]`) as HTMLElement | null;
+          const weToEl   = document.querySelector(`[data-we="${newIndex + 1}"]`) as HTMLElement | null;
+
+          if (weFromEl && weToEl) {
+            const fromRect = weFromEl.getBoundingClientRect();
+            const toRect   = weToEl.getBoundingClientRect();
+
+            // 슬라이더 이동 후 target "We"의 실제 화면 좌표
+            const targetX = toRect.left;
+            const targetY = toRect.top - (newIndex - oldIndex) * window.innerHeight;
+
+            // 플로팅 "We" 생성
+            const computed  = window.getComputedStyle(weFromEl);
+            const floatingWe = document.createElement("div");
+            floatingWe.textContent = "We";
+            floatingWe.setAttribute("data-floating-we", "true");
+            Object.assign(floatingWe.style, {
+              position:      "fixed",
+              top:           "0",
+              left:          "0",
+              fontFamily:    computed.fontFamily,
+              fontSize:      computed.fontSize,
+              fontWeight:    computed.fontWeight,
+              letterSpacing: computed.letterSpacing,
+              color:         computed.color,
+              lineHeight:    "1",
+              zIndex:        "5001",
+              pointerEvents: "none",
+              whiteSpace:    "nowrap",
+            });
+            document.body.appendChild(floatingWe);
+            gsap.set(floatingWe, {
+              x: fromRect.left,
+              y: fromRect.top,
+              transformPerspective: 900,
+              rotationY: 0,
+              filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+            });
+
+            gsap.set(weFromEl, { opacity: 0 });
+            gsap.set(weToEl,   { opacity: 0 });
+
+            // 화면 중앙 좌표 (We 크기 기준)
+            const cx = window.innerWidth  / 2 - fromRect.width  / 2;
+            const cy = window.innerHeight / 2 - fromRect.height / 2;
+
+            // 비디오 준비
+            const videoEl      = newIndex === 1 ? video1Ref.current : video2Ref.current;
+            const otherVideoEl = newIndex === 1 ? video2Ref.current : video1Ref.current;
+            if (videoEl) {
+              videoEl.style.display = "block";
+              if (otherVideoEl) otherVideoEl.style.display = "none";
+              videoEl.currentTime = 0;
+              videoEl.play().catch(() => {});
+            }
+
+            const tl = gsap.timeline({ onComplete: onDone });
+
+            // 슬라이더 이동
+            tl.to(sliderRef.current, { yPercent: -newIndex * 100, duration: 1.5, ease: "power4.inOut" }, 0);
+
+            // We 외 단어 퇴장
+            tl.to(`.b${oldIndex + 1}-word:not([data-we="${oldIndex + 1}"])`, { opacity: 0, y: -20, duration: 0.35 }, 0);
+            tl.to(".b3-scroll-hint", { opacity: 0, duration: 0.2 }, 0);
+
+            // We → 화면 중앙 (3D 회전 + 그림자 강조)
+            tl.to(floatingWe, {
+              x: cx, y: cy, scale: 1.15,
+              rotationY: 14,
+              filter: "drop-shadow(10px 22px 32px rgba(0,0,0,0.38))",
+              duration: 0.5, ease: "power2.in",
+            }, 0.08);
+
+            // 비디오 열림
+            tl.fromTo(
+              videoOverlayRef.current,
+              { clipPath: "circle(0% at 50% 50%)" },
+              { clipPath: "circle(40% at 50% 50%)", duration: 0.38, ease: "power2.out" },
+              0.18
+            );
+
+            // We → 착지 (3D 복귀 + 그림자 소멸)
+            tl.to(floatingWe, {
+              x: targetX, y: targetY, scale: 1,
+              rotationY: 0,
+              filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))",
+              duration: 0.5, ease: "power2.out",
+              onComplete: () => {
+                gsap.set(weToEl, { opacity: 1 });
+                if (document.body.contains(floatingWe)) document.body.removeChild(floatingWe);
+              }
+            }, 0.62);
+
+            // 비디오 닫힘
+            tl.to(videoOverlayRef.current, {
+              clipPath: "circle(0% at 50% 50%)",
+              duration: 0.38, ease: "power2.in",
+              onComplete: () => { if (videoEl) videoEl.pause(); }
+            }, 0.62);
+
+            // 새 섹션 단어 등장 (We 제외)
+            const staggerAmt = newIndex === 1 ? 0.4 : 0.6;
+            const dur        = newIndex === 1 ? 0.9 : 1.0;
+            tl.fromTo(
+              `.b${newIndex + 1}-word:not([data-we="${newIndex + 1}"])`,
+              { opacity: 0, y: 30 },
+              { opacity: 1, y: 0, duration: dur, stagger: { amount: staggerAmt, from: "random" }, ease: "power2.out" },
+              0.85
+            );
+
+            if (newIndex === 2) {
+              gsap.fromTo(".b3-scroll-hint", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 1.0 });
+            }
+
+            return;
+          }
         }
 
-        const tl = gsap.timeline({
-          onComplete: () => {
-            isAnimating.current = false;
-            currentIndex.current = newIndex;
-            setIndexState(newIndex);
-
-            // B3 도달 → lenis 시작, content-container가 자연스럽게 올라오며 B3를 덮음
-            if (lenis && newIndex === 2) {
-              lenis.start();
-              registerExitTrigger();
-            }
-          }
-        });
-
+        // ── 일반 전환 (후진 or fallback) ──────────────────────────────
+        const tl = gsap.timeline({ onComplete: onDone });
         tl.to(sliderRef.current, { yPercent: -newIndex * 100, duration: 1.5, ease: "power4.inOut" }, 0);
-        
-        // 이전 모든 슬라이드 텍스트 일괄 퇴장 처리
         tl.to(".b1-word, .b2-word, .b3-word", { opacity: 0, y: -20, duration: 0.4 }, 0);
         tl.to(".b3-scroll-hint", { opacity: 0, duration: 0.2 }, 0);
 
-        const isB1 = newIndex === 0;
-        const isB2 = newIndex === 1;
-        const isB3 = newIndex === 2;
+        const staggerAmt = newIndex === 1 ? 0.4 : 0.6;
+        const dur        = newIndex === 1 ? 0.9 : 1.0;
+        tl.fromTo(
+          `.b${newIndex + 1}-word`,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: dur, stagger: { amount: staggerAmt, from: "random" }, ease: "power2.out" },
+          0.4
+        );
 
-        if (isB1) {
-          // B1: 단어별로 랜덤하게 등장
-          tl.fromTo(
-            ".b1-word",
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1.0,
-              stagger: { amount: 0.6, from: "random" },
-              ease: "power2.out",
-            },
-            0.4
-          );
-        } else if (isB2) {
-          tl.fromTo(
-            ".b2-word",
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.9,
-              stagger: { amount: 0.4, from: "random" },
-              ease: "power2.out",
-            },
-            0.4
-          );
-        } else if (isB3) {
-          // B3: 단어별로 랜덤하게 등장
-          tl.fromTo(
-            ".b3-word",
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 1.0,
-              stagger: { amount: 0.6, from: "random" },
-              ease: "power2.out",
-            },
-            0.4
-          );
-          // Scroll hint fade in (타임라인 밖 — isAnimating 해제에 영향 없음)
-          gsap.fromTo(
-            ".b3-scroll-hint",
-            { opacity: 0, y: 8 },
-            { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 1.0 }
-          );
-        }
-
-        // Stacking Sync: Manage the sticky parent's z-index to allow Portfolio to cover at the right time
-        const stickyParent = containerRef.current?.parentElement;
-        if (stickyParent) {
-          if (newIndex === 2) {
-            gsap.set(stickyParent, { zIndex: 10 });
-          } else {
-            gsap.set(stickyParent, { zIndex: 30 });
-          }
+        if (newIndex === 2) {
+          gsap.fromTo(".b3-scroll-hint", { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out", delay: 1.0 });
         }
       };
 
-      // Initial Parent Z-Index
       const stickyParent = containerRef.current?.parentElement;
       if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
 
@@ -254,9 +280,11 @@ export const HeroSectionV2 = () => {
         preventDefault: false,
       });
     }, containerRef);
+
     return () => {
       exitTriggerRef.current?.kill();
       ctx.revert();
+      document.querySelectorAll("[data-floating-we]").forEach(el => el.remove());
       const lenis = window.__lenis;
       if (lenis) lenis.start();
     };
@@ -265,6 +293,8 @@ export const HeroSectionV2 = () => {
 
   return (
     <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
+
+      {/* 시계 포탈 */}
       {mounted && createPortal(
         <div
           ref={metaRef}
@@ -276,7 +306,36 @@ export const HeroSectionV2 = () => {
         document.body
       )}
 
+      {/* 비디오 오버레이 포탈 */}
+      {mounted && createPortal(
+        <div
+          ref={videoOverlayRef}
+          className="fixed inset-0 pointer-events-none z-[500]"
+          style={{ clipPath: "circle(0% at 50% 50%)" }}
+        >
+          <video
+            ref={video1Ref}
+            src="/videos/videos_01.mp4"
+            className="w-full h-full object-cover"
+            muted
+            playsInline
+            preload="auto"
+          />
+          <video
+            ref={video2Ref}
+            src="/videos/videos_02.mp4"
+            className="w-full h-full object-cover"
+            style={{ display: "none" }}
+            muted
+            playsInline
+            preload="auto"
+          />
+        </div>,
+        document.body
+      )}
+
       <div ref={sliderRef} className="relative w-full h-full will-change-transform">
+
         {/* Block 1 */}
         <div className="flex w-full h-full flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
@@ -284,7 +343,10 @@ export const HeroSectionV2 = () => {
               <div key={i} className="py-0.5 md:py-1">
                 {line.text.split(" ").map((word, j) => (
                   <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                    <span className={`b1-word inline-block translate-y-[100%] opacity-0 ${line.bold ? "font-bold" : "font-normal"}`}>
+                    <span
+                      className={`b1-word inline-block translate-y-[100%] opacity-0 ${line.bold ? "font-bold" : "font-normal"}`}
+                      {...(i === 0 && j === 0 ? { "data-we": "1" } : {})}
+                    >
                       {word}
                     </span>
                   </span>
@@ -294,15 +356,11 @@ export const HeroSectionV2 = () => {
           </div>
           <div className="mt-2 md:mt-4">
             <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]">
-              {[
-                "우리는 AI를 활용하여, 고객의 제품을 기획하고 만들고 운영하는 매니징 기업입니다."
-              ].map((line, i) => (
+              {["우리는 AI를 활용하여, 고객의 제품을 기획하고 만들고 운영하는 매니징 기업입니다."].map((line, i) => (
                 <div key={i} className="py-0.5">
                   {line.split(" ").map((word, j) => (
                     <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                      <span className="b1-word inline-block translate-y-[100%] opacity-0">
-                        {word}
-                      </span>
+                      <span className="b1-word inline-block translate-y-[100%] opacity-0">{word}</span>
                     </span>
                   ))}
                 </div>
@@ -326,18 +384,16 @@ export const HeroSectionV2 = () => {
           </div>
         </div>
 
-        {/* Block 2 */}
+        {/* Block 2 - 데스크톱 전용 */}
         <div className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding">
           <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
-            {/* Line 1 */}
             <div className="py-0.5 md:py-1">
               {"We take responsibility for".split(" ").map((word, j) => (
                 <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
+                  <span className="b2-word inline-block translate-y-[100%] opacity-0" {...(j === 0 ? { "data-we": "2" } : {})}>{word}</span>
                 </span>
               ))}
             </div>
-            {/* Line 2 */}
             <div className="py-0.5 md:py-1">
               {"design, planning, development,".split(" ").map((word, j) => (
                 <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
@@ -345,7 +401,6 @@ export const HeroSectionV2 = () => {
                 </span>
               ))}
             </div>
-            {/* Line 3 */}
             <div className="py-0.5 md:py-1">
               {"operation, and consulting.".split(" ").map((word, k) => (
                 <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
@@ -358,9 +413,7 @@ export const HeroSectionV2 = () => {
             <p className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6]">
               {"우리는 디자인과 기획, 개발과 운영 그리고 컨설팅을 책임집니다.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
+                  <span className="b2-word inline-block translate-y-[100%] opacity-0">{word}</span>
                 </span>
               ))}
             </p>
@@ -373,42 +426,32 @@ export const HeroSectionV2 = () => {
             <div className="py-0.5 md:py-1">
               {"We work with our clients to design".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
+                  <span className="b3-word inline-block translate-y-[100%] opacity-0" {...(i === 0 ? { "data-we": "3" } : {})}>{word}</span>
                 </span>
               ))}
             </div>
             <div className="py-0.5 md:py-1">
               {"sustainable growth on clear structure.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
+                  <span className="b3-word inline-block translate-y-[100%] opacity-0">{word}</span>
                 </span>
               ))}
             </div>
             <div className="py-0.5 md:py-1">
               {"We are VINUSPREAD.".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">
-                    {word}
-                  </span>
+                  <span className="b3-word inline-block font-bold translate-y-[100%] opacity-0">{word}</span>
                 </span>
               ))}
             </div>
           </div>
           <div className="py-1">
             <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
-              {[
-                "우리는 고객과 함께, 명확한 구조 위에서 지속 가능한 성장을 설계합니다."
-              ].map((line, i) => (
+              {["우리는 고객과 함께, 명확한 구조 위에서 지속 가능한 성장을 설계합니다."].map((line, i) => (
                 <div key={i} className="py-0.5">
                   {line.split(" ").map((word, j) => (
                     <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                      <span className="b3-word inline-block translate-y-[100%] opacity-0">
-                        {word}
-                      </span>
+                      <span className="b3-word inline-block translate-y-[100%] opacity-0">{word}</span>
                     </span>
                   ))}
                 </div>
@@ -429,13 +472,12 @@ export const HeroSectionV2 = () => {
               </span>
             </div>
           </div>
-
-          {/* Scroll hint */}
           <div className="absolute bottom-10 left-page-padding flex items-center gap-3 b3-scroll-hint opacity-0">
             <span className="w-6 h-[1px] bg-mine-shaft/40 block" />
             <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/40">Scroll to explore</span>
           </div>
         </div>
+
       </div>
     </div>
   );
