@@ -113,7 +113,7 @@ export const AboutSection = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-stretch">
 
         {/* Left: desktop */}
-        <div ref={leftColRef} className="hidden lg:block relative">
+        <div ref={leftColRef} className="hidden lg:block relative self-start">
           {/* 이미지 1 */}
           <div ref={clip1Ref} className="overflow-hidden aspect-[4/5] w-[65%] bg-gallery" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale1Ref} className="w-full h-full" style={{ scale: "1.2" }}>
