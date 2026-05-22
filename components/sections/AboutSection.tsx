@@ -69,7 +69,8 @@ export const AboutSection = () => {
       tl.to({}, { duration: 0.4 });
 
       // 5. 이미지2 퇴장: clip-path 아래에서 위로 접힘 (입장 반대)
-      tl.to(clip2Ref.current, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.0, ease: "power3.in" });
+      // 이미지2가 물리적으로 작아 같은 duration이면 더 빠르게 보임 → 보정
+      tl.to(clip2Ref.current, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.3, ease: "power3.in" });
 
       // 6. 이미지1 퇴장: clip-path 아래에서 위로 접힘
       tl.to(clip1Ref.current, { clipPath: "inset(0% 0% 100% 0%)", duration: 1.0, ease: "power3.in" });
