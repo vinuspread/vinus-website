@@ -9,10 +9,9 @@ import { ArrowLink } from "@/components/common/ArrowLink";
 import { useFitText } from "@/hooks/useFitText";
 
 const B1_LINES = [
-  { text: "In a fast-changing world,", bold: false },
-  { text: "we focus on the essential value of experience.", bold: false },
-  { text: "We design and manage products with clarity, structure, and purpose.", bold: false },
-  { text: "We are VINUSPREAD.", bold: true },
+  { text: "We are a product studio", bold: false },
+  { text: "that plans, builds, and operates", bold: false },
+  { text: "client products with AI.", bold: true },
 ];
 
 
@@ -301,9 +300,7 @@ export const HeroSectionV2 = () => {
           <div className="mt-2 md:mt-4">
             <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]">
               {[
-                "빠르게 변화하는 세상 속에서, 우리는 경험의 본질에 집중합니다.",
-                "명확한 구조와 목적을 바탕으로 제품을 설계하고 관리합니다.",
-                "우리는 VINUSPREAD 입니다."
+                "우리는 AI를 활용하여, 고객의 제품을 기획하고 만들고 운영하는 매니징 기업입니다."
               ].map((line, i) => (
                 <div key={i} className="py-0.5">
                   {line.split(" ").map((word, j) => (
