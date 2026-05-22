@@ -355,7 +355,7 @@ export const HeroSectionV2 = () => {
 
         {/* Block 3 - 화면 중앙에 배치, 간격 축소 */}
         <div id="hero-b3-content" ref={b3ContentRef} className="w-full h-full flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-5 md:gap-6 will-change-transform">
-          <div className="font-inter leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(80px,5.5vw,90px)]">
+          <div className="font-inter leading-[1.05] md:leading-[0.95] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(60px,5.5vw,90px)]">
             <div className="py-0.5 md:py-1">
               {"We work with our clients to design".split(" ").map((word, i) => (
                 <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
