@@ -303,7 +303,7 @@ img + div[style*="position: absolute"] { display: none !important; }
 
 @utility body-text-ko {
   font-family: var(--font-pretendard);
-  font-size: clamp(15px, 1.4vw, 18px);
+  font-size: clamp(15px, 1.4vw, 16px);
   font-weight: 500;
   line-height: 1.6;
   color: rgb(42 42 42 / 0.4);
