@@ -42,6 +42,8 @@ img + div[style*="position: absolute"] { display: none !important; }
   html, body {
     @apply bg-white text-mine-shaft antialiased overflow-x-hidden;
     font-family: var(--font-pretendard);
+    word-break: keep-all;
+    overflow-wrap: break-word;
   }
 
   h1, h2, h3, h4, h5, h6, .font-inter {
