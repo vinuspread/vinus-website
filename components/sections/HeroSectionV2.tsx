@@ -192,18 +192,17 @@ export const HeroSectionV2 = () => {
             0.4
           );
         } else if (isB2) {
-          // B2: 단어별로 훨씬 더 느리고 긴 호흡으로 등장
           tl.fromTo(
             ".b2-word",
-            { opacity: 0, y: 50 },
+            { opacity: 0, y: 30 },
             {
               opacity: 1,
               y: 0,
-              duration: 2.0, // 더 느리게
-              stagger: { amount: 1.5, from: "random" }, // 시간차 대폭 확장
+              duration: 0.9,
+              stagger: { amount: 0.4, from: "random" },
               ease: "power2.out",
             },
-            0.8 // 등장 딜레이 추가
+            0.4
           );
         } else if (isB3) {
           // B3: 단어별로 랜덤하게 등장

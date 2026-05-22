@@ -61,7 +61,7 @@ export const WorkGrid = ({ filter = "All", limit, isSlider: isSliderProp, marque
         ease: "power1.inOut",
         scrollTrigger: {
           trigger: container,
-          start: "top 80px",
+          start: "center center",
           end: () => `+=${getMaxScroll() * 1.2}`,
           scrub: 2,
           pin: true,
