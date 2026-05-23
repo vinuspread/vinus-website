@@ -1,6 +1,7 @@
 "use client";
 
-import { useReveal } from "@/hooks/useReveal";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 import { ListRow } from "@/components/common/ListRow";
 
 const awardsData = [
@@ -23,26 +24,55 @@ const awardsData = [
 ];
 
 export const AwardsSection = () => {
-  const ref = useReveal();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // ListRow 내부 anim-move-up CSS 초기 상태 오버라이드 (GSAP가 직접 제어)
+      gsap.set(section.querySelectorAll(".anim-move-up"), { opacity: 1, y: 0 });
+
+      // 초기 숨김
+      gsap.set(".awards-heading", { opacity: 0, y: 36 });
+      gsap.set(".awards-row",    { opacity: 0, y: 24 });
+
+      // 헤딩
+      gsap.to(".awards-heading", {
+        opacity: 1, y: 0,
+        duration: 1.0, ease: "power3.out",
+        scrollTrigger: { trigger: section, start: "top 80%" },
+      });
+
+      // 리스트 rows — stagger
+      gsap.to(".awards-row", {
+        opacity: 1, y: 0,
+        stagger: 0.13,
+        duration: 0.8, ease: "power2.out",
+        scrollTrigger: { trigger: section, start: "top 75%" },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section ref={ref as any} className="anim-wrap section-pad bg-white">
+    <section ref={sectionRef} className="section-pad bg-white">
       <div className="flex flex-col gap-12">
 
-        <h2 className="anim-move-up display-heading text-mine-shaft">
+        <h2 className="awards-heading display-heading text-mine-shaft" style={{ opacity: 0 }}>
           Awards & Recognitions.
         </h2>
 
         <div className="flex flex-col border-t border-alto">
-          {awardsData.map((award, idx) => (
-            <ListRow
-              key={award.name}
-              label={award.name}
-              detail={award.items.join(" - ")}
-              delay={idx * 60}
-            />
+          {awardsData.map((award) => (
+            <div key={award.name} className="awards-row" style={{ opacity: 0 }}>
+              <ListRow label={award.name} detail={award.items.join(" - ")} />
+            </div>
           ))}
         </div>
+
       </div>
     </section>
   );

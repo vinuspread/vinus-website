@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useReveal } from "@/hooks/useReveal";
+import { useLayoutEffect, useRef } from "react";
+import { gsap } from "@/lib/gsap";
 
 const slides = [
   { src: "https://picsum.photos/seed/s1/800/600", alt: "Project 1", wide: false },
@@ -15,10 +16,30 @@ const slides = [
 const marqueeSlides = [...slides, ...slides];
 
 export const ImageSliderSection = () => {
-  const revealRef = useReveal();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    gsap.set(section, { clipPath: "inset(100% 0 0 0)" });
+
+    gsap.to(section, {
+      clipPath: "inset(0% 0 0 0)",
+      duration: 1.2, ease: "power4.out",
+      scrollTrigger: {
+        trigger: section,
+        start: "top 88%",
+        toggleActions: "play none none none",
+      },
+    });
+  }, []);
 
   return (
-    <section ref={revealRef as any} className="anim-wrap bg-white border-b border-alto overflow-hidden h-[240px] md:h-[380px] lg:h-[500px] group/slider">
+    <section
+      ref={sectionRef}
+      className="bg-white border-b border-alto overflow-hidden h-[240px] md:h-[380px] lg:h-[500px] group/slider"
+    >
       <div className="h-full overflow-hidden">
         <div className="flex gap-4 h-full w-max marquee-images group-hover/slider:[animation-play-state:paused]">
           {marqueeSlides.map((slide, i) => (
