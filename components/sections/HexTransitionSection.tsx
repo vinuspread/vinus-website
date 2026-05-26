@@ -16,10 +16,10 @@ export const HexTransitionSection = () => {
     const hex     = hexRef.current;
     if (!section || !hex) return;
 
-    // 뷰포트(콘텐츠 영역) 전체를 커버하는 크기
+    // 헥사곤 형태가 보이는 최대 크기 (뷰포트 80% 커버)
     const scaleTarget = Math.max(
-      window.innerWidth / HEX_W,
-      window.innerHeight / HEX_H
+      (window.innerWidth  * 0.8) / HEX_W,
+      (window.innerHeight * 0.8) / HEX_H
     );
 
     const yStart = (window.innerHeight - HEX_H) / 2; // 헥사곤 하단 = 뷰포트 하단
@@ -35,10 +35,11 @@ export const HexTransitionSection = () => {
         },
       });
 
-      // y: scale보다 2배 빠른 duration → 올라오면서 동시에 커지는 효과
-      tl.fromTo(hex, { y: yStart }, { y: yEnd, ease: "none", duration: 0.5 }, 0);
-      // scale: 일정 속도로 뷰포트 전체 커버까지 성장
-      tl.fromTo(hex, { scale: 1 }, { scale: scaleTarget, ease: "none", duration: 1 }, 0);
+      // 상승 + 확대를 하나의 tween으로 완전 동기화 — 올라오면서 동시에 커짐
+      tl.fromTo(hex,
+        { y: yStart, scale: 1 },
+        { y: yEnd, scale: scaleTarget, ease: "none", duration: 1 }
+      );
       // 최대 사이즈 유지
       tl.to(hex, { scale: scaleTarget, ease: "none", duration: 1 });
       // 원래 사이즈로 축소
