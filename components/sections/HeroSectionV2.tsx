@@ -27,9 +27,8 @@ export const HeroSectionV2 = () => {
   const metaRef        = useRef<HTMLDivElement>(null);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
   const [mounted, setMounted] = useState(false);
-  const currentIndex      = useRef(0);
-  const isAnimating       = useRef(false);
-  const lastTransitionEnd = useRef(0);
+  const currentIndex  = useRef(0);
+  const isAnimating   = useRef(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -142,7 +141,6 @@ export const HeroSectionV2 = () => {
       exitSection(oldIdx, () => {
         enterSection(newIdx, 0, () => {
           isAnimating.current = false;
-          lastTransitionEnd.current = Date.now();
           if (newIdx === 1) {
             // B2 완전히 입장 → observer 비활성, lenis 인계
             obs.disable();
@@ -176,11 +174,7 @@ export const HeroSectionV2 = () => {
         }
       },
       onUp: () => {
-        if (
-          currentIndex.current > 0 &&
-          window.scrollY < 5 &&
-          Date.now() - lastTransitionEnd.current > 600
-        ) {
+        if (currentIndex.current > 0 && window.scrollY < 5) {
           animateTo(currentIndex.current - 1);
         }
       },
