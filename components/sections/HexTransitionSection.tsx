@@ -22,7 +22,7 @@ export const HexTransitionSection = () => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         hex,
-        { scale: 1, y: window.innerHeight },
+        { scale: 1, y: (window.innerHeight - HEX_H) / 2 },
         {
           scale: scaleTarget,
           y: 0,
