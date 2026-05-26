@@ -34,15 +34,15 @@ export const HexTransitionSection = () => {
         },
       });
 
-      // 전반부: 올라오며 80%까지 성장
+      // 1/3: 올라오며 80%까지 성장
       tl.fromTo(hex,
         { scale: 1, y: yStart },
         { scale: scaleTarget, y: yEnd, ease: "none", duration: 1 }
       );
-      // 후반부: 제자리에서 원래 사이즈로 축소
-      tl.to(hex,
-        { scale: 1, ease: "none", duration: 1 }
-      );
+      // 1/3: 80% 크기 유지 (스크롤 길이로 체류 시간 제어)
+      tl.to(hex, { scale: scaleTarget, ease: "none", duration: 1 });
+      // 1/3: 원래 사이즈로 축소
+      tl.to(hex, { scale: 1, ease: "none", duration: 1 });
     }, section);
 
     return () => ctx.revert();
