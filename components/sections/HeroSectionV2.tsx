@@ -32,13 +32,22 @@ export const HeroSectionV2 = () => {
 
   useEffect(() => setMounted(true), []);
 
-  // SmoothScroll의 useEffect([pathname])가 lenis.start()를 호출한 뒤 다시 멈춤
-  // (useLayoutEffect보다 useEffect가 나중에 실행되므로 DOM 순서상 HeroSection이 SmoothScroll보다 나중에 fires)
+  // hard refresh 시 lenis가 늦게 초기화될 수 있으므로 최대 2초간 재시도
   useEffect(() => {
     const isMobile = window.matchMedia("(max-width: 1024px)").matches;
     if (isMobile) return;
-    const lenis = window.__lenis;
-    if (lenis) lenis.stop();
+
+    const tryStop = () => {
+      const lenis = window.__lenis;
+      if (lenis) { lenis.stop(); return true; }
+      return false;
+    };
+
+    if (tryStop()) return;
+
+    const intervals = [100, 300, 600, 1000, 2000];
+    const timers = intervals.map((ms) => setTimeout(tryStop, ms));
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   // 시계
