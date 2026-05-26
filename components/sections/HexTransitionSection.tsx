@@ -16,7 +16,8 @@ export const HexTransitionSection = () => {
     const hex     = hexRef.current;
     if (!section || !hex) return;
 
-    const scaleTarget = Math.min(
+    // 뷰포트(콘텐츠 영역) 전체를 커버하는 크기
+    const scaleTarget = Math.max(
       window.innerWidth / HEX_W,
       window.innerHeight / HEX_H
     );
@@ -34,13 +35,13 @@ export const HexTransitionSection = () => {
         },
       });
 
-      // y: power2.out으로 빠르게 치고 올라오는 효과
-      tl.fromTo(hex, { y: yStart }, { y: yEnd, ease: "power2.out", duration: 1 }, 0);
-      // scale: 일정 속도로 성장
+      // y: scale보다 2배 빠른 duration → 올라오면서 동시에 커지는 효과
+      tl.fromTo(hex, { y: yStart }, { y: yEnd, ease: "none", duration: 0.5 }, 0);
+      // scale: 일정 속도로 뷰포트 전체 커버까지 성장
       tl.fromTo(hex, { scale: 1 }, { scale: scaleTarget, ease: "none", duration: 1 }, 0);
-      // 1/3: 80% 크기 유지 (스크롤 길이로 체류 시간 제어)
+      // 최대 사이즈 유지
       tl.to(hex, { scale: scaleTarget, ease: "none", duration: 1 });
-      // 1/3: 원래 사이즈로 축소
+      // 원래 사이즈로 축소
       tl.to(hex, { scale: 1, ease: "none", duration: 1 });
     }, section);
 
