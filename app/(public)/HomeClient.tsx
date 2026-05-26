@@ -57,7 +57,7 @@ export default function HomeClient({ works }: Props) {
 
   return (
     <div className="relative">
-      <div style={{ height: "100vh" }}>
+      <div style={{ height: 0 }}>
         <div className="sticky top-0 h-screen overflow-hidden bg-white">
           <HeroSection />
         </div>
