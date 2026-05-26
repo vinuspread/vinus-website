@@ -199,7 +199,7 @@ export const HeroSectionV2 = () => {
       {SECTIONS.map((section, i) => (
         <div
           key={i}
-          className="hero-panel absolute inset-0 flex flex-col justify-start pt-[100px] lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
+          className="hero-panel absolute inset-0 flex flex-col justify-start pt-[300px] lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
           style={{ opacity: 0, visibility: "hidden" }}
         >
 
