@@ -22,13 +22,14 @@ export const HexTransitionSection = () => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         hex,
-        { scale: 1 },
+        { scale: 1, y: "calc(172px - 50vh)" },
         {
           scale: scaleTarget,
+          y: 0,
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top bottom", // 섹션이 뷰포트 진입 즉시 시작
+            start: "top bottom",
             end: "bottom top",
             scrub: 1,
           },

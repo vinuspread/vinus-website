@@ -203,7 +203,7 @@ export const HeroSectionV2 = () => {
     <div
       id="hero-section"
       ref={containerRef}
-      className="relative w-full h-screen bg-white z-10 overflow-hidden"
+      className="relative w-full h-full bg-white z-10 overflow-hidden"
     >
       {/* 시계 포탈 */}
       {mounted && createPortal(
