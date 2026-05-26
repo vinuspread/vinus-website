@@ -27,8 +27,9 @@ export const HeroSectionV2 = () => {
   const metaRef        = useRef<HTMLDivElement>(null);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
   const [mounted, setMounted] = useState(false);
-  const currentIndex = useRef(0);
-  const isAnimating  = useRef(false);
+  const currentIndex      = useRef(0);
+  const isAnimating       = useRef(false);
+  const lastTransitionEnd = useRef(0);
 
   useEffect(() => setMounted(true), []);
 
@@ -129,6 +130,7 @@ export const HeroSectionV2 = () => {
       exitSection(oldIdx, () => {
         enterSection(newIdx, 0, () => {
           isAnimating.current = false;
+          lastTransitionEnd.current = Date.now();
           if (newIdx === 1) {
             if (lenis) lenis.start();
             if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
@@ -156,7 +158,11 @@ export const HeroSectionV2 = () => {
         }
       },
       onUp: (self) => {
-        if (currentIndex.current > 0 && window.scrollY < 5) {
+        if (
+          currentIndex.current > 0 &&
+          window.scrollY < 5 &&
+          Date.now() - lastTransitionEnd.current > 600
+        ) {
           self.event?.preventDefault();
           animateTo(currentIndex.current - 1);
         }
