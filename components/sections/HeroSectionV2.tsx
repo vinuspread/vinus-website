@@ -227,7 +227,7 @@ export const HeroSectionV2 = () => {
                       ))}
                     </div>
                     {/* 2행: PRACTICE. & 서브카피 */}
-                    <div className="flex -mt-[40px]">
+                    <div className="flex mt-0 lg:-mt-[40px]">
                       <div className="flex flex-col gap-3">
                         <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
                           <span
@@ -239,7 +239,7 @@ export const HeroSectionV2 = () => {
                         </div>
                         <div className="overflow-hidden">
                           <p
-                            className="h-sub font-inter font-normal text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
+                            className="h-sub font-inter font-normal text-[18px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
                             style={{ transform: "translateY(110%)" }}
                           >
                             {section.subCopy}
