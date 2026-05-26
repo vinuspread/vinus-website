@@ -8,7 +8,7 @@ import { ArrowLink } from "@/components/common/ArrowLink";
 const SECTIONS = [
   {
     mainCopy: "The product practice.",
-    subCopy: "Using AI, we plan and develop our clients' products, strengthening their competitiveness and operating them toward continuous improvement.",
+    subCopy: "Using AI, we plan and develop our clients' products,\nstrengthening their competitiveness and operating them toward continuous improvement.",
     ko: "바이너스는 AI를 활용하여, 고객의 제품을 기획하고 개발하고 운영합니다.",
     lines: [] as { text: string; bold: boolean }[],
     fontSize: "clamp(72px,11vw,240px)",
@@ -270,7 +270,7 @@ export const HeroSectionV2 = () => {
                         </div>
                         <div className="overflow-hidden">
                           <p
-                            className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left"
+                            className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left whitespace-pre-line"
                             style={{ transform: "translateY(150%)" }}
                           >
                             {section.subCopy}
