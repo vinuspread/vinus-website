@@ -208,7 +208,7 @@ export const HeroSectionV2 = () => {
                       style={{ fontSize: section.fontSize }}
                     >
                       {leftWords.map((word, k) => (
-                        <div key={k} className="pb-[0.15em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
+                        <div key={k} className="pb-[0.15em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
                           <span className="h-word inline-block" style={{ transform: "translateY(110%)" }}>
                             {word}
                           </span>
@@ -218,7 +218,7 @@ export const HeroSectionV2 = () => {
                     {/* 2행: PRACTICE. & 서브카피 */}
                     <div className="flex mt-0 lg:-mt-[40px]">
                       <div className="flex flex-col gap-[40px]">
-                        <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
+                        <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
                           <span
                             className="h-word font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block"
                             style={{ fontSize: section.fontSize, transform: "translateY(110%)" }}
