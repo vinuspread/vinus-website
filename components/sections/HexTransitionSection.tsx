@@ -16,7 +16,7 @@ export const HexTransitionSection = () => {
     const hex     = hexRef.current;
     if (!section || !hex) return;
 
-    const scaleTarget = Math.max(
+    const scaleTarget = Math.min(
       window.innerWidth / HEX_W,
       window.innerHeight / HEX_H
     );
