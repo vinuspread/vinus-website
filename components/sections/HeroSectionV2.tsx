@@ -163,10 +163,9 @@ export const HeroSectionV2 = () => {
         if (currentIndex.current < 1) {
           animateTo(currentIndex.current + 1);
         } else if (currentIndex.current === 1 && !isAnimating.current) {
-          // B2에서 아래 스크롤 → lenis 시작, obs 비활성, hero를 hex 뒤로
+          // B2에서 아래 스크롤 → lenis 시작, obs 비활성
           obs.disable();
           if (lenis) lenis.start();
-          if (stickyParent) gsap.set(stickyParent, { zIndex: 5 });
         }
       },
       onUp: () => {

@@ -22,7 +22,7 @@ export const HexTransitionSection = () => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         hex,
-        { scale: 1 },
+        { scale: 0 },
         {
           scale: scaleTarget,
           ease: "none",
@@ -42,7 +42,7 @@ export const HexTransitionSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white z-[15]"
+      className="relative bg-white z-[35]"
       style={{ height: "350vh" }}
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
