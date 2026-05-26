@@ -42,7 +42,7 @@ export const HexTransitionSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-white"
+      className="relative bg-white z-[15]"
       style={{ height: "350vh" }}
     >
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
