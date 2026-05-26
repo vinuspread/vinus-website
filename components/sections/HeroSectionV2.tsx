@@ -303,8 +303,8 @@ export const HeroSectionV2 = () => {
           {/* B2: 데스크톱 링크 + 스크롤 힌트 */}
           {i === 1 && (
             <>
-              <div className="hidden lg:block overflow-hidden">
-                <div className="h-sub flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(150%)" }}>
+              <div className="absolute bottom-[80px] left-page-padding hidden lg:block overflow-hidden">
+                <div className="h-sub flex flex-row gap-12 items-start" style={{ transform: "translateY(150%)" }}>
                   <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
                   <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
                 </div>
