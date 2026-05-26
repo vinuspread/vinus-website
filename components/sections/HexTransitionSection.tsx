@@ -20,14 +20,11 @@ export const HexTransitionSection = () => {
       Math.ceil(Math.max(window.innerWidth / HEX_W, window.innerHeight / HEX_H)) * 1.4;
 
     const ctx = gsap.context(() => {
-      const yOffset = 172 - window.innerHeight / 2;
-
       gsap.fromTo(
         hex,
-        { scale: 1, y: yOffset },
+        { scale: 1 },
         {
           scale: scaleTarget,
-          y: 0,
           ease: "none",
           scrollTrigger: {
             trigger: section,
