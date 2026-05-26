@@ -311,29 +311,6 @@ export const HeroSectionV2 = () => {
           )}
         </div>
       ))}
-      {/* hex peek — 히어로 하단 80px에 헥사곤 팁 노출 */}
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 overflow-hidden pointer-events-none hidden lg:block"
-        style={{ width: 300, height: 80 }}
-      >
-        <div
-          style={{
-            width: 300,
-            height: 344,
-            clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-          }}
-        >
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-          >
-            <source src="/videos/hex-reel.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
     </div>
   );
 };
