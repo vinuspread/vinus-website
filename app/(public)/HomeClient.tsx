@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { HeroSectionV2 as HeroSection } from "@/components/sections/HeroSectionV2";
+import { HexTransitionSection } from "@/components/sections/HexTransitionSection";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ClientsBrandsSection } from "@/components/sections/ClientsBrandsSection";
 import { ImageSliderSection } from "@/components/sections/ImageSliderSection";
@@ -61,6 +62,8 @@ export default function HomeClient({ works }: Props) {
           <HeroSection />
         </div>
       </div>
+
+      <HexTransitionSection />
 
       <div id="content-container" className="relative z-20">
         <section className="pt-0 pb-0 relative z-0">
