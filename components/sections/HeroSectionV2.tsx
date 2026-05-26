@@ -15,21 +15,12 @@ const SECTIONS = [
   },
   {
     lines: [
-      { text: "We take responsibility for",      bold: false },
-      { text: "design, planning, development,",  bold: false },
-      { text: "operation, and consulting.",       bold: true  },
+      { text: "We own", bold: false },
+      { text: "every stage.", bold: true },
     ],
-    ko: "우리는 디자인과 기획, 개발과 운영 그리고 컨설팅을 책임집니다.",
-    fontSize: "clamp(58px,13vw,240px)",
-  },
-  {
-    lines: [
-      { text: "We work with our clients to design",    bold: false },
-      { text: "sustainable growth on clear structure.", bold: false },
-      { text: "We are VINUSPREAD.",                     bold: true  },
-    ],
-    ko: "우리는 고객과 함께, 명확한 구조 위에서 지속 가능한 성장을 설계합니다.",
-    fontSize: "clamp(60px,5.5vw,90px)",
+    subCopy: "We handle every stage of building products, and our responsibility continues beyond launch.",
+    ko: "제품화를 위한 모든 단계를 다루며 출시 이후까지 책임집니다.",
+    fontSize: "clamp(72px,11vw,240px)",
   },
 ];
 
@@ -130,8 +121,8 @@ export const HeroSectionV2 = () => {
       const oldIdx = currentIndex.current;
       currentIndex.current = newIdx;
 
-      // B3 → 이전: lenis 다시 멈춤
-      if (oldIdx === 2 && newIdx < 2) {
+      // B2 → 이전: lenis 다시 멈춤
+      if (oldIdx === 1 && newIdx < 1) {
         if (lenis) lenis.stop();
         if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
       }
@@ -139,7 +130,7 @@ export const HeroSectionV2 = () => {
       exitSection(oldIdx, () => {
         enterSection(newIdx, 0, () => {
           isAnimating.current = false;
-          if (newIdx === 2) {
+          if (newIdx === 1) {
             if (lenis) lenis.start();
             if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
           }
@@ -160,7 +151,7 @@ export const HeroSectionV2 = () => {
       target: window,
       type: "wheel,touch",
       onDown: () => {
-        if (currentIndex.current < 2) animateTo(currentIndex.current + 1);
+        if (currentIndex.current < 1) animateTo(currentIndex.current + 1);
       },
       onUp: () => {
         if (currentIndex.current > 0 && window.scrollY < 5) {
@@ -206,7 +197,6 @@ export const HeroSectionV2 = () => {
           {/* 영문 타이포 */}
           {i === 0 && "mainCopy" in section ? (
             <>
-              {/* 메인카피: 왼쪽(The product) + 오른쪽(practice. + 서브카피) */}
               {(() => {
                 const words = (section.mainCopy ?? "").split(" ");
                 const leftWords = words.slice(0, -1);
@@ -273,6 +263,18 @@ export const HeroSectionV2 = () => {
             </div>
           )}
 
+          {/* B2 서브카피 */}
+          {"subCopy" in section && i !== 0 && (
+            <div className="overflow-hidden">
+              <p
+                className="h-line font-inter font-normal text-[18px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
+                style={{ transform: "translateY(110%)" }}
+              >
+                {section.subCopy}
+              </p>
+            </div>
+          )}
+
           {/* 한글카피 */}
           <div className="overflow-hidden">
             <p
@@ -283,7 +285,7 @@ export const HeroSectionV2 = () => {
             </p>
           </div>
 
-          {/* 섹션 1: 모바일 링크 */}
+          {/* B1: 모바일 링크 */}
           {i === 0 && (
             <div className="lg:hidden overflow-hidden mt-auto pb-10">
               <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
@@ -293,8 +295,8 @@ export const HeroSectionV2 = () => {
             </div>
           )}
 
-          {/* 섹션 3: 링크 + 스크롤 힌트 */}
-          {i === 2 && (
+          {/* B2: 데스크톱 링크 + 스크롤 힌트 */}
+          {i === 1 && (
             <>
               <div className="hidden lg:block overflow-hidden">
                 <div className="h-line flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(110%)" }}>
