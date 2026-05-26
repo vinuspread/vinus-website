@@ -28,7 +28,7 @@ export const HexTransitionSection = () => {
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top bottom",
+            start: "top top",
             end: "bottom top",
             scrub: 1,
           },
