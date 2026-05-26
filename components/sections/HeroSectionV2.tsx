@@ -141,12 +141,8 @@ export const HeroSectionV2 = () => {
       exitSection(oldIdx, () => {
         enterSection(newIdx, 0, () => {
           isAnimating.current = false;
-          if (newIdx === 1) {
-            // B2 완전히 입장 → observer 비활성, lenis 인계
-            obs.disable();
-            if (lenis) lenis.start();
-            if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
-          }
+          // obs는 항상 활성 유지 — B2에서도 위/아래 스크롤 모두 처리
+          // lenis는 onDown(B2)에서 사용자가 아래로 스크롤할 때만 시작
         });
       });
     };
@@ -167,7 +163,7 @@ export const HeroSectionV2 = () => {
         if (currentIndex.current < 1) {
           animateTo(currentIndex.current + 1);
         } else if (currentIndex.current === 1 && !isAnimating.current) {
-          // B2 완전히 입장된 상태에서 아래 스크롤 → lenis에 인계
+          // B2에서 아래 스크롤 → lenis 시작, obs 비활성
           obs.disable();
           if (lenis) lenis.start();
           if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
@@ -188,7 +184,7 @@ export const HeroSectionV2 = () => {
       if (currentIndex.current === 1 && window.scrollY === 0) {
         if (lenis) lenis.stop();
         if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
-        obs.enable();
+        obs.enable(); // 콘텐츠 스크롤 후 최상단 복귀 시 재활성
       }
       if (scrollHint && window.scrollY > 0) {
         gsap.to(scrollHint, { opacity: 0, duration: 0.4, ease: "power2.out", overwrite: true });
