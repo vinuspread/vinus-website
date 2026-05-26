@@ -25,20 +25,23 @@ export const HexTransitionSection = () => {
     const yEnd   = -(window.innerHeight * 0.1);          // 중앙을 지나 10% 위까지
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        hex,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      // 전반부: 올라오며 80%까지 성장
+      tl.fromTo(hex,
         { scale: 1, y: yStart },
-        {
-          scale: scaleTarget,
-          y: yEnd,
-          ease: "none",
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        }
+        { scale: scaleTarget, y: yEnd, ease: "none", duration: 1 }
+      );
+      // 후반부: 제자리에서 원래 사이즈로 축소
+      tl.to(hex,
+        { scale: 1, ease: "none", duration: 1 }
       );
     }, section);
 
