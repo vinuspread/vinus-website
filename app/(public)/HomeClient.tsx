@@ -57,13 +57,15 @@ export default function HomeClient({ works }: Props) {
 
   return (
     <div className="relative">
-      <div style={{ height: 0 }}>
+      <div style={{ height: "350vh" }}>
         <div className="sticky top-0 h-screen overflow-hidden bg-white">
           <HeroSection />
         </div>
       </div>
 
-      <HexTransitionSection />
+      <div style={{ marginTop: "-350vh" }}>
+        <HexTransitionSection />
+      </div>
 
       <div id="content-container" className="relative z-20">
         <section className="pt-0 pb-0 relative z-0">
