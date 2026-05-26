@@ -11,7 +11,7 @@ const SECTIONS = [
     subCopy: "Using AI, we plan and develop our clients' products, strengthening their competitiveness and operating them toward continuous improvement.",
     ko: "바이너스는 AI를 활용하여, 고객의 제품을 기획하고 개발하고 운영합니다.",
     lines: [] as { text: string; bold: boolean }[],
-    fontSize: "clamp(64px,13vw,240px)",
+    fontSize: "clamp(64px,11vw,240px)",
   },
   {
     lines: [
