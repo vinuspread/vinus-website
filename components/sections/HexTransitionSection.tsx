@@ -45,7 +45,7 @@ export const HexTransitionSection = () => {
     if (!section || !hex) return;
 
     const scaleTarget =
-      Math.ceil(Math.max(window.innerWidth / HEX_W, window.innerHeight / HEX_H)) * 1.3;
+      Math.ceil(Math.max(window.innerWidth / HEX_W, window.innerHeight / HEX_H)) * 1.4;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -56,11 +56,9 @@ export const HexTransitionSection = () => {
           ease: "none",
           scrollTrigger: {
             trigger: section,
-            start: "top top",
-            end: "+=200%",
-            pin: true,
+            start: "top bottom", // 섹션이 뷰포트 진입 즉시 시작
+            end: "bottom top",
             scrub: 1,
-            pinSpacing: true,
           },
         }
       );
@@ -72,32 +70,35 @@ export const HexTransitionSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-screen bg-white flex items-center justify-center overflow-hidden"
+      className="relative bg-white"
+      style={{ height: "350vh" }}
     >
-      <div
-        ref={hexRef}
-        style={{
-          width: HEX_W,
-          height: HEX_H,
-          clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
-          position: "relative",
-          flexShrink: 0,
-        }}
-      >
-        {IMAGES.map((src, i) => (
-          <div
-            key={i}
-            ref={(el) => { imgsRef.current[i] = el; }}
-            style={{ position: "absolute", inset: 0, opacity: i === 0 ? 1 : 0 }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              alt=""
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            />
-          </div>
-        ))}
+      <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
+        <div
+          ref={hexRef}
+          style={{
+            width: HEX_W,
+            height: HEX_H,
+            clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+            position: "relative",
+            flexShrink: 0,
+          }}
+        >
+          {IMAGES.map((src, i) => (
+            <div
+              key={i}
+              ref={(el) => { imgsRef.current[i] = el; }}
+              style={{ position: "absolute", inset: 0, opacity: i === 0 ? 1 : 0 }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt=""
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
