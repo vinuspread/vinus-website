@@ -7,13 +7,11 @@ import { ArrowLink } from "@/components/common/ArrowLink";
 
 const SECTIONS = [
   {
-    lines: [
-      { text: "We are a product studio",        bold: false },
-      { text: "that plans, builds, and operates", bold: false },
-      { text: "client products with AI.",         bold: true  },
-    ],
-    ko: "우리는 AI를 활용하여, 고객의 제품을 기획하고 만들고 운영하는 매니징 기업입니다.",
-    fontSize: "clamp(58px,5.5vw,100px)",
+    mainCopy: "The product practice.",
+    subCopy: "Using AI, we plan and develop our clients' products, strengthening their competitiveness and operating them toward continuous improvement.",
+    ko: "바이너스는 AI를 활용하여, 고객의 제품을 기획하고 개발하고 운영합니다.",
+    lines: [] as { text: string; bold: boolean }[],
+    fontSize: "clamp(58px,13vw,240px)",
   },
   {
     lines: [
@@ -22,7 +20,7 @@ const SECTIONS = [
       { text: "operation, and consulting.",       bold: true  },
     ],
     ko: "우리는 디자인과 기획, 개발과 운영 그리고 컨설팅을 책임집니다.",
-    fontSize: "clamp(58px,5.5vw,100px)",
+    fontSize: "clamp(58px,13vw,240px)",
   },
   {
     lines: [
@@ -81,33 +79,48 @@ export const HeroSectionV2 = () => {
     // 초기 상태: 전체 숨김
     panels.forEach((panel) => {
       gsap.set(panel, { opacity: 0, visibility: "hidden" });
-      panel.querySelectorAll<HTMLElement>(".h-line").forEach((line) => {
-        gsap.set(line, { y: "110%" });
+      panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-practice, .h-sub, .h-ko").forEach((el) => {
+        gsap.set(el, { y: "110%" });
       });
     });
 
     const enterSection = (idx: number, delay = 0, onComplete?: () => void) => {
       const panel = panels[idx];
-      const lines = panel.querySelectorAll<HTMLElement>(".h-line");
       gsap.set(panel, { visibility: "visible" });
 
       const tl = gsap.timeline({ onComplete });
       tl.to(panel, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0);
-      tl.to(lines,  {
-        y: "0%",
-        stagger: 0.13,
-        duration: 0.75, ease: "power3.out",
-      }, delay > 0 ? delay : 0.05);
+
+      const start = delay > 0 ? delay : 0.05;
+
+      if (idx === 0) {
+        // B1: group-sequential animation
+        const words    = panel.querySelectorAll<HTMLElement>(".h-word");
+        const practice = panel.querySelectorAll<HTMLElement>(".h-practice");
+        const sub      = panel.querySelectorAll<HTMLElement>(".h-sub");
+        const ko       = panel.querySelectorAll<HTMLElement>(".h-ko");
+
+        const dur = 1.2;
+        const wordEnd = start + (words.length - 1) * 0.15 + dur * 0.8;
+
+        tl.to(words,    { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
+        tl.to(practice, { y: "0%", duration: dur, ease: "power3.out" }, wordEnd - 0.1);
+        tl.to(sub,      { y: "0%", duration: dur * 0.9, ease: "power3.out" }, wordEnd - 0.1 + dur * 0.75);
+        tl.to(ko,       { y: "0%", duration: dur * 0.8, ease: "power3.out" }, wordEnd - 0.1 + dur * 0.75 + dur * 0.7);
+      } else {
+        const lines = panel.querySelectorAll<HTMLElement>(".h-line");
+        tl.to(lines, { y: "0%", stagger: 0.15, duration: 1.2, ease: "power3.out" }, start);
+      }
     };
 
     const exitSection = (idx: number, onComplete: () => void) => {
       const panel = panels[idx];
-      const lines = panel.querySelectorAll<HTMLElement>(".h-line");
+      const allEls = panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-practice, .h-sub, .h-ko");
       const tl = gsap.timeline({ onComplete });
-      tl.to(lines, { y: "-30%", opacity: 0, stagger: 0.05, duration: 0.3, ease: "power2.in" }, 0);
+      tl.to(allEls, { y: "-30%", opacity: 0, stagger: 0.05, duration: 0.3, ease: "power2.in" }, 0);
       tl.to(panel, { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 0.1);
       tl.set(panel, { visibility: "hidden" });
-      tl.set(lines, { y: "110%", opacity: 1 }); // 다음 등장을 위해 리셋
+      tl.set(allEls, { y: "110%", opacity: 1 });
     };
 
     const animateTo = (newIdx: number) => {
@@ -189,27 +202,81 @@ export const HeroSectionV2 = () => {
           className="hero-panel absolute inset-0 flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
           style={{ opacity: 0, visibility: "hidden" }}
         >
-          {/* 영문 타이포 */}
-          <div
-            className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft"
-            style={{ fontSize: section.fontSize }}
-          >
-            {section.lines.map((line, j) => (
-              <div key={j} className="overflow-hidden py-0.5 md:py-1">
-                <span
-                  className={`h-line inline-block ${line.bold ? "font-bold" : "font-normal"}`}
-                  style={{ transform: "translateY(110%)" }}
-                >
-                  {line.text}
-                </span>
-              </div>
-            ))}
-          </div>
 
-          {/* 국문 */}
+          {/* 영문 타이포 */}
+          {i === 0 && "mainCopy" in section ? (
+            <>
+              {/* 메인카피: 왼쪽(The product) + 오른쪽(practice. + 서브카피) */}
+              {(() => {
+                const words = (section.mainCopy ?? "").split(" ");
+                const leftWords = words.slice(0, -1);
+                const rightWord = words[words.length - 1];
+                return (
+                  <div className="flex flex-col gap-0">
+                    {/* 1행: THE PRODUCT */}
+                    <div
+                      className="font-inter font-medium leading-none tracking-[-0.04em] text-mine-shaft flex flex-wrap uppercase"
+                      style={{ fontSize: section.fontSize }}
+                    >
+                      {leftWords.map((word, k) => (
+                        <div key={k} className="pb-[0.15em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
+                          <span className="h-word inline-block" style={{ transform: "translateY(110%)" }}>
+                            {word}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* 2행: PRACTICE. & 서브카피 */}
+                    <div className="flex -mt-[40px]">
+                      <div className="flex flex-col gap-3">
+                        <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
+                          <span
+                            className="h-practice font-inter font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block uppercase"
+                            style={{ fontSize: section.fontSize, transform: "translateY(110%)" }}
+                          >
+                            {rightWord}
+                          </span>
+                        </div>
+                        <div className="overflow-hidden">
+                          <p
+                            className="h-sub font-inter font-normal text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
+                            style={{ transform: "translateY(110%)" }}
+                          >
+                            {section.subCopy}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </>
+          ) : (
+            <div
+              className="font-inter leading-[1.1] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft"
+              style={{ fontSize: section.fontSize }}
+            >
+              {section.lines.map((line, j) => (
+                <div key={j} className="flex flex-wrap">
+                  {line.text.split(" ").map((word, k) => (
+                    <div key={k} className="pb-[0.2em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
+                      <span
+                        className={`h-line inline-block ${line.bold ? "font-medium" : "font-normal"}`}
+                        style={{ transform: "translateY(110%)" }}
+                      >
+                        {word}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 한글카피 */}
           <div className="overflow-hidden">
             <p
-              className="h-line font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]"
+              className={`${i === 0 ? "h-ko" : "h-line"} font-pretendard text-[14px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]`}
               style={{ transform: "translateY(110%)" }}
             >
               {section.ko}
@@ -219,7 +286,7 @@ export const HeroSectionV2 = () => {
           {/* 섹션 1: 모바일 링크 */}
           {i === 0 && (
             <div className="lg:hidden overflow-hidden">
-              <div className="h-line flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
+              <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
                 <ArrowLink href="/work"    className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
                 <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
               </div>
