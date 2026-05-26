@@ -30,10 +30,10 @@ export const HexTransitionSection = () => {
     let current = 0;
     const id = setInterval(() => {
       const next = (current + 1) % imgs.length;
-      gsap.to(imgs[current], { opacity: 0, duration: 0.8, ease: "power2.inOut" });
-      gsap.to(imgs[next],    { opacity: 1, duration: 0.8, ease: "power2.inOut" });
+      gsap.to(imgs[current], { opacity: 0, duration: 0.15, ease: "none" });
+      gsap.to(imgs[next],    { opacity: 1, duration: 0.15, ease: "none" });
       current = next;
-    }, 2000);
+    }, 200);
 
     return () => clearInterval(id);
   }, []);
