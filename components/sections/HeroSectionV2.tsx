@@ -149,11 +149,15 @@ export const HeroSectionV2 = () => {
     const obs = Observer.create({
       target: window,
       type: "wheel,touch",
-      onDown: () => {
-        if (currentIndex.current < 1) animateTo(currentIndex.current + 1);
+      onDown: (self) => {
+        if (currentIndex.current < 1) {
+          self.event?.preventDefault();
+          animateTo(currentIndex.current + 1);
+        }
       },
-      onUp: () => {
+      onUp: (self) => {
         if (currentIndex.current > 0 && window.scrollY < 5) {
+          self.event?.preventDefault();
           animateTo(currentIndex.current - 1);
         }
       },
