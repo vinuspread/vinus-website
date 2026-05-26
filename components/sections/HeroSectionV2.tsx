@@ -228,7 +228,7 @@ export const HeroSectionV2 = () => {
                     </div>
                     {/* 2행: PRACTICE. & 서브카피 */}
                     <div className="flex mt-0 lg:-mt-[40px]">
-                      <div className="flex flex-col gap-3">
+                      <div className="flex flex-col gap-[40px]">
                         <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
                           <span
                             className="h-word font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block uppercase"
