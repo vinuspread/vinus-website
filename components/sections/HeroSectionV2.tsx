@@ -33,6 +33,15 @@ export const HeroSectionV2 = () => {
 
   useEffect(() => setMounted(true), []);
 
+  // SmoothScroll의 useEffect([pathname])가 lenis.start()를 호출한 뒤 다시 멈춤
+  // (useLayoutEffect보다 useEffect가 나중에 실행되므로 DOM 순서상 HeroSection이 SmoothScroll보다 나중에 fires)
+  useEffect(() => {
+    const isMobile = window.matchMedia("(max-width: 1024px)").matches;
+    if (isMobile) return;
+    const lenis = window.__lenis;
+    if (lenis) lenis.stop();
+  }, []);
+
   // 시계
   useEffect(() => {
     const pad = (n: number) => String(n).padStart(2, "0");
