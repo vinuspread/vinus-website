@@ -199,7 +199,7 @@ export const HeroSectionV2 = () => {
       {SECTIONS.map((section, i) => (
         <div
           key={i}
-          className="hero-panel absolute inset-0 flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
+          className="hero-panel absolute inset-0 flex flex-col justify-start pt-[100px] lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
           style={{ opacity: 0, visibility: "hidden" }}
         >
 
@@ -285,7 +285,7 @@ export const HeroSectionV2 = () => {
 
           {/* 섹션 1: 모바일 링크 */}
           {i === 0 && (
-            <div className="lg:hidden overflow-hidden mt-[16px]">
+            <div className="lg:hidden overflow-hidden mt-auto pb-10">
               <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
                 <ArrowLink href="/work"    className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
                 <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
