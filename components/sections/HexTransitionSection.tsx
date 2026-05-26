@@ -21,8 +21,8 @@ export const HexTransitionSection = () => {
       (window.innerHeight * 0.8) / HEX_H
     );
 
-    const yStart = (window.innerHeight - HEX_H) / 2;   // 헥사곤 하단 = 뷰포트 하단
-    const yEnd   = -(window.innerHeight * 0.1);          // 중앙을 지나 10% 위까지
+    const yStart = window.innerHeight;          // 뷰포트 아래에서 시작 → 스크롤보다 빠르게 올라오는 효과
+    const yEnd   = -(window.innerHeight * 0.1); // 중앙을 지나 10% 위까지
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
