@@ -79,7 +79,7 @@ export const HeroSectionV2 = () => {
     // 초기 상태: 전체 숨김
     panels.forEach((panel) => {
       gsap.set(panel, { opacity: 0, visibility: "hidden" });
-      panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-practice, .h-sub, .h-ko").forEach((el) => {
+      panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-sub, .h-ko").forEach((el) => {
         gsap.set(el, { y: "110%" });
       });
     });
@@ -94,19 +94,19 @@ export const HeroSectionV2 = () => {
       const start = delay > 0 ? delay : 0.05;
 
       if (idx === 0) {
-        // B1: group-sequential animation
-        const words    = panel.querySelectorAll<HTMLElement>(".h-word");
-        const practice = panel.querySelectorAll<HTMLElement>(".h-practice");
-        const sub      = panel.querySelectorAll<HTMLElement>(".h-sub");
-        const ko       = panel.querySelectorAll<HTMLElement>(".h-ko");
+        // B1: THE → PRODUCT → PRACTICE. (same stagger) → sub-copy → Korean copy
+        const words = panel.querySelectorAll<HTMLElement>(".h-word");
+        const sub   = panel.querySelectorAll<HTMLElement>(".h-sub");
+        const ko    = panel.querySelectorAll<HTMLElement>(".h-ko");
 
         const dur = 1.2;
-        const wordEnd = start + (words.length - 1) * 0.15 + dur * 0.8;
+        const lastWordStart = start + (words.length - 1) * 0.15;
+        const subStart = lastWordStart + dur * 0.75;
+        const koStart  = subStart + dur * 0.9 * 0.70;
 
-        tl.to(words,    { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
-        tl.to(practice, { y: "0%", duration: dur, ease: "power3.out" }, wordEnd - 0.1);
-        tl.to(sub,      { y: "0%", duration: dur * 0.9, ease: "power3.out" }, wordEnd - 0.1 + dur * 0.75);
-        tl.to(ko,       { y: "0%", duration: dur * 0.8, ease: "power3.out" }, wordEnd - 0.1 + dur * 0.75 + dur * 0.7);
+        tl.to(words, { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
+        tl.to(sub,   { y: "0%", duration: dur * 0.9, ease: "power3.out" }, subStart);
+        tl.to(ko,    { y: "0%", duration: dur * 0.8, ease: "power3.out" }, koStart);
       } else {
         const lines = panel.querySelectorAll<HTMLElement>(".h-line");
         tl.to(lines, { y: "0%", stagger: 0.15, duration: 1.2, ease: "power3.out" }, start);
@@ -115,7 +115,7 @@ export const HeroSectionV2 = () => {
 
     const exitSection = (idx: number, onComplete: () => void) => {
       const panel = panels[idx];
-      const allEls = panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-practice, .h-sub, .h-ko");
+      const allEls = panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-sub, .h-ko");
       const tl = gsap.timeline({ onComplete });
       tl.to(allEls, { y: "-30%", opacity: 0, stagger: 0.05, duration: 0.3, ease: "power2.in" }, 0);
       tl.to(panel, { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 0.1);
@@ -231,7 +231,7 @@ export const HeroSectionV2 = () => {
                       <div className="flex flex-col gap-3">
                         <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
                           <span
-                            className="h-practice font-inter font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block uppercase"
+                            className="h-word font-inter font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block uppercase"
                             style={{ fontSize: section.fontSize, transform: "translateY(110%)" }}
                           >
                             {rightWord}
