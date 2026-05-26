@@ -15,7 +15,7 @@ const SECTIONS = [
   },
   {
     mainCopy: "We own every stage.",
-    subCopy: "We span every stage of bringing products to life, and support their stable operation after launch.",
+    subCopy: "We cover every stage of bringing products to life,\nand support stable operations long after launch.",
     ko: "제품화를 위한 모든 단계를 아우르며 출시 이후 안정적인 운영을 지원합니다.",
     lines: [] as { text: string; bold: boolean }[],
     fontSize: "clamp(72px,11vw,240px)",
