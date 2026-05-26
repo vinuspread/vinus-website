@@ -285,7 +285,7 @@ export const HeroSectionV2 = () => {
 
           {/* 섹션 1: 모바일 링크 */}
           {i === 0 && (
-            <div className="lg:hidden overflow-hidden">
+            <div className="lg:hidden overflow-hidden mt-[16px]">
               <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
                 <ArrowLink href="/work"    className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
                 <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
