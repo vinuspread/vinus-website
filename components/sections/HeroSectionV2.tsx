@@ -159,8 +159,8 @@ export const HeroSectionV2 = () => {
       onDown: () => {
         if (currentIndex.current < 1) {
           animateTo(currentIndex.current + 1);
-        } else if (currentIndex.current === 1) {
-          // B2에서 아래 스크롤 → lenis에 인계
+        } else if (currentIndex.current === 1 && !isAnimating.current) {
+          // B2 완전히 입장된 상태에서 아래 스크롤 → lenis에 인계
           obs.disable();
           if (lenis) lenis.start();
           if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
