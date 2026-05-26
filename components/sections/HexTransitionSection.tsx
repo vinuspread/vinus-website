@@ -22,8 +22,9 @@ export const HexTransitionSection = () => {
       (window.innerHeight * 0.8) / HEX_H
     );
 
-    const yStart = (window.innerHeight - HEX_H) / 2; // 헥사곤 하단 = 뷰포트 하단
-    const yEnd   = -(window.innerHeight * 0.1);       // 중앙을 지나 10% 위까지
+    // 헥사곤이 progress ~15% 시점에 화면 진입 → 이미 1.4x 크기로 등장해 성장이 체감됨
+    const yStart = window.innerHeight * 0.85;
+    const yEnd   = -(window.innerHeight * 0.1);
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
