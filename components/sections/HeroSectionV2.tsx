@@ -102,7 +102,7 @@ export const HeroSectionV2 = () => {
         const dur = 1.2;
         const lastWordStart = start + (words.length - 1) * 0.15;
         const subStart = lastWordStart + dur * 0.75;
-        const koStart  = subStart + dur * 0.9 * 0.70;
+        const koStart  = subStart + dur * 0.9 * 0.50;
 
         tl.to(words, { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
         tl.to(sub,   { y: "0%", duration: dur * 0.9, ease: "power3.out" }, subStart);
