@@ -114,6 +114,9 @@ export const HeroSectionV2 = () => {
       tl.set(allEls, { y: "150%", opacity: 1 });
     };
 
+    // obs는 클로저 안에서 forward-reference — 콜백은 항상 할당 이후 실행됨
+    let obs!: ReturnType<typeof Observer.create>;
+
     const animateTo = (newIdx: number) => {
       if (isAnimating.current) return;
       isAnimating.current = true;
@@ -121,7 +124,7 @@ export const HeroSectionV2 = () => {
       const oldIdx = currentIndex.current;
       currentIndex.current = newIdx;
 
-      // B2 → 이전: lenis 다시 멈춤
+      // B2 → B1: lenis 멈춤 (obs는 이미 활성 상태)
       if (oldIdx === 1 && newIdx < 1) {
         if (lenis) lenis.stop();
         if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
@@ -132,6 +135,8 @@ export const HeroSectionV2 = () => {
           isAnimating.current = false;
           lastTransitionEnd.current = Date.now();
           if (newIdx === 1) {
+            // B2 완전히 입장 → observer 비활성, lenis 인계
+            obs.disable();
             if (lenis) lenis.start();
             if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
           }
@@ -148,31 +153,45 @@ export const HeroSectionV2 = () => {
     if (lenis) lenis.stop();
     if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
 
-    const obs = Observer.create({
+    obs = Observer.create({
       target: window,
       type: "wheel,touch",
-      onDown: (self) => {
+      onDown: () => {
         if (currentIndex.current < 1) {
-          self.event?.preventDefault();
           animateTo(currentIndex.current + 1);
+        } else if (currentIndex.current === 1) {
+          // B2에서 아래 스크롤 → lenis에 인계
+          obs.disable();
+          if (lenis) lenis.start();
+          if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
         }
       },
-      onUp: (self) => {
+      onUp: () => {
         if (
           currentIndex.current > 0 &&
           window.scrollY < 5 &&
           Date.now() - lastTransitionEnd.current > 600
         ) {
-          self.event?.preventDefault();
           animateTo(currentIndex.current - 1);
         }
       },
       tolerance: 10,
-      preventDefault: false,
+      preventDefault: true,
     });
+
+    // 페이지 최상단 복귀 시 hero observer 재활성
+    const handleScroll = () => {
+      if (currentIndex.current === 1 && window.scrollY === 0) {
+        if (lenis) lenis.stop();
+        if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
+        obs.enable();
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       obs.kill();
+      window.removeEventListener("scroll", handleScroll);
       if (lenis) lenis.start();
     };
   }, []);
