@@ -69,7 +69,7 @@ export const HeroSectionV2 = () => {
     panels.forEach((panel) => {
       gsap.set(panel, { opacity: 0, visibility: "hidden" });
       panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-sub, .h-ko").forEach((el) => {
-        gsap.set(el, { y: "110%" });
+        gsap.set(el, { y: "150%" });
       });
     });
 
@@ -110,7 +110,7 @@ export const HeroSectionV2 = () => {
       tl.to(allEls, { y: "-30%", opacity: 0, stagger: 0.05, duration: 0.3, ease: "power2.in" }, 0);
       tl.to(panel, { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 0.1);
       tl.set(panel, { visibility: "hidden" });
-      tl.set(allEls, { y: "110%", opacity: 1 });
+      tl.set(allEls, { y: "150%", opacity: 1 });
     };
 
     const animateTo = (newIdx: number) => {
@@ -209,7 +209,7 @@ export const HeroSectionV2 = () => {
                     >
                       {leftWords.map((word, k) => (
                         <div key={k} className="pb-[0.15em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
-                          <span className="h-word inline-block" style={{ transform: "translateY(110%)" }}>
+                          <span className="h-word inline-block" style={{ transform: "translateY(150%)" }}>
                             {word}
                           </span>
                         </div>
@@ -221,7 +221,7 @@ export const HeroSectionV2 = () => {
                         <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
                           <span
                             className="h-word font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block"
-                            style={{ fontSize: section.fontSize, transform: "translateY(110%)" }}
+                            style={{ fontSize: section.fontSize, transform: "translateY(150%)" }}
                           >
                             {rightWord}
                           </span>
@@ -229,7 +229,7 @@ export const HeroSectionV2 = () => {
                         <div className="overflow-hidden">
                           <p
                             className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
-                            style={{ transform: "translateY(110%)" }}
+                            style={{ transform: "translateY(150%)" }}
                           >
                             {section.subCopy}
                           </p>
@@ -246,7 +246,7 @@ export const HeroSectionV2 = () => {
           <div className="overflow-hidden">
             <p
               className="h-ko font-pretendard text-[16px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]"
-              style={{ transform: "translateY(110%)" }}
+              style={{ transform: "translateY(150%)" }}
             >
               {section.ko}
             </p>
@@ -255,7 +255,7 @@ export const HeroSectionV2 = () => {
           {/* B1: 모바일 링크 */}
           {i === 0 && (
             <div className="lg:hidden overflow-hidden mt-auto pb-10">
-              <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
+              <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(150%)" }}>
                 <ArrowLink href="/work"    className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
                 <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
               </div>
@@ -266,7 +266,7 @@ export const HeroSectionV2 = () => {
           {i === 1 && (
             <>
               <div className="hidden lg:block overflow-hidden">
-                <div className="h-sub flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(110%)" }}>
+                <div className="h-sub flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(150%)" }}>
                   <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
                   <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
                 </div>
