@@ -16,16 +16,21 @@ export const HexTransitionSection = () => {
     const hex     = hexRef.current;
     if (!section || !hex) return;
 
-    const scaleTarget =
-      Math.ceil(Math.max(window.innerWidth / HEX_W, window.innerHeight / HEX_H)) * 1.4;
+    const scaleTarget = Math.max(
+      (window.innerWidth * 0.8) / HEX_W,
+      (window.innerHeight * 0.8) / HEX_H
+    );
+
+    const yStart = (window.innerHeight - HEX_H) / 2;   // 헥사곤 하단 = 뷰포트 하단
+    const yEnd   = -(window.innerHeight * 0.1);          // 중앙을 지나 10% 위까지
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
         hex,
-        { scale: 1, y: (window.innerHeight - HEX_H) / 2 },
+        { scale: 1, y: yStart },
         {
           scale: scaleTarget,
-          y: 0,
+          y: yEnd,
           ease: "none",
           scrollTrigger: {
             trigger: section,
