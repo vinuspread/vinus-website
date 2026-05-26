@@ -23,7 +23,7 @@ export const HexTransitionSection = () => {
     );
 
     // 헥사곤이 progress ~15% 시점에 화면 진입 → 이미 1.4x 크기로 등장해 성장이 체감됨
-    const yStart = window.innerHeight * 0.75;
+    const yStart = window.innerHeight * 0.5;
     const yEnd   = -(window.innerHeight * 0.1);
 
     const ctx = gsap.context(() => {
