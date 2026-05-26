@@ -188,12 +188,16 @@ export const HeroSectionV2 = () => {
       preventDefault: true,
     });
 
-    // 페이지 최상단 복귀 시 hero observer 재활성
+    // 페이지 최상단 복귀 시 hero observer 재활성 + scroll hint 페이드
+    const scrollHint = container.querySelector<HTMLElement>(".scroll-hint");
     const handleScroll = () => {
       if (currentIndex.current === 1 && window.scrollY === 0) {
         if (lenis) lenis.stop();
         if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
         obs.enable();
+      }
+      if (scrollHint && window.scrollY > 0) {
+        gsap.to(scrollHint, { opacity: 0, duration: 0.4, ease: "power2.out", overwrite: true });
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -309,7 +313,7 @@ export const HeroSectionV2 = () => {
                   <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
                 </div>
               </div>
-              <div className="absolute bottom-10 left-page-padding hidden lg:flex items-center gap-3">
+              <div className="scroll-hint absolute bottom-10 left-page-padding hidden lg:flex items-center gap-3">
                 <span className="w-6 h-[1px] bg-mine-shaft/40 block" />
                 <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/40">Scroll to explore</span>
               </div>
