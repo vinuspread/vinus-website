@@ -61,7 +61,7 @@ export default function HomeClient({ works }: Props) {
         <HeroSection />
       </div>
 
-      <div style={{ marginTop: "-100vh" }}>
+      <div style={{ marginTop: "-50vh" }}>
         <HexTransitionSection />
       </div>
 
