@@ -14,12 +14,10 @@ const SECTIONS = [
     fontSize: "clamp(72px,11vw,240px)",
   },
   {
-    lines: [
-      { text: "We own", bold: false },
-      { text: "every stage.", bold: true },
-    ],
+    mainCopy: "We own every stage.",
     subCopy: "We handle every stage of building products, and our responsibility continues beyond launch.",
     ko: "제품화를 위한 모든 단계를 다루며 출시 이후까지 책임집니다.",
+    lines: [] as { text: string; bold: boolean }[],
     fontSize: "clamp(72px,11vw,240px)",
   },
 ];
@@ -84,9 +82,9 @@ export const HeroSectionV2 = () => {
 
       const start = delay > 0 ? delay : 0.05;
 
-      if (idx === 0) {
-        // B1: THE → PRODUCT → PRACTICE. (same stagger) → sub-copy → Korean copy
-        const words = panel.querySelectorAll<HTMLElement>(".h-word");
+      const words = panel.querySelectorAll<HTMLElement>(".h-word");
+      if (words.length > 0) {
+        // mainCopy 구조: 단어별 stagger → sub-copy → Korean copy
         const sub   = panel.querySelectorAll<HTMLElement>(".h-sub");
         const ko    = panel.querySelectorAll<HTMLElement>(".h-ko");
 
@@ -102,6 +100,7 @@ export const HeroSectionV2 = () => {
         const lines = panel.querySelectorAll<HTMLElement>(".h-line");
         tl.to(lines, { y: "0%", stagger: 0.15, duration: 1.2, ease: "power3.out" }, start);
       }
+
     };
 
     const exitSection = (idx: number, onComplete: () => void) => {
@@ -195,7 +194,7 @@ export const HeroSectionV2 = () => {
         >
 
           {/* 영문 타이포 */}
-          {i === 0 && "mainCopy" in section ? (
+          {"mainCopy" in section ? (
             <>
               {(() => {
                 const words = (section.mainCopy ?? "").split(" ");
@@ -241,44 +240,12 @@ export const HeroSectionV2 = () => {
                 );
               })()}
             </>
-          ) : (
-            <div
-              className="font-inter leading-[1.1] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft"
-              style={{ fontSize: section.fontSize }}
-            >
-              {section.lines.map((line, j) => (
-                <div key={j} className="flex flex-wrap">
-                  {line.text.split(" ").map((word, k) => (
-                    <div key={k} className="pb-[0.2em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
-                      <span
-                        className={`h-line inline-block ${line.bold ? "font-medium" : "font-normal"}`}
-                        style={{ transform: "translateY(110%)" }}
-                      >
-                        {word}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* B2 서브카피 */}
-          {"subCopy" in section && i !== 0 && (
-            <div className="overflow-hidden">
-              <p
-                className="h-line font-inter font-normal text-[18px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
-                style={{ transform: "translateY(110%)" }}
-              >
-                {section.subCopy}
-              </p>
-            </div>
-          )}
+          ) : null}
 
           {/* 한글카피 */}
           <div className="overflow-hidden">
             <p
-              className={`${i === 0 ? "h-ko" : "h-line"} font-pretendard text-[16px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]`}
+              className="h-ko font-pretendard text-[16px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]"
               style={{ transform: "translateY(110%)" }}
             >
               {section.ko}
@@ -299,7 +266,7 @@ export const HeroSectionV2 = () => {
           {i === 1 && (
             <>
               <div className="hidden lg:block overflow-hidden">
-                <div className="h-line flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(110%)" }}>
+                <div className="h-sub flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(110%)" }}>
                   <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
                   <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
                 </div>
