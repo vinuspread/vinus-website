@@ -270,7 +270,7 @@ export const HeroSectionV2 = () => {
                         </div>
                         <div className="overflow-hidden">
                           <p
-                            className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
+                            className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left"
                             style={{ transform: "translateY(150%)" }}
                           >
                             {section.subCopy}
