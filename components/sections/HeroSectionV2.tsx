@@ -205,7 +205,7 @@ export const HeroSectionV2 = () => {
                   <div className="flex flex-col gap-0">
                     {/* 1행: THE PRODUCT */}
                     <div
-                      className="font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft flex flex-wrap uppercase"
+                      className="font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft flex flex-wrap"
                       style={{ fontSize: section.fontSize }}
                     >
                       {leftWords.map((word, k) => (
@@ -221,7 +221,7 @@ export const HeroSectionV2 = () => {
                       <div className="flex flex-col gap-[40px]">
                         <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px 0 -200px)" }}>
                           <span
-                            className="h-word font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block uppercase"
+                            className="h-word font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block"
                             style={{ fontSize: section.fontSize, transform: "translateY(110%)" }}
                           >
                             {rightWord}
