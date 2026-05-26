@@ -17,8 +17,8 @@ export const HexTransitionSection = () => {
     if (!section || !hex) return;
 
     const scaleTarget = Math.max(
-      (window.innerWidth * 0.8) / HEX_W,
-      (window.innerHeight * 0.8) / HEX_H
+      window.innerWidth / HEX_W,
+      window.innerHeight / HEX_H
     );
 
     const yStart = (window.innerHeight - HEX_H) / 2; // 헥사곤 하단 = 뷰포트 하단
