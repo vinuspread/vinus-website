@@ -11,7 +11,7 @@ const SECTIONS = [
     subCopy: "Using AI, we plan and develop our clients' products, strengthening their competitiveness and operating them toward continuous improvement.",
     ko: "바이너스는 AI를 활용하여, 고객의 제품을 기획하고 개발하고 운영합니다.",
     lines: [] as { text: string; bold: boolean }[],
-    fontSize: "clamp(58px,13vw,240px)",
+    fontSize: "clamp(64px,13vw,240px)",
   },
   {
     lines: [
@@ -239,7 +239,7 @@ export const HeroSectionV2 = () => {
                         </div>
                         <div className="overflow-hidden">
                           <p
-                            className="h-sub font-inter font-normal text-[18px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
+                            className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left max-w-[42em]"
                             style={{ transform: "translateY(110%)" }}
                           >
                             {section.subCopy}
@@ -276,7 +276,7 @@ export const HeroSectionV2 = () => {
           {/* 한글카피 */}
           <div className="overflow-hidden">
             <p
-              className={`${i === 0 ? "h-ko" : "h-line"} font-pretendard text-[14px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]`}
+              className={`${i === 0 ? "h-ko" : "h-line"} font-pretendard text-[16px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]`}
               style={{ transform: "translateY(110%)" }}
             >
               {section.ko}
