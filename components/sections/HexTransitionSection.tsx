@@ -34,11 +34,10 @@ export const HexTransitionSection = () => {
         },
       });
 
-      // 1/3: 올라오며 80%까지 성장 — power2.out으로 스크롤보다 빠르게 치고 올라오는 효과
-      tl.fromTo(hex,
-        { scale: 1, y: yStart },
-        { scale: scaleTarget, y: yEnd, ease: "power2.out", duration: 1 }
-      );
+      // y: power2.out으로 빠르게 치고 올라오는 효과
+      tl.fromTo(hex, { y: yStart }, { y: yEnd, ease: "power2.out", duration: 1 }, 0);
+      // scale: 일정 속도로 성장
+      tl.fromTo(hex, { scale: 1 }, { scale: scaleTarget, ease: "none", duration: 1 }, 0);
       // 1/3: 80% 크기 유지 (스크롤 길이로 체류 시간 제어)
       tl.to(hex, { scale: scaleTarget, ease: "none", duration: 1 });
       // 1/3: 원래 사이즈로 축소
