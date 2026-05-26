@@ -1,25 +1,47 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState, useEffect } from "react";
+import { useLayoutEffect, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { gsap } from "@/lib/gsap";
-import { ScrollTrigger } from "@/lib/gsap";
+import { gsap, Observer } from "@/lib/gsap";
 import { ArrowLink } from "@/components/common/ArrowLink";
 
-const B1_LINES = [
-  { text: "We are a product studio", bold: false },
-  { text: "that plans, builds, and operates", bold: false },
-  { text: "client products with AI.", bold: true },
+const SECTIONS = [
+  {
+    lines: [
+      { text: "We are a product studio",        bold: false },
+      { text: "that plans, builds, and operates", bold: false },
+      { text: "client products with AI.",         bold: true  },
+    ],
+    ko: "우리는 AI를 활용하여, 고객의 제품을 기획하고 만들고 운영하는 매니징 기업입니다.",
+    fontSize: "clamp(58px,5.5vw,100px)",
+  },
+  {
+    lines: [
+      { text: "We take responsibility for",      bold: false },
+      { text: "design, planning, development,",  bold: false },
+      { text: "operation, and consulting.",       bold: true  },
+    ],
+    ko: "우리는 디자인과 기획, 개발과 운영 그리고 컨설팅을 책임집니다.",
+    fontSize: "clamp(58px,5.5vw,100px)",
+  },
+  {
+    lines: [
+      { text: "We work with our clients to design",    bold: false },
+      { text: "sustainable growth on clear structure.", bold: false },
+      { text: "We are VINUSPREAD.",                     bold: true  },
+    ],
+    ko: "우리는 고객과 함께, 명확한 구조 위에서 지속 가능한 성장을 설계합니다.",
+    fontSize: "clamp(60px,5.5vw,90px)",
+  },
 ];
 
 export const HeroSectionV2 = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sliderRef    = useRef<HTMLDivElement>(null);
-  const metaRef      = useRef<HTMLDivElement>(null);
-  const b3ContentRef = useRef<HTMLDivElement>(null);
-
-  const [mounted, setMounted] = useState(false);
+  const containerRef   = useRef<HTMLDivElement>(null);
+  const metaRef        = useRef<HTMLDivElement>(null);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
+  const [mounted, setMounted] = useState(false);
+  const currentIndex = useRef(0);
+  const isAnimating  = useRef(false);
 
   useEffect(() => setMounted(true), []);
 
@@ -45,82 +67,109 @@ export const HeroSectionV2 = () => {
   }, [mounted]);
 
   useLayoutEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 1024px)").matches;
+    const container = containerRef.current;
+    if (!container) return;
 
-    if (isMobile) {
-      gsap.fromTo(
-        ".b1-word",
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, stagger: { amount: 0.4, from: "random" }, duration: 0.8, delay: 0.4, ease: "power2.out" }
-      );
-      const stickyParent = containerRef.current?.parentElement;
-      if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
-      return;
-    }
+    const isMobile    = window.matchMedia("(max-width: 1024px)").matches;
+    const lenis       = window.__lenis;
+    const stickyParent = container.parentElement;
 
-    const ctx = gsap.context(() => {
-      const section = containerRef.current;
-      if (!section) return;
+    const panels = Array.from(
+      container.querySelectorAll<HTMLElement>(".hero-panel")
+    );
 
-      // B2/B3 초기 숨김 — B1은 로드 애니메이션으로 별도 처리
-      gsap.set(".b2-word, .b3-word", { opacity: 0, y: 30 });
-      gsap.set(".b3-scroll-hint", { opacity: 0, y: 8 });
-      gsap.set(sliderRef.current, { yPercent: 0 });
-
-      // B1 로드 입장 (스크롤 무관)
-      gsap.fromTo(
-        ".b1-word",
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, stagger: { amount: 0.5, from: "random" }, duration: 1.0, delay: 0.6, ease: "power2.out" }
-      );
-
-      // 스크롤 드리븐 타임라인 — B1은 이미 노출된 상태에서 시작
-      const tl = gsap.timeline();
-      tl.to({}, { duration: 0.8 }); // B1 노출 구간
-
-      // ── B1 → B2 ──
-      tl.addLabel("t12");
-      tl.to(".b1-word", { opacity: 0, y: -25, stagger: 0.03, duration: 0.6, ease: "power2.in" }, "t12");
-      tl.to(sliderRef.current, { yPercent: -100, duration: 1.4, ease: "power3.inOut" }, "t12+=0.2");
-      tl.to(".b2-word", {
-        opacity: 1, y: 0,
-        stagger: { amount: 0.4, from: "random" },
-        duration: 0.9, ease: "power2.out",
-      }, "t12+=1.0");
-      tl.to({}, { duration: 0.8 });
-
-      // ── B2 → B3 ──
-      tl.addLabel("t23");
-      tl.to(".b2-word", { opacity: 0, y: -25, stagger: 0.03, duration: 0.6, ease: "power2.in" }, "t23");
-      tl.to(sliderRef.current, { yPercent: -200, duration: 1.4, ease: "power3.inOut" }, "t23+=0.2");
-      tl.to(".b3-word", {
-        opacity: 1, y: 0,
-        stagger: { amount: 0.5, from: "random" },
-        duration: 1.0, ease: "power2.out",
-      }, "t23+=1.0");
-      tl.to(".b3-scroll-hint", { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, "t23+=1.8");
-      tl.to({}, { duration: 0.5 });
-
-      const stickyParent = section.parentElement;
-      if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top top",
-        end: "+=4000",
-        pin: true,
-        scrub: 1,
-        animation: tl,
-        invalidateOnRefresh: true,
+    // 초기 상태: 전체 숨김
+    panels.forEach((panel) => {
+      gsap.set(panel, { opacity: 0, visibility: "hidden" });
+      panel.querySelectorAll<HTMLElement>(".h-line").forEach((line) => {
+        gsap.set(line, { y: "110%" });
       });
-    }, containerRef);
+    });
 
-    return () => ctx.revert();
+    const enterSection = (idx: number, delay = 0, onComplete?: () => void) => {
+      const panel = panels[idx];
+      const lines = panel.querySelectorAll<HTMLElement>(".h-line");
+      gsap.set(panel, { visibility: "visible" });
+
+      const tl = gsap.timeline({ onComplete });
+      tl.to(panel, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0);
+      tl.to(lines,  {
+        y: "0%",
+        stagger: 0.13,
+        duration: 0.75, ease: "power3.out",
+      }, delay > 0 ? delay : 0.05);
+    };
+
+    const exitSection = (idx: number, onComplete: () => void) => {
+      const panel = panels[idx];
+      const lines = panel.querySelectorAll<HTMLElement>(".h-line");
+      const tl = gsap.timeline({ onComplete });
+      tl.to(lines, { y: "-30%", opacity: 0, stagger: 0.05, duration: 0.3, ease: "power2.in" }, 0);
+      tl.to(panel, { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 0.1);
+      tl.set(panel, { visibility: "hidden" });
+      tl.set(lines, { y: "110%", opacity: 1 }); // 다음 등장을 위해 리셋
+    };
+
+    const animateTo = (newIdx: number) => {
+      if (isAnimating.current) return;
+      isAnimating.current = true;
+
+      const oldIdx = currentIndex.current;
+      currentIndex.current = newIdx;
+
+      // B3 → 이전: lenis 다시 멈춤
+      if (oldIdx === 2 && newIdx < 2) {
+        if (lenis) lenis.stop();
+        if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
+      }
+
+      exitSection(oldIdx, () => {
+        enterSection(newIdx, 0, () => {
+          isAnimating.current = false;
+          if (newIdx === 2) {
+            if (lenis) lenis.start();
+            if (stickyParent) gsap.set(stickyParent, { zIndex: 10 });
+          }
+        });
+      });
+    };
+
+    // B1 초기 입장
+    enterSection(0, 0.5);
+
+    if (isMobile) return;
+
+    // 데스크톱: lenis 멈추고 Observer 등록
+    if (lenis) lenis.stop();
+    if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
+
+    const obs = Observer.create({
+      target: window,
+      type: "wheel,touch",
+      onDown: () => {
+        if (currentIndex.current < 2) animateTo(currentIndex.current + 1);
+      },
+      onUp: () => {
+        if (currentIndex.current > 0 && window.scrollY < 5) {
+          animateTo(currentIndex.current - 1);
+        }
+      },
+      tolerance: 10,
+      preventDefault: false,
+    });
+
+    return () => {
+      obs.kill();
+      if (lenis) lenis.start();
+    };
   }, []);
 
   return (
-    <div id="hero-section" ref={containerRef} className="relative w-full h-screen bg-white overflow-hidden z-10">
-
+    <div
+      id="hero-section"
+      ref={containerRef}
+      className="relative w-full h-screen bg-white z-10 overflow-hidden"
+    >
       {/* 시계 포탈 */}
       {mounted && createPortal(
         <div
@@ -133,148 +182,67 @@ export const HeroSectionV2 = () => {
         document.body
       )}
 
-      <div ref={sliderRef} className="relative w-full h-full will-change-transform">
-
-        {/* Block 1 */}
-        <div className="flex w-full h-full flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8">
-          <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
-            {B1_LINES.map((line, i) => (
-              <div key={i} className="py-0.5 md:py-1">
-                {line.text.split(" ").map((word, j) => (
-                  <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                    <span className={`b1-word inline-block opacity-0 ${line.bold ? "font-bold" : "font-normal"}`}>
-                      {word}
-                    </span>
-                  </span>
-                ))}
+      {/* 섹션 패널 */}
+      {SECTIONS.map((section, i) => (
+        <div
+          key={i}
+          className="hero-panel absolute inset-0 flex flex-col justify-center lg:justify-start pt-0 lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
+          style={{ opacity: 0, visibility: "hidden" }}
+        >
+          {/* 영문 타이포 */}
+          <div
+            className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft"
+            style={{ fontSize: section.fontSize }}
+          >
+            {section.lines.map((line, j) => (
+              <div key={j} className="overflow-hidden py-0.5 md:py-1">
+                <span
+                  className={`h-line inline-block ${line.bold ? "font-bold" : "font-normal"}`}
+                  style={{ transform: "translateY(110%)" }}
+                >
+                  {line.text}
+                </span>
               </div>
             ))}
           </div>
-          <div className="mt-2 md:mt-4">
-            <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]">
-              {["우리는 AI를 활용하여, 고객의 제품을 기획하고 만들고 운영하는 매니징 기업입니다."].map((line, i) => (
-                <div key={i} className="py-0.5">
-                  {line.split(" ").map((word, j) => (
-                    <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                      <span className="b1-word inline-block opacity-0">{word}</span>
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* 모바일 전용 링크 */}
-          <div className="lg:hidden py-2">
-            <div className="flex flex-col gap-6 items-start">
-              <span className="overflow-hidden">
-                <span className="b1-word inline-block opacity-0">
-                  <ArrowLink href="/work" className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
-                </span>
-              </span>
-              <span className="overflow-hidden">
-                <span className="b1-word inline-block opacity-0">
-                  <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
 
-        {/* Block 2 — 데스크톱 전용 */}
-        <div className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding">
-          <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(58px,5.5vw,100px)]">
-            <div className="py-0.5 md:py-1">
-              {"We take responsibility for".split(" ").map((word, j) => (
-                <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block opacity-0">{word}</span>
-                </span>
-              ))}
-            </div>
-            <div className="py-0.5 md:py-1">
-              {"design, planning, development,".split(" ").map((word, j) => (
-                <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block opacity-0">{word}</span>
-                </span>
-              ))}
-            </div>
-            <div className="py-0.5 md:py-1">
-              {"operation, and consulting.".split(" ").map((word, k) => (
-                <span key={k} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block font-bold opacity-0">{word}</span>
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4 md:mt-6">
-            <p className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6]">
-              {"우리는 디자인과 기획, 개발과 운영 그리고 컨설팅을 책임집니다.".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b2-word inline-block opacity-0">{word}</span>
-                </span>
-              ))}
+          {/* 국문 */}
+          <div className="overflow-hidden">
+            <p
+              className="h-line font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]"
+              style={{ transform: "translateY(110%)" }}
+            >
+              {section.ko}
             </p>
           </div>
-        </div>
 
-        {/* Block 3 — 데스크톱 전용 */}
-        <div id="hero-b3-content" ref={b3ContentRef} className="hidden lg:flex w-full h-full flex-col justify-start pt-[25vh] px-page-padding gap-5 md:gap-6 will-change-transform">
-          <div className="font-inter leading-[1.05] md:leading-[0.8] tracking-[-0.02em] md:tracking-[-0.04em] text-mine-shaft text-[clamp(60px,5.5vw,90px)]">
-            <div className="py-0.5 md:py-1">
-              {"We work with our clients to design".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b3-word inline-block opacity-0">{word}</span>
-                </span>
-              ))}
+          {/* 섹션 1: 모바일 링크 */}
+          {i === 0 && (
+            <div className="lg:hidden overflow-hidden">
+              <div className="h-line flex flex-col gap-6 items-start" style={{ transform: "translateY(110%)" }}>
+                <ArrowLink href="/work"    className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
+                <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
+              </div>
             </div>
-            <div className="py-0.5 md:py-1">
-              {"sustainable growth on clear structure.".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b3-word inline-block opacity-0">{word}</span>
-                </span>
-              ))}
-            </div>
-            <div className="py-0.5 md:py-1">
-              {"We are VINUSPREAD.".split(" ").map((word, i) => (
-                <span key={i} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                  <span className="b3-word inline-block font-bold opacity-0">{word}</span>
-                </span>
-              ))}
-            </div>
-          </div>
-          <div className="py-1">
-            <div className="font-pretendard text-[14px] md:text-[16px] font-medium text-mine-shaft/40 max-w-[850px] leading-[1.5]">
-              {["우리는 고객과 함께, 명확한 구조 위에서 지속 가능한 성장을 설계합니다."].map((line, i) => (
-                <div key={i} className="py-0.5">
-                  {line.split(" ").map((word, j) => (
-                    <span key={j} className="inline-block mr-[0.3em]" style={{ overflow: "clip", paddingBottom: "0.2em" }}>
-                      <span className="b3-word inline-block opacity-0">{word}</span>
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="py-2">
-            <div className="flex flex-col sm:flex-row gap-6 sm:gap-12 items-start">
-              <span className="overflow-hidden">
-                <span className="b3-word inline-block opacity-0">
-                  <ArrowLink href="/work" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
-                </span>
-              </span>
-              <span className="overflow-hidden">
-                <span className="b3-word inline-block opacity-0">
+          )}
+
+          {/* 섹션 3: 링크 + 스크롤 힌트 */}
+          {i === 2 && (
+            <>
+              <div className="hidden lg:block overflow-hidden">
+                <div className="h-line flex flex-col sm:flex-row gap-6 sm:gap-12 items-start" style={{ transform: "translateY(110%)" }}>
+                  <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
                   <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
-                </span>
-              </span>
-            </div>
-          </div>
-          <div className="absolute bottom-10 left-page-padding flex items-center gap-3 b3-scroll-hint opacity-0">
-            <span className="w-6 h-[1px] bg-mine-shaft/40 block" />
-            <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/40">Scroll to explore</span>
-          </div>
+                </div>
+              </div>
+              <div className="absolute bottom-10 left-page-padding hidden lg:flex items-center gap-3">
+                <span className="w-6 h-[1px] bg-mine-shaft/40 block" />
+                <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/40">Scroll to explore</span>
+              </div>
+            </>
+          )}
         </div>
-
-      </div>
+      ))}
     </div>
   );
 };
