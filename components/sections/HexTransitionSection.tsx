@@ -36,11 +36,10 @@ export const HexTransitionSection = () => {
         },
       });
 
-      // 상승 + 확대를 하나의 tween으로 완전 동기화 — 올라오면서 동시에 커짐
-      tl.fromTo(hex,
-        { y: yStart, scale: 1 },
-        { y: yEnd, scale: scaleTarget, ease: "none", duration: 1 }
-      );
+      // scale: power2.out — 스크롤 초반에 빠르게 성장 (화면에 등장하자마자 커지는 효과)
+      tl.fromTo(hex, { scale: 1 }, { scale: scaleTarget, ease: "power2.out", duration: 1 }, 0);
+      // y: 일정 속도로 상승
+      tl.fromTo(hex, { y: yStart }, { y: yEnd, ease: "none", duration: 1 }, 0);
       // 최대 사이즈 유지
       tl.to(hex, { scale: scaleTarget, ease: "none", duration: 1 });
       // 원래 사이즈로 축소
