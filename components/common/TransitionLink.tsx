@@ -6,31 +6,49 @@
 // 전환 타이밍 전체는 GSAP 타임라인이 담당합니다.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import type { MouseEvent, ReactNode } from "react";
+import type { AnchorHTMLAttributes, MouseEvent, ReactNode } from "react";
 import { transition } from "@/lib/pageTransition";
 
-interface Props {
+interface Props extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "onClick"> {
   href: string;
   children: ReactNode;
   className?: string;
-  onClick?: () => void;
+  onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
 
-export const TransitionLink = ({ href, children, className, onClick }: Props) => {
+const shouldUseDefaultNavigation = (event: MouseEvent<HTMLAnchorElement>, href: string) =>
+  event.metaKey ||
+  event.ctrlKey ||
+  event.shiftKey ||
+  event.altKey ||
+  event.button !== 0 ||
+  href.startsWith("#") ||
+  href.startsWith("mailto:") ||
+  href.startsWith("tel:") ||
+  href.startsWith("http://") ||
+  href.startsWith("https://") ||
+  event.currentTarget.target === "_blank" ||
+  event.currentTarget.hasAttribute("download");
+
+export const TransitionLink = ({ href, children, className, onClick, ...props }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
 
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    onClick?.(e);
+    if (e.defaultPrevented || shouldUseDefaultNavigation(e, href)) return;
+
     e.preventDefault();
     if (href === pathname) return;
-    onClick?.();
+    sessionStorage.setItem(`scroll:${pathname}`, String(window.scrollY));
     transition(() => router.push(href));
   };
 
   return (
-    <a href={href} onClick={handleClick} className={className}>
+    <Link href={href} onClick={handleClick} className={className} {...props}>
       {children}
-    </a>
+    </Link>
   );
 };

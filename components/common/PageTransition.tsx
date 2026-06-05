@@ -8,6 +8,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { setOverlay, setLogo, revealOnLoad, onNavigated } from "@/lib/pageTransition";
 
 export const PageTransition = () => {
@@ -35,13 +36,17 @@ export const PageTransition = () => {
     <div
       ref={overlayRef}
       className="fixed inset-0 z-[9000] bg-mine-shaft pointer-events-none flex items-center justify-center"
+      style={{ transform: "scaleY(0)", transformOrigin: "top" }}
     >
-      <img
+      <Image
         ref={logoRef}
         src="/images/logo.svg"
+        width={160}
+        height={36}
         alt=""
         aria-hidden="true"
         data-pin-nopin="true"
+        unoptimized
         style={{ opacity: 0 }}
         className="h-7 md:h-9 w-auto invert"
       />

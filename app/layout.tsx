@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
-import { Inter, Syne, Noto_Serif_KR } from 'next/font/google'
+import { Syne, Noto_Serif_KR, Plus_Jakarta_Sans } from 'next/font/google'
 import localFont from 'next/font/local'
 import Script from 'next/script'
 import './globals.css'
+import 'lenis/dist/lenis.css'
 import JsonLd from '@/components/seo/JsonLd'
 
 const pretendard = localFont({
@@ -12,7 +13,7 @@ const pretendard = localFont({
   weight: '45 920',
 })
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
@@ -81,9 +82,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko" className={`${pretendard.variable} ${inter.variable} ${syne.variable} ${notoSerifKr.variable}`} suppressHydrationWarning>
+    <html lang="ko" className={`${pretendard.variable} ${plusJakartaSans.variable} ${syne.variable} ${notoSerifKr.variable}`} suppressHydrationWarning>
       <head></head>
       <body suppressHydrationWarning>
+        <Script
+          id="home-scroll-reset"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){if("scrollRestoration"in history){history.scrollRestoration="manual";}window.addEventListener("popstate",function(){if(location.pathname==="/"){sessionStorage.setItem("restore-pop:/","1");}setTimeout(function(){if(location.pathname==="/"){sessionStorage.setItem("restore-pop:/","1");}},0);setTimeout(function(){sessionStorage.removeItem("restore-pop:/");},2500);});if(location.pathname!=="/"){return;}var reset=function(){if(sessionStorage.getItem("restore-pop:/")==="1"){return;}window.scrollTo(0,0);};reset();window.addEventListener("pageshow",reset,{once:true});document.addEventListener("DOMContentLoaded",reset,{once:true});setTimeout(reset,0);setTimeout(reset,50);setTimeout(reset,150);setTimeout(reset,300);})();`,
+          }}
+        />
         <JsonLd data={organizationLd} />
         <JsonLd data={websiteLd} />
         {children}
@@ -94,8 +102,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             strategy="afterInteractive"
           />
         )}
+        {/* impeccable-live-start */}
+        <Script id="impeccable-live" src="http://localhost:8400/live.js" strategy="afterInteractive" />
+        {/* impeccable-live-end */}
       </body>
     </html>
   )
 }
-

@@ -350,3 +350,13 @@ img + div[style*="position: absolute"] { display: none !important; }
 .prose-editorial ol {
   @apply list-decimal pl-6 mb-8 flex flex-col gap-2;
 }
+
+/* HexTransitionSection 타이틀 데스크톱만 10% 키운 폰트 크기 적용 */
+@media (min-width: 1024px) {
+  .hex-title-container {
+    --hex-title-font-size: clamp(75px, 12.1vw, 264px);
+  }
+  .brand-text-block {
+    --hex-title-top: calc(30vh + 89px);
+  }
+}

@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 export const AboutSection = () => {
-  const ref = useReveal();
+  const revealRef = useReveal<HTMLElement>();
   const sectionRef = useRef<HTMLElement>(null);
 
   // desktop refs
@@ -69,7 +69,7 @@ export const AboutSection = () => {
       tl.to({}, { duration: 0.4 });
 
       // 5. 이미지1 퇴장
-      tl.to(clip1Ref.current, { clipPath: "inset(0% 0% 100% 0%)", y: "-40%", duration: 1.0, ease: "power3.in" });
+      tl.to(clip1Ref.current, { clipPath: "inset(0% 0% 100% 0%)", y: "-40%", duration: 1.3, ease: "power3.in" });
 
       // 6. 이미지2 퇴장: 이미지1 시작 0.2 후 오버랩
       tl.to(clip2Ref.current, { clipPath: "inset(0% 0% 100% 0%)", y: "-40%", duration: 1.3, ease: "power3.in" }, "<0.2");
@@ -105,8 +105,8 @@ export const AboutSection = () => {
   return (
     <section
       ref={(el) => {
-        (sectionRef as any).current = el;
-        (ref as any).current = el;
+        sectionRef.current = el;
+        revealRef.current = el;
       }}
       className="anim-wrap section-pad bg-white overflow-visible z-[10] relative"
     >
@@ -122,7 +122,7 @@ export const AboutSection = () => {
           </div>
 
           {/* 이미지 2 */}
-          <div ref={clip2Ref} className="absolute bottom-[-70%] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
+          <div ref={clip2Ref} className="absolute bottom-[-50%] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale2Ref} className="w-full h-full" style={{ scale: "1.2" }}>
               <div className="absolute inset-x-0 will-change-transform" style={{ height: "190%", top: "-45%" }}>
                 <img src="https://picsum.photos/seed/about2/800/1000" alt="About Vinuspread 2" className="w-full h-full object-cover" data-pin-nopin="true" />
@@ -143,18 +143,20 @@ export const AboutSection = () => {
         {/* Right: 텍스트 */}
         <div ref={rightColRef} className="flex flex-col gap-12">
           <h2 className="about-text-item display-heading text-mine-shaft">
-            Focusing on the enduring value of what truly matters.
+            Always there.
+            <br />
+            From the first idea to the last detail.
           </h2>
           <p className="about-text-item body-text break-keep">
-            VINUSPREAD partners with visionary leaders to capture the essential essence at the core of their brand.
-            By transforming strategic insights into beautiful design systems and digital ecosystems, we help
-            organizations transcend physical and structural boundaries. Our work translates bold vision into
-            scalable impact, creating experiences that resonate deeply and carry forward into the world.
+            Vinuspread is a product management group that partners with clients from the very first idea through
+            to completion and beyond. We don&apos;t just deliver outcomes. We help define the direction. Working with AI
+            as our methodology, we bring a faster, more experimental approach to every project backed by over 20
+            years of experience in UI/UX, branding, and product design.
           </p>
           <p className="about-text-item body-text-ko mt-4">
-            바이너스프레드는 브랜드의 본질적 가치를 포착하고, 전략적 인사이트를 아름다운 디자인 시스템과 디지털 생태계로 전환합니다.
-            우리는 조직이 물리적·구조적 한계를 넘어설 수 있도록 돕고,
-            깊은 울림을 남기는 경험으로 브랜드의 비전을 세상에 확장시킵니다.
+            바이너스프레드는 프로젝트의 기획부터 완성까지, 전 과정을 함께하는 프로덕트 매니지먼트 그룹입니다.
+            단순히 결과물을 만드는 것을 넘어, 브랜드가 나아갈 방향을 함께 설계합니다. AI를 방법론으로 삼아 더 빠르고
+            실험적인 방식으로 일하며, 20여 년의 경험 위에서 클라이언트의 제품이 더 나은 방향으로 성장할 수 있도록 돕습니다.
           </p>
           <div className="about-text-item mt-12">
             <div className="flex flex-col border-t border-mine-shaft/10">

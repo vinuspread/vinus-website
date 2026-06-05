@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { useReveal } from "@/hooks/useReveal";
 import { ListRow } from "@/components/common/ListRow";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
@@ -27,7 +27,7 @@ const brands = [
 ];
 
 export const ClientsBrandsSection = () => {
-  const sectionRef = useReveal() as React.RefObject<HTMLElement>;
+  const sectionRef = useReveal<HTMLElement>();
   const clipImg1Ref  = useRef<HTMLDivElement>(null);
   const clipImg2Ref  = useRef<HTMLDivElement>(null);
 
@@ -80,7 +80,7 @@ export const ClientsBrandsSection = () => {
 
   return (
     <section
-      ref={sectionRef as any}
+      ref={sectionRef}
       className="anim-wrap section-pad bg-white mt-[80px] md:mt-[120px] rounded-t-[32px] z-[10] relative"
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
@@ -88,7 +88,7 @@ export const ClientsBrandsSection = () => {
         {/* Left */}
         <div className="flex flex-col gap-12">
           <h2 className="brands-item display-heading text-mine-shaft">
-            Brands we&apos;ve worked with.
+            Clients we&apos;ve partnered with.
           </h2>
 
           <div className="brands-logo-grid grid grid-cols-3 md:grid-cols-6 border-t border-alto mb-24">
@@ -133,7 +133,7 @@ export const ClientsBrandsSection = () => {
           </div>
           <div ref={clipImg2Ref} className="overflow-hidden aspect-[2/3] w-[60%] self-start" style={{ clipPath: "inset(100% 0 0 0)" }}>
             <img
-              src="/images/about_vertical.png"
+              src="https://picsum.photos/seed/about/800/1200"
               alt=""
               className="w-full h-full object-cover"
               data-pin-nopin="true"

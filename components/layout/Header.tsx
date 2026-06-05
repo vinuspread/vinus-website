@@ -40,9 +40,9 @@ export const Header = () => {
   }, [isHome]);
 
   useEffect(() => {
-    setIsDark(false);
+    const resetDarkFrame = requestAnimationFrame(() => setIsDark(false));
     const darkSections = document.querySelectorAll("[data-header-dark]");
-    if (!darkSections.length) return;
+    if (!darkSections.length) return () => cancelAnimationFrame(resetDarkFrame);
     const headerHeight = 80;
     const obs = new IntersectionObserver(
       (entries) => {
@@ -52,7 +52,10 @@ export const Header = () => {
       { rootMargin: `0px 0px -${window.innerHeight - headerHeight}px 0px`, threshold: 0 }
     );
     darkSections.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
+    return () => {
+      cancelAnimationFrame(resetDarkFrame);
+      obs.disconnect();
+    };
   }, [pathname]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,10 +63,15 @@ export const Header = () => {
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = "hidden";
+      window.__lenis?.stop();
     } else {
       document.body.style.overflow = "unset";
+      window.__lenis?.start();
     }
-    return () => { document.body.style.overflow = "unset"; };
+    return () => {
+      document.body.style.overflow = "unset";
+      window.__lenis?.start();
+    };
   }, [isMenuOpen]);
 
   const navItems = [

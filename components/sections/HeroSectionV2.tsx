@@ -2,52 +2,38 @@
 
 import { useLayoutEffect, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { gsap, Observer } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { ArrowLink } from "@/components/common/ArrowLink";
 
 const SECTIONS = [
   {
-    mainCopy: "The product practice.",
+    mainCopy: ["THE PRODUCT", "PRACTICE."],
     subCopy: "We plan and develop products with AI,\nstrengthening competitiveness through continuous improvement.",
     ko: "바이너스는 AI를 활용하여, 고객의 제품을 기획하고 개발하고 운영합니다.",
     lines: [] as { text: string; bold: boolean }[],
-    fontSize: "clamp(72px,11vw,240px)",
+    fontSize: "clamp(68px, 11vw, 240px)",
   },
   {
-    mainCopy: "We own every stage.",
+    mainCopy: ["WE OWN", "EVERY STAGE."],
     subCopy: "We cover every stage of bringing products to life,\nand support stable operations long after launch.",
     ko: "제품화를 위한 모든 단계를 아우르며 출시 이후 안정적인 운영을 지원합니다.",
     lines: [] as { text: string; bold: boolean }[],
-    fontSize: "clamp(72px,11vw,240px)",
+    fontSize: "clamp(68px, 11vw, 240px)",
   },
 ];
+
+const HERO_2_CENTER_DETACH_PROGRESS = 0.1;
 
 export const HeroSectionV2 = () => {
   const containerRef   = useRef<HTMLDivElement>(null);
   const metaRef        = useRef<HTMLDivElement>(null);
   const timeDisplayRef = useRef<HTMLSpanElement>(null);
+  const sharedHexRef   = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
-  const currentIndex  = useRef(0);
-  const isAnimating   = useRef(false);
 
-  useEffect(() => setMounted(true), []);
-
-  // hard refresh 시 lenis가 늦게 초기화될 수 있으므로 최대 2초간 재시도
   useEffect(() => {
-    const isMobile = window.matchMedia("(max-width: 1024px)").matches;
-    if (isMobile) return;
-
-    const tryStop = () => {
-      const lenis = window.__lenis;
-      if (lenis) { lenis.stop(); return true; }
-      return false;
-    };
-
-    if (tryStop()) return;
-
-    const intervals = [100, 300, 600, 1000, 2000];
-    const timers = intervals.map((ms) => setTimeout(tryStop, ms));
-    return () => timers.forEach(clearTimeout);
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // 시계
@@ -75,135 +61,275 @@ export const HeroSectionV2 = () => {
     const container = containerRef.current;
     if (!container) return;
 
-    const isMobile    = window.matchMedia("(max-width: 1024px)").matches;
-    const lenis       = window.__lenis;
-    const stickyParent = container.parentElement;
-
     const panels = Array.from(
       container.querySelectorAll<HTMLElement>(".hero-panel")
     );
+    const sharedHex = sharedHexRef.current;
 
-    // 초기 상태: 전체 숨김
-    panels.forEach((panel) => {
-      gsap.set(panel, { opacity: 0, visibility: "hidden" });
-      panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-sub, .h-ko").forEach((el) => {
-        gsap.set(el, { y: "150%" });
-      });
-    });
+    const ctx = gsap.context(() => {
+      panels.forEach((panel, idx) => {
+        const words = panel.querySelectorAll<HTMLElement>(".h-word");
+        const hexThe = panel.querySelectorAll<HTMLElement>(".h-hex-the");
+        const hexPractice = panel.querySelectorAll<HTMLElement>(".h-hex-practice");
+        const hexOwn = panel.querySelectorAll<HTMLElement>(".h-hex-own");
+        const sub = panel.querySelectorAll<HTMLElement>(".h-sub");
+        const ko = panel.querySelectorAll<HTMLElement>(".h-ko");
+        const scrollHint = panel.querySelector<HTMLElement>(".scroll-hint");
+        const movingEls = panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-hex-the, .h-hex-practice, .h-hex-own, .h-sub, .h-ko");
 
-    const enterSection = (idx: number, delay = 0, onComplete?: () => void) => {
-      const panel = panels[idx];
-      gsap.set(panel, { visibility: "visible" });
+        gsap.set(panel, { opacity: 1, visibility: "visible" });
+        if (idx > 0) {
+          gsap.set(panel, { yPercent: 4 });
+        }
+        gsap.set(movingEls, { y: "200%", opacity: 1 });
 
-      const tl = gsap.timeline({ onComplete });
-      tl.to(panel, { opacity: 1, duration: 0.5, ease: "power2.out" }, 0);
+        ScrollTrigger.create({
+          trigger: panel,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const fadeIn = idx === 0 ? 1 : Math.min(1, progress / 0.35);
+            const fadeOut = Math.min(1, (1 - progress) / 0.35);
+            const enterY = idx === 0 ? 0 : 4 * (1 - fadeIn);
+            const exitY = -4 * (1 - fadeOut);
+            gsap.set(panel, { yPercent: enterY + exitY });
+          },
+        });
 
-      const start = delay > 0 ? delay : 0.05;
-
-      const words = panel.querySelectorAll<HTMLElement>(".h-word");
-      if (words.length > 0) {
-        // mainCopy 구조: 단어별 stagger → sub-copy → Korean copy
-        const sub   = panel.querySelectorAll<HTMLElement>(".h-sub");
-        const ko    = panel.querySelectorAll<HTMLElement>(".h-ko");
-
+        const start = idx === 0 ? 0.35 : 0.05;
         const dur = 1.2;
-        const lastWordStart = start + (words.length - 1) * 0.15;
+        const lastWordStart = start + Math.max(words.length - 1, 0) * 0.15;
         const subStart = lastWordStart + dur * 0.75;
-        const koStart  = subStart + dur * 0.9 * 0.50;
+        const koStart = subStart + dur * 0.9 * 0.5;
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: panel,
+            start: idx === 0 ? "top 80%" : "top 62%",
+            once: true,
+          },
+        });
 
         tl.to(words, { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
-        tl.to(sub,   { y: "0%", duration: dur * 0.9, ease: "power3.out" }, subStart);
-        tl.to(ko,    { y: "0%", duration: dur * 0.8, ease: "power3.out" }, koStart);
-      } else {
-        const lines = panel.querySelectorAll<HTMLElement>(".h-line");
-        tl.to(lines, { y: "0%", stagger: 0.15, duration: 1.2, ease: "power3.out" }, start);
-      }
+        tl.to(hexThe, { y: "0%", duration: dur, ease: "power3.out" }, start + 0.2);
+        tl.to(hexPractice, { y: "0%", duration: dur, ease: "power3.out" }, lastWordStart + 0.25);
+        tl.to(hexOwn, { y: "0%", duration: dur, ease: "power3.out" }, start + 0.3);
+        tl.to(sub, { y: "0%", duration: dur * 0.9, ease: "power3.out" }, subStart);
+        tl.to(ko, { y: "0%", duration: dur * 0.8, ease: "power3.out" }, koStart);
 
-    };
-
-    const exitSection = (idx: number, onComplete: () => void) => {
-      const panel = panels[idx];
-      const allEls = panel.querySelectorAll<HTMLElement>(".h-line, .h-word, .h-sub, .h-ko");
-      const tl = gsap.timeline({ onComplete });
-      tl.to(allEls, { y: "-30%", opacity: 0, stagger: 0.05, duration: 0.3, ease: "power2.in" }, 0);
-      tl.to(panel, { opacity: 0, duration: 0.35, ease: "power2.inOut" }, 0.1);
-      tl.set(panel, { visibility: "hidden" });
-      tl.set(allEls, { y: "150%", opacity: 1 });
-    };
-
-    // obs는 클로저 안에서 forward-reference — 콜백은 항상 할당 이후 실행됨
-    let obs!: ReturnType<typeof Observer.create>;
-
-    const animateTo = (newIdx: number) => {
-      if (isAnimating.current) return;
-      isAnimating.current = true;
-
-      const oldIdx = currentIndex.current;
-      currentIndex.current = newIdx;
-
-      // B2 → B1: lenis 멈춤 (obs는 이미 활성 상태)
-      if (oldIdx === 1 && newIdx < 1) {
-        if (lenis) lenis.stop();
-        if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
-      }
-
-      exitSection(oldIdx, () => {
-        enterSection(newIdx, 0, () => {
-          isAnimating.current = false;
-          // obs는 항상 활성 유지 — B2에서도 위/아래 스크롤 모두 처리
-          // lenis는 onDown(B2)에서 사용자가 아래로 스크롤할 때만 시작
-        });
+        if (scrollHint) {
+          gsap.to(scrollHint, {
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              start: "top top",
+              end: "bottom center",
+              scrub: true,
+            },
+          });
+        }
       });
-    };
 
-    // B1 초기 입장
-    enterSection(0, 0.5);
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const sourceHex = container.querySelector<HTMLElement>('[data-hero-hex="practice"]');
+      const targetHex = container.querySelector<HTMLElement>('[data-hero-hex="own"]');
+      const staticHexes = container.querySelectorAll<HTMLElement>(".h-hex-practice, .h-hex-own");
+      const fillHex = sharedHex?.querySelector<SVGPolygonElement>(".hero-shared-hex-fill");
 
-    if (isMobile) return;
+      if (!reducedMotion && panels[1] && sharedHex && sourceHex && targetHex && fillHex) {
+        const clamp = gsap.utils.clamp(0, 1);
+        let frozenBoxes: {
+          from: { left: number; top: number; width: number; height: number };
+          to: { left: number; top: number; width: number; height: number };
+        } | null = null;
+        let centerBoxes: {
+          from: { left: number; top: number; width: number; height: number };
+          to: { left: number; top: number; width: number; height: number };
+        } | null = null;
+        const smooth = (value: number) => {
+          const t = clamp(value);
+          return t * t * t * (t * (t * 6 - 15) + 10);
+        };
+        const setStaticVisibility = (visible: boolean) => {
+          gsap.set(staticHexes, { visibility: visible ? "visible" : "hidden" });
+          if (visible && document.documentElement.dataset.heroVideoHexActive === "true") {
+            gsap.set(container.querySelectorAll<HTMLElement>(".h-hex-own"), { visibility: "hidden" });
+          }
+        };
+        const measureMotion = () => {
+          const sourceWrapper = sourceHex.closest<HTMLElement>(".h-hex-practice");
+          const targetWrapper = targetHex.closest<HTMLElement>(".h-hex-own");
+          const previousSourcePanelTransform = panels[0]?.style.transform;
+          const previousTargetPanelTransform = panels[1]?.style.transform;
+          const previousSourceTransform = sourceWrapper?.style.transform;
+          const previousTargetTransform = targetWrapper?.style.transform;
 
-    // 데스크톱: lenis 멈추고 Observer 등록
-    if (lenis) lenis.stop();
-    if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
+          if (panels[0]) panels[0].style.transform = "none";
+          if (panels[1]) panels[1].style.transform = "none";
+          if (sourceWrapper) sourceWrapper.style.transform = "translateY(0%)";
+          if (targetWrapper) targetWrapper.style.transform = "translateY(0%)";
 
-    obs = Observer.create({
-      target: window,
-      type: "wheel,touch",
-      onDown: () => {
-        if (currentIndex.current < 1) {
-          animateTo(currentIndex.current + 1);
-        } else if (currentIndex.current === 1 && !isAnimating.current) {
-          // B2에서 아래 스크롤 → lenis 시작, obs 비활성
-          obs.disable();
-          if (lenis) lenis.start();
-        }
-      },
-      onUp: () => {
-        if (currentIndex.current > 0 && window.scrollY < 5) {
-          animateTo(currentIndex.current - 1);
-        }
-      },
-      tolerance: 10,
-      preventDefault: true,
-    });
+          const sourceVisual = sourceHex.querySelector<SVGSVGElement>("svg") ?? sourceHex;
+          const targetVisual = targetHex.querySelector<SVGSVGElement>("svg") ?? targetHex;
+          const sourceRect = sourceVisual.getBoundingClientRect();
+          const targetRect = targetVisual.getBoundingClientRect();
+          const sourcePanelRect = panels[0].getBoundingClientRect();
+          const sourceDocumentTop = sourceRect.top + window.scrollY;
+          const targetDocumentTop = targetRect.top + window.scrollY;
+          const targetDocumentCenter = targetDocumentTop + targetRect.height / 2;
+          const startScroll = sourcePanelRect.top + window.scrollY + window.innerHeight * 0.3 - 1;
+          const endScroll = Math.max(startScroll + 1, targetDocumentCenter - window.innerHeight * 0.653);
+          const boxes = {
+            from: {
+              left: sourceRect.left,
+              top: sourceDocumentTop - startScroll,
+              width: sourceRect.width,
+              height: sourceRect.height,
+            },
+            to: {
+              left: targetRect.left,
+              top: targetDocumentTop - endScroll + window.innerHeight * 0.016,
+              width: targetRect.width,
+              height: targetRect.height,
+            },
+          };
 
-    // 페이지 최상단 복귀 시 hero observer 재활성 + scroll hint 페이드
-    const scrollHint = container.querySelector<HTMLElement>(".scroll-hint");
-    const handleScroll = () => {
-      if (currentIndex.current === 1 && window.scrollY === 0) {
-        if (lenis) lenis.stop();
-        if (stickyParent) gsap.set(stickyParent, { zIndex: 30 });
-        obs.enable(); // 콘텐츠 스크롤 후 최상단 복귀 시 재활성
+          if (panels[0]) panels[0].style.transform = previousSourcePanelTransform ?? "";
+          if (panels[1]) panels[1].style.transform = previousTargetPanelTransform ?? "";
+          if (sourceWrapper) sourceWrapper.style.transform = previousSourceTransform ?? "";
+          if (targetWrapper) targetWrapper.style.transform = previousTargetTransform ?? "";
+
+          return { boxes, startScroll, endScroll };
+        };
+        const measureCenterMotion = () => {
+          const targetWrapper = targetHex.closest<HTMLElement>(".h-hex-own");
+          const previousTargetPanelTransform = panels[1]?.style.transform;
+          const previousTargetTransform = targetWrapper?.style.transform;
+
+          if (panels[1]) panels[1].style.transform = "none";
+          if (targetWrapper) targetWrapper.style.transform = "translateY(0%)";
+
+          const targetVisual = targetHex.querySelector<SVGSVGElement>("svg") ?? targetHex;
+          const targetRect = targetVisual.getBoundingClientRect();
+          const targetDocumentTop = targetRect.top + window.scrollY;
+          const panel2Rect = panels[1].getBoundingClientRect();
+          const startScroll = panel2Rect.top + window.scrollY + window.innerHeight * HERO_2_CENTER_DETACH_PROGRESS - 1;
+          const endScroll = Math.max(startScroll + 1, panel2Rect.top + window.scrollY + panels[1].offsetHeight);
+          const boxes = {
+            from: {
+              left: targetRect.left,
+              top: targetDocumentTop - startScroll + window.innerHeight * 0.016,
+              width: targetRect.width,
+              height: targetRect.height,
+            },
+            to: {
+              left: document.documentElement.clientWidth / 2 - targetRect.width / 2,
+              top: window.innerHeight / 2 - targetRect.height / 2,
+              width: targetRect.width,
+              height: targetRect.height,
+            },
+          };
+
+          if (panels[1]) panels[1].style.transform = previousTargetPanelTransform ?? "";
+          if (targetWrapper) targetWrapper.style.transform = previousTargetTransform ?? "";
+
+          return { boxes, startScroll, endScroll };
+        };
+        const renderSharedHex = (progress: number) => {
+          const travel = smooth(progress);
+          const scaleProgress = Math.sin(travel * Math.PI);
+          const scale = 1 + scaleProgress;
+          const active = progress > 0.001 && progress < 0.999;
+
+          if (!active) {
+            gsap.set(sharedHex, { autoAlpha: 0 });
+            setStaticVisibility(true);
+            if (progress <= 0.001) {
+              frozenBoxes = null;
+            }
+            return;
+          }
+
+          frozenBoxes ??= measureMotion().boxes;
+          const { from, to } = frozenBoxes;
+          setStaticVisibility(false);
+          gsap.set(sharedHex, {
+            autoAlpha: 1,
+            x: from.left + (to.left - from.left) * travel,
+            y: from.top + (to.top - from.top) * travel,
+            width: from.width + (to.width - from.width) * travel,
+            height: from.height + (to.height - from.height) * travel,
+            scale,
+            transformOrigin: "50% 50%",
+          });
+          gsap.set(fillHex, { autoAlpha: 1 });
+        };
+
+        ScrollTrigger.create({
+          trigger: container,
+          start: () => measureMotion().startScroll,
+          end: () => measureMotion().endScroll,
+          scrub: true,
+          invalidateOnRefresh: true,
+          onRefresh: (self) => {
+            frozenBoxes = null;
+            renderSharedHex(self.progress);
+          },
+          onUpdate: (self) => renderSharedHex(self.progress),
+        });
+
+        const renderCenterHex = (progress: number) => {
+          if (document.documentElement.dataset.heroVideoHexActive === "true") {
+            gsap.set(sharedHex, { autoAlpha: 0 });
+            return;
+          }
+
+          const travel = smooth(progress);
+          const active = progress > 0.001 && progress < 0.999;
+
+          if (!active) {
+            gsap.set(sharedHex, { autoAlpha: 0 });
+            setStaticVisibility(true);
+            if (progress <= 0.001) {
+              centerBoxes = null;
+            }
+            return;
+          }
+
+          centerBoxes ??= measureCenterMotion().boxes;
+          const { from, to } = centerBoxes;
+          setStaticVisibility(false);
+          gsap.set(sharedHex, {
+            autoAlpha: 1,
+            x: from.left + (to.left - from.left) * travel,
+            y: from.top + (to.top - from.top) * travel,
+            width: from.width,
+            height: from.height,
+            scale: 1,
+            transformOrigin: "50% 50%",
+          });
+          gsap.set(fillHex, { autoAlpha: 1 });
+        };
+
+        ScrollTrigger.create({
+          trigger: container,
+          start: () => measureCenterMotion().startScroll,
+          end: () => measureCenterMotion().endScroll,
+          scrub: true,
+          invalidateOnRefresh: true,
+          onRefresh: (self) => {
+            centerBoxes = null;
+            renderCenterHex(self.progress);
+          },
+          onUpdate: (self) => renderCenterHex(self.progress),
+        });
       }
-      if (scrollHint && window.scrollY > 0) {
-        gsap.to(scrollHint, { opacity: 0, duration: 0.4, ease: "power2.out", overwrite: true });
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    }, container);
 
     return () => {
-      obs.kill();
-      window.removeEventListener("scroll", handleScroll);
-      if (lenis) lenis.start();
+      ctx.revert();
     };
   }, []);
 
@@ -211,7 +337,7 @@ export const HeroSectionV2 = () => {
     <div
       id="hero-section"
       ref={containerRef}
-      className="relative w-full h-full bg-white z-10 overflow-hidden"
+      className="relative w-full bg-white z-10"
     >
       {/* 시계 포탈 */}
       {mounted && createPortal(
@@ -226,50 +352,170 @@ export const HeroSectionV2 = () => {
       )}
 
       {/* 섹션 패널 */}
+      <div
+        ref={sharedHexRef}
+        className="hero-shared-hex pointer-events-none fixed left-0 top-0 z-[25] hidden lg:block text-mine-shaft"
+        style={{ opacity: 0, visibility: "hidden", width: 0, height: 0 }}
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 41 47"
+          className="w-full h-full overflow-visible"
+          style={{ transformOrigin: "50% 50%" }}
+        >
+          <polygon
+            className="hero-shared-hex-fill animate-[spin_8s_linear_infinite]"
+            style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
+            points="20.5 0, 41 11.75, 41 35.25, 20.5 47, 0 35.25, 0 11.75"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+
       {SECTIONS.map((section, i) => (
         <div
           key={i}
-          className="hero-panel absolute inset-0 flex flex-col justify-start pt-[300px] lg:pt-[25vh] px-page-padding gap-6 md:gap-8"
+          className="hero-panel relative min-h-screen flex flex-col justify-center px-page-padding gap-4 lg:gap-8"
           style={{ opacity: 0, visibility: "hidden" }}
         >
 
           {/* 영문 타이포 */}
-          {"mainCopy" in section ? (
+          {section.mainCopy ? (
             <>
               {(() => {
-                const words = (section.mainCopy ?? "").split(" ");
-                const leftWords = words.slice(0, -1);
-                const rightWord = words[words.length - 1];
+                const line1 = section.mainCopy[0] || "";
+                const line2 = section.mainCopy[1] || "";
+                const words1 = line1.split(" ");
+                const words2 = line2.split(" ");
                 return (
                   <div className="flex flex-col gap-0">
-                    {/* 1행: THE PRODUCT */}
+                    {/* 1행 */}
                     <div
-                      className="font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft flex flex-wrap"
+                      className="font-inter font-semibold lg:font-medium leading-[0.85] lg:leading-none tracking-[-0.04em] text-mine-shaft flex flex-wrap"
                       style={{ fontSize: section.fontSize }}
                     >
-                      {leftWords.map((word, k) => (
-                        <div key={k} className="pb-[0.15em] mr-[0.22em]" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
-                          <span className="h-word inline-block" style={{ transform: "translateY(150%)" }}>
+                      {words1.map((word, k) => (
+                        <div key={k} className="pb-[0.15em] mr-[0.22em] overflow-hidden whitespace-nowrap" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
+                          <span className="h-word inline-block" style={{ transform: "translateY(200%)" }}>
                             {word}
                           </span>
+                          {word === "OWN" && section.mainCopy[0] === "WE OWN" && (
+                            <span
+                              className="h-hex-own hidden lg:inline-flex items-center justify-center overflow-visible fill-current ml-[0.034em]"
+                              style={{
+                                width: "1.30em",
+                                height: "0.86em",
+                                transform: "translateY(200%)",
+                                verticalAlign: "middle"
+                              }}
+                            >
+                              <span
+                                className="inline-block"
+                                data-hero-hex="own"
+                                style={{ width: "0.75em", height: "0.86em", transform: "translateY(-0.14em)" }}
+                              >
+                                <svg
+                                  viewBox="0 0 41 47"
+                                  className="w-full h-full overflow-visible fill-current"
+                                  style={{ transformOrigin: "50% 50%" }}
+                                >
+                                  <polygon
+                                    className="animate-[spin_8s_linear_infinite]"
+                                    style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
+                                    points="20.5 0, 41 11.75, 41 35.25, 20.5 47, 0 35.25, 0 11.75"
+                                  />
+                                </svg>
+                              </span>
+                            </span>
+                          )}
+                          {word === "THE" && section.mainCopy[1] === "PRACTICE." && (
+                            <span
+                              className="h-hex-the inline-flex lg:hidden items-center justify-center overflow-visible fill-current ml-[0.224em]"
+                              style={{
+                                width: "1.30em",
+                                height: "0.86em",
+                                transform: "translateY(200%)",
+                                verticalAlign: "middle"
+                              }}
+                            >
+                              <span
+                                className="inline-block"
+                                style={{ width: "0.75em", height: "0.86em" }}
+                              >
+                                  <svg
+                                    viewBox="0 0 41 47"
+                                    className="w-full h-full overflow-visible fill-current"
+                                    style={{
+                                      transform: "translateY(-0.07em)",
+                                      transformOrigin: "50% 50%"
+                                    }}
+                                  >
+                                  <polygon
+                                    className="animate-[spin_8s_linear_infinite]"
+                                    style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
+                                    points="20.5 0, 41 11.75, 41 35.25, 20.5 47, 0 35.25, 0 11.75"
+                                  />
+                              </svg>
+                              </span>
+                            </span>
+                          )}
                         </div>
                       ))}
                     </div>
-                    {/* 2행: PRACTICE. & 서브카피 */}
-                    <div className="flex mt-0 lg:-mt-[40px]">
-                      <div className="flex flex-col gap-[40px]">
-                        <div className="pb-[0.2em]" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
-                          <span
-                            className="h-word font-inter font-extrabold lg:font-medium leading-none tracking-[-0.04em] text-mine-shaft inline-block"
-                            style={{ fontSize: section.fontSize, transform: "translateY(150%)" }}
-                          >
-                            {rightWord}
-                          </span>
+                    {/* 2행 & 서브카피 */}
+                    <div className="flex mt-0 lg:-mt-[0.33em] flex-wrap lg:flex-nowrap">
+                      <div className="flex flex-col gap-10 lg:gap-[0.03em] w-full lg:w-auto">
+                        <div
+                          className="font-inter font-semibold lg:font-medium leading-[0.85] lg:leading-none tracking-[-0.04em] text-mine-shaft flex flex-wrap"
+                          style={{ fontSize: section.fontSize }}
+                        >
+                          {words2.map((word, k) => (
+                            <div key={k} className="pb-[0.2em] mr-[0.22em] overflow-hidden whitespace-nowrap" style={{ clipPath: "inset(0 -200px -25% -200px)" }}>
+                              <span
+                                className="h-word font-inter font-semibold lg:font-medium leading-[0.85] lg:leading-none tracking-[-0.04em] text-mine-shaft inline-block"
+                                style={{ transform: "translateY(200%)" }}
+                              >
+                                {word}
+                              </span>
+                              {word === "PRACTICE." && (
+                                <span
+                                  className="h-hex-practice hidden lg:inline-flex items-center justify-center overflow-visible fill-current ml-[-0.006em]"
+                                  style={{
+                                    width: "1.30em",
+                                    height: "0.86em",
+                                    transform: "translateY(200%)",
+                                    verticalAlign: "middle"
+                                  }}
+                                >
+                                  <span
+                                    className="inline-block"
+                                    data-hero-hex="practice"
+                                    style={{ width: "0.75em", height: "0.86em" }}
+                                  >
+                                  <svg
+                                    viewBox="0 0 41 47"
+                                    className="w-full h-full overflow-visible fill-current"
+                                    style={{
+                                      transform: "translateY(-0.13em)",
+                                      transformOrigin: "50% 50%"
+                                    }}
+                                  >
+                                    <polygon
+                                      className="animate-[spin_8s_linear_infinite]"
+                                      style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
+                                      points="20.5 0, 41 11.75, 41 35.25, 20.5 47, 0 35.25, 0 11.75"
+                                    />
+                                  </svg>
+                                  </span>
+                                </span>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                        <div className="overflow-hidden">
+                        <div className="overflow-hidden lg:-mt-[0.1em]">
                           <p
-                            className="h-sub font-inter font-normal text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.01em] text-mine-shaft text-left whitespace-pre-line"
-                            style={{ transform: "translateY(150%)" }}
+                            className="h-sub font-inter font-medium text-[22px] lg:text-[32px] leading-[1.5] tracking-[-0.03em] text-mine-shaft text-left whitespace-normal lg:whitespace-pre-line"
+                            style={{ transform: "translateY(200%)" }}
                           >
                             {section.subCopy}
                           </p>
@@ -283,32 +529,21 @@ export const HeroSectionV2 = () => {
           ) : null}
 
           {/* 한글카피 */}
-          <div className="overflow-hidden">
+          <div className="overflow-hidden mt-10">
             <p
-              className="h-ko font-pretendard text-[16px] md:text-[22px] font-medium text-mine-shaft/40 leading-[1.6] max-w-[900px]"
-              style={{ transform: "translateY(150%)" }}
+              className="h-ko font-pretendard text-[18px] md:text-[24px] font-medium text-mine-shaft leading-[1.6] max-w-[900px]"
+              style={{ transform: "translateY(200%)" }}
             >
               {section.ko}
             </p>
           </div>
 
-          {/* B1: 모바일 링크 */}
           {i === 0 && (
-            <div className="lg:hidden overflow-hidden mt-auto pb-10">
-              <div className="h-sub flex flex-col gap-6 items-start" style={{ transform: "translateY(150%)" }}>
-                <ArrowLink href="/work"    className="text-[20px] font-semibold gap-4">View Experience</ArrowLink>
-                <ArrowLink href="/contact" className="text-[20px] font-semibold gap-4">Start a Project</ArrowLink>
-              </div>
-            </div>
-          )}
-
-          {/* B2: 데스크톱 링크 + 스크롤 힌트 */}
-          {i === 1 && (
             <>
-              <div className="absolute bottom-[100px] left-page-padding hidden lg:block overflow-hidden">
-                <div className="h-sub flex flex-row gap-12 items-start" style={{ transform: "translateY(150%)" }}>
-                  <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
-                  <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
+              <div className="lg:hidden absolute bottom-[96px] left-0 right-0 px-page-padding overflow-hidden">
+                <div className="h-sub flex flex-col gap-4 items-start" style={{ transform: "translateY(200%)" }}>
+                  <ArrowLink href="/work"    className="text-[22px] font-semibold gap-4">View Experience</ArrowLink>
+                  <ArrowLink href="/contact" className="text-[22px] font-semibold gap-4">Start a Project</ArrowLink>
                 </div>
               </div>
               <div className="scroll-hint absolute bottom-10 left-page-padding hidden lg:flex items-center gap-3">
@@ -316,6 +551,15 @@ export const HeroSectionV2 = () => {
                 <span className="font-inter text-[12px] uppercase tracking-widest text-mine-shaft/40">Scroll to explore</span>
               </div>
             </>
+          )}
+
+          {i === 1 && (
+            <div className="absolute bottom-[100px] left-page-padding hidden lg:block overflow-hidden">
+              <div className="h-sub flex flex-row gap-12 items-start" style={{ transform: "translateY(200%)" }}>
+                <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
+                <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
+              </div>
+            </div>
           )}
         </div>
       ))}

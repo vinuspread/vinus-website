@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import type { CSSProperties } from "react";
+import { TransitionLink } from "@/components/common/TransitionLink";
 
 interface ProjectCardProps {
   src: string;
@@ -25,6 +26,9 @@ export const ProjectCard = ({
   className = "",
 }: ProjectCardProps) => {
   const delay = delayOffset + (index % 2) * 60;
+  const style: CSSProperties & { "--project-card-delay": string } = {
+    "--project-card-delay": `${delay}ms`,
+  };
 
   const content = (
     <div className="flex flex-col">
@@ -58,11 +62,11 @@ export const ProjectCard = ({
 
   if (href) {
     return (
-      <Link href={href} className={base} data-cursor="VIEW">
+      <TransitionLink href={href} className={base} data-cursor="VIEW" style={style}>
         {content}
-      </Link>
+      </TransitionLink>
     );
   }
 
-  return <div className={base}>{content}</div>;
+  return <div className={base} style={style}>{content}</div>;
 };

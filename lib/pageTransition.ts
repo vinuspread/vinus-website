@@ -30,7 +30,7 @@ let outPending = false
 export function setOverlay(el: HTMLElement | null) {
   overlayEl = el
   // GSAP이 처음부터 transform을 소유 — React style prop 간섭 방지
-  if (el) gsap.set(el, { scaleY: 1 })
+  if (el) gsap.set(el, { scaleY: 0, transformOrigin: "top" })
 }
 
 export function setLogo(el: HTMLElement | null) {
@@ -43,6 +43,7 @@ export function revealOnLoad() {
   if (!overlayEl) return
   outPending = false
   gsap.killTweensOf(overlayEl)
+  if ((gsap.getProperty(overlayEl, "scaleY") as number) <= 0.001) return
   gsap.to(overlayEl, {
     scaleY: 0,
     transformOrigin: "top",

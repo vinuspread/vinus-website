@@ -1,5 +1,5 @@
 "use client";
-import Link from "next/link";
+import { TransitionLink } from "@/components/common/TransitionLink";
 import { cn } from "@/lib/utils";
 import { ArrowIcon } from "@/components/common/ArrowIcon";
 
@@ -31,9 +31,9 @@ export const ArrowLink = ({ href, children, className = "", external, ...props }
   }
 
   return (
-    <Link href={href} className={classes} {...(props as any)}>
+    <TransitionLink href={href} className={classes} {...props}>
       <span className="flex-grow text-left">{children}</span>
       {icon}
-    </Link>
+    </TransitionLink>
   );
 };
