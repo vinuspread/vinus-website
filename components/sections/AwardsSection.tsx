@@ -4,22 +4,22 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import { ListRow } from "@/components/common/ListRow";
 
-const awardsData = [
+const focusData = [
   {
-    name: "Awwwards",
-    items: ["1x Studio of the Year Nominee", "2x E-commerce of the Year Nominee", "1x Site of the Month", "13x Site of the Day", "12x Developer Award", "21x Honourable Mention"],
+    name: "Product Strategy",
+    items: ["Discovery", "Roadmap", "Service Structure", "AI Opportunity Mapping"],
   },
   {
-    name: "The FWA",
-    items: ["10x FWA of the Day"],
+    name: "Experience Design",
+    items: ["UX/UI", "Web", "App", "Interaction"],
   },
   {
-    name: "CSS Design Awards",
-    items: ["1x Website of the Year Nominee", "1x Website of the Month", "11x Website of the Day", "15x Innovation", "15x UX Design", "15x UI Design"],
+    name: "Brand Systems",
+    items: ["Identity", "Character & IP", "Visual Direction", "Content Rules"],
   },
   {
-    name: "Webby Awards",
-    items: ["1x Webby Nominee"],
+    name: "Launch & Operation",
+    items: ["CMS", "SEO", "Analytics", "Continuous Improvement"],
   },
 ];
 
@@ -62,13 +62,13 @@ export const AwardsSection = () => {
       <div className="flex flex-col gap-12">
 
         <h2 className="awards-heading display-heading text-mine-shaft" style={{ opacity: 0 }}>
-          Awards & Recognitions.
+          What we manage.
         </h2>
 
         <div className="flex flex-col border-t border-alto">
-          {awardsData.map((award) => (
-            <div key={award.name} className="awards-row" style={{ opacity: 0 }}>
-              <ListRow label={award.name} detail={award.items.join(" - ")} />
+          {focusData.map((focus) => (
+            <div key={focus.name} className="awards-row" style={{ opacity: 0 }}>
+              <ListRow label={focus.name} detail={focus.items.join(" - ")} />
             </div>
           ))}
         </div>

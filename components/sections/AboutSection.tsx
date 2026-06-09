@@ -3,6 +3,7 @@
 import { useReveal } from "@/hooks/useReveal";
 import { ArrowLink } from "@/components/common/ArrowLink";
 import { useLayoutEffect, useRef } from "react";
+import Image from "next/image";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 export const AboutSection = () => {
@@ -116,8 +117,8 @@ export const AboutSection = () => {
         <div ref={leftColRef} className="hidden lg:block relative self-start">
           {/* 이미지 1 */}
           <div ref={clip1Ref} className="overflow-hidden aspect-[4/5] w-[65%] bg-gallery" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
-            <div ref={scale1Ref} className="w-full h-full" style={{ scale: "1.2" }}>
-              <img src="https://picsum.photos/seed/about1/800/1000" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
+            <div ref={scale1Ref} className="relative w-full h-full" style={{ scale: "1.2" }}>
+              <Image src="/about_vertical.png" alt="Vinuspread workspace facade" fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" data-pin-nopin="true" />
             </div>
           </div>
 
@@ -125,7 +126,7 @@ export const AboutSection = () => {
           <div ref={clip2Ref} className="absolute bottom-[-50%] right-0 overflow-hidden aspect-[3/4] w-[58%] bg-white" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
             <div ref={scale2Ref} className="w-full h-full" style={{ scale: "1.2" }}>
               <div className="absolute inset-x-0 will-change-transform" style={{ height: "190%", top: "-45%" }}>
-                <img src="https://picsum.photos/seed/about2/800/1000" alt="About Vinuspread 2" className="w-full h-full object-cover" data-pin-nopin="true" />
+                <Image src="/about_img.png" alt="Vinuspread architectural project facade" fill sizes="(min-width: 1024px) 34vw, 100vw" className="object-cover" data-pin-nopin="true" />
               </div>
             </div>
           </div>
@@ -134,8 +135,8 @@ export const AboutSection = () => {
         {/* Left: mobile */}
         <div className="lg:hidden">
           <div ref={clip1MRef} className="overflow-hidden aspect-[4/5] w-full bg-gallery" style={{ clipPath: "inset(100% 0% 0% 0%)" }}>
-            <div ref={scale1MRef} className="w-full h-full" style={{ scale: "1.2" }}>
-              <img src="https://picsum.photos/seed/about1/800/1000" alt="About Vinuspread" className="w-full h-full object-cover" data-pin-nopin="true" />
+            <div ref={scale1MRef} className="relative w-full h-full" style={{ scale: "1.2" }}>
+              <Image src="/about_vertical.png" alt="Vinuspread workspace facade" fill sizes="(max-width: 1023px) 100vw, 1px" className="object-cover" data-pin-nopin="true" />
             </div>
           </div>
         </div>
@@ -159,20 +160,19 @@ export const AboutSection = () => {
             실험적인 방식으로 일하며, 20여 년의 경험 위에서 클라이언트의 제품이 더 나은 방향으로 성장할 수 있도록 돕습니다.
           </p>
           <div className="about-text-item mt-12">
-            <div className="flex flex-col border-t border-mine-shaft/10">
+            <div className="flex flex-col items-start gap-[1em]">
               {[
-                { label: "Explore our services", href: "/services" },
-                { label: "See our work", href: "/work" },
-                { label: "Discover our story", href: "/story" },
+                { label: "Explore our Services", href: "/services" },
+                { label: "See our Work", href: "/work" },
               ].map(({ label, href }) => (
-                <div key={href} className="border-b border-mine-shaft/10 group">
-                  <ArrowLink
-                    href={href}
-                    className="flex flex-row items-center justify-between w-full border-none py-[32px] font-inter text-[20px] lg:text-[24px] font-medium tracking-[-0.02em] whitespace-nowrap"
-                  >
-                    {label}
-                  </ArrowLink>
-                </div>
+                <ArrowLink
+                  key={href}
+                  href={href}
+                  className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6"
+                  hoverUnderline
+                >
+                  {label}
+                </ArrowLink>
               ))}
             </div>
           </div>

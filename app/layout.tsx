@@ -102,9 +102,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             strategy="afterInteractive"
           />
         )}
-        {/* impeccable-live-start */}
-        <Script id="impeccable-live" src="http://localhost:8400/live.js" strategy="afterInteractive" />
-        {/* impeccable-live-end */}
+        {process.env.NEXT_PUBLIC_IMPECCABLE_LIVE === '1' && (
+          <Script id="impeccable-live" src="http://localhost:8400/live.js" strategy="afterInteractive" />
+        )}
       </body>
     </html>
   )

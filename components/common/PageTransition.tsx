@@ -41,14 +41,15 @@ export const PageTransition = () => {
       <Image
         ref={logoRef}
         src="/images/logo.svg"
-        width={160}
-        height={36}
+        width={150}
+        height={33}
         alt=""
         aria-hidden="true"
         data-pin-nopin="true"
+        loading="eager"
         unoptimized
         style={{ opacity: 0 }}
-        className="h-7 md:h-9 w-auto invert"
+        className="invert"
       />
     </div>
   );

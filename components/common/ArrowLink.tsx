@@ -8,13 +8,18 @@ interface ArrowLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
   className?: string;
   external?: boolean;
+  hoverUnderline?: boolean;
 }
 
-export const ArrowLink = ({ href, children, className = "", external, ...props }: ArrowLinkProps) => {
+export const ArrowLink = ({ href, children, className = "", external, hoverUnderline = false, ...props }: ArrowLinkProps) => {
   const classes = cn(
     "group flex flex-row items-center justify-between gap-4 transition-all duration-200 ease-out whitespace-nowrap",
     "font-inter text-[15px] font-medium tracking-[-0.01em] text-mine-shaft",
     className
+  );
+  const textClasses = cn(
+    "flex-grow text-left",
+    hoverUnderline && "arrow-link-label--underline"
   );
 
   const icon = (
@@ -24,7 +29,7 @@ export const ArrowLink = ({ href, children, className = "", external, ...props }
   if (external) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={classes} {...props}>
-        <span className="flex-grow text-left">{children}</span>
+        <span className={textClasses}>{children}</span>
         {icon}
       </a>
     );
@@ -32,7 +37,7 @@ export const ArrowLink = ({ href, children, className = "", external, ...props }
 
   return (
     <TransitionLink href={href} className={classes} {...props}>
-      <span className="flex-grow text-left">{children}</span>
+      <span className={textClasses}>{children}</span>
       {icon}
     </TransitionLink>
   );

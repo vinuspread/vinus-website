@@ -1,15 +1,15 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
-import { useReveal } from "@/hooks/useReveal";
-import { ListRow } from "@/components/common/ListRow";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { ArrowIcon } from "@/components/common/ArrowIcon";
 
 const clientLogos = Array.from({ length: 28 }, (_, i) => ({
   name: `client-${String(i + 1).padStart(2, "0")}`,
-  src: `/images/logos/logo${String(i + 1).padStart(2, "0")}.jpg`,
+  src: `/images/logos/logo${String(i + 1).padStart(2, "0")}.png`,
 }));
+
+const visibleClientLogos = clientLogos.slice(0, 24);
+const marqueeClientLogos = [...visibleClientLogos, ...visibleClientLogos];
 
 const brands = [
   { name: "DongA Onbook",        services: "Branding - Digital Design - Web Development" },
@@ -27,95 +27,71 @@ const brands = [
 ];
 
 export const ClientsBrandsSection = () => {
-  const sectionRef = useReveal<HTMLElement>();
-  const clipImg1Ref  = useRef<HTMLDivElement>(null);
-  const clipImg2Ref  = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-
-      // 초기 상태
-      gsap.set(".brands-item", { opacity: 0, y: 50 });
-      gsap.set(".brands-logo-grid", { opacity: 0, y: 30 });
-      gsap.set(".brands-list-row", { opacity: 0, y: 20 });
-      gsap.set(clipImg1Ref.current, { clipPath: "inset(100% 0 0 0)" });
-      gsap.set(clipImg2Ref.current, { clipPath: "inset(100% 0 0 0)" });
-
-      // 1. 헤딩
-      tl.to(".brands-item", { opacity: 1, y: 0, stagger: 0.15, duration: 0.9 }, 0);
-
-      // 2. 로고 그리드
-      tl.to(".brands-logo-grid", { opacity: 1, y: 0, duration: 0.9 }, 0.3);
-
-      // 3. 우측 이미지 1
-      tl.to(clipImg1Ref.current, { clipPath: "inset(0% 0 0 0)", duration: 1.2 }, 0.5);
-
-      // 4. 브랜드 리스트
-      tl.to(".brands-list-row", { opacity: 1, y: 0, stagger: 0.06, duration: 0.7 }, 0.8);
-
-      // 5. 우측 이미지 2
-      tl.to(clipImg2Ref.current, { clipPath: "inset(0% 0 0 0)", duration: 1.2 }, 1.0);
-
-      // 6. 잠시 멈춤
-      tl.to({}, { duration: 0.6 });
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 30%",
-        end: "+=2800",
-        scrub: 1.0,
-        pin: true,
-        anticipatePin: 1,
-        animation: tl,
-        invalidateOnRefresh: true,
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
-      ref={sectionRef}
-      className="anim-wrap section-pad bg-white mt-[80px] md:mt-[120px] rounded-t-[32px] z-[10] relative"
+      className="bg-mine-shaft mt-[80px] md:mt-[120px] z-[10] relative overflow-hidden"
+      data-header-dark
     >
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch">
+      <div className="px-page-padding pt-[clamp(80px,10vw,120px)] text-center">
+        <div className="mx-auto max-w-[920px]">
+          <h2 className="brands-item display-heading text-white text-center">
+            Clients we&apos;ve partnered with.
+          </h2>
+        </div>
+      </div>
+
+      <div className="brands-logo-marquee relative left-1/2 mt-14 md:mt-20 w-screen -translate-x-1/2 py-[52px] md:py-[72px] overflow-hidden">
+        <div className="client-logo-marquee-track flex w-max items-center">
+          {marqueeClientLogos.map((client, i) => {
+            const duplicate = i >= visibleClientLogos.length;
+
+            return (
+              <div
+                key={`${client.name}-${i}`}
+                aria-hidden={duplicate}
+                className="flex h-[88px] w-[196px] md:h-[112px] md:w-[320px] shrink-0 items-center justify-center px-8 md:px-12"
+              >
+                <div className="relative h-[24px] w-[124px] md:h-[40px] md:w-[200px]">
+                  <Image
+                    src={client.src}
+                    alt={duplicate ? "" : client.name}
+                    fill
+                    sizes="(min-width: 768px) 200px, 124px"
+                    className="object-contain opacity-40 grayscale"
+                    data-pin-nopin="true"
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-stretch px-page-padding pb-[clamp(80px,10vw,120px)] pt-[clamp(72px,9vw,120px)]">
 
         {/* Left */}
         <div className="flex flex-col gap-12">
-          <h2 className="brands-item display-heading text-mine-shaft">
-            Clients we&apos;ve partnered with.
-          </h2>
 
-          <div className="brands-logo-grid grid grid-cols-3 md:grid-cols-6 border-t border-alto mb-24">
-            {clientLogos.slice(0, 24).map((client, i) => (
-              <div
-                key={client.name}
-                className={cn(
-                  "border-b border-r border-alto h-[72px] md:h-[100px] flex items-center justify-center p-3 md:p-5 transition-all duration-500",
-                  (i + 1) % 3 === 0 ? "border-r-0" : "",
-                  "md:border-r",
-                  (i + 1) % 6 === 0 ? "md:border-r-0" : ""
-                )}
-              >
-                <img
-                  src={client.src}
-                  alt={client.name}
-                  className="max-h-[20px] md:max-h-[28px] max-w-full object-contain"
-                  data-pin-nopin="true"
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-col border-t border-alto">
+          <div className="flex flex-col border-t border-white/15">
             {brands.map((brand) => (
-              <div key={brand.name} className="brands-list-row">
-                <ListRow label={brand.name} detail={brand.services} />
+              <div
+                key={brand.name}
+                className="brands-list-row group grid grid-cols-1 md:grid-cols-12 md:items-center gap-2 md:gap-0 py-[28px] md:py-[32px] border-b border-white/15 transition-colors hover:bg-white/[0.04]"
+              >
+                <div className="md:col-span-4 flex items-center justify-between md:block">
+                  <span className="font-inter text-[18px] md:text-[20px] lg:text-[24px] font-medium tracking-[-0.02em] text-white">
+                    {brand.name}
+                  </span>
+                  <ArrowIcon className="md:hidden text-white opacity-25 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]" />
+                </div>
+                <div className="md:col-span-7">
+                  <span className="font-inter font-medium text-[16px] uppercase tracking-normal leading-relaxed text-white/55">
+                    {brand.services}
+                  </span>
+                </div>
+                <div className="hidden md:flex col-span-1 justify-end">
+                  <ArrowIcon className="text-white opacity-25 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-[2px] group-hover:-translate-y-[2px]" />
+                </div>
               </div>
             ))}
           </div>
@@ -123,19 +99,24 @@ export const ClientsBrandsSection = () => {
 
         {/* Right */}
         <div className="hidden lg:flex flex-col justify-between gap-8">
-          <div ref={clipImg1Ref} className="overflow-hidden w-[80%] self-end" style={{ height: "44vw", clipPath: "inset(100% 0 0 0)" }}>
-            <img
-              src="https://picsum.photos/seed/brands/800/1200"
-              alt="Brands Vinuspread"
-              className="w-full h-full object-cover scale-125 will-change-transform"
+          <div className="relative overflow-hidden w-[80%] self-end" style={{ height: "44vw" }}>
+            <Image
+              src="/brands_vertical.png"
+              alt="Corporate glass facade representing Vinuspread client work"
+              fill
+              sizes="40vw"
+              loading="eager"
+              className="object-cover scale-125 will-change-transform"
               data-pin-nopin="true"
             />
           </div>
-          <div ref={clipImg2Ref} className="overflow-hidden aspect-[2/3] w-[60%] self-start" style={{ clipPath: "inset(100% 0 0 0)" }}>
-            <img
-              src="https://picsum.photos/seed/about/800/1200"
-              alt=""
-              className="w-full h-full object-cover"
+          <div className="relative overflow-hidden aspect-[2/3] w-[60%] self-start">
+            <Image
+              src="/about_vertical.png"
+              alt="Vinuspread workspace facade"
+              fill
+              sizes="30vw"
+              className="object-cover"
               data-pin-nopin="true"
             />
           </div>

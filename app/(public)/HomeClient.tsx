@@ -1,9 +1,11 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import Image from "next/image";
 import { HeroSectionV2 as HeroSection } from "@/components/sections/HeroSectionV2";
 import { HexTransitionSection } from "@/components/sections/HexTransitionSection";
 import { AboutSection } from "@/components/sections/AboutSection";
+import { BlogHighlightsSection, type BlogHighlightItem } from "@/components/sections/BlogHighlightsSection";
 import { ClientsBrandsSection } from "@/components/sections/ClientsBrandsSection";
 import { ImageSliderSection } from "@/components/sections/ImageSliderSection";
 import { AwardsSection } from "@/components/sections/AwardsSection";
@@ -22,10 +24,11 @@ export interface WorkItem {
 
 interface Props {
   works: WorkItem[]
+  stories: BlogHighlightItem[]
 }
 
-export default function HomeClient({ works }: Props) {
-  const fullImgRef = useRef<HTMLImageElement>(null);
+export default function HomeClient({ works, stories }: Props) {
+  const fullImgRef = useRef<HTMLDivElement>(null);
   const fullSectionRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -72,7 +75,7 @@ export default function HomeClient({ works }: Props) {
             marquee={
               <div className="mb-[3em] overflow-hidden bg-white">
                 <Marquee
-                  text="AI PRODUCT • PRODUCT MANAGEMENT • DIGITAL EXPERIENCE • BRAND IDENTITY • CHARACTER & IP"
+                  text="PRODUCT STRATEGY • AI WORKFLOW • DIGITAL EXPERIENCE • BRAND SYSTEM • OPERATIONS"
                   speed={520}
                   scrollReactive
                   className="font-inter font-medium text-[clamp(120px,14.8vw,213px)] leading-none tracking-[-0.04em] text-mine-shaft uppercase"
@@ -88,17 +91,25 @@ export default function HomeClient({ works }: Props) {
         </section>
 
         <AboutSection />
+        <BlogHighlightsSection stories={stories} />
         <ClientsBrandsSection />
 
         <div ref={fullSectionRef} className="relative">
           <section className="sticky top-0 w-full h-[100vh] overflow-hidden">
-            <img
+            <div
               ref={fullImgRef}
-              src="https://picsum.photos/seed/full/2000/1200"
-              alt=""
-              className="w-full h-full object-cover block will-change-transform"
-              data-pin-nopin="true"
-            />
+              className="absolute inset-0 will-change-transform"
+            >
+              <Image
+                src="/about_img.png"
+                alt="Vinuspread architectural project detail"
+                fill
+                sizes="100vw"
+                className="object-cover"
+                loading="eager"
+                data-pin-nopin="true"
+              />
+            </div>
           </section>
           <div className="relative z-10 bg-white">
             <AwardsSection />

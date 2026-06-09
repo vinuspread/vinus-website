@@ -77,11 +77,11 @@ export const CustomCursor = () => {
     <>
       <div
         ref={dotRef}
-        className="hidden lg:block fixed top-0 left-0 w-[6px] h-[6px] bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        className="hidden lg:block fixed top-0 left-0 w-[6px] h-[6px] bg-white rounded-full pointer-events-none z-[10000] mix-blend-difference"
       />
       <div
         ref={ringRef}
-        className="hidden lg:block fixed top-0 left-0 w-[32px] h-[32px] border border-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+        className="hidden lg:block fixed top-0 left-0 w-[32px] h-[32px] border border-white rounded-full pointer-events-none z-[10000] mix-blend-difference"
       />
     </>
   );

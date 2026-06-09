@@ -13,8 +13,7 @@ export default function LabPage() {
   return (
     <main className="min-h-screen bg-mine-shaft" data-header-dark>
 
-      {/* Pink header zone */}
-      <div style={{ backgroundColor: "#FD2F79" }}>
+      <div className="bg-mine-shaft">
         {/* Header — white text on dark */}
         <div className="[&_*]:!text-white [&_.breadcrumb-label]:!text-white/40 [&_.body-text]:!text-white/50 [&_.body-text-ko]:!text-white/50">
           <PageHeader

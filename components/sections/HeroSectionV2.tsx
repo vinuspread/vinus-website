@@ -111,12 +111,12 @@ export const HeroSectionV2 = () => {
           },
         });
 
-        tl.to(words, { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
-        tl.to(hexThe, { y: "0%", duration: dur, ease: "power3.out" }, start + 0.2);
-        tl.to(hexPractice, { y: "0%", duration: dur, ease: "power3.out" }, lastWordStart + 0.25);
-        tl.to(hexOwn, { y: "0%", duration: dur, ease: "power3.out" }, start + 0.3);
-        tl.to(sub, { y: "0%", duration: dur * 0.9, ease: "power3.out" }, subStart);
-        tl.to(ko, { y: "0%", duration: dur * 0.8, ease: "power3.out" }, koStart);
+        if (words.length) tl.to(words, { y: "0%", stagger: 0.15, duration: dur, ease: "power3.out" }, start);
+        if (hexThe.length) tl.to(hexThe, { y: "0%", duration: dur, ease: "power3.out" }, start + 0.2);
+        if (hexPractice.length) tl.to(hexPractice, { y: "0%", duration: dur, ease: "power3.out" }, lastWordStart + 0.25);
+        if (hexOwn.length) tl.to(hexOwn, { y: "0%", duration: dur, ease: "power3.out" }, start + 0.3);
+        if (sub.length) tl.to(sub, { y: "0%", duration: dur * 0.9, ease: "power3.out" }, subStart);
+        if (ko.length) tl.to(ko, { y: "0%", duration: dur * 0.8, ease: "power3.out" }, koStart);
 
         if (scrollHint) {
           gsap.to(scrollHint, {
@@ -542,8 +542,8 @@ export const HeroSectionV2 = () => {
             <>
               <div className="lg:hidden absolute bottom-[96px] left-0 right-0 px-page-padding overflow-hidden">
                 <div className="h-sub flex flex-col gap-4 items-start" style={{ transform: "translateY(200%)" }}>
-                  <ArrowLink href="/work"    className="text-[22px] font-semibold gap-4">View Experience</ArrowLink>
-                  <ArrowLink href="/contact" className="text-[22px] font-semibold gap-4">Start a Project</ArrowLink>
+                  <ArrowLink href="/work"    className="text-[22px] font-semibold gap-4" hoverUnderline>View Experience</ArrowLink>
+                  <ArrowLink href="/contact" className="text-[22px] font-semibold gap-4" hoverUnderline>Start a Project</ArrowLink>
                 </div>
               </div>
               <div className="scroll-hint absolute bottom-10 left-page-padding hidden lg:flex items-center gap-3">
@@ -556,8 +556,8 @@ export const HeroSectionV2 = () => {
           {i === 1 && (
             <div className="absolute bottom-[100px] left-page-padding hidden lg:block overflow-hidden">
               <div className="h-sub flex flex-row gap-12 items-start" style={{ transform: "translateY(200%)" }}>
-                <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">View Experience</ArrowLink>
-                <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6">Start a Project</ArrowLink>
+                <ArrowLink href="/work"    className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6" hoverUnderline>View Experience</ArrowLink>
+                <ArrowLink href="/contact" className="text-[20px] md:text-[24px] font-semibold gap-4 md:gap-6" hoverUnderline>Start a Project</ArrowLink>
               </div>
             </div>
           )}

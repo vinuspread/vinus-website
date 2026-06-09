@@ -5,12 +5,12 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 
 const slides = [
-  { src: "https://picsum.photos/seed/s1/800/600", alt: "Project 1", wide: false },
-  { src: "https://picsum.photos/seed/s2/1200/800", alt: "Project 2", wide: true },
-  { src: "https://picsum.photos/seed/s3/800/600", alt: "Project 3", wide: false },
-  { src: "https://picsum.photos/seed/s4/1200/800", alt: "Project 4", wide: true },
-  { src: "https://picsum.photos/seed/s5/800/600", alt: "Project 5", wide: false },
-  { src: "https://picsum.photos/seed/s6/1200/800", alt: "Project 6", wide: true },
+  { src: "/images/projects/abstract_glass.png", alt: "Abstract glass identity study", wide: false },
+  { src: "/images/projects/nextgen_ui_premium.png", alt: "Premium digital product dashboard", wide: true },
+  { src: "/images/projects/creative_agency_id.png", alt: "Creative agency identity system", wide: false },
+  { src: "/images/projects/tech_interface.png", alt: "Technology interface concept", wide: true },
+  { src: "/images/projects/branding_luxury.png", alt: "Luxury brand system direction", wide: false },
+  { src: "/images/projects/futuristic_product.png", alt: "Futuristic product experience concept", wide: true },
 ];
 
 const marqueeSlides = [...slides, ...slides];
@@ -51,6 +51,7 @@ export const ImageSliderSection = () => {
                 src={slide.src}
                 alt={slide.alt}
                 fill
+                sizes={slide.wide ? "(min-width: 1024px) 66vw, (min-width: 768px) 79vw, 75vw" : "(min-width: 1024px) 36vw, (min-width: 768px) 55vw, 65vw"}
                 className="object-cover"
                 data-pin-nopin="true"
               />
